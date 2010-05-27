@@ -68,6 +68,23 @@ public class FileTools
         return file.substring(dot+1);
     }
     
+    public static String getFilenameFromPath(String file)
+    {
+        int slash = file.lastIndexOf('/');
+        int backslash = file.lastIndexOf('\\');
+        
+        if(slash != -1)
+        {
+            return file.substring(slash + 1);
+        }
+        else if(backslash != -1)
+        {
+            return file.substring(backslash + 1);
+        }
+        
+        return "";
+    }
+    
     /**
      * If the file represents a directory, it is returned, otherwise, its 
      * parent directory is returned.
