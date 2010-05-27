@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCommon.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCore.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/snakeyaml-1.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/swingx-0.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/miglayout-3.7-swing.jar"/>
+	<classpathentry kind="lib" path="lib/jsyntaxpane-0.9.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/jide-2.1.2-common.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

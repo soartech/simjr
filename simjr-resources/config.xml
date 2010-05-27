@@ -1,0 +1,1332 @@
+<?xml version='1.0'?>
+<config>
+	<resources>
+		<resource name="ccontrol.frontend">
+			<areas/>
+			<frontend>
+				<settings>
+					<setting name="t3">
+						<base>
+							<roots>
+								<root name="ccontrol center">
+									<layout factory="predefined">
+										<replacement id="rootccontrol center"/>
+										<delegate id="delegate_SplitDockStationFactory">
+											<node nodeId="1272669100781" orientation="HORIZONTAL" divider="0.8477366255144033">
+												<node nodeId="1272669100876" orientation="VERTICAL" divider="0.22381635581061693">
+													<leaf id="1" nodeId="1272669100718"/>
+													<leaf id="3" nodeId="1272669100875">
+														<placeholders>
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</placeholders>
+														<placeholder-map>
+															<version>0</version>
+															<format>dock.PlaceholderList</format>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.RadioMessagePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.ConsolePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+														</placeholder-map>
+													</leaf>
+												</node>
+												<node nodeId="1272669100797" orientation="VERTICAL" divider="0.5">
+													<leaf id="0" nodeId="1272669100765">
+														<placeholders>
+															<placeholder>dock.single.EntityListPanel</placeholder>
+														</placeholders>
+													</leaf>
+													<leaf id="2" nodeId="1272669100796">
+														<placeholders>
+															<placeholder>dock.single.EntityPropertiesView</placeholder>
+														</placeholders>
+													</leaf>
+												</node>
+											</node>
+										</delegate>
+									</layout>
+									<children ignore="false">
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityListPanel">
+												<replacement id="dockablesingle EntityListPanel"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityListPanel</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_pvd">
+												<id>__PVD1</id>
+												<multiple>PVD1</multiple>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityPropertiesView">
+												<replacement id="dockablesingle EntityPropertiesView"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityPropertiesView</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_StackDockStationFactory">
+												<selected>1</selected>
+												<placeholders>
+													<version>0</version>
+													<format>dock.PlaceholderList</format>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">0</item>
+														<item key="dock.index" type="i">0</item>
+														<item key="dock.placeholder" type="s">dock.single.RadioMessagePanel</item>
+													</entry>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">1</item>
+														<item key="dock.index" type="i">1</item>
+														<item key="dock.placeholder" type="s">dock.single.ConsolePanel</item>
+													</entry>
+												</placeholders>
+											</layout>
+											<children ignore="false">
+												<child>
+													<layout factory="predefined" placeholder="dock.single.RadioMessagePanel">
+														<replacement id="dockablesingle RadioMessagePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>RadioMessagePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+												<child>
+													<layout factory="predefined" placeholder="dock.single.ConsolePanel">
+														<replacement id="dockablesingle ConsolePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>ConsolePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+											</children>
+										</child>
+									</children>
+								</root>
+								<root name="external">
+									<layout factory="predefined">
+										<replacement id="rootexternal"/>
+										<delegate id="delegate_screen dock"/>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol north">
+									<layout factory="predefined">
+										<replacement id="rootccontrol north"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="SOUTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol south">
+									<layout factory="predefined">
+										<replacement id="rootccontrol south"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="NORTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol east">
+									<layout factory="predefined">
+										<replacement id="rootccontrol east"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="WEST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol west">
+									<layout factory="predefined">
+										<replacement id="rootccontrol west"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="EAST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+							</roots>
+							<children>
+								<child key="single CheatSheetView" location="false">
+									<layout>
+										<layout factory="predefined" placeholder="dock.single.CheatSheetView">
+											<replacement id="dockablesingle CheatSheetView"/>
+											<delegate id="delegate_ccontrol backup factory id">
+												<id>CheatSheetView</id>
+											</delegate>
+										</layout>
+										<children ignore="false"/>
+									</layout>
+								</child>
+							</children>
+						</base>
+						<modes>
+							<dockables>
+								<entry id="single ConsolePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.ConsolePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+												<property factory="StackDockPropertyFactory">
+													<index>1</index>
+													<placeholder>dock.single.ConsolePanel</placeholder>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single EntityPropertiesView" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityPropertiesView</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<node location="BOTTOM" size="0.5" id="1272669100797"/>
+														<leaf id="1272669100796"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single RadioMessagePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.RadioMessagePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single CheatSheetView">
+									<history/>
+									<properties/>
+								</entry>
+								<entry id="single EntityListPanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityListPanel</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<leaf id="1272669100765"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="multi __PVD1" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPathProperty">
+													<leaf id="1272669100718"/>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+							</dockables>
+							<modes>
+								<entry id="dock.mode.maximized"/>
+							</modes>
+						</modes>
+						<multi-factories>
+							<factory id="pvd">
+								<dockable id="__PVD1"/>
+							</factory>
+						</multi-factories>
+					</setting>
+					<setting name="t2">
+						<base>
+							<roots>
+								<root name="ccontrol center">
+									<layout factory="predefined">
+										<replacement id="rootccontrol center"/>
+										<delegate id="delegate_SplitDockStationFactory">
+											<node nodeId="1272669100781" orientation="HORIZONTAL" divider="0.8477366255144033">
+												<node nodeId="1272669100876" orientation="VERTICAL" divider="0.7503586800573888">
+													<leaf id="1" nodeId="1272669100718"/>
+													<leaf id="3" nodeId="1272669100875">
+														<placeholders>
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</placeholders>
+														<placeholder-map>
+															<version>0</version>
+															<format>dock.PlaceholderList</format>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.RadioMessagePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.ConsolePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+														</placeholder-map>
+													</leaf>
+												</node>
+												<node nodeId="1272669100797" orientation="VERTICAL" divider="0.5">
+													<leaf id="0" nodeId="1272669100765">
+														<placeholders>
+															<placeholder>dock.single.EntityListPanel</placeholder>
+														</placeholders>
+													</leaf>
+													<leaf id="2" nodeId="1272669100796">
+														<placeholders>
+															<placeholder>dock.single.EntityPropertiesView</placeholder>
+														</placeholders>
+													</leaf>
+												</node>
+											</node>
+										</delegate>
+									</layout>
+									<children ignore="false">
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityListPanel">
+												<replacement id="dockablesingle EntityListPanel"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityListPanel</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_pvd">
+												<id>__PVD1</id>
+												<multiple>PVD1</multiple>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityPropertiesView">
+												<replacement id="dockablesingle EntityPropertiesView"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityPropertiesView</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_StackDockStationFactory">
+												<selected>1</selected>
+												<placeholders>
+													<version>0</version>
+													<format>dock.PlaceholderList</format>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">0</item>
+														<item key="dock.index" type="i">0</item>
+														<item key="dock.placeholder" type="s">dock.single.RadioMessagePanel</item>
+													</entry>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">1</item>
+														<item key="dock.index" type="i">1</item>
+														<item key="dock.placeholder" type="s">dock.single.ConsolePanel</item>
+													</entry>
+												</placeholders>
+											</layout>
+											<children ignore="false">
+												<child>
+													<layout factory="predefined" placeholder="dock.single.RadioMessagePanel">
+														<replacement id="dockablesingle RadioMessagePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>RadioMessagePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+												<child>
+													<layout factory="predefined" placeholder="dock.single.ConsolePanel">
+														<replacement id="dockablesingle ConsolePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>ConsolePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+											</children>
+										</child>
+									</children>
+								</root>
+								<root name="external">
+									<layout factory="predefined">
+										<replacement id="rootexternal"/>
+										<delegate id="delegate_screen dock"/>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol north">
+									<layout factory="predefined">
+										<replacement id="rootccontrol north"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="SOUTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol south">
+									<layout factory="predefined">
+										<replacement id="rootccontrol south"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="NORTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol east">
+									<layout factory="predefined">
+										<replacement id="rootccontrol east"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="WEST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol west">
+									<layout factory="predefined">
+										<replacement id="rootccontrol west"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="EAST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+							</roots>
+							<children>
+								<child key="single CheatSheetView" location="false">
+									<layout>
+										<layout factory="predefined" placeholder="dock.single.CheatSheetView">
+											<replacement id="dockablesingle CheatSheetView"/>
+											<delegate id="delegate_ccontrol backup factory id">
+												<id>CheatSheetView</id>
+											</delegate>
+										</layout>
+										<children ignore="false"/>
+									</layout>
+								</child>
+							</children>
+						</base>
+						<modes>
+							<dockables>
+								<entry id="single ConsolePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.ConsolePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+												<property factory="StackDockPropertyFactory">
+													<index>1</index>
+													<placeholder>dock.single.ConsolePanel</placeholder>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single EntityPropertiesView" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityPropertiesView</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<node location="BOTTOM" size="0.5" id="1272669100797"/>
+														<leaf id="1272669100796"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single RadioMessagePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.RadioMessagePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single CheatSheetView">
+									<history/>
+									<properties/>
+								</entry>
+								<entry id="single EntityListPanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityListPanel</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<leaf id="1272669100765"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="multi __PVD1" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPathProperty">
+													<leaf id="1272669100718"/>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+							</dockables>
+							<modes>
+								<entry id="dock.mode.maximized"/>
+							</modes>
+						</modes>
+						<multi-factories>
+							<factory id="pvd">
+								<dockable id="__PVD1"/>
+							</factory>
+						</multi-factories>
+					</setting>
+					<setting name="t1">
+						<base>
+							<roots>
+								<root name="ccontrol center">
+									<layout factory="predefined">
+										<replacement id="rootccontrol center"/>
+										<delegate id="delegate_SplitDockStationFactory">
+											<node nodeId="1272669100781" orientation="HORIZONTAL" divider="0.5277777777777778">
+												<node nodeId="1272669100876" orientation="VERTICAL" divider="0.7">
+													<leaf id="1" nodeId="1272669100718"/>
+													<leaf id="3" nodeId="1272669100875">
+														<placeholders>
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</placeholders>
+														<placeholder-map>
+															<version>0</version>
+															<format>dock.PlaceholderList</format>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.RadioMessagePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+															<entry>
+																<key shared="false">
+																	<placeholder>dock.single.ConsolePanel</placeholder>
+																</key>
+																<item key="convert" type="b">true</item>
+																<item key="convert-keys" type="a"/>
+															</entry>
+														</placeholder-map>
+													</leaf>
+												</node>
+												<node nodeId="1272669100797" orientation="VERTICAL" divider="0.5">
+													<leaf id="0" nodeId="1272669100765">
+														<placeholders>
+															<placeholder>dock.single.EntityListPanel</placeholder>
+														</placeholders>
+													</leaf>
+													<leaf id="2" nodeId="1272669100796">
+														<placeholders>
+															<placeholder>dock.single.EntityPropertiesView</placeholder>
+														</placeholders>
+													</leaf>
+												</node>
+											</node>
+										</delegate>
+									</layout>
+									<children ignore="false">
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityListPanel">
+												<replacement id="dockablesingle EntityListPanel"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityListPanel</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_pvd">
+												<id>__PVD1</id>
+												<multiple>PVD1</multiple>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="predefined" placeholder="dock.single.EntityPropertiesView">
+												<replacement id="dockablesingle EntityPropertiesView"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>EntityPropertiesView</id>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+										<child>
+											<layout factory="delegate_StackDockStationFactory">
+												<selected>1</selected>
+												<placeholders>
+													<version>0</version>
+													<format>dock.PlaceholderList</format>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.RadioMessagePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">0</item>
+														<item key="dock.index" type="i">0</item>
+														<item key="dock.placeholder" type="s">dock.single.RadioMessagePanel</item>
+													</entry>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.ConsolePanel</placeholder>
+														</key>
+														<item key="convert" type="b">true</item>
+														<item key="convert-keys" type="a">
+															<item type="s">id</item>
+															<item type="s">index</item>
+															<item type="s">placeholder</item>
+														</item>
+														<item key="dock.id" type="i">1</item>
+														<item key="dock.index" type="i">1</item>
+														<item key="dock.placeholder" type="s">dock.single.ConsolePanel</item>
+													</entry>
+												</placeholders>
+											</layout>
+											<children ignore="false">
+												<child>
+													<layout factory="predefined" placeholder="dock.single.RadioMessagePanel">
+														<replacement id="dockablesingle RadioMessagePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>RadioMessagePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+												<child>
+													<layout factory="predefined" placeholder="dock.single.ConsolePanel">
+														<replacement id="dockablesingle ConsolePanel"/>
+														<delegate id="delegate_ccontrol backup factory id">
+															<id>ConsolePanel</id>
+														</delegate>
+													</layout>
+													<children ignore="false"/>
+												</child>
+											</children>
+										</child>
+									</children>
+								</root>
+								<root name="external">
+									<layout factory="predefined">
+										<replacement id="rootexternal"/>
+										<delegate id="delegate_screen dock"/>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol north">
+									<layout factory="predefined">
+										<replacement id="rootccontrol north"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="SOUTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol south">
+									<layout factory="predefined">
+										<replacement id="rootccontrol south"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="NORTH"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol east">
+									<layout factory="predefined">
+										<replacement id="rootccontrol east"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="WEST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+								<root name="ccontrol west">
+									<layout factory="predefined">
+										<replacement id="rootccontrol west"/>
+										<delegate id="delegate_flap dock">
+											<window auto="false" direction="EAST"/>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+											</placeholders>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</root>
+							</roots>
+							<children>
+								<child key="single CheatSheetView" location="false">
+									<layout>
+										<layout factory="predefined" placeholder="dock.single.CheatSheetView">
+											<replacement id="dockablesingle CheatSheetView"/>
+											<delegate id="delegate_ccontrol backup factory id">
+												<id>CheatSheetView</id>
+											</delegate>
+										</layout>
+										<children ignore="false"/>
+									</layout>
+								</child>
+							</children>
+						</base>
+						<modes>
+							<dockables>
+								<entry id="single ConsolePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.ConsolePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+												<property factory="StackDockPropertyFactory">
+													<index>1</index>
+													<placeholder>dock.single.ConsolePanel</placeholder>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single EntityPropertiesView" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityPropertiesView</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<node location="BOTTOM" size="0.5" id="1272669100797"/>
+														<leaf id="1272669100796"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single RadioMessagePanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.RadioMessagePanel</placeholder>
+													<backup-path>
+														<node location="LEFT" size="0.8" id="1272669100781"/>
+														<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+														<leaf id="1272669100875"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="single CheatSheetView">
+									<history/>
+									<properties/>
+								</entry>
+								<entry id="single EntityListPanel" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPlaceholderProperty">
+													<placeholder>dock.single.EntityListPanel</placeholder>
+													<backup-path>
+														<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+														<leaf id="1272669100765"/>
+													</backup-path>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+								<entry id="multi __PVD1" current="dock.mode.normal">
+									<history>
+										<mode>dock.mode.normal</mode>
+									</history>
+									<properties>
+										<property id="dock.mode.normal">
+											<mode>dock.mode.normal</mode>
+											<root>ccontrol center</root>
+											<location>
+												<property factory="SplitDockPathProperty">
+													<leaf id="1272669100718"/>
+												</property>
+											</location>
+										</property>
+									</properties>
+								</entry>
+							</dockables>
+							<modes>
+								<entry id="dock.mode.maximized"/>
+							</modes>
+						</modes>
+						<multi-factories>
+							<factory id="pvd">
+								<dockable id="__PVD1"/>
+							</factory>
+						</multi-factories>
+					</setting>
+				</settings>
+				<current name="t3">
+					<base>
+						<roots>
+							<root name="ccontrol center">
+								<layout factory="predefined">
+									<replacement id="rootccontrol center"/>
+									<delegate id="delegate_SplitDockStationFactory">
+										<node nodeId="1272669100781" orientation="HORIZONTAL" divider="0.8477366255144033">
+											<node nodeId="1272669100876" orientation="VERTICAL" divider="0.22381635581061693">
+												<leaf id="0" nodeId="1272669100718"/>
+												<leaf id="3" nodeId="1272669100875">
+													<placeholders>
+														<placeholder>dock.single.RadioMessagePanel</placeholder>
+														<placeholder>dock.single.ConsolePanel</placeholder>
+													</placeholders>
+													<placeholder-map>
+														<version>0</version>
+														<format>dock.PlaceholderList</format>
+														<entry>
+															<key shared="false">
+																<placeholder>dock.single.RadioMessagePanel</placeholder>
+															</key>
+															<item key="convert" type="b">true</item>
+															<item key="convert-keys" type="a"/>
+														</entry>
+														<entry>
+															<key shared="false">
+																<placeholder>dock.single.ConsolePanel</placeholder>
+															</key>
+															<item key="convert" type="b">true</item>
+															<item key="convert-keys" type="a"/>
+														</entry>
+													</placeholder-map>
+												</leaf>
+											</node>
+											<node nodeId="1272669100797" orientation="VERTICAL" divider="0.5">
+												<leaf id="2" nodeId="1272669100765">
+													<placeholders>
+														<placeholder>dock.single.EntityListPanel</placeholder>
+													</placeholders>
+												</leaf>
+												<leaf id="1" nodeId="1272669100796">
+													<placeholders>
+														<placeholder>dock.single.EntityPropertiesView</placeholder>
+													</placeholders>
+												</leaf>
+											</node>
+										</node>
+									</delegate>
+								</layout>
+								<children ignore="false">
+									<child>
+										<layout factory="delegate_pvd">
+											<id>__PVD1</id>
+											<multiple>PVD1</multiple>
+										</layout>
+										<children ignore="false"/>
+									</child>
+									<child>
+										<layout factory="predefined" placeholder="dock.single.EntityPropertiesView">
+											<replacement id="dockablesingle EntityPropertiesView"/>
+											<delegate id="delegate_ccontrol backup factory id">
+												<id>EntityPropertiesView</id>
+											</delegate>
+										</layout>
+										<children ignore="false"/>
+									</child>
+									<child>
+										<layout factory="predefined" placeholder="dock.single.EntityListPanel">
+											<replacement id="dockablesingle EntityListPanel"/>
+											<delegate id="delegate_ccontrol backup factory id">
+												<id>EntityListPanel</id>
+											</delegate>
+										</layout>
+										<children ignore="false"/>
+									</child>
+									<child>
+										<layout factory="delegate_StackDockStationFactory">
+											<selected>1</selected>
+											<placeholders>
+												<version>0</version>
+												<format>dock.PlaceholderList</format>
+												<entry>
+													<key shared="false">
+														<placeholder>dock.single.RadioMessagePanel</placeholder>
+													</key>
+													<item key="convert" type="b">true</item>
+													<item key="convert-keys" type="a">
+														<item type="s">id</item>
+														<item type="s">index</item>
+														<item type="s">placeholder</item>
+													</item>
+													<item key="dock.id" type="i">0</item>
+													<item key="dock.index" type="i">0</item>
+													<item key="dock.placeholder" type="s">dock.single.RadioMessagePanel</item>
+												</entry>
+												<entry>
+													<key shared="false">
+														<placeholder>dock.single.ConsolePanel</placeholder>
+													</key>
+													<item key="convert" type="b">true</item>
+													<item key="convert-keys" type="a">
+														<item type="s">id</item>
+														<item type="s">index</item>
+														<item type="s">placeholder</item>
+													</item>
+													<item key="dock.id" type="i">1</item>
+													<item key="dock.index" type="i">1</item>
+													<item key="dock.placeholder" type="s">dock.single.ConsolePanel</item>
+												</entry>
+											</placeholders>
+										</layout>
+										<children ignore="false">
+											<child>
+												<layout factory="predefined" placeholder="dock.single.RadioMessagePanel">
+													<replacement id="dockablesingle RadioMessagePanel"/>
+													<delegate id="delegate_ccontrol backup factory id">
+														<id>RadioMessagePanel</id>
+													</delegate>
+												</layout>
+												<children ignore="false"/>
+											</child>
+											<child>
+												<layout factory="predefined" placeholder="dock.single.ConsolePanel">
+													<replacement id="dockablesingle ConsolePanel"/>
+													<delegate id="delegate_ccontrol backup factory id">
+														<id>ConsolePanel</id>
+													</delegate>
+												</layout>
+												<children ignore="false"/>
+											</child>
+										</children>
+									</child>
+								</children>
+							</root>
+							<root name="external">
+								<layout factory="predefined">
+									<replacement id="rootexternal"/>
+									<delegate id="delegate_screen dock"/>
+								</layout>
+								<children ignore="false"/>
+							</root>
+							<root name="ccontrol north">
+								<layout factory="predefined">
+									<replacement id="rootccontrol north"/>
+									<delegate id="delegate_flap dock">
+										<window auto="false" direction="SOUTH"/>
+										<placeholders>
+											<version>0</version>
+											<format>dock.PlaceholderList</format>
+										</placeholders>
+									</delegate>
+								</layout>
+								<children ignore="false"/>
+							</root>
+							<root name="ccontrol south">
+								<layout factory="predefined">
+									<replacement id="rootccontrol south"/>
+									<delegate id="delegate_flap dock">
+										<window auto="false" direction="NORTH"/>
+										<placeholders>
+											<version>0</version>
+											<format>dock.PlaceholderList</format>
+										</placeholders>
+									</delegate>
+								</layout>
+								<children ignore="false"/>
+							</root>
+							<root name="ccontrol east">
+								<layout factory="predefined">
+									<replacement id="rootccontrol east"/>
+									<delegate id="delegate_flap dock">
+										<window auto="false" direction="WEST"/>
+										<placeholders>
+											<version>0</version>
+											<format>dock.PlaceholderList</format>
+										</placeholders>
+									</delegate>
+								</layout>
+								<children ignore="false"/>
+							</root>
+							<root name="ccontrol west">
+								<layout factory="predefined">
+									<replacement id="rootccontrol west"/>
+									<delegate id="delegate_flap dock">
+										<window auto="false" direction="EAST"/>
+										<placeholders>
+											<version>0</version>
+											<format>dock.PlaceholderList</format>
+										</placeholders>
+									</delegate>
+								</layout>
+								<children ignore="false"/>
+							</root>
+						</roots>
+						<children>
+							<child key="single CheatSheetView" location="false">
+								<layout>
+									<layout factory="predefined" placeholder="dock.single.CheatSheetView">
+										<replacement id="dockablesingle CheatSheetView"/>
+										<delegate id="delegate_ccontrol backup factory id">
+											<id>CheatSheetView</id>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
+								</layout>
+							</child>
+						</children>
+					</base>
+					<modes>
+						<dockables>
+							<entry id="single ConsolePanel" current="dock.mode.normal">
+								<history>
+									<mode>dock.mode.normal</mode>
+								</history>
+								<properties>
+									<property id="dock.mode.normal">
+										<mode>dock.mode.normal</mode>
+										<root>ccontrol center</root>
+										<location>
+											<property factory="SplitDockPlaceholderProperty">
+												<placeholder>dock.single.ConsolePanel</placeholder>
+												<backup-path>
+													<node location="LEFT" size="0.8" id="1272669100781"/>
+													<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+													<leaf id="1272669100875"/>
+												</backup-path>
+											</property>
+											<property factory="StackDockPropertyFactory">
+												<index>1</index>
+												<placeholder>dock.single.ConsolePanel</placeholder>
+											</property>
+										</location>
+									</property>
+								</properties>
+							</entry>
+							<entry id="single EntityPropertiesView" current="dock.mode.normal">
+								<history>
+									<mode>dock.mode.normal</mode>
+								</history>
+								<properties>
+									<property id="dock.mode.normal">
+										<mode>dock.mode.normal</mode>
+										<root>ccontrol center</root>
+										<location>
+											<property factory="SplitDockPlaceholderProperty">
+												<placeholder>dock.single.EntityPropertiesView</placeholder>
+												<backup-path>
+													<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+													<node location="BOTTOM" size="0.5" id="1272669100797"/>
+													<leaf id="1272669100796"/>
+												</backup-path>
+											</property>
+										</location>
+									</property>
+								</properties>
+							</entry>
+							<entry id="single RadioMessagePanel" current="dock.mode.normal">
+								<history>
+									<mode>dock.mode.normal</mode>
+								</history>
+								<properties>
+									<property id="dock.mode.normal">
+										<mode>dock.mode.normal</mode>
+										<root>ccontrol center</root>
+										<location>
+											<property factory="SplitDockPlaceholderProperty">
+												<placeholder>dock.single.RadioMessagePanel</placeholder>
+												<backup-path>
+													<node location="LEFT" size="0.8" id="1272669100781"/>
+													<node location="BOTTOM" size="0.30000000000000004" id="1272669100876"/>
+													<leaf id="1272669100875"/>
+												</backup-path>
+											</property>
+										</location>
+									</property>
+								</properties>
+							</entry>
+							<entry id="single CheatSheetView">
+								<history/>
+								<properties/>
+							</entry>
+							<entry id="single EntityListPanel" current="dock.mode.normal">
+								<history>
+									<mode>dock.mode.normal</mode>
+								</history>
+								<properties>
+									<property id="dock.mode.normal">
+										<mode>dock.mode.normal</mode>
+										<root>ccontrol center</root>
+										<location>
+											<property factory="SplitDockPlaceholderProperty">
+												<placeholder>dock.single.EntityListPanel</placeholder>
+												<backup-path>
+													<node location="RIGHT" size="0.19999999999999996" id="1272669100781"/>
+													<leaf id="1272669100765"/>
+												</backup-path>
+											</property>
+										</location>
+									</property>
+								</properties>
+							</entry>
+							<entry id="multi __PVD1" current="dock.mode.normal">
+								<history>
+									<mode>dock.mode.normal</mode>
+								</history>
+								<properties>
+									<property id="dock.mode.normal">
+										<mode>dock.mode.normal</mode>
+										<root>ccontrol center</root>
+										<location>
+											<property factory="SplitDockPathProperty">
+												<leaf id="1272669100718"/>
+											</property>
+										</location>
+									</property>
+								</properties>
+							</entry>
+						</dockables>
+						<modes>
+							<entry id="dock.mode.maximized"/>
+						</modes>
+					</modes>
+					<multi-factories>
+						<factory id="pvd">
+							<dockable id="__PVD1"/>
+						</factory>
+					</multi-factories>
+				</current>
+			</frontend>
+		</resource>
+		<resource name="ccontrol.preferences"/>
+		<resource name="dock.ui.ThemeMap">
+			<key>smooth</key>
+		</resource>
+	</resources>
+</config>

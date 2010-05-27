@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sim Jr Core Plugin Tests
+Bundle-SymbolicName: com.soartech.simjr.core.test
+Bundle-Version: 2.2.0.qualifier
+Bundle-Vendor: Soar Technology, Inc.
+Fragment-Host: com.soartech.simjr.core;bundle-version="2.2.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit;bundle-version="3.8.2"
+Export-Package: com.soartech.simjr.console,
+ com.soartech.simjr.core,
+ com.soartech.simjr.scenario,
+ com.soartech.simjr.sim,
+ com.soartech.simjr.sim.entities,
+ com.soartech.simjr.util,
+ com.soartech.simjr.weapons

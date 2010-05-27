@@ -1,0 +1,67 @@
+<!--
+ Copyright (c) 2010, Soar Technology, Inc.
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ 
+ * Neither the name of Soar Technology, Inc. nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without the specific prior written permission of Soar Technology, Inc.
+ 
+ THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<html>
+<head>
+<script type="text/javascript">
+function createManualController()
+{
+   getActionManager().executeAction("com.soartech.simjr.ui.actions.CreateManualControllerAction");
+}
+</script>
+</head>
+<body>
+<h2>About Sim Jr Cheat Sheets
+<p><b>This is a Sim Jr cheat sheet</b> defined in <i>simple/cheatsheet.html</i>. It's just normal HTML. Links can include embedded Sim Jr JavaScript by using the <b>simjr:</b> scheme like this:</p>
+<pre>
+   &lt;a href="simjr:simulation.setPaused(false)"&gt;Run&lt;/a&gt;
+</pre>
+
+Additional JavaScript functions can be defined in a <code>&lt;script&gt;</code> tag in <code>&lt;head&gt;</code> as usual.
+
+<p>Here are some examples of things you can do:</p>
+
+<ul>
+<li>You can <a href="simjr:simulation.setPaused(false)">run</a> the simulation</li>
+<li>You can <a href="simjr:simulation.setPaused(true)">pause</a> the simulation</li>
+<li>You can <a href="simjr:showEntity(null,%22hello%22)">center the view on an entity</a></li>
+
+<li>You can 
+	<a href="simjr:selectEntity(%22hello%22)">select an entity</a>
+   and 
+    <a href="simjr:createManualController()">
+    create a manual controller</a>
+   for it.
+</li>
+
+<li>You can even create <a href="http://www.google.com">links</a> to external sites</li>
+</ul>
+</body>
+</html>

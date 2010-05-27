@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
+  <simjr:metadata>
+    <simjr:name>Sim Jr Web UI Test</simjr:name>
+    <simjr:description />
+  </simjr:metadata>
+  <simjr:terrain>
+    <simjr:origin simjr:latitude="42.3" simjr:longitude="-83.0" simjr:altitude="0.0" />
+  </simjr:terrain>
+  <simjr:entities>
+    <simjr:entity simjr:name="truck" simjr:prototype="truck" simjr:force="other" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30965422758247" simjr:longitude="-83.00221063000863" simjr:altitude="0.0041767507791519165" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="tank" simjr:prototype="tank" simjr:force="neutral" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30574037953574" simjr:longitude="-83.01661284965535" simjr:altitude="0.004176010377705097" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);
+simjr.entities.capabilities.add(self, new RouteFollower(), {route: "a-c", speed:15});
+</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="rwa" simjr:prototype="rwa" simjr:force="opposing" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31470993662854" simjr:longitude="-82.99421736048173" simjr:altitude="0.35949237272143364" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="a" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.305656722931715" simjr:longitude="-83.02228724570786" simjr:altitude="1.2439915211871266" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="b" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31582686841574" simjr:longitude="-83.01780067028642" simjr:altitude="1.4679085109382868" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="c" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31977047354725" simjr:longitude="-82.99970479710146" simjr:altitude="1.146166943013668" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="a-c" simjr:prototype="route" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="a" />
+        <simjr:point simjr:name="b" />
+        <simjr:point simjr:name="c" />
+      </simjr:points>
+    </simjr:entity>
+    <simjr:entity simjr:name="d" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31360952340601" simjr:longitude="-83.00813426514651" simjr:altitude="1.391495507210493" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="e" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30277073364295" simjr:longitude="-83.00994719359207" simjr:altitude="1.816790921613574" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="f" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30831104308221" simjr:longitude="-82.99548297634354" simjr:altitude="1.4261671183630824" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="b-f" simjr:prototype="route" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="b" />
+        <simjr:point simjr:name="d" />
+        <simjr:point simjr:name="e" />
+        <simjr:point simjr:name="f" />
+      </simjr:points>
+    </simjr:entity>
+    <simjr:entity simjr:name="boat" simjr:prototype="cruiser" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31790805641638" simjr:longitude="-83.024038219844" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="nw" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.313810351606485" simjr:longitude="-83.01683665743914" simjr:altitude="0.36342170275747776" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="ne" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.31278485093296" simjr:longitude="-83.00992694236514" simjr:altitude="0.2965860581025481" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="sw" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30808775683155" simjr:longitude="-83.01938052762557" simjr:altitude="0.346654599532485" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="se" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false">
+      <simjr:location>
+        <simjr:lla simjr:latitude="42.30673995625346" simjr:longitude="-83.01094412893137" simjr:altitude="0.4093008376657963" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="area" simjr:prototype="area" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="ne" />
+        <simjr:point simjr:name="nw" />
+        <simjr:point simjr:name="sw" />
+        <simjr:point simjr:name="se" />
+      </simjr:points>
+    </simjr:entity>
+  </simjr:entities>
+  <simjr:preLoadScript simjr:type="text/javascript">// Commonly used imports and scripts
+importPackage(Packages.com.soartech.simjr.controllers);
+requireScript("ui");
+requireScript("terrain");
+requireScript("polygons");
+requireScript("weapons");
+
+// Set up commonly used services
+// configureSoar();
+// configureVista();
+// var ss = configureSoarSpeak("simjr.helosoar.sagis.grammar.nuance", "Dragon34", "34");
+// if(ss != null) ss.tts("*", "66");</simjr:preLoadScript>
+  <simjr:postLoadScript simjr:type="text/javascript">// createCheatSheet(); // load cheatsheet.html
+var pvd = getActivePlanViewDisplay();
+if(pvd != null) { pvd.showAll(); }
+
+requireScript("web");
+simjr.web.install();
+simjr.web.openBrowser();
+</simjr:postLoadScript>
+</simjr:scenario>
+
