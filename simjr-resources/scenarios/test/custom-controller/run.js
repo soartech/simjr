@@ -28,6 +28,11 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */ 
+
+/*
+ * An example of implementing a custom entity behavior in pure JavaScript.
+ * Drag around "first" to see how "second" follows it.
+ */
 requireScript("polygons");
 requireScript("ui");
 
@@ -41,47 +46,58 @@ requireScript("ui");
        { name: "g", x: -100, y: 100 }
     ]);
     
-    // Create a couple of waypoints to avoid
-    simjr.polygons.waypoint({ name: "b", properties: { "shape.line.color" : java.awt.Color.RED }});
-    simjr.polygons.waypoint({ name:"f", x: 0, y: 100, properties: { "shape.line.color" : java.awt.Color.RED } });
-    
     // Create a truck to drive the route
     simjr.entities.create({
-        name:      "avoider",
+        name:      "first",
         prototype: "truck",
         x:         -100,     // start at point A
         capabilities: [
-            new Packages.com.soartech.simjr.controllers.RouteFollower(),
-            new Packages.com.soartech.simjr.controllers.Avoider()
+            new Packages.com.soartech.simjr.controllers.RouteFollower()
         ],
         properties: {
-            "routeFollower.route" : "route",
-            // Set the points to avoid. Can be an entity, an entity name, or a location
-            "avoider.points": createList(["b", new Vector3(100, 50, 0), simjr.entities("f")]),
-            "avoider.radius": 20.0
+            "routeFollower.route" : "route"
         }
     });
     
-    // reverse route
-    simjr.polygons.route("route2", ["c", "a", "g", "e"]);
-    
-    // Create another truck that drives route in reverse and avoids first truck
-    simjr.entities.create({
-        name:      "avoider2",
+    // Create another truck
+    var second = simjr.entities.create({
+        name:      "second",
         prototype: "truck",
-        x:         100,     // start at point B
-        capabilities: [
-            new Packages.com.soartech.simjr.controllers.RouteFollower(),
-            new Packages.com.soartech.simjr.controllers.Avoider()
-        ],
+        x:         100,
+        y:         100,
+        capabilities: [],
         properties: {
-            "routeFollower.route" : "route2",
-            "routeFollower.speed" : 5,
-            // Set the points to avoid. Can be an entity, an entity name, or a location
-            "avoider.points": createList(["b", "avoider"]),
-            "avoider.radius": 30.0
+            "target" : "first"
         }
     });
+    
+    // Implement a simple following behavior for the second truck. It will
+    // follow the first truck wherever it goes. We use EntityController 
+    // because it has Tickable built-in.
+    second.addCapability(new EntityController({
+        getEntity: function () { return second; },
+        attach: function(e) {},
+        detach: function() {},
+        
+        tick: function (dt) { 
+        	var e = this.getEntity();
+        	// Look at the target property to see what we should follow
+            var target = e.getSimulation().getEntity(e.getProperty("target"));
+            
+            // Calculate new velocity vector to the target
+            var dir = target.position.subtract(e.position);
+            dir = dir.normalized().multiply(10.0);
+            e.velocity = dir;
+            
+            // Set the orientation to point at the target
+            e.orientation = java.lang.Math.atan2(dir.y, dir.x);
+        },
+        
+        openDebugger: function() { 
+            logger.info("JavaScript debugging not supported");
+        },
+        getAdapter: function(klass) { return null; }
+    }));
     
     getActivePlanViewDisplay().showAll();
 })();
