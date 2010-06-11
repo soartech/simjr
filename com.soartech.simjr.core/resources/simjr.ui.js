@@ -55,8 +55,8 @@ function getMainFrame()
 
 function getActivePlanViewDisplay()
 {
-    var mf = getMainFrame();
-    return mf != null ? mf.getActivePlanViewDisplay() : null;
+    var pvdp = services.findService(java.lang.Class.forName("com.soartech.simjr.ui.pvd.PlanViewDisplayProvider"));
+    return pvdp != null ? pvdp.getActivePlanViewDisplay() : null;
 }
 
 /**

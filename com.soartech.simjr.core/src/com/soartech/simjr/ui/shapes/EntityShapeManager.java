@@ -91,6 +91,10 @@ public class EntityShapeManager
     public EntityShapeManager(Simulation simulation, ShapeSystem shapeSystem, 
                               SwingPrimitiveRendererFactory shapeFactory)
     {
+        if(simulation == null)
+        {
+            throw new IllegalArgumentException("simulation must not be null");
+        }
         this.simulation = simulation;
         this.shapeSystem = shapeSystem;
         this.shapeFactory = shapeFactory;
