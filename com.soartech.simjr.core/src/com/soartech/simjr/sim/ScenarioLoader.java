@@ -71,6 +71,13 @@ public class ScenarioLoader
         this.services = services;
     }
     
+    /**
+     * Load a scenario from a file
+     * 
+     * @param file the Sim Jr XML scenario file (*.sjx)
+     * @param progress
+     * @throws SimulationException
+     */
     public void loadScenario(File file, ProgressMonitor progress) throws SimulationException
     {
         this.model = new Model();
@@ -88,6 +95,32 @@ public class ScenarioLoader
         catch (ModelException e)
         {
             throw new SimulationException(e);
+        }
+        finally
+        {
+            this.model = null;
+        }
+    }
+    
+    /**
+     * Load a scenario from a pre-existing scenario model
+     * 
+     * @param model the model
+     * @param progress 
+     * @throws SimulationException
+     */
+    public void loadScenario(Model model, ProgressMonitor progress) throws SimulationException
+    {
+        this.model = model;
+        try
+        {
+            logger.info("Loading scenario from '" + model.getFile() + "'");
+            initializeTerrain(progress);
+            runPrePostLoadScript(progress, model.getPreLoadScript(), "pre");
+            loadEntities(progress);
+            runPrePostLoadScript(progress, model.getPostLoadScript(), "post");
+            loadCheatSheet();
+            logger.info("Finished loading scenario.");
         }
         finally
         {
@@ -232,6 +265,11 @@ public class ScenarioLoader
 
     private void loadCheatSheet()
     {
+        if(model.getFile() == null)
+        {
+            return;
+        }
+        
         final File cheatSheetFile = new File(model.getFile().getParentFile(), "cheatsheet.html");
         if(cheatSheetFile.exists())
         {
