@@ -95,6 +95,7 @@ public class EntityListPanel extends DefaultSingleCDockable
         
     private Map<String, DefaultMutableTreeNode> categoryNodes = new HashMap<String, DefaultMutableTreeNode>();
     private Map<Entity, DefaultMutableTreeNode> entityNodes = new HashMap<Entity, DefaultMutableTreeNode>();
+    private boolean ignoreTreeSelectionChange = false;
     
     public EntityListPanel(SimulationApplication services)
     {
@@ -207,6 +208,10 @@ public class EntityListPanel extends DefaultSingleCDockable
     
     private void listSelectionChanged()
     {
+        if(ignoreTreeSelectionChange)
+        {
+            return;
+        }
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) entityTree.getLastSelectedPathComponent();
         if(node == null)
         {
@@ -244,7 +249,17 @@ public class EntityListPanel extends DefaultSingleCDockable
         }
         TreePath path = new TreePath(node.getPath());
         entityTree.scrollPathToVisible(path);
-        entityTree.getSelectionModel().setSelectionPath(path);
+        
+        try
+        {
+            ignoreTreeSelectionChange = true;
+            entityTree.getSelectionModel().setSelectionPath(path);
+        }
+        finally
+        {
+            ignoreTreeSelectionChange = false;
+        }
+            
     }
     
     private void safeUpdate()

@@ -49,6 +49,7 @@ import com.soartech.shapesystem.swing.SwingPrimitiveRendererFactory;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.SimulationListenerAdapter;
 import com.soartech.simjr.ui.SimulationImages;
@@ -63,12 +64,16 @@ public class EntityShapeManager
 {
     private static final Logger logger = Logger.getLogger(EntityShapeManager.class);
     
+    private static final String HIGHLIGHT_ID = "simjr.pvd.highlight";
+
     private Simulation simulation;
     private ShapeSystem shapeSystem;
     private SwingPrimitiveRendererFactory shapeFactory;
     private Listener listener = new Listener();
     private TimedShapeManager timedShapes;
     private Map<Entity, EntityShape> shapes = new HashMap<Entity, EntityShape>();
+    private List<String> selectionIds = new ArrayList<String>();
+    
     // This has to be a list to get Z-order to behave consistently for entities in
     // the same layer
     private List<Entity> addedEntities = Collections.synchronizedList(new ArrayList<Entity>());
@@ -183,18 +188,63 @@ public class EntityShapeManager
         
     }
     
-    
-    public Shape createSelection(String id, Entity selected)
+    public void updateSelection(List<Entity> entities)
     {
-        EntityShapeFactory factory = getShapeFactory(selected);
+        for(String selectionId : selectionIds)
+        {
+            shapeSystem.removeShape(selectionId);
+        }
+        selectionIds.clear();
+        
+        for(Entity e : entities)
+        {
+            if(e != null && EntityTools.isVisible(e))
+            {
+                createSelection(e);
+            }
+        }
+    }
+    
+    private Shape createSelection(Entity selected)
+    {
+        final String id = "selection." + selected.getName();
+        
+        final EntityShapeFactory factory = getShapeFactory(selected);
         if(factory == null || factory.equals(NullShapeFactory.FACTORY))
         {
             return null;
         }
         
         factory.initialize(this.shapeFactory);
-        Shape selection = factory.createSelection(id, selected);
-        shapeSystem.removeShape(id); // make sure an old one isn't lying around
+        final Shape selection = factory.createSelection(id, selected);
+        shapeSystem.addShape(selection);
+
+        selectionIds.add(id);
+        return selection;
+    }
+    
+    
+    public void highlightEntity(Entity entity)
+    {
+        shapeSystem.removeShape(HIGHLIGHT_ID);
+        if(entity != null && EntityTools.isVisible(entity))
+        {
+            createHighlight(entity);
+        }
+    }
+    
+    private Shape createHighlight(Entity selected)
+    {
+        final EntityShapeFactory factory = getShapeFactory(selected);
+        if(factory == null || factory.equals(NullShapeFactory.FACTORY))
+        {
+            return null;
+        }
+        
+        factory.initialize(this.shapeFactory);
+        final Shape selection = factory.createSelection(HIGHLIGHT_ID, selected);
+        selection.getStyle().setOpacity(selection.getStyle().getOpacity() / 2.0f);
+        
         shapeSystem.addShape(selection);
 
         return selection;

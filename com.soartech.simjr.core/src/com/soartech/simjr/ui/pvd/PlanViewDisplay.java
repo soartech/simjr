@@ -44,6 +44,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,6 @@ import org.apache.log4j.Logger;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
-import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
@@ -70,7 +70,6 @@ import com.soartech.simjr.radios.RadioHistory;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
-import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.Terrain;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
@@ -95,9 +94,6 @@ public class PlanViewDisplay extends JPanel
     
     private static final long serialVersionUID = 6151999888052532421L;
     
-    private static final String SELECTION_ID = "simjr.pvd.selection";
-    private static final String HIGHLIGHT_ID = "simjr.pvd.highlight";
-
 
     private ServiceManager app;
     private Simulation sim;
@@ -509,15 +505,15 @@ public class PlanViewDisplay extends JPanel
         return Adaptables.adapt(SelectionManager.findService(this.app).getSelectedObject(), Entity.class);
     }
     
+    private List<Entity> getSelectedEntities()
+    {
+        return Adaptables.adaptCollection(SelectionManager.findService(app).getSelection(), Entity.class);
+    }
+    
     private void appSelectionChanged(Object source)
     {
-        shapeSystem.removeShape(SELECTION_ID);
-        
-        final Entity e = getSelectedEntity();
-        if(e != null && EntityTools.isVisible(e))
-        {
-            shapeAdapter.createSelection(SELECTION_ID, e);
-        }
+        shapeAdapter.updateSelection(getSelectedEntities());
+        repaint();
     }
     
     private Entity getEntityAtScreenPoint(Point point)
@@ -528,26 +524,32 @@ public class PlanViewDisplay extends JPanel
     
     private void mouseMoved(MouseEvent e)
     {
-        shapeSystem.removeShape(HIGHLIGHT_ID);
-        final Entity entity = getEntityAtScreenPoint(e.getPoint());
-        if(entity != null && EntityTools.isVisible(entity))
-        {
-            final Shape highlight = shapeAdapter.createSelection(HIGHLIGHT_ID, entity);
-            highlight.getStyle().setOpacity(highlight.getStyle().getOpacity() / 2.0f);
-        }
+        shapeAdapter.highlightEntity(getEntityAtScreenPoint(e.getPoint()));
+        repaint();
     }
     
     private void mousePressed(MouseEvent e)
     {
-        final Entity selected = getEntityAtScreenPoint(e.getPoint());
-        SelectionManager.findService(this.app).setSelection(this, selected);
+        if(e.isControlDown())
+        {
+            return;
+        }
+        
+        final Entity entityUnderCursor = getEntityAtScreenPoint(e.getPoint());
+        final SelectionManager sm = SelectionManager.findService(this.app);
+        final List<Entity> selectedEntities = getSelectedEntities();
+        
+        if(SwingUtilities.isRightMouseButton(e) || !selectedEntities.contains(entityUnderCursor))
+        {
+            sm.setSelection(this, entityUnderCursor);
+        }
         
         if(SwingUtilities.isRightMouseButton(e))
         {
             return;
         }
         
-        draggingEntity = selected != null;
+        draggingEntity = entityUnderCursor != null;
         lastDragPoint.setLocation(e.getPoint());
         
         if(!draggingEntity)
@@ -559,6 +561,49 @@ public class PlanViewDisplay extends JPanel
         }
         
         repaint();
+    }
+    
+    /**
+     * Restores the cursor following a drag/pan operation.
+     */
+    private void mouseReleased(MouseEvent e)
+    {
+        requestFocus();
+        
+        // restore the cursor to standard pointer
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        
+        final SelectionManager sm = SelectionManager.findService(this.app);
+        final List<Entity> selectedEntities = getSelectedEntities();
+        final Entity entityUnderCursor = getEntityAtScreenPoint(e.getPoint());
+        
+        if(SwingUtilities.isRightMouseButton(e))
+        {
+            contextMenuPoint = e.getPoint();
+            contextMenu.show(this, e.getX(), e.getY());
+        }
+        else if(!e.isControlDown() && selectedEntities.size() > 1)
+        {
+            // Multi-selection management is done on mouse release.
+            sm.setSelection(this, entityUnderCursor);
+        }
+        else if(e.isControlDown())
+        {
+            // Multi-selection management is done on mouse release.
+            // Ctrl-click adds/removes an entity from the selection
+            final List<Object> newSel = new ArrayList<Object>(sm.getSelection());
+            if(!newSel.remove(entityUnderCursor))
+            {
+                newSel.add(0, entityUnderCursor);
+            }
+            sm.setSelection(this, newSel);
+        }
+        
+        draggingEntity = false;
+        
+        repaint();
+        
+        dragFinished();
     }
     
     private void dragEntity(MouseEvent e)
@@ -640,28 +685,6 @@ public class PlanViewDisplay extends JPanel
         repaint();
     }
     
-    /**
-     * Restores the cursor following a drag/pan operation.
-     */
-    private void mouseReleased(MouseEvent e)
-    {
-        requestFocus();
-        
-        // restore the cursor to standard pointer
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        
-        if(SwingUtilities.isRightMouseButton(e))
-        {
-            contextMenuPoint = e.getPoint();
-            contextMenu.show(this, e.getX(), e.getY());
-        }
-        draggingEntity = false;
-        
-        repaint();
-        
-        dragFinished();
-    }
-
     public boolean isDraggingEntity()
     {
         return draggingEntity;

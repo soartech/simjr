@@ -32,24 +32,30 @@
 package com.soartech.simjr.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.soartech.simjr.ProgressMonitor;
-import com.soartech.simjr.SimulationException;
-import com.soartech.simjr.adaptables.AbstractAdaptable;
+import com.soartech.simjr.services.AbstractSimulationService;
 import com.soartech.simjr.services.ConstructOnDemand;
 import com.soartech.simjr.services.ServiceManager;
-import com.soartech.simjr.services.SimulationService;
 
 /**
  * @author ray
  */
 @ConstructOnDemand
-public class SelectionManager extends AbstractAdaptable implements SimulationService
+public class SelectionManager extends AbstractSimulationService
 {
-    private List<SelectionManagerListener> listeners = new ArrayList<SelectionManagerListener>();
-    private List<Object> selection = new ArrayList<Object>();
+    private List<SelectionManagerListener> listeners = new CopyOnWriteArrayList<SelectionManagerListener>();
+    private List<Object> selection = new CopyOnWriteArrayList<Object>();
     
+    /**
+     * Find the selection manager in the given service manager. This is a 
+     * convenience method for scripting.
+     * 
+     * @param services the service manager
+     * @return the selection manager or {@code null} if not found
+     */
     public static SelectionManager findService(ServiceManager services)
     {
         return services.findService(SelectionManager.class);
@@ -63,31 +69,48 @@ public class SelectionManager extends AbstractAdaptable implements SimulationSer
         
     }
     
+    /**
+     * Add a listener for selection changes
+     * 
+     * @param listener the listener
+     */
     public void addListener(SelectionManagerListener listener)
     {
         listeners.add(listener);
     }
     
+    /**
+     * Remove a listener previously registered with {@link #addListener(SelectionManagerListener)}
+     * 
+     * @param listener the listener
+     */
     public void removeListener(SelectionManagerListener listener)
     {
         listeners.remove(listener);
     }
     
+    /**
+     * Set the current selection to a single object
+     *  
+     * @param source the source of the selection
+     * @param selectedObject the selected object
+     */
     public void setSelection(Object source, Object selectedObject)
     {
-        selection.clear();
-        if(selectedObject != null)
-        {
-            selection.add(selectedObject);
-        }
-        fireSelectionChanged(source);
+        setSelection(source, Arrays.asList(selectedObject));
     }
     
+    /**
+     * Set the current selection to a list of objects.
+     * 
+     * @param source the source of the selection change
+     * @param selection the new list of selected objects
+     */
     public void setSelection(Object source, List<Object> selection)
     {
         if(selection != null)
         {
-            this.selection = new ArrayList<Object>(selection);
+            this.selection = new CopyOnWriteArrayList<Object>(selection);
         }
         else
         {
@@ -96,20 +119,25 @@ public class SelectionManager extends AbstractAdaptable implements SimulationSer
         fireSelectionChanged(source);
     }
     
+    /**
+     * If there's a selection, returns the first item in the selection.
+     * 
+     * @return the first selected object in the selection list, or {@code null}
+     *      if there's no selection.
+     */
     public Object getSelectedObject()
     {
         return !selection.isEmpty() ? selection.get(0) : null;
     }
     
+    /**
+     * @return the current list of selected objects
+     */
+    public List<Object> getSelection()
+    {
+        return new ArrayList<Object>(selection);
+    }
     
-    public void shutdown() throws SimulationException
-    {
-    }
-
-    public void start(ProgressMonitor progress) throws SimulationException
-    {
-    }
-
     private List<SelectionManagerListener> getSafeListeners()
     {
         return new ArrayList<SelectionManagerListener>(listeners);
