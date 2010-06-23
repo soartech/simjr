@@ -107,6 +107,17 @@ public class SwingTools
             }};
     }
     
+    /**
+     * Add a list of file filters to a file chooser. The input is a list of 
+     * extension/description pairs, for example:
+     * 
+     * <pre>{@code
+     * addFileFilters(chooser, "Text Files", "txt", "Web Pages", "html");
+     * }</pre>
+     * 
+     * @param chooser the file chooser
+     * @param pairs list of extension/description pairs
+     */
     public static void addFileFilters(JFileChooser chooser, Object... pairs)
     {
         if(pairs.length % 2 != 0)
