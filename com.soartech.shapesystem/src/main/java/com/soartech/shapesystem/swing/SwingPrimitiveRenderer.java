@@ -43,7 +43,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import com.soartech.shapesystem.CapStyle;
 import com.soartech.shapesystem.FillStyle;
+import com.soartech.shapesystem.JoinStyle;
 import com.soartech.shapesystem.LineStyle;
 import com.soartech.shapesystem.PrimitiveRenderer;
 import com.soartech.shapesystem.ShapeStyle;
@@ -81,16 +83,16 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         
         float lineThickness = (float) factory.getTransformer().scalarToPixels(style.getLineThickness());
         Stroke stroke = null;
+        int capStyle = getSwingCapStyle(style.getCapStyle());
+        int joinStyle = getSwingJoinStyle(style.getJoinStyle());
         
         if(style.getLineStyle() == LineStyle.SOLID)
         {
-            stroke = new BasicStroke(lineThickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
+            stroke = new BasicStroke(lineThickness, capStyle, joinStyle);
         }
         else
         {
-            stroke = new BasicStroke(lineThickness, 
-                    BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 
-                    10.0f, DASHES, 0.0f);
+            stroke = new BasicStroke(lineThickness, capStyle, joinStyle, 10.0f, DASHES, 0.0f);
         }
         
         g.setStroke(stroke);
@@ -103,6 +105,34 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         else 
         {
             g.setComposite(factory.getOriginalComposite());
+        }
+    }
+    
+    private int getSwingCapStyle(CapStyle capStyle)
+    {
+        switch (capStyle) {
+            case BUTT:
+                return BasicStroke.CAP_BUTT;
+            case ROUND:
+                return BasicStroke.CAP_ROUND;
+            case SQUARE:
+                return BasicStroke.CAP_SQUARE;
+            default:
+                return BasicStroke.CAP_BUTT;
+        }
+    }
+    
+    private int getSwingJoinStyle(JoinStyle joinStyle)
+    {
+        switch ( joinStyle ) {
+            case BEVEL:
+                return BasicStroke.JOIN_BEVEL;
+            case MITER:
+                return BasicStroke.JOIN_MITER;
+            case ROUND:
+                return BasicStroke.JOIN_ROUND;
+            default:
+                return BasicStroke.JOIN_ROUND;
         }
     }
     
@@ -207,7 +237,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         switchToLineColor();
         g.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
-
+    
     /* (non-Javadoc)
      * 
      * @see com.soartech.shapesystem.PrimitiveRenderer#drawPolygon(java.util.List)
@@ -236,6 +266,25 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
             switchToLineColor();
             g.drawPolygon(xPoints, yPoints, n);
         }
+    }
+    
+    public void drawPolyline(List<SimplePosition> polyLinePoints)
+    {
+        Graphics2D g = factory.getGraphics2D();
+
+        int[] xPoints = new int[polyLinePoints.size()];
+        int[] yPoints = new int[polyLinePoints.size()];
+        
+        int n = 0;
+        for(SimplePosition p  : polyLinePoints)
+        {
+            xPoints[n] = (int) p.x;
+            yPoints[n] = (int) p.y;
+            ++n;
+        }
+        
+        switchToLineColor();
+        g.drawPolygon(xPoints, yPoints, n);
     }
 
     /* (non-Javadoc)

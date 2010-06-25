@@ -44,6 +44,8 @@ public interface PrimitiveRenderer
     void drawArc(SimplePosition center, double radius, SimpleRotation from, SimpleRotation to);
 
     void drawPolygon(List<SimplePosition> bounds);
+    
+    void drawPolyline(List<SimplePosition> polyLinePoints);
 
     void drawLine(SimplePosition start, SimplePosition end);
 

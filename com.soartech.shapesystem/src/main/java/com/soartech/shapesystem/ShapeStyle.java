@@ -39,6 +39,8 @@ import java.awt.Color;
 public class ShapeStyle
 {
     private LineStyle lineStyle;
+    private CapStyle capStyle;
+    private JoinStyle joinStyle;
     private FillStyle fillStyle;
     private Scalar lineThickness;
     private Color lineColor;
@@ -48,6 +50,8 @@ public class ShapeStyle
     public ShapeStyle()
     {
         this.lineStyle = LineStyle.SOLID;
+        this.capStyle = CapStyle.BUTT;
+        this.joinStyle = JoinStyle.ROUND;
         this.fillStyle = FillStyle.NONE;
         this.lineThickness = new Scalar(2.0, ScalarUnit.Pixels);
         this.lineColor = Color.BLACK;
@@ -58,6 +62,8 @@ public class ShapeStyle
     protected ShapeStyle(ShapeStyle other)
     {
         this.lineStyle = other.lineStyle;
+        this.capStyle = other.capStyle;
+        this.joinStyle = other.joinStyle;
         this.fillStyle = other.fillStyle;
         this.lineThickness = other.lineThickness;
         this.lineColor = other.lineColor;
@@ -82,6 +88,36 @@ public class ShapeStyle
     public ShapeStyle setLineStyle(LineStyle lineStyle)
     {
         this.lineStyle = lineStyle;
+        return this;
+    }
+    /**
+     * @return the capping style used for drawing line endpoints
+     */
+    public CapStyle getCapStyle()
+    {
+        return capStyle;
+    }
+    /**
+     * @param capStyle the capping style used to draw line endpoints
+     */
+    public ShapeStyle setCapStyle(CapStyle capStyle)
+    {
+        this.capStyle = capStyle;
+        return this;
+    }
+    /**
+     * @return the joining style used for drawing connections between line segments
+     */
+    public JoinStyle getJoinStyle()
+    {
+        return joinStyle;
+    }
+    /**
+     * @param joinStyle the joining style used to draw connections between line segments
+     */
+    public ShapeStyle setJoinStyle(JoinStyle joinStyle)
+    {
+        this.joinStyle = joinStyle;
         return this;
     }
     /**

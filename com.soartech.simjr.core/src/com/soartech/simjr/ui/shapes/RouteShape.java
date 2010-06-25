@@ -38,8 +38,10 @@ import java.util.Map;
 
 import com.soartech.math.LineSegmentDistance;
 import com.soartech.math.Vector3;
+import com.soartech.shapesystem.CapStyle;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.FillStyle;
+import com.soartech.shapesystem.JoinStyle;
 import com.soartech.shapesystem.Position;
 import com.soartech.shapesystem.PrimitiveRenderer;
 import com.soartech.shapesystem.PrimitiveRendererFactory;
@@ -80,6 +82,8 @@ public class RouteShape extends EntityShape implements EntityConstants
             final AbstractPolygon polygon = Adaptables.adapt(selected, AbstractPolygon.class);
             final ShapeStyle style = createSelectionStyle();
             style.setLineColor(style.getFillColor());
+            style.setCapStyle(CapStyle.ROUND);
+            style.setJoinStyle(JoinStyle.ROUND);
             setLineWidth(selected.getProperties(), style, true);
             return new SystemShape(polygon, id, LAYER_SELECTION, style);   
         }
@@ -209,16 +213,11 @@ public class RouteShape extends EntityShape implements EntityConstants
             for(ShapeStyle style : new ShapeStyle[] {backStyle, frontStyle} )
             {
                 final PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
+
+                renderer.drawPolyline(cachedPoints);
                 
-                SimplePosition last = null;
                 for(SimplePosition point : cachedPoints)
                 {
-                    if(last != null)
-                    {
-                        renderer.drawLine(last, point);
-                    }
-                    last = point;
-                    
                     if(first)
                     {
                         if(onScreenIndex == 0 && renderer.isPointInViewport(point))

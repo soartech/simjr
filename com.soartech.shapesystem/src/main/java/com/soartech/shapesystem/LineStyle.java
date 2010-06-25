@@ -31,7 +31,10 @@
  */
 package com.soartech.shapesystem;
 
+
 /**
+ * Enumeration for line type information (i.e. solid or dashed)
+ * 
  * @author ray
  */
 public enum LineStyle
