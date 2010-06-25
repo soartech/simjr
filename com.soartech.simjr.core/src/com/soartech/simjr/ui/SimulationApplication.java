@@ -128,7 +128,7 @@ public class SimulationApplication extends DefaultServiceManager
     {
         // Install default actions from javascript
         final ScriptRunner scriptRunner = findService(ScriptRunner.class);
-        scriptRunner.runResource(progress, SimJrProps.get("simjr.actions.path", "/simjr.actions.js"));        
+        scriptRunner.runResource(progress, getClass().getClassLoader(), SimJrProps.get("simjr.actions.path", "/simjr.actions.js"));        
     }
     
     private void loadScenario(ProgressMonitor progress, String[] args)

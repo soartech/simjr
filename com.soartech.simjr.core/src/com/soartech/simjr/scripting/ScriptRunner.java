@@ -378,9 +378,9 @@ public class ScriptRunner extends AbstractAdaptable implements SimulationService
      * @return The return value of the script
      * @throws Exception
      */
-    public synchronized Object runResource(ProgressMonitor progress, String path) throws Exception
+    public synchronized Object runResource(ProgressMonitor progress, ClassLoader loader, String path) throws Exception
     {
-        final InputStream stream = ScriptRunner.class.getResourceAsStream(path);
+        final InputStream stream = loader.getResourceAsStream(path);
         if(stream == null)
         {
             throw new IllegalArgumentException("Could not find resource '" + path + "' on class path");
