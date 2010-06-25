@@ -284,7 +284,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         }
         
         switchToLineColor();
-        g.drawPolygon(xPoints, yPoints, n);
+        g.drawPolyline(xPoints, yPoints, n);
     }
 
     /* (non-Javadoc)
