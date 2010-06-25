@@ -152,6 +152,10 @@ public class ObjectContextMenu extends JPopupMenu
                 if(action != null)
                 {
                     add(action);
+                    if(action instanceof AbstractSimulationAction)
+                    {
+                        ((AbstractSimulationAction) action).update();
+                    }
                 }
                 else
                 {

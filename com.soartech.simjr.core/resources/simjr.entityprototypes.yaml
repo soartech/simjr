@@ -48,6 +48,7 @@ prototypes:
     factory: !class com.soartech.simjr.sim.entities.DefaultEntity
     properties:
         visible: true
+        locked: false
         
 - &control
     id: control

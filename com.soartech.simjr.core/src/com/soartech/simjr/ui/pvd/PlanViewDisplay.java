@@ -616,6 +616,12 @@ public class PlanViewDisplay extends JPanel
             return;
         }
         
+        final Boolean locked = (Boolean) entity.getProperty(EntityConstants.PROPERTY_LOCKED);
+        if(locked != null && locked.booleanValue())
+        {
+            return;
+        }
+        
         final Point screenDelta = new Point(e.getX() - lastDragPoint.x, e.getY() - lastDragPoint.y);
         lastDragPoint.setLocation(e.getPoint());
         final Vector3 delta = new Vector3(transformer.screenToMeters(screenDelta.getX()),

@@ -58,6 +58,26 @@ public class EntityTools
     public static final Comparator<Entity> NAME_COMPARATOR = new NameComparator();
     
     /**
+     * Generate an unused name for an entity using the given prefix as a starting point.
+     * 
+     * @param sim the simulation
+     * @param prefix the prefix
+     * @return a unused name with the given prefix
+     */
+    public static String getUnusedName(Simulation sim, String prefix)
+    {
+        synchronized(sim.getLock())
+        {
+            int suffix = 0;
+            while(sim.getEntity(prefix + suffix) != null)
+            {
+                suffix++;
+            }
+            return prefix + suffix;
+        }
+    }
+    
+    /**
      * Retrieve a property from the given property set, returning a default
      * value if it's not there. This method also takes {@link LazyEntityPropertyValue}
      * into account.

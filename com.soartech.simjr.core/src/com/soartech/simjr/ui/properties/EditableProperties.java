@@ -51,6 +51,7 @@ public class EditableProperties
     {
         new AboveGroundLevel(),
         new DefaultEditableProperty(EntityConstants.PROPERTY_VISIBLE),
+        new DefaultEditableProperty(EntityConstants.PROPERTY_LOCKED),
         new DefaultComboBoxProperty(EntityConstants.PROPERTY_DAMAGE, DamageStatus.values()),
         new DefaultEditableProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE),
         new DefaultEditableProperty(EntityConstants.PROPERTY_VISIBLE_RANGE_VISIBLE),

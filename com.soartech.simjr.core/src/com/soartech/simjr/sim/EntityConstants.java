@@ -54,6 +54,7 @@ public interface EntityConstants
     public static final String PROPERTY_SHAPE_OPACITY = "shape.opacity";
     public static final String PROPERTY_SHAPE_LABEL_VISIBLE = "shape.label.visible";
     public static final String PROPERTY_VISIBLE = "visible";
+    public static final String PROPERTY_LOCKED = "locked";
     public static final String PROPERTY_CATEGORY = "category";
     public static final String PROPERTY_VELOCITY = "velocity";
     public static final String PROPERTY_POSITION = "position";
