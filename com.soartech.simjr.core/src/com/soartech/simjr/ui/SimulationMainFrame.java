@@ -150,7 +150,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private static final long serialVersionUID = 2229452633565018323L;
 
-    private SimulationApplication app;
     private ServiceManager services;
         
     private JMenu fileMenu = new JMenu("File");
@@ -206,12 +205,11 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     }
     
     /**
-     * @param app
+     * @param serviceManager
      */
-    public SimulationMainFrame(SimulationApplication app)
+    public SimulationMainFrame(ServiceManager serviceManager)
     {
-        this.app = app;
-        this.services = app;
+        this.services = serviceManager;
         this.services.addService(this);
         
         setTitle("Sim Jr");
@@ -246,10 +244,10 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //create the first PVD
         createPvdFrame(null, false);
 
-        addDockable(new EntityListPanel(app), defaultEntityListLocation, ENTITIES_FRAME_KEY);
-        addDockable(this.propertiesView = new EntityPropertiesView(app), defaultEntityPropertiesLocation, ENTITY_PROPERTIES_FRAME_KEY);
+        addDockable(new EntityListPanel(services), defaultEntityListLocation, ENTITIES_FRAME_KEY);
+        addDockable(this.propertiesView = new EntityPropertiesView(services), defaultEntityPropertiesLocation, ENTITY_PROPERTIES_FRAME_KEY);
         addDockable(new RadioMessagePanel(services), defaultRadioMessagesLocation, RADIO_MESSAGES_FRAME_KEY);
-        addDockable(new ConsolePanel(app), defaultConsoleLocation, CONSOLE_FRAME_KEY);
+        addDockable(new ConsolePanel(services), defaultConsoleLocation, CONSOLE_FRAME_KEY);
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);
         
         initMenus();
@@ -468,7 +466,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private PlanViewDisplay createPlanViewDisplay(PvdFrame pf, String title, boolean split, boolean first)
     {
-        pf.pvd = new PlanViewDisplay(app, getActivePlanViewDisplay());
+        pf.pvd = new PlanViewDisplay(services, getActivePlanViewDisplay());
         pf.title = title;
         
         //DF settings

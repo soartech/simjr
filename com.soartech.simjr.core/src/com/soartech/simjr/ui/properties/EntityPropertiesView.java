@@ -31,6 +31,7 @@ package com.soartech.simjr.ui.properties;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -51,11 +52,11 @@ import javax.swing.table.TableCellRenderer;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
 import com.soartech.math.Vector3;
+import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.entities.FuelModel;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
-import com.soartech.simjr.ui.SimulationApplication;
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 
@@ -65,17 +66,18 @@ import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 @SuppressWarnings("serial")
 public class EntityPropertiesView extends DefaultSingleCDockable
 {
-    private SimulationApplication app;
+    private ServiceManager services;
     private JLabel title = new JLabel();
     private EntityPropertiesViewModel tableModel;
     private JTable table;
+    private Component component;
     
     private ColorRenderer colorRenderer = new ColorRenderer(true);
     private VectorRenderer vectorRenderer = new VectorRenderer();
     private DoubleRenderer doubleRenderer = new DoubleRenderer();
     private FuelRenderer fuelRenderer = new FuelRenderer();
     
-    public EntityPropertiesView(SimulationApplication app)
+    public EntityPropertiesView(ServiceManager serviceManager)
     {
         super("EntityPropertiesView");
 
@@ -89,11 +91,11 @@ public class EntityPropertiesView extends DefaultSingleCDockable
         setResizeLocked(true);
         setTitleIcon(SimulationImages.PROPERTIES);
         
-        this.app = app;
+        this.services = serviceManager;
         
-        SelectionManager.findService(this.app).addListener(new SelectionListener());
+        SelectionManager.findService(this.services).addListener(new SelectionListener());
         
-        tableModel = new EntityPropertiesViewModel(app);
+        tableModel = new EntityPropertiesViewModel(services);
         
         JPanel header = new JPanel(new BorderLayout());
         header.add(title, BorderLayout.WEST);
@@ -166,8 +168,13 @@ public class EntityPropertiesView extends DefaultSingleCDockable
         };
         table.addMouseMotionListener(new TableMouseMotionListener());
         
-        
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        component = new  JScrollPane(table);
+        add(component, BorderLayout.CENTER);
+    }
+    
+    public Component getComponent() 
+    {
+        return component;
     }
     
     public void refreshModel()
@@ -243,7 +250,7 @@ public class EntityPropertiesView extends DefaultSingleCDockable
     {
         public void selectionChanged(Object source)
         {
-            Object o = SelectionManager.findService(app).getSelectedObject();
+            Object o = SelectionManager.findService(services).getSelectedObject();
             
             String s = "";
             if(o instanceof Entity)

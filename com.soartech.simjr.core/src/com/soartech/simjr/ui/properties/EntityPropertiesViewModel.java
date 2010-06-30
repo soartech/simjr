@@ -46,10 +46,10 @@ import java.util.Map.Entry;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
+import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
-import com.soartech.simjr.ui.SimulationApplication;
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -60,7 +60,7 @@ import com.soartech.simjr.ui.actions.ActionManager;
 @SuppressWarnings("serial")
 public class EntityPropertiesViewModel extends AbstractTableModel
 {
-    private SimulationApplication app;
+    private ServiceManager services;
     
     private Entity entity;
     private List<Map.Entry<String, Object>> entries = new ArrayList<Map.Entry<String, Object>>();
@@ -81,11 +81,11 @@ public class EntityPropertiesViewModel extends AbstractTableModel
                 return o1.getKey().compareTo(o2.getKey());
             }};
 
-    public EntityPropertiesViewModel(SimulationApplication app)
+    public EntityPropertiesViewModel(ServiceManager serviceManager)
     {
-        this.app = app;
+        this.services = serviceManager;
         
-        SelectionManager.findService(this.app).addListener(new SelectionListener());
+        SelectionManager.findService(this.services).addListener(new SelectionListener());
         
         refreshAction = new RefreshAction();
         copyAction = new CopyToClipboardAction();
@@ -99,7 +99,7 @@ public class EntityPropertiesViewModel extends AbstractTableModel
     {
         entity = null;
         entries.clear();
-        Object o = SelectionManager.findService(this.app).getSelectedObject();
+        Object o = SelectionManager.findService(this.services).getSelectedObject();
         if(o instanceof Entity)
         {
             entity = (Entity) o;
@@ -246,7 +246,7 @@ public class EntityPropertiesViewModel extends AbstractTableModel
     {
         public RefreshAction()
         {
-            super(app.findService(ActionManager.class), "Refresh", SimulationImages.REFRESH);
+            super(services.findService(ActionManager.class), "Refresh", SimulationImages.REFRESH);
             
             setToolTip("Refresh property values");
         }

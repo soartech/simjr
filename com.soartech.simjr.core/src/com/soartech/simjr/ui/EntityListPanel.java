@@ -32,6 +32,7 @@
 package com.soartech.simjr.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -96,8 +97,9 @@ public class EntityListPanel extends DefaultSingleCDockable
     private Map<String, DefaultMutableTreeNode> categoryNodes = new HashMap<String, DefaultMutableTreeNode>();
     private Map<Entity, DefaultMutableTreeNode> entityNodes = new HashMap<Entity, DefaultMutableTreeNode>();
     private boolean ignoreTreeSelectionChange = false;
+    private Component component;
     
-    public EntityListPanel(SimulationApplication services)
+    public EntityListPanel(ServiceManager services)
     {
         super("EntityListPanel");
         this.services = services;
@@ -140,9 +142,15 @@ public class EntityListPanel extends DefaultSingleCDockable
             categoryNodes.put(category, node);
         }
         
-        add(new JScrollPane(entityTree), BorderLayout.CENTER);
+        component = new JScrollPane(entityTree);
+        add(component, BorderLayout.CENTER);
         
         update();
+    }
+    
+    public Component getComponent()
+    {
+        return component;
     }
     
     private DefaultMutableTreeNode getCategoryNode(Entity e)
