@@ -104,7 +104,21 @@ public class EntityElementList
     
     public NewEntityEdit addEntity(String baseName, String prototype)
     {
-        String finalName = generateName(baseName);
+        return addEntity(baseName, prototype, false);
+    }
+    
+    /**
+     * Add a new entity with the give (base) name and prototype.
+     * 
+     * @param baseName the base name, from which a new name will be generated
+     * @param prototype the prototype
+     * @param forceName if {@code true}, {@code baseName} will be used directly rather
+     *      than generating a new unique name
+     * @return the edit for the entity creation
+     */
+    public NewEntityEdit addEntity(String baseName, String prototype, boolean forceName)
+    {
+        final String finalName = forceName ? baseName : generateName(baseName);
         
         final Element element = EntityElement.build(model, finalName, prototype);
         
