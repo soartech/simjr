@@ -271,5 +271,141 @@ public class Geocentric extends GeoTransBase
         }
         return point;
     } /* END OF Convert_Geocentric_To_Geodetic */
+    
+    /**
+     * Converts Geocentric orientation to Geodetic orientation.
+     * 
+     * @param lat radians
+     * @param lon radians
+     * @param psi radians, rotation about z axis
+     * @param phi radians, rotation about y axis
+     * @param theta radians, rotation about x axis
+     * @return (pitch,roll,yaw)
+     */
+    public static Vector3 toGeodeticAngle(double lat, double lon, double disPsi, double disPhi, double disTheta)
+    {
+        double dis_roll, dis_pitch, dis_yaw;
+        double cos_r, sin_r, cos_p, sin_p, cos_y, sin_y, roll, pitch, yaw;
+        double b_sub_11, b_sub_12, b_sub_23, b_sub_33, poly1, poly2;
+
+        double cos_lat, sin_lat, cos_lon, sin_lon, sin_sin, sin_cos;
+        double cos_sin, cos_cos;
+
+        double phi, lambda;
+
+        phi = (float) lat;
+        lambda = (float) lon;
+
+        dis_pitch = disTheta;
+        dis_roll = disPhi;
+        dis_yaw = disPsi;
+
+        cos_lat = cos(phi);
+        sin_lat = sin(phi);
+        cos_lon = cos(lambda);
+        sin_lon = sin(lambda);
+
+        sin_sin = sin_lat * sin_lon;
+        sin_cos = sin_lat * cos_lon;
+        cos_sin = cos_lat * sin_lon;
+        cos_cos = cos_lat * cos_lon;
+
+        cos_r = cos(dis_roll);
+        sin_r = sin(dis_roll);
+
+        cos_p = cos(dis_pitch);
+        sin_p = sin(dis_pitch);
+
+        cos_y = cos(dis_yaw);
+        sin_y = sin(dis_yaw);
+
+        pitch = Math.asin(cos_cos * cos_p * cos_y + cos_sin * cos_p * sin_y - sin_lat * sin_p);
+
+        poly1 = cos_p * cos_y;
+        poly2 = cos_p * sin_y;
+
+        b_sub_11 = (-sin_lon * poly1 + cos_lon * poly2);
+        b_sub_12 = (-sin_cos * poly1 - sin_sin * poly2 - cos_lat * sin_p);
+
+        yaw = atan2(b_sub_11, b_sub_12);
+
+        b_sub_23 = (cos_cos * (-cos_r * sin_y + sin_r * sin_p * cos_y) +
+                    cos_sin * ( cos_r * cos_y + sin_r * sin_p * sin_y) +
+                    sin_lat * ( sin_r * cos_p));
+        b_sub_33 = (cos_cos * ( sin_r * sin_y + cos_r * sin_p * cos_y) +
+                    cos_sin * (-sin_r * cos_y + cos_r * sin_p * sin_y) +
+                    sin_lat * (cos_r * cos_p));
+
+        roll = (float) atan2(-b_sub_23, -b_sub_33);
+        
+        //geod_angle->pitch = pitch;
+        //geod_angle->roll = roll;
+        //geod_angle->hdg = yaw;        
+                
+        Vector3 geodeticAngle = new Vector3(pitch, roll, yaw);
+        
+        return geodeticAngle;
+    }
+    
+    /**
+     * Converts Geodetic orientation to Geocentric orientation.
+     * @param lat radians
+     * @param lon radians
+     * @param in_pitch radians
+     * @param in_roll radians
+     * @param in_hdg radians
+     * @return (pitch,roll,yaw)
+     */
+    public static Vector3 fromGeodeticAngle(double lat, double lon, double in_pitch, double in_roll, double in_hdg)
+    {
+        double cos_r, sin_r, cos_p, sin_p, cos_y, sin_y, roll, pitch, yaw;
+        double a_sub_12, a_sub_11, a_sub_23, a_sub_33, poly1, poly2;
+
+        double cos_lat, sin_lat, cos_lon, sin_lon, sin_sin, sin_cos;
+        double cos_sin, cos_cos;
+
+        cos_lat = cos(lat);
+        sin_lat = sin(lat);
+        cos_lon = cos(lon);
+        sin_lon = sin(lon);
+
+        sin_sin = sin_lat * sin_lon;
+        sin_cos = sin_lat * cos_lon;
+        cos_sin = cos_lat * sin_lon;
+        cos_cos = cos_lat * cos_lon;
+
+        cos_r = cos(in_roll); /*phi*/
+        sin_r = sin(in_roll);
+
+        cos_p = cos(in_pitch); /*theta*/
+        sin_p = sin(in_pitch);
+
+        cos_y = cos(in_hdg); /*psi*/
+        sin_y = sin(in_hdg);
+
+        pitch = Math.asin(-cos_lat * cos_y * cos_p - sin_lat * sin_p);
+
+        poly1 = sin_y * cos_p;
+        poly2 = cos_y * cos_p;
+
+        a_sub_12 = cos_lon * poly1 - sin_sin * poly2 + 
+                   cos_sin * sin_p;
+        a_sub_11 = -sin_lon * poly1 - sin_cos * poly2 + 
+                    cos_cos * sin_p;
+
+        yaw =  atan2(a_sub_12*cos(pitch), a_sub_11*cos(pitch));
+
+        a_sub_23 = cos_lat * (-sin_y * cos_r + cos_y * sin_p * sin_r) - sin_lat * cos_p * sin_r;
+        a_sub_33 = cos_lat * (sin_y * sin_r + cos_y * sin_p * cos_r) - sin_lat * cos_p * cos_r;
+
+        roll = atan2(a_sub_23*cos(pitch), a_sub_33*cos(pitch));
+
+        //geoc_angle->psi = yaw;
+        //geoc_angle->theta = pitch;
+        //geoc_angle->phi = roll;        
+        
+        Vector3 geocentricAngle = new Vector3(pitch,roll,yaw);
+        return geocentricAngle;
+    }
 
 }
