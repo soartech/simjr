@@ -84,7 +84,7 @@ public class EntityVisibleRangeShape
 
         EntityVisibleRange range = EntityVisibleRange.get(parent.getEntity(), property);
         Boolean visible = (Boolean) parent.getEntity().getProperty(property + ".visible");
-        if(range == null || range.getVisibleRange() == 0.0 || (visible != null && !visible.booleanValue()))
+        if(range == null || range.getVisibleRange() <= 0.0 || (visible != null && !visible.booleanValue()))
         {
             parent.removeShape(shape);
             shape = null;

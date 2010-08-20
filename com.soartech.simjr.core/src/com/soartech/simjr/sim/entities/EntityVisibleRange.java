@@ -41,7 +41,8 @@ import com.soartech.simjr.sim.EntityConstants;
  * added to an entity as the value of the PROPERTY_VISIBLE_RANGE property on 
  * an entity.  Setting the values on this object will cause entity property
  * change events to be fired. Also, the display system will automatically show
- * sensor arcs for entities with this property.
+ * sensor arcs for entities with this property.  
+ * Setting this to -1 will result in an infinite (but not drawn) visible range. 
  * 
  * @author ray
  */
@@ -122,6 +123,8 @@ public class EntityVisibleRange
      */
     public boolean isInRange(Vector3 otherPos)
     {
+        if(visibleRange < 0) return true;
+        
         Vector3 agentPos = entity.getPosition();
         Vector3 displacement = otherPos.subtract(agentPos);
         Vector3 xyDisplacement = new Vector3(displacement.x, displacement.y, 0.0);
