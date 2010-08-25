@@ -73,11 +73,11 @@ function setOrigin(props)
         var origin = new Geodetic.Point();
         if(props.latitude !== undefined )
         {
-            origin.latitude = java.lang.Math.toRadians(props["latitude"]);
+            origin.latitude = java.lang.Math.toRadians(props.latitude);
         }
         if(props.longitude !== undefined)
         {
-            origin.longitude = java.lang.Math.toRadians(props["longitude"]);
+            origin.longitude = java.lang.Math.toRadians(props.longitude);
         }
         sim.setTerrain(new SimpleTerrain(origin));
     }
@@ -104,11 +104,11 @@ function toGeocentric(props)
         var origin = new Geodetic.Point();
         if(props.latitude !== undefined)
         {
-            origin.latitude = java.lang.Math.toRadians(props["latitude"]);
+            origin.latitude = java.lang.Math.toRadians(props.latitude);
         }
         if(props.longitude !== undefined)
         {
-            origin.longitude = java.lang.Math.toRadians(props["longitude"]);
+            origin.longitude = java.lang.Math.toRadians(props.longitude);
         }
         return sim.getTerrain().fromGeodetic(origin);
     }
