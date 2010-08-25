@@ -88,6 +88,14 @@ prototypes:
     subcategory: area
     properties:
         polygon.closed: true
+        
+- &complex-area
+    id: complex-area
+    parent: *polygon
+    category: area
+    subcategory: area
+    properties:
+        polygon.closed: true
 
 ###############################################################################
 

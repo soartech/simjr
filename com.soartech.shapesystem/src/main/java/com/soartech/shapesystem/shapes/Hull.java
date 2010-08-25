@@ -49,9 +49,10 @@ import com.soartech.shapesystem.SimplePosition;
 /**
  * @author ray
  */
-public class ConvexHull extends Shape
+public class Hull extends Shape
 {
     private List<String> pointNames;
+    private final boolean convex; 
     
     /**
      * @param name
@@ -59,10 +60,11 @@ public class ConvexHull extends Shape
      * @param style
      * @param points
      */
-    public ConvexHull(String name, String layer,
-            ShapeStyle style, List<String> points)
+    public Hull(String name, String layer, ShapeStyle style, List<String> points, boolean convex)
     {
         super(name, layer, new Position(), Rotation.IDENTITY, style);
+        
+        this.convex = convex;
         
         this.pointNames = new ArrayList<String>(points);
     }
@@ -81,8 +83,7 @@ public class ConvexHull extends Shape
      * @see com.soartech.shapesystem.Shape#calculateBase(com.soartech.shapesystem.ShapeSystem, com.soartech.shapesystem.CoordinateTransformer)
      */
     @Override
-    protected void calculateBase(ShapeSystem system,
-            CoordinateTransformer transformer)
+    protected void calculateBase(ShapeSystem system, CoordinateTransformer transformer)
     {
         if(pointNames.size() < 3)
         {
@@ -117,7 +118,11 @@ public class ConvexHull extends Shape
         	spatPoints.add(new Vector3(p.x, -p.y, 0.0));
         }
         
-        Polygon poly = Polygon.createConvexHull(spatPoints);
+        Polygon poly;
+        if(convex)
+            poly = Polygon.createConvexHull(spatPoints);
+        else
+            poly = Polygon.createPolygon(spatPoints);
         
         List<SimplePosition> finalPoints = new ArrayList<SimplePosition>();
         for(Vector3 v : poly.getPoints())
@@ -154,7 +159,13 @@ public class ConvexHull extends Shape
         {
             hullPoints.add(new Vector3(p.x, -p.y, 0.0));
         }
-        Polygon p = Polygon.createConvexHull(hullPoints);
+        
+        Polygon p;
+        if(convex)
+            p = Polygon.createConvexHull(hullPoints);
+        else
+            p = Polygon.createPolygon(hullPoints);
+        
         return p.contains(new Vector3(x, y, 0.0));
     }
 }

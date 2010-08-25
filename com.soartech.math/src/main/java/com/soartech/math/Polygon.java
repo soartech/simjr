@@ -76,13 +76,26 @@ public class Polygon
             return new Polygon(points);
         }
         
-        // Sort points for alrgorithm
+        // Sort points for algorithm
         lexicalSort(points);
         
         // Perform convex hull algorithm
         points = andrewsChainHull(points);
         
         return new Polygon(points);
+    }
+    
+    /**
+     * Create a polygon that is the concave hull of a collection of X-Y points.
+     * 
+     * @param hullPoints
+     *            An ordered list of input points that hull is calculated from. 
+     *            Only the X and Y coordinates of the points are considered.
+     * @return A polygon that is the concave hull of a set of points
+     */
+    public static Polygon createPolygon(Collection<Vector3> hullPoints)
+    {
+        return new Polygon(new ArrayList<Vector3>(hullPoints));
     }
 
     /**
@@ -159,7 +172,6 @@ public class Polygon
     
     private static class LexicalPointComparator implements Comparator<Vector3>
     {
-
         public int compare(Vector3 a, Vector3 b)
         {
             if(a.x > b.x)
@@ -186,7 +198,6 @@ public class Polygon
                 return -1;
             }
         }
-        
     }
     
     private static final Comparator<Vector3> LEXICAL_POINT_COMPARATOR = 

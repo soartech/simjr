@@ -40,7 +40,7 @@ import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
-import com.soartech.shapesystem.shapes.ConvexHull;
+import com.soartech.shapesystem.shapes.Hull;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
@@ -54,15 +54,16 @@ public class AreaShape extends EntityShape implements EntityConstants
 {
     public static final String NAME = "area";
     
-    public static final EntityShapeFactory FACTORY = new Factory();
-    public static class Factory extends AbstractEntityShapeFactory {
+    public static final EntityShapeFactory FACTORY = new SimpleHullFactory();
+    
+    public static class SimpleHullFactory extends AbstractEntityShapeFactory {
 
         /* (non-Javadoc)
          * @see com.soartech.simjr.ui.shapes.EntityShapeFactory#create(com.soartech.simjr.sim.Entity, com.soartech.shapesystem.ShapeSystem)
          */
         public EntityShape create(Entity entity, ShapeSystem system)
         {
-            return new AreaShape(Adaptables.adapt(entity, AbstractPolygon.class), system);
+            return new AreaShape(Adaptables.adapt(entity, AbstractPolygon.class), system, true);
         }
         
         /* (non-Javadoc)
@@ -74,21 +75,46 @@ public class AreaShape extends EntityShape implements EntityConstants
             final AbstractPolygon polygon = Adaptables.adapt(selected, AbstractPolygon.class);
             final List<String> points = polygon.getPointNames();
             
-            return new ConvexHull(id, LAYER_SELECTION, createSelectionStyle(), points);
+            return new Hull(id, LAYER_SELECTION, createSelectionStyle(), points, true);
+        }
+
+        public String toString() { return NAME; }
+    };
+    
+    public static class ComplexHullFactory extends AbstractEntityShapeFactory {
+
+        /* (non-Javadoc)
+         * @see com.soartech.simjr.ui.shapes.EntityShapeFactory#create(com.soartech.simjr.sim.Entity, com.soartech.shapesystem.ShapeSystem)
+         */
+        public EntityShape create(Entity entity, ShapeSystem system)
+        {
+            return new AreaShape(Adaptables.adapt(entity, AbstractPolygon.class), system, false);
+        }
+        
+        /* (non-Javadoc)
+         * @see com.soartech.simjr.ui.pvd.AbstractEntityShapeFactory#createSelection(java.lang.String, com.soartech.simjr.Entity)
+         */
+        @Override
+        public Shape createSelection(String id, Entity selected)
+        {
+            final AbstractPolygon polygon = Adaptables.adapt(selected, AbstractPolygon.class);
+            final List<String> points = polygon.getPointNames();
+            
+            return new Hull(id, LAYER_SELECTION, createSelectionStyle(), points, false);
         }
 
         public String toString() { return NAME; }
     };
     
     private final AbstractPolygon polygon;
-    private ConvexHull hull;
+    private Hull hull;
     private boolean updateHull = false;
     
     /**
      * @param area
      * @param system
      */
-    public AreaShape(AbstractPolygon polygon, ShapeSystem system)
+    public AreaShape(AbstractPolygon polygon, ShapeSystem system, boolean convex)
     {
         super(polygon.getEntity(), system);
         
@@ -113,7 +139,7 @@ public class AreaShape extends EntityShape implements EntityConstants
             style.setOpacity(opacity.floatValue());
         }
         
-        hull = new ConvexHull(name + ".hull", LAYER_AREA, style, polygon.getPointNames());
+        hull = new Hull(name + ".hull", LAYER_AREA, style, polygon.getPointNames(), convex);
                 
         createLabel(0, 0, polygon.getName());
         
