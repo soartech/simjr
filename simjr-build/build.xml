@@ -13,6 +13,7 @@
   <target name="env-init">
     <tstamp/>
 
+  	<property environment="env"/>
     <property name="workspaceDirectory" value="${basedir}/.." />
     <property file="build.properties"/>
     <property name="target" location="target" />
@@ -32,7 +33,7 @@
 
     <!-- define your jdk location here -->
     <ant4eclipse:installedJREs>
-      <jre id="jdk16" location="C:/Program Files/Java/jdk1.6.0_16" />
+      <jre id="jdk16" location="${env.JAVA_HOME}" />
     </ant4eclipse:installedJREs>
 
     <!-- define the target platform location -->
@@ -163,7 +164,7 @@
 
   </macrodef>
 
-  <target name="test" depends="init">
+  <target name="test" depends="init" unless="notest">
 
     <!-- iterate over all projects in the workspace -->
     <ant4eclipse:executeProjectSet workspaceDirectory="${workspaceDirectory}"
