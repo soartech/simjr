@@ -32,5 +32,4 @@ setlocal
 set PATH=%PATH%;dist\plugins\vendor\soarspeak-1.0.2\bin
 set ANT4ECLIPSE_VERSION=1.0.0.M3
 set ANT4ECLIPSE_HOME=tools\org.ant4eclipse_%ANT4ECLIPSE_VERSION%
-rem ant -lib %ANT4ECLIPSE_HOME%\org.ant4eclipse_%ANT4ECLIPSE_VERSION%.jar -lib %ANT4ECLIPSE_HOME%\libs %*
 ant -lib %ANT4ECLIPSE_HOME%\org.ant4eclipse_%ANT4ECLIPSE_VERSION%.jar -lib %ANT4ECLIPSE_HOME%\libs %*

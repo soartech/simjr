@@ -16,9 +16,10 @@
   	<property environment="env"/>
     <property name="workspaceDirectory" value="${basedir}/.." />
     <property file="build.properties"/>
-    <property name="target" location="target" />
+    <property name="build.dir" location="."/>
+    <property name="target" location="${build.dir}/target" />
     <property name="test.reports.dir" location="${target}/test-reports" />
-    <property name="dist" location="dist" />
+    <property name="dist" location="${build.dir}/dist" />
     <property name="dist.name" value="${ant.project.name}-${version}"/>
     <property name="dist.zip" location="${dist.name}.zip"/>
   </target>
@@ -26,7 +27,7 @@
   <target name="clean" depends="env-init">
     <delete dir="${target}"/>
     <delete dir="${dist}"/>
-    <delete dir="${dist.zip}"/>
+    <delete file="${dist.zip}"/>
   </target>
 
   <target name="init" depends="env-init">
@@ -79,13 +80,21 @@
         <exclude name="org.eclipse.osgi_*.jar" />
       </fileset>
     </copy>
+    
+    <!-- Delete all the test jars -->
+    <delete>
+      <fileset dir="${dist}/plugins">
+        <include name="*.test_*.jar" />
+        <include name="*.test.source_*.jar" />
+      </fileset>
+    </delete>
 
     <copy todir="${dist}">
       <fileset dir="platform/plugins">
         <include name="org.eclipse.osgi_*.jar" />
       </fileset>
 
-      <fileset dir="../simjr-resources">
+      <fileset dir="../simjr-resources" erroronmissingdir="false">
         <include name="**/grammars/**" />
         <include name="**/scenarios/**" />
         <include name="**/scripts/**" />
@@ -186,10 +195,13 @@
     </ant4eclipse:executeProjectSet>
 
   </target>
-
-  <target name="dist" depends="build,test">
+  
+  <target name="zip" depends="env-init" unless="nozip">
     <zip destfile="${dist.zip}">
       <zipfileset dir="${dist}" prefix="${dist.name}"/>
     </zip>
+  </target>
+  
+  <target name="dist" depends="build,test,zip">
   </target>
 </project>
