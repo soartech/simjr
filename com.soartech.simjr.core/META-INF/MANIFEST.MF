@@ -14,6 +14,8 @@ Bundle-ClassPath: .,
  lib/dockingFramesCommon.jar,
  lib/dockingFramesCore.jar
 Export-Package: .,
+ bibliothek.gui.dock.common,
+ bibliothek.gui.dock.common.action,
  com.soartech.simjr,
  com.soartech.simjr.adaptables,
  com.soartech.simjr.app,
