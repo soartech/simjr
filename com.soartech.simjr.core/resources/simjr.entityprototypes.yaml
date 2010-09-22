@@ -187,6 +187,12 @@ prototypes:
         maxSpeed: 800.0
         ms2525.template: "S%cAPMFF---"
         
+- &generic-fueler
+    id: generic-fueler
+    parent: *generic-aircraft
+    properties:
+        maxSpeed: 600.0
+        
 - &dismounted-infantry
     id: dismounted-infantry
     parent: *ground
