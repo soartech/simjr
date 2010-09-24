@@ -32,20 +32,41 @@
 package com.soartech.math.geotrans;
 
 /**
+ * The Class Geodetic.
+ * TODO: Unclear what this external class is for since the {@link Point} is the interesting part?
+ *
  * @author ray
  */
 public class Geodetic
 {
+    
+    /**
+     * Represents a geodetic point. (aka lat, lon, altitude)
+     */
     public static class Point
     {
+        
+        /** The latitude in radians. */
         public double latitude;
+        
+        /** The longitude in radians. */
         public double longitude;
+        
+        /** The altitude in meters. */
         public double altitude;
         
+        /**
+         * Instantiates a new point.
+         */
         public Point()
         {
         }
         
+        /**
+         * Creates a copy of an existing point.
+         *
+         * @param other the other
+         */
         public Point(Point other)
         {
             this.latitude = other.latitude;
@@ -55,12 +76,12 @@ public class Geodetic
     }
     
     /**
-     * 
+     * Instantiates a new {@link Geodetic} instance.
+     * TODO: Unclear what this external class is for?
      */
     public Geodetic()
     {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 }
