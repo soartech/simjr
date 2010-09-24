@@ -34,8 +34,9 @@ package com.soartech.simjr.sim;
 import com.soartech.simjr.adaptables.Adaptable;
 
 /**
- * Represents a capability attached to an entity. A capability is ticked
- * each time the entity is ticked.
+ * Represents a capability attached to an entity. To create a capability
+ * that receives tick calls, make sure the capability also implements 
+ * the {@link Tickable} interface.
  * 
  * @author ray
  */
