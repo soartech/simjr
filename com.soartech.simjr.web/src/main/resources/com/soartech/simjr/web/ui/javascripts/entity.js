@@ -40,7 +40,7 @@ function SimJrEntity(json) {
     
     this.getIconHref = function() {
         if(this.ms2525) {
-            return "http://weaver.soartech.com/weaver/pm/apps/ms2525/render?code=" + this.ms2525;
+            return "http://weaver.soartech.com/weaver/pm/apps/ms2525/render?code=" + this.ms2525 + "&_accept=image/png";
         }
         return "http://localhost:8080/simjr/ui/images/waypoint.png";
     };
