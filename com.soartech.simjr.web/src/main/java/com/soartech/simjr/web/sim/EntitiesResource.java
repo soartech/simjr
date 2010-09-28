@@ -38,7 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -56,7 +55,7 @@ import com.soartech.simjr.sim.entities.MilStd2525Provider;
  */
 public class EntitiesResource
 {
-    private static final Logger logger = Logger.getLogger(EntitiesResource.class);
+    //private static final Logger logger = Logger.getLogger(EntitiesResource.class);
     
     private final RootResource root;
     
@@ -120,6 +119,8 @@ public class EntitiesResource
         json.put("visible", EntityTools.isVisible(e));
         json.put("force", e.getProperty(EntityConstants.PROPERTY_FORCE));
         json.put("ms2525", e.getProperty(MilStd2525Provider.PROPERTY));
+        json.put("showLabel", e.getProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE));
+        json.put("allowOnClick", e.getProperty(EntityConstants.PROPERTY_WEB_DISABLE_ONCLICK));
         
         addLocationJson(e, json);
         

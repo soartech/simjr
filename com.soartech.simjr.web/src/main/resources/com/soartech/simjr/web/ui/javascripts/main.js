@@ -53,11 +53,15 @@ function SimJr(ge) {
             e.html = {};
             if(e.visible) {
                 
-                if (json.location && !json.polygon) {
-                    
-                    var pm = ge.createPlacemark("entity-" + json.name);
-                    pm.setName(e.name);
-                    
+                var pm = ge.createPlacemark("entity-" + json.name);
+                
+                //Optionally disable the label.
+                if(e.showLabel === undefined || e.showLabel) {
+                	pm.setName(e.name);
+                }
+            	
+                if (json.location && !json.polygon) 
+                {
                     var pmStyle = ge.createStyle('');
                     var pmIcon = ge.createIcon('');
                     pmIcon.setHref(e.getIconHref());
@@ -70,9 +74,8 @@ function SimJr(ge) {
                     
                     e.kml.placemark = pm;
                 }
-                else if(json.polygon && !json.polygon.closed) {
-                    var pm = ge.createPlacemark("entity-" + json.name);
-                    pm.setName(e.name);
+                else if(json.polygon && !json.polygon.closed) 
+                {
                     var line = ge.createLineString("");
                     pm.setGeometry(line);
                     
@@ -89,9 +92,8 @@ function SimJr(ge) {
                     e.kml.placemark = pm;
                     e.kml.line = line;
                 }
-                else if(json.polygon && json.polygon.closed) {
-                    var pm = ge.createPlacemark("entity-" + json.name);
-                    pm.setName(e.name);
+                else if(json.polygon && json.polygon.closed) 
+                {
                     var poly = ge.createPolygon("");
                     var line = ge.createLinearRing("");
                     pm.setGeometry(poly);
@@ -115,10 +117,12 @@ function SimJr(ge) {
                     e.kml.polygon = poly;
                 }
                 
-                google.earth.addEventListener(e.kml.placemark, 'click', function(event) {
-                    event.preventDefault();
-                    that.showProperties(e);
-                });
+                if(e.allowOnClick === undefined || e.allowOnClick) {
+	                google.earth.addEventListener(e.kml.placemark, 'click', function(event) {
+	                    event.preventDefault();
+	                    that.showProperties(e);
+	                });
+            	}
             }
             that.entities[e.name] = e;
             
