@@ -179,6 +179,19 @@ public class AbstractEntityTest extends TestCase
         assertEquals(desiredAgl, EntityTools.getAboveGroundLevel(entity), 0.1);
     }
     
+    public void testOrientationIsConstrainedToZeroToTwoPi() throws Exception
+    {
+        final Entity entity = new TestEntity(getName());
+        
+        sim.addEntity(entity);
+
+        entity.setOrientation(3 * Math.PI);
+        assertEquals(Math.PI, entity.getOrientation(), 0.0001);
+        
+        entity.setOrientation(-Math.PI);
+        assertEquals(Math.PI, entity.getOrientation(), 0.0001);
+    }
+    
     public void testDestroyedEntityDoesNotMove() throws Exception
     {
         final Entity entity = new TestEntity(getName());

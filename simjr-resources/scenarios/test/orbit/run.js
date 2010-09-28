@@ -37,7 +37,7 @@ requireScript("ui");
 requireScript("polygons");
 
 var rwaOrbitPoint = simjr.polygons.waypoint({name:"rwaPoint", x: 0, y: -2000 });
-simjr.entities.create({
+var rwa = simjr.entities.create({
 	name:"rwa", 
 	prototype:"rwa",
 	x: -5000, y: 2000,
@@ -51,7 +51,7 @@ simjr.entities.create({
 });
 
 var fwaOrbitPoint = simjr.polygons.waypoint({name:"fwaPoint", x: 0, y: 2000 });
-simjr.entities.create({
+var fwa = simjr.entities.create({
 	name:"fwa", 
 	prototype:"fwa",
 	x: 5000, y: -2000,

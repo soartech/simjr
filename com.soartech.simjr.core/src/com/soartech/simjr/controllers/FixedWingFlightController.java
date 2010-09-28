@@ -167,13 +167,15 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     @Override
     public void tick(double dt)
     {
-        // TODO: Use desired-turn-rate!
-
         // Convert desired speed, bearing and altitude into a desired velocity
+    	
+    	// Note that desiredHeading is CW with 0 north, orientation is CCW with 0 east
         
         // Get X/Y part of desired velocity - sin/cos switched to account for 0 North.
         double x = Math.sin(desiredHeading);
         double y = Math.cos(desiredHeading);
+        double currentOrientation = getEntity().getOrientation();
+        double desiredOrientation = Angles.navRadiansToMathRadians(desiredHeading);
         Vector3 desiredVelocity = new Vector3(x, y, 0);
         
         // Scale by speed to get the right ground speed
@@ -207,58 +209,21 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // Store in properties so it's displayed in UI.
         getEntity().setProperty("desired-velocity", desiredVelocity);
 
-        // Start with this
-        Vector3 newVelocity = desiredVelocity;
-        
-        // Build velocity we're allowed to turn at
-        Vector3 planeDesired = new Vector3(desiredVelocity.x, desiredVelocity.y, 0.0);
-        Vector3 unitDesired = planeDesired.normalized(); 
-        Vector3 planeActual = new Vector3(getEntity().getVelocity().x, getEntity().getVelocity().y, 0.0);
-        if(planeActual.epsilonEquals(Vector3.ZERO))
-        {
-            planeActual = Vector3.X_UNIT;
-        }
-        Vector3 unitActual = planeActual.normalized();
+        double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation);
+        double maxDeltaAngle = desiredTurnRate * dt;
+        double desiredDeltaAngle = Math.min(Math.abs(angleDiff), maxDeltaAngle) * Math.signum(angleDiff);
+        double newOrientation = currentOrientation + desiredDeltaAngle;
+        getEntity().setOrientation(newOrientation);
 
-        // Catch zero-vectors and give them something that will multiply alright.
-        if (unitActual.epsilonEquals(Vector3.ZERO)) { unitActual = Vector3.Y_UNIT; }
-        if (unitDesired.epsilonEquals(Vector3.ZERO)) { unitDesired = Vector3.Y_UNIT; }
-            
-        double angleDesired = Math.atan2(unitDesired.y, unitDesired.x);
-        double angleActual = Math.atan2(unitActual.y, unitActual.x);
-        double angleDiff = Angles.angleDifference(angleDesired, angleActual);
+        Vector3 newVelocity = new Vector3(Math.cos(newOrientation), Math.sin(newOrientation), 0.0);
+        newVelocity = newVelocity.multiply(desiredSpeed);
+        newVelocity = new Vector3(newVelocity.x, newVelocity.y, desiredVelocityZ);
         
-        if (Math.abs(angleDiff) > Math.toRadians(1.0))
-        {
-            double maxDeltaAngle = desiredTurnRate * dt;
-            double desiredDeltaAngle = Math.min(Math.abs(angleDiff), maxDeltaAngle) * Math.signum(angleDiff);
-    
-            // Rotate the current unit-velocity by the max angle we're allowed to turn
-            double rotatedX = unitActual.x*Math.cos(desiredDeltaAngle) - unitActual.y*Math.sin(desiredDeltaAngle);
-            double rotatedY = unitActual.x*Math.sin(desiredDeltaAngle) + unitActual.y*Math.cos(desiredDeltaAngle);
-            Vector3 unitPossible = new Vector3(rotatedX, rotatedY, 0.0);
-            
-            // Decide how much of the desired velocity should be inherited
-            double rotationFraction = Math.abs(desiredDeltaAngle / angleDiff);
-            double interpolatedVelocity = planeActual.length()*(1.0 - rotationFraction) + planeDesired.length()*rotationFraction;
-            
-            newVelocity = unitPossible.multiply(interpolatedVelocity);
-        }
-
         if(newVelocity.epsilonEquals(Vector3.ZERO))
         {
             newVelocity = Vector3.ZERO;
         }
         getEntity().setVelocity(newVelocity);
-        
-        // Only turn the entity if it's moving
-        // TODO Come up with a better way of doing this. Maybe FlightController should
-        // have an airborne flag.
-        if(newVelocity.length() > 1.0)
-        {
-            // Fix the heading to the velocity
-            getEntity().setOrientation(Angles.navRadiansToMathRadians(Angles.getBearing(newVelocity)));
-        }
     }
 
 }

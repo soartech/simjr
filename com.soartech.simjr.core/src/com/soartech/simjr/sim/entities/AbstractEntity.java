@@ -352,6 +352,10 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             radians += 2 * Math.PI;
         }
+        while(radians >= 2 * Math.PI)
+        {
+        	radians -= 2 * Math.PI;
+        }
         this.orientation = radians;
     }
 
