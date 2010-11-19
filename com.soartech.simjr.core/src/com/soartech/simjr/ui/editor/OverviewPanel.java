@@ -53,11 +53,11 @@ public class OverviewPanel extends JPanel implements ModelChangeListener
 {
     private static final long serialVersionUID = 5881221908791785184L;
 
-    private final ScenarioEditorApplication app;
+    private final ScenarioEditorServiceManager app;
     private final JTextField nameField = new JTextField(50);
     private final JTextArea descArea = new JTextArea();
     
-    public OverviewPanel(final ScenarioEditorApplication app)
+    public OverviewPanel(final ScenarioEditorServiceManager app)
     {
         super(new MigLayout());
         this.app = app;

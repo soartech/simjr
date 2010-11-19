@@ -58,14 +58,14 @@ public class SourcePanel extends JPanel implements ModelChangeListener, EditorTa
         jsyntaxpane.DefaultSyntaxKit.initKit();
     }
     
-    private final ScenarioEditorApplication app;
+    private final ScenarioEditorServiceManager app;
     private final JEditorPane textArea = new JEditorPane();
     private boolean activated = false;
     
     /**
      * @param app
      */
-    public SourcePanel(ScenarioEditorApplication app)
+    public SourcePanel(ScenarioEditorServiceManager app)
     {
         super(new BorderLayout());
         

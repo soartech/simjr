@@ -37,6 +37,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -46,6 +47,7 @@ import javax.swing.undo.UndoableEdit;
 import org.apache.log4j.Logger;
 
 import com.soartech.math.geotrans.Geodetic;
+import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.app.ApplicationState;
@@ -55,6 +57,7 @@ import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.ModelException;
 import com.soartech.simjr.services.DefaultServiceManager;
+import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.SimpleTerrain;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -76,11 +79,10 @@ import com.soartech.simjr.util.SwingTools;
 /**
  * @author ray
  */
-public class ScenarioEditorApplication extends DefaultServiceManager implements PropertyChangeListener
+public class ScenarioEditorApplication extends DefaultServiceManager implements PropertyChangeListener, ScenarioEditorServiceManager
 {
     private static final Logger logger = Logger.getLogger(ScenarioEditorApplication.class);
     
-    private static ScenarioEditorApplication instance;
     private ScenarioEditorMainFrame frame;
     private Model model = new Model();
     
@@ -101,7 +103,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     
     private ScenarioEditorApplication(String args[])
     {
-        instance = this;
+        addService(this);
         
         addService(new PreferenceProvider("simjr/editor"));
         
@@ -198,17 +200,15 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         new AdjustMapOpacityAction(actionManager);
     }
     
-    public static ScenarioEditorApplication getInstance()
-    {
-        return instance;
-    }
-    
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.editor.ScenarioEditorServiceManager#getModel()
+     */
     public Model getModel()
     {
         return model;
     }
     
-    public ScenarioEditorMainFrame getFrame()
+    public JFrame getFrame()
     {
         return frame;
     }
@@ -218,6 +218,11 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         JOptionPane.showMessageDialog(frame, text, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
+    public void showPanel(JComponent component)
+    {
+        frame.showPanel(component);
+    }
+    
     public File selectFile(Object... filters)
     {
         final String cd = findService(PreferenceProvider.class).getPreferences().get("chooser.currentDirectory", null);
@@ -239,6 +244,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
      * 
      * @return false if the user asked to cancel
      */
+    @Override
     public boolean saveIfModelIsChanged()
     {
         if(getModel().isDirty())
@@ -291,4 +297,19 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         SwingUtilities.invokeLater(new Runnable() { public void run() { new ScenarioEditorApplication(args); }});
     }
 
+    @Override
+    public void shutdown() throws SimulationException
+    {        
+    }
+
+    @Override
+    public void start(ProgressMonitor progress) throws SimulationException
+    {        
+    }
+
+    @Override
+    public Object getAdapter(Class klass)
+    {
+        return null;
+    }
 }

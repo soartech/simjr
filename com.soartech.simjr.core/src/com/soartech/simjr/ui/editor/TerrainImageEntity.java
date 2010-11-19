@@ -55,9 +55,9 @@ import com.soartech.simjr.ui.shapes.EntityShapeFactory;
  */
 public class TerrainImageEntity extends AbstractEntity
 {
-    private final MapPanel mapPanel;
+    private final TerrainImageListener mapPanel;
     
-    public TerrainImageEntity(String name, MapPanel mapPanel)
+    public TerrainImageEntity(String name, TerrainImageListener mapPanel)
     {
         super(name, EntityPrototypes.NULL);
         

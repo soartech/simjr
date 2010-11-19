@@ -36,7 +36,7 @@ import javax.swing.Icon;
 import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.editor.ScenarioEditorApplication;
+import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
 
 /**
  * @author ray
@@ -106,13 +106,13 @@ public abstract class AbstractEditorAction extends AbstractSimulationAction
         super(manager, label, icon, klass, adapt);
     }
     
-    public ScenarioEditorApplication getApplication()
+    public ScenarioEditorServiceManager getApplication()
     {
-        return ScenarioEditorApplication.getInstance();
+        return getServices().findService(ScenarioEditorServiceManager.class);
     }
     
     public Model getModel()
     {
-        return ScenarioEditorApplication.getInstance().getModel();
+        return getApplication().getModel();
     }
 }

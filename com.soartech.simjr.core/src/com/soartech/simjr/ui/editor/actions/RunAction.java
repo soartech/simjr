@@ -88,7 +88,7 @@ public class RunAction extends AbstractEditorAction
         
         runner.runScenario(getModel());
         
-        getApplication().getFrame().showPanel(findService(RunPanel.class));
+        getApplication().showPanel(findService(RunPanel.class));
         getActionManager().updateActions();
     }
 
