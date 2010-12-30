@@ -154,6 +154,7 @@
             <include name="**/Test*.java" />
             <exclude name="**/AllTests.java" />
 
+            <exclude name="**/SoarSpeakManagerTest.java" />
             <exclude name="**/VistaRhsFunctionCommTest.java" />
             <exclude name="**/MetersToMgrsRhsFunctionTest.java" />
             <exclude name="**/com/soartech/simjr/helosoar/**" />
@@ -163,6 +164,7 @@
             <include name="**/Test*.java" />
             <exclude name="**/AllTests.java" />
 
+            <exclude name="**/SoarSpeakManagerTest.java" />
             <exclude name="**/VistaRhsFunctionCommTest.java" />
             <exclude name="**/MetersToMgrsRhsFunctionTest.java" />
             <exclude name="**/com/soartech/simjr/helosoar/**" />
