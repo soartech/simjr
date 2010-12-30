@@ -37,6 +37,8 @@ rem bat scripts, be sure to use "call simjr.bat".
 rem These files must be moved from plugins up to the root...
 rem org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar
 
+setlocal
+set JAVA_OPTS=-Djava.net.preferIPv4Stack=true
 set SIMJR_HOME=%~dsp0
-java %SIMJR_OPTS% -Dsimjr.home=%SIMJR_HOME% -Dsimjr.app=sim "-Dsimjr.args=%*" -jar org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar -console
+java %JAVA_OPTS% %SIMJR_OPTS% -Dsimjr.home=%SIMJR_HOME% -Dsimjr.app=sim "-Dsimjr.args=%*" -jar org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar -console
 
