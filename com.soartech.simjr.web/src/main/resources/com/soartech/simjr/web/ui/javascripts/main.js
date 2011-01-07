@@ -231,7 +231,7 @@ function SimJr(ge) {
             that.firstRefresh = false;
             
             if(repeat) {
-                timeout = setTimeout("simjr.refresh(true)", 1000);
+                timeout = setTimeout("simjr.refresh(true)", 1000); //How often SimJr is polled. 
             }
         });
         
