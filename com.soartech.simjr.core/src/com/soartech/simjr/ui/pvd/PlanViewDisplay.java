@@ -194,6 +194,11 @@ public class PlanViewDisplay extends JPanel
         detonationShapes.dispose();
     }
     
+    public EntityShapeManager getShapeAdapter()
+    {
+        return shapeAdapter;
+    }
+    
     public ShapeSystem getShapeSystem()
     {
         return shapeSystem;

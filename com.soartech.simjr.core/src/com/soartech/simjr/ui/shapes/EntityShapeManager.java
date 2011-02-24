@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.ui.shapes;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,8 +44,15 @@ import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
 
+import com.soartech.shapesystem.FillStyle;
+import com.soartech.shapesystem.Position;
+import com.soartech.shapesystem.Rotation;
+import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.Shape;
+import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
+import com.soartech.shapesystem.shapes.Frame;
+import com.soartech.shapesystem.shapes.ImageShape;
 import com.soartech.shapesystem.swing.SwingPrimitiveRendererFactory;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
@@ -73,6 +81,7 @@ public class EntityShapeManager
     private TimedShapeManager timedShapes;
     private Map<Entity, EntityShape> shapes = new HashMap<Entity, EntityShape>();
     private List<String> selectionIds = new ArrayList<String>();
+    private Set<String> decorationIds = new HashSet<String>();
     
     // This has to be a list to get Z-order to behave consistently for entities in
     // the same layer
@@ -223,17 +232,35 @@ public class EntityShapeManager
         return selection;
     }
     
-    
+    /**
+     * Set the primary highlight shape to be centered on the specified entity
+     * and to use the default highlight color.
+     * 
+     * @param entity
+     */
     public void highlightEntity(Entity entity)
+    {
+        highlightEntity(entity, null);
+        
+    }
+    
+    /**
+     * Set the primary highlight shape to be centered on the specified entity
+     * and to use the specified highlight color.
+     * 
+     * @param entity
+     * @param color
+     */
+    public void highlightEntity(Entity entity, Color color)
     {
         shapeSystem.removeShape(HIGHLIGHT_ID);
         if(entity != null && EntityTools.isVisible(entity))
         {
-            createHighlight(entity);
+            createHighlight(entity, HIGHLIGHT_ID, color);
         }
     }
-    
-    private Shape createHighlight(Entity selected)
+
+    private Shape createHighlight(Entity selected, String highlightId, Color color)
     {
         final EntityShapeFactory factory = getShapeFactory(selected);
         if(factory == null || factory.equals(NullShapeFactory.FACTORY))
@@ -242,12 +269,45 @@ public class EntityShapeManager
         }
         
         factory.initialize(this.shapeFactory);
-        final Shape selection = factory.createSelection(HIGHLIGHT_ID, selected);
-        selection.getStyle().setOpacity(selection.getStyle().getOpacity() / 2.0f);
         
+        final Shape selection = factory.createSelection(highlightId, selected);
+        ShapeStyle style = selection.getStyle();
+        style.setOpacity(selection.getStyle().getOpacity() / 2.0f);
+        if (color != null)
+        {
+            style.setFillColor(color);
+            style.setLineColor(color.darker());
+        }
         shapeSystem.addShape(selection);
 
         return selection;
+    }
+    
+    public void addHighlightDecoration(Entity e, String suffix, Color color)
+    {
+        Shape highlight = createHighlight(e, HIGHLIGHT_ID + "." + suffix, color);
+        addDecoration(e, highlight);
+    }
+    
+    public void addDecoration(Entity e, Shape shape)
+    {
+        shape.setPosition(new Position(shapes.get(e).getPrimaryDisplayShape()));
+        String id = shape.getName();
+        if (shapeSystem.getShape(id) != null)
+        {
+            shapeSystem.removeShape(id);
+        }
+        shapeSystem.addShape(shape);
+        decorationIds.add(id);
+    }
+    
+    public void clearDecorations()
+    {
+        for (String decorationId : decorationIds)
+        {
+            shapeSystem.removeShape(decorationId);
+        }
+        decorationIds.clear();
     }
     
     public List<Entity> getEntitiesAtScreenPoint(double x, double y, double tolerance)
