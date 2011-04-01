@@ -176,6 +176,43 @@ public class DefaultEntityShape extends EntityShape
         }
     }
     
+    @Override
+    public ImageShape createBodyShape(String shapeId, ShapeStyle shapeStyle)
+    {
+    	Frame bodyFrame = getBodyFrame();
+        
+        String layer = EntityTools.getProperty(getEntity().getProperties(), 
+                EntityConstants.PROPERTY_SHAPE_LAYER, 
+                EntityConstants.LAYER_AIR).toString();
+
+    	ImageShape body = new ImageShape(shapeId, layer,
+                                new Position(bodyFrame.getName()),
+                                Rotation.createRelative(bodyFrame.getName()),
+                                Scalar.createPixel(width),
+                                Scalar.createPixel(height),
+                                getBodyImage(),
+                                shapeStyle);
+    	
+    	return body;
+    }
+    
+    public ImageShape createShadowShape(String shapeId, ShapeStyle shapeStyle)
+    {
+        if (!hasShadow)
+        {
+        	return null;
+        }
+        
+        ImageShape shadow = new ImageShape(shapeId, EntityConstants.LAYER_SHADOWS,
+                         new Position(getShadowFrame().getName()),
+                         Rotation.createRelative(getRootFrame().getName()),
+                         Scalar.createPixel(width),
+                         Scalar.createPixel(height),
+                         finalImagePrefix + "/shadow.png", shapeStyle);
+        
+        return shadow;
+    }
+    
     /**
      * @param entity
      * @param system
@@ -188,48 +225,32 @@ public class DefaultEntityShape extends EntityShape
         
         this.rendererFactory = factory.rendererFactory;
         loadImages();
-                
-        String name = getRootFrame().getName();
         
-        Frame bodyFrame = getBodyFrame();
-                
-        String layer = EntityTools.getProperty(entity.getProperties(), 
-                                               EntityConstants.PROPERTY_SHAPE_LAYER, 
-                                               EntityConstants.LAYER_AIR).toString();
+        String root = getRootFrame().getName();
+        
+        createBody(root + ".body");
+        createLabel(12, 12, root);
+        
+        if (hasShadow)
+        {
+        	createShadow(root + ".shadow");
+        }
 
-        myBody = new ImageShape(name + ".body", layer,
-                                new Position(bodyFrame.getName()),
-                                Rotation.createRelative(bodyFrame.getName()),
-                                Scalar.createPixel(width),
-                                Scalar.createPixel(height),
-                                getBodyImage(),
-                                new ShapeStyle());
-                
-        createLabel(12, 12, name);
-        createShadow();
         addHitableShape(myBody);
     }
     
-    private void createShadow()
+    private void createBody(String name)
     {
-        if(!hasShadow)
-        {
-            return;
-        }
-        String name = getRootFrame().getName();
-        
-        Frame shadowFrame = getShadowFrame();
-        
+        myBody = createBodyShape(name, new ShapeStyle());
+    }
+    
+    private void createShadow(String name)
+    {
         ShapeStyle shadowStyle = new ShapeStyle();
         shadowStyle.setFillStyle(FillStyle.FILLED);
         shadowStyle.setOpacity(0.8f);
         
-        ImageShape shadow = new ImageShape(name + ".shadow", EntityConstants.LAYER_SHADOWS,
-                         new Position(shadowFrame.getName()),
-                         Rotation.createRelative(name),
-                         Scalar.createPixel(width),
-                         Scalar.createPixel(height),
-                         finalImagePrefix + "/shadow.png", shadowStyle);
+        Shape shadow = createShadowShape(name, shadowStyle);
         
         addShape(shadow);
     }
@@ -256,6 +277,4 @@ public class DefaultEntityShape extends EntityShape
     {
         return String.format("%s (%dx%d), %s", finalImagePrefix, width, height, hasShadow);
     }
-    
-    
 }

@@ -215,6 +215,11 @@ public class EntityShape implements EntityPropertyListener
         return bodyFrame.getName();
     }
     
+    public Shape createBodyShape(String shapeId, ShapeStyle shapeStyle)
+    {
+    	return null;
+    }
+    
     public Text createLabel(int xOffset, int yOffset, String text)
     {
         return createLabel(xOffset, yOffset, text, getPrimaryDisplayShape());

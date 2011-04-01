@@ -75,12 +75,8 @@ public class TruckShape extends EntityShape
         updateForce();
         style.setLineColor(Color.DARK_GRAY);
         
-        Box body = new Box(name + ".body", EntityConstants.LAYER_GROUND, 
-                                new Position(name),
-                                Rotation.createRelative(name),
-                                style, 
-                                Scalar.createPixel(15),
-                                Scalar.createPixel(10));
+        Box body = createBodyShape(name + ".body", style);
+        
         Box cab = new Box(name + ".cab", EntityConstants.LAYER_GROUND, 
                 Position.createRelativePixel(11,0,name),
                 Rotation.createRelative(name),
@@ -93,11 +89,24 @@ public class TruckShape extends EntityShape
         addHitableShape(body);
         addShape(cab);
     }
+    
+    @Override
+    public Box createBodyShape(String shapeId, ShapeStyle shapeStyle)
+    {
+    	Box body = new Box(shapeId, EntityConstants.LAYER_GROUND, 
+    			new Position(getRootFrame().getName()),
+                Rotation.createRelative(getRootFrame().getName()),
+                style, 
+                Scalar.createPixel(15),
+                Scalar.createPixel(10));
+    	
+    	return body;
+    }
+    
     @Override
     protected void updateForce()
     {
         String force = EntityTools.getForce(getEntity());
         style.setFillColor(getForceColor(force));
     }
-
 }
