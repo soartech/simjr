@@ -98,7 +98,7 @@ public class TankShape extends EntityShape
     	Box body = new Box(shapeId, EntityConstants.LAYER_GROUND, 
     			new Position(getRootFrame().getName()),
                 Rotation.createRelative(getRootFrame().getName()),
-                style, 
+                shapeStyle, 
                 Scalar.createPixel(16),
                 Scalar.createPixel(16));
     	

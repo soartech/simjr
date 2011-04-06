@@ -96,7 +96,7 @@ public class TruckShape extends EntityShape
     	Box body = new Box(shapeId, EntityConstants.LAYER_GROUND, 
     			new Position(getRootFrame().getName()),
                 Rotation.createRelative(getRootFrame().getName()),
-                style, 
+                shapeStyle, 
                 Scalar.createPixel(15),
                 Scalar.createPixel(10));
     	
