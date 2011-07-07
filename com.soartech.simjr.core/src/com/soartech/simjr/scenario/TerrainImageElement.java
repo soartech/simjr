@@ -49,7 +49,7 @@ import com.soartech.simjr.util.UndoTools;
 public class TerrainImageElement implements ModelElement
 {
     public static final String ADDED = TerrainImageElement.class.getCanonicalName() + ".added";
-    public static final String REMOVED = TerrainImageElement.class.getCanonicalName() + ".added";
+    public static final String REMOVED = TerrainImageElement.class.getCanonicalName() + ".removed";
     public static final String HREF = TerrainImageElement.class.getCanonicalName() + ".href";
     public static final String METERS_PER_PIXEL = TerrainImageElement.class.getCanonicalName() + ".metersPerPixel";
     public static boolean isProperty(String p)
@@ -187,6 +187,15 @@ public class TerrainImageElement implements ModelElement
     {
         return location;
     }
+
+    // FIXME: To get rid of the bug where map location for the image is not written out
+    // or read in properly (it is currently always zero in the xml), we need a setLocation
+    // function. This doesn't seem to work though. Need to wade through all that undo/redo
+    // and xpath code to figure out how to set the location properly.
+//    public UndoableEdit setLocation(double latDegrees, double lonDegrees, double altitude)
+//    {
+//        return location.setLocation(latDegrees, lonDegrees, altitude);        
+//    }
     
     private UndoableEdit getOrCreateImageElement(String href, double metersPerPixel)
     {
@@ -266,7 +275,7 @@ public class TerrainImageElement implements ModelElement
             setImageMetersPerPixel(oldValue);
         }
     }
-    
+        
     private class CreateEdit extends AbstractUndoableEdit
     {
         private static final long serialVersionUID = 2557435858151443282L;
