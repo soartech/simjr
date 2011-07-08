@@ -116,6 +116,7 @@
     <copy todir="${dist}">
       <fileset dir="platform">
         <include name="*.bat" />
+        <include name="*.sh" />
       </fileset>
     </copy>
   </target>
