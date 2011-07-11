@@ -32,10 +32,14 @@
 package com.soartech.simjr.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,18 +48,21 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JWindow;
 import javax.swing.ListSelectionModel;
+import javax.swing.Popup;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.jidesoft.popup.JidePopup;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
@@ -71,7 +78,6 @@ public class RouteEditor extends JPanel
 
     private AbstractPolygon route;
     
-    private JidePopup popup;
     private DefaultListModel listModel = new DefaultListModel();
     private JList list = new JList(listModel);
     private AbstractAction upAction = new AbstractAction("Move Up") {
@@ -109,26 +115,70 @@ public class RouteEditor extends JPanel
             addPoint();
         }};
     
-    public static void showPopupEditor(Component owner, Point point, AbstractPolygon route)
+    private static class NiftyPopup extends Popup implements
+            WindowFocusListener
     {
-        JidePopup popup = new JidePopup();
-        popup.setMovable(true);
-        popup.setResizable(true);
-        popup.setOwner(owner);
-        popup.setContentPane(new RouteEditor(route, popup));
-        popup.setFocusable(true);
-        popup.setMovable(true);
-        popup.showPopup(point.x, point.y);
-        popup.removeExcludedComponent(owner);
+        private final JWindow dialog;
+
+        public NiftyPopup(Frame base, JPanel panel, int x, int y)
+        {
+            super();
+            dialog = new JWindow(base);
+            dialog.setFocusable(true);
+            dialog.setLocation(x, y);
+            dialog.setContentPane(panel);
+            panel.setBorder(new JPopupMenu().getBorder());
+            dialog.setSize(panel.getPreferredSize());
+            dialog.addKeyListener(new KeyAdapter()
+            {
+                @Override
+                public void keyPressed(KeyEvent e)
+                {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    {
+                        dialog.setVisible(false);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void show()
+        {
+            dialog.addWindowFocusListener(this);
+            dialog.setVisible(true);
+        }
+
+        @Override
+        public void hide()
+        {
+            dialog.setVisible(false);
+            dialog.removeWindowFocusListener(this);
+        }
+
+        public void windowGainedFocus(WindowEvent e)
+        {
+            // NO-OP
+        }
+
+        public void windowLostFocus(WindowEvent e)
+        {
+            hide();
+        }
     }
         
-    public RouteEditor(AbstractPolygon route, JidePopup popup)
+    public static void showPopupEditor(JFrame frame, Point point, AbstractPolygon route)
+    {
+        RouteEditor re = new RouteEditor(route);
+        NiftyPopup popup = new NiftyPopup(frame, re, point.x, point.y);
+        popup.show();
+    }
+        
+    public RouteEditor(AbstractPolygon route)
     {
         super(new BorderLayout());
         
         this.route = route;
-        
-        this.popup = popup;
         
         add(new JLabel("Editing route: " + route.getName()), BorderLayout.NORTH);
         add(new JScrollPane(list), BorderLayout.CENTER);
@@ -273,19 +323,11 @@ public class RouteEditor extends JPanel
                 return EntityTools.NAME_COMPARATOR.compare(o1, o2);
             }});
         
-        if(popup != null) 
-        {
-            popup.setTransient(false);
-        }
         Object[] values = r.toArray();
         Entity e = (Entity) JOptionPane.showInputDialog(this, 
                         "Choose point", "Add point to route",
                         JOptionPane.INFORMATION_MESSAGE, null,
                         values, values[0]);
-        if(popup != null)
-        {
-            popup.setTransient(true);
-        }
         if(e != null)
         {
             listModel.addElement(e.getName());

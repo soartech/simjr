@@ -38,13 +38,14 @@ import java.awt.event.ActionEvent;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.ui.RouteEditor;
+import com.soartech.simjr.ui.editor.actions.AbstractEditorAction;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
  * @author ray
  */
-public class EditRouteAction extends AbstractSimulationAction
+public class EditRouteAction extends AbstractEditorAction
 {
     private static final long serialVersionUID = -9047372417083601728L;
     
@@ -79,7 +80,7 @@ public class EditRouteAction extends AbstractSimulationAction
             final PlanViewDisplay pvd = pvdPro != null ? pvdPro.getActivePlanViewDisplay() : null;
             if(pvd != null)
             {
-                RouteEditor.showPopupEditor(pvd, location, route);
+                RouteEditor.showPopupEditor(getApplication().getFrame(), location, route);
             }
         }
     }
