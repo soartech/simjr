@@ -86,6 +86,14 @@ public class SimpleTerrain implements Terrain
     }
 
     /* (non-Javadoc)
+     * @see com.soartech.simjr.sim.Terrain#getTerrainTypeAtPoint(com.soartech.math.Vector3)
+     */
+    public Object getTerrainTypeAtPoint(Vector3 point)
+    {
+    	return null;
+    }
+    
+    /* (non-Javadoc)
      * @see com.soartech.simjr.Terrain#clampPointToGround(com.soartech.spatr.math.Vector3, double)
      */
     public Vector3 clampPointToGround(Vector3 point, double agl)

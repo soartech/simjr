@@ -48,6 +48,7 @@ import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.scenario.ModelException;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
+import com.soartech.simjr.scenario.TerrainTypeElement;
 import com.soartech.simjr.scripting.ScriptRunSettings;
 import com.soartech.simjr.scripting.ScriptRunner;
 import com.soartech.simjr.services.ServiceManager;
@@ -134,26 +135,39 @@ public class ScenarioLoader
         origin.latitude = Math.toRadians(model.getTerrain().getOriginLatitude());
         origin.longitude = Math.toRadians(model.getTerrain().getOriginLongitude());
         final Simulation sim = services.findService(Simulation.class);
-        sim.setTerrain(new SimpleTerrain(origin));
         
-        loadTerrainImage(sim);
+        final TerrainTypeElement tte = model.getTerrain().getTerrainType();
+        File href = null;
+        if (tte != null && tte.hasTerrainType())
+        {
+        	href = tte.getTerrainTypeFile();
+        }
+        
+        // Set the origin of the terrain (for coordinate conversions)
+        // and the filename for the terrain type map.
+        DetailedTerrain detailedTerrain = new DetailedTerrain(origin, href);
+        sim.setTerrain(detailedTerrain);
+        
+        loadTerrainImage(sim, detailedTerrain);
     }
 
-    private void loadTerrainImage(Simulation sim)
+    private void loadTerrainImage(Simulation sim, DetailedTerrain detailedTerrain)
     {
         final TerrainImageElement tie = model.getTerrain().getImage();
-        if(!tie.hasImage())
+        if (!tie.hasImage())
         {
             return;
         }
         
+        final File href = tie.getImageFile();
+        logger.info("Using map image from '" + href + "'");
+        final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
+        detailedTerrain.setCoordinateFrame(origin, tie.getImageMetersPerPixel());
+        
         final PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
-        if(pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
+        if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
         {
-            final File href = tie.getImageFile();
-            logger.info("Using map image from '" + href + "'");
-            final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
-            final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
+        	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
             pvdPro.getActivePlanViewDisplay().setMapImage(image);
         }
     }

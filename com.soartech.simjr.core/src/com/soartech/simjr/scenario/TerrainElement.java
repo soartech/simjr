@@ -51,6 +51,7 @@ public class TerrainElement implements ModelElement
     private final XPath latPath;
     private final XPath lonPath;
     private final TerrainImageElement image;
+    private final TerrainTypeElement terrainType;
     
     public static Element buildDefault(Model model)
     {
@@ -79,6 +80,7 @@ public class TerrainElement implements ModelElement
         this.lonPath = this.model.newXPath("/simjr:scenario/simjr:terrain/simjr:origin/@simjr:longitude");
         
         this.image = TerrainImageElement.attach(this);
+        this.terrainType = TerrainTypeElement.attach(this);
     }
     
     /* (non-Javadoc)
@@ -134,6 +136,11 @@ public class TerrainElement implements ModelElement
     public TerrainImageElement getImage()
     {
         return image;
+    }
+    
+    public TerrainTypeElement getTerrainType()
+    {
+    	return terrainType;
     }
     
     private class ChangeTerrainOriginEdit extends AbstractUndoableEdit

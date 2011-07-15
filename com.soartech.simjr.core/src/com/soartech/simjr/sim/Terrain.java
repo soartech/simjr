@@ -83,6 +83,14 @@ public interface Terrain
     double getElevationAtPoint(Vector3 point);
     
     /**
+     * Return the terrain type at the X/Y position of the given point.
+     * 
+     * @param point The point
+     * @return The terrain type
+     */
+    Object getTerrainTypeAtPoint(Vector3 point);
+    
+    /**
      * Preserve the X/Y position of the given point while forcing it to the
      * specified above-ground-level
      * 
