@@ -75,11 +75,11 @@ import bibliothek.gui.dock.common.MultipleCDockableLayout;
 import bibliothek.gui.dock.common.SingleCDockable;
 import bibliothek.gui.dock.common.event.CFocusListener;
 import bibliothek.gui.dock.common.intern.CDockable;
-import bibliothek.gui.dock.common.layout.ThemeMap;
 import bibliothek.gui.dock.common.menu.CLayoutChoiceMenuPiece;
 import bibliothek.gui.dock.common.menu.CLookAndFeelMenuPiece;
 import bibliothek.gui.dock.common.menu.CThemeMenuPiece;
 import bibliothek.gui.dock.common.menu.SingleCDockableListMenuPiece;
+import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.facile.menu.FreeMenuPiece;
 import bibliothek.gui.dock.facile.menu.RootMenuPiece;
 import bibliothek.gui.dock.facile.menu.SubmenuPiece;
@@ -258,7 +258,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     {
         dockable.setLocation(location);
         singleDockables.put(key, dockable);
-        control.add(dockable);
+        control.addDockable(dockable);
         dockable.setVisible(true);        
     }
     
@@ -400,7 +400,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         {
             if(frame.title.equals("PVD1"))
             {
-                control.add(frame);
+                control.addDockable(frame);
                 frame.setVisible(true);
             }
         }
@@ -490,7 +490,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         pf.getContentPane().add(pf.pvd);
         
         //add the dockable to the DF controller
-        control.add(pf, "__" + pf.title);
+        control.addDockable("__" + pf.title, pf);
         
         if(!first && pvds.get(0).isVisible())
         {
@@ -750,7 +750,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                             {
                                 if(!frame.isVisible())
                                 {
-                                    control.add(frame, "__" + frame.title);
+                                    control.addDockable("__" + frame.title, frame);
                                     frame.setVisible(true);
                                 }
                                 else
