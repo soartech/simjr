@@ -32,14 +32,9 @@
 package com.soartech.simjr.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,12 +48,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JWindow;
 import javax.swing.ListSelectionModel;
-import javax.swing.Popup;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -115,58 +107,6 @@ public class RouteEditor extends JPanel
             addPoint();
         }};
     
-    private static class NiftyPopup extends Popup implements
-            WindowFocusListener
-    {
-        private final JWindow dialog;
-
-        public NiftyPopup(Frame base, JPanel panel, int x, int y)
-        {
-            super();
-            dialog = new JWindow(base);
-            dialog.setFocusable(true);
-            dialog.setLocation(x, y);
-            dialog.setContentPane(panel);
-            panel.setBorder(new JPopupMenu().getBorder());
-            dialog.setSize(panel.getPreferredSize());
-            dialog.addKeyListener(new KeyAdapter()
-            {
-                @Override
-                public void keyPressed(KeyEvent e)
-                {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    {
-                        dialog.setVisible(false);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void show()
-        {
-            dialog.addWindowFocusListener(this);
-            dialog.setVisible(true);
-        }
-
-        @Override
-        public void hide()
-        {
-            dialog.setVisible(false);
-            dialog.removeWindowFocusListener(this);
-        }
-
-        public void windowGainedFocus(WindowEvent e)
-        {
-            // NO-OP
-        }
-
-        public void windowLostFocus(WindowEvent e)
-        {
-            hide();
-        }
-    }
-        
     public static void showPopupEditor(JFrame frame, Point point, AbstractPolygon route)
     {
         RouteEditor re = new RouteEditor(route);

@@ -35,7 +35,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JFrame;
+
 import com.soartech.simjr.ui.MapImageOpacityController;
+import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
@@ -84,7 +87,9 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
             return;
         }
         final Rectangle rect = pvd.getBounds();
-        MapImageOpacityController.showPopupEditor(pvd, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
+        
+        JFrame frame = getServices().findService(SimulationMainFrame.class);
+        MapImageOpacityController.showPopupEditor(frame, pvd, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
     }
 
 }

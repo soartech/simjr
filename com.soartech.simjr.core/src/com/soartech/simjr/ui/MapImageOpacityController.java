@@ -35,13 +35,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jidesoft.popup.JidePopup;
 import com.soartech.simjr.ui.pvd.MapImage;
 
 /**
@@ -51,17 +51,11 @@ public class MapImageOpacityController extends JPanel
 {
     private static final long serialVersionUID = -8232810196699751398L;
 
-    public static void showPopupEditor(Component owner, Point point, MapImage mapImage)
+    public static void showPopupEditor(JFrame frame, Component mapContainer, Point point, MapImage mapImage)
     {
-        JidePopup popup = new JidePopup();
-        popup.setMovable(true);
-        popup.setResizable(true);
-        popup.setOwner(owner);
-        popup.setContentPane(new MapImageOpacityController(owner, mapImage));
-        popup.setFocusable(true);
-        popup.setMovable(true);
-        popup.showPopup(point.x, point.y);
-        popup.removeExcludedComponent(owner);
+        MapImageOpacityController mioc = new MapImageOpacityController(mapContainer, mapImage);
+        NiftyPopup popup = new NiftyPopup(frame, mioc, point.x, point.y);
+        popup.show();
     }
 
     public MapImageOpacityController(final Component mapContainer, final MapImage mapImage)
