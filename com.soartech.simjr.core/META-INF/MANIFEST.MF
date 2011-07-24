@@ -6,7 +6,6 @@ Bundle-Version: 2.2.0.qualifier
 Bundle-ClassPath: .,
  bin/,
  simjr.jar,
- lib/jide-2.1.2-common.jar,
  lib/swingx-0.9.4.jar,
  lib/snakeyaml-1.6.jar,
  lib/miglayout-3.7-swing.jar,

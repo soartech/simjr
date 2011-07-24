@@ -41,10 +41,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jidesoft.swing.JideTabbedPane;
 import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -68,7 +68,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
     private static final long serialVersionUID = 691070210836482404L;
     private final ScenarioEditorApplication app;
     private JPanel content;
-    private JideTabbedPane tabs;
+    private JTabbedPane tabs;
     private EditorTab lastActiveTab;
     
     public ScenarioEditorMainFrame(ScenarioEditorApplication scenarioEditorApplication)
@@ -77,10 +77,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         
         this.content = new JPanel(new BorderLayout());
         
-        tabs = new JideTabbedPane();
-        tabs.setBoldActiveTab(true);
-        tabs.setTabShape(JideTabbedPane.SHAPE_OFFICE2003);
-        tabs.setColorTheme(JideTabbedPane.COLOR_THEME_OFFICE2003);
+        tabs = new JTabbedPane();
         tabs.addTab("Map", new MapPanel(app));
         tabs.addTab("Scripts", new ScriptsPanel(app));
         tabs.addTab("Source", new SourcePanel(app));

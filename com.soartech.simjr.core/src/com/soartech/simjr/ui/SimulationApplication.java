@@ -206,21 +206,6 @@ public class SimulationApplication extends DefaultServiceManager
         }
     }
  
-    private static void initializeLookAndFeel()
-    {
-        // Initialize look and feel and style. Otherwise JIDE docking stuff
-        // looks weird.
-//        LookAndFeelFactory.installDefaultLookAndFeel();
-//        LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-        
-        
-        //not using these layouts
-        //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.ECLIPSE_STYLE);
-        //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.ECLIPSE3X_STYLE);
-        //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
-        //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.VSNET_STYLE);
-    }
-    
     private static SplashScreen showSplashScreen()
     {
         SplashScreen splashScreen = null;
@@ -263,7 +248,6 @@ public class SimulationApplication extends DefaultServiceManager
         logger.info("   simjr.home=" + SimJrProps.get(SimJrProps.HOME));
         logger.info("   current directory = " + System.getProperty("user.dir"));
         
-        initializeLookAndFeel();
         SplashScreen splashScreen = showSplashScreen();
         
         app.initialize(splashScreen, args);

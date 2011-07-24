@@ -10,6 +10,5 @@
 	<classpathentry kind="lib" path="lib/miglayout-3.7-swing.jar"/>
 	<classpathentry kind="lib" path="lib/jsyntaxpane-0.9.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/jide-2.1.2-common.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
