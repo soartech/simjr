@@ -231,6 +231,7 @@ public class Simulation extends AbstractAdaptable implements SimulationService
                 {
                     listener.onEntityRemoved(e);
                 }
+                e.setSimulation(null);
             }
         }
     }

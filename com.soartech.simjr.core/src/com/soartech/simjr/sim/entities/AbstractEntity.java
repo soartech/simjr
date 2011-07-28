@@ -328,7 +328,15 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     {
         if(!this.sim.compareAndSet(null, sim))
         {
-            throw new IllegalStateException("sim is already set");
+            if (sim == null) 
+            {
+                this.sim.set(sim);
+                return;
+            }
+            else
+            {
+                throw new IllegalStateException("sim is already set");
+            }
         }
         
         // Once the sim is set, reset the position in case enforce-agl is on.
