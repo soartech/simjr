@@ -135,7 +135,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
 
     public static final String ENTITIES_FRAME_KEY = "__entities";
     
-    private final CLocation firstPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7);
     private final CLocation defaultPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
     
     private final CLocation defaultEntityListLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
@@ -871,8 +870,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

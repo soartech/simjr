@@ -37,7 +37,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
-import javax.swing.JComponent;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -47,7 +47,7 @@ import javax.swing.undo.UndoableEdit;
 import org.apache.log4j.Logger;
 
 import com.soartech.math.geotrans.Geodetic;
-import com.soartech.simjr.ProgressMonitor;
+import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.app.ApplicationState;
@@ -57,7 +57,6 @@ import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.ModelException;
 import com.soartech.simjr.services.DefaultServiceManager;
-import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.SimpleTerrain;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -308,7 +307,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     }
 
     @Override
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return null;
     }

@@ -42,6 +42,5 @@ public interface Adaptable
      * @param klass The requested class or interface
      * @return An object of type klass or null if conversion is not supported.
      */
-    @SuppressWarnings("unchecked")
-    Object getAdapter(Class klass);
+    Object getAdapter(Class<?> klass);
 }

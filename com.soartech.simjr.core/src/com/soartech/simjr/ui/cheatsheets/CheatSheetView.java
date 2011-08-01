@@ -205,8 +205,7 @@ public class CheatSheetView extends DefaultSingleCDockable implements HyperlinkL
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

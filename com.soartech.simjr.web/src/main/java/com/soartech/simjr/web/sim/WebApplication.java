@@ -77,7 +77,6 @@ public class WebApplication extends Application implements
     /* (non-Javadoc)
      * @see com.soartech.simjr.SimulationService#start(com.soartech.simjr.ProgressMonitor)
      */
-    @SuppressWarnings("unchecked")
     public void start(ProgressMonitor progress) throws SimulationException
     {
         SimJrWebActivator.getDefault().registerResource("/simjr/ui", "/com/soartech/simjr/web/ui");
@@ -85,7 +84,7 @@ public class WebApplication extends Application implements
 //        SimJrWebActivator.getDefault().registerResource("/simjr/ui/images", "/com/soartech/simjr/web/ui/images");
 //        SimJrWebActivator.getDefault().registerResource("/simjr/ui/javascripts", "/com/soartech/simjr/web/ui/javascripts");
         
-        final Hashtable props = new Hashtable();
+        final Hashtable<Object,Object> props = new Hashtable<Object,Object>();
         props.put("servlet-name", "Sim Jr Simulation Servlet");
         props.put("alias", "/simjr/sim");
         
@@ -110,7 +109,7 @@ public class WebApplication extends Application implements
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
     @Override
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

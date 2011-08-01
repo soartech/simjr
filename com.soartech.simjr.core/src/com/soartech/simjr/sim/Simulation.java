@@ -484,9 +484,9 @@ public class Simulation extends AbstractAdaptable implements SimulationService
      * @see com.soartech.simjr.adaptables.AbstractAdaptable#getAdapter(java.lang.Class)
      */
     @Override
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
-        // The sim creates and maintains the protoype database. This makes it
+        // The sim creates and maintains the prototype database. This makes it
         // discoverable through the ServiceManager.findService() interface.
         if(klass.isAssignableFrom(EntityPrototypeDatabase.class))
         {

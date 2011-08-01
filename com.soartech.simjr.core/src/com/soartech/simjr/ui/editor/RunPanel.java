@@ -115,7 +115,7 @@ public class RunPanel extends JPanel implements SimulationService
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

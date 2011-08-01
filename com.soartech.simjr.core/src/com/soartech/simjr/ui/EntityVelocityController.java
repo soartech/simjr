@@ -234,8 +234,7 @@ public class EntityVelocityController extends JPanel implements EntityController
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

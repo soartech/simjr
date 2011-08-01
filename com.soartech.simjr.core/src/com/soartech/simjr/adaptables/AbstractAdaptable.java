@@ -45,8 +45,7 @@ public class AbstractAdaptable implements Adaptable
     /* (non-Javadoc)
      * @see com.soartech.simjr.Adaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }

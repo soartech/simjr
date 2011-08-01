@@ -108,7 +108,7 @@ public class SimulationThread extends AbstractAdaptable implements Runnable
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         final Object fromPolicy = Adaptables.adapt(tickPolicy.get(), klass);
         if(fromPolicy != null)

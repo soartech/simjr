@@ -44,15 +44,10 @@ import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
 
-import com.soartech.shapesystem.FillStyle;
 import com.soartech.shapesystem.Position;
-import com.soartech.shapesystem.Rotation;
-import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
-import com.soartech.shapesystem.shapes.Frame;
-import com.soartech.shapesystem.shapes.ImageShape;
 import com.soartech.shapesystem.swing.SwingPrimitiveRendererFactory;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;

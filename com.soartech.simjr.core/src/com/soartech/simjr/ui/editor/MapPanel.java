@@ -180,7 +180,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         return Adaptables.adaptUnchecked(this, klass, false);
     }
@@ -413,7 +413,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
              * @see com.soartech.simjr.sim.entities.AbstractEntity#getAdapter(java.lang.Class)
              */
             @Override
-            public Object getAdapter(Class klass)
+            public Object getAdapter(Class<?> klass)
             {
                 // Add adaptation to EntityElement so that a right-click in the PVD
                 // will show the right actions...

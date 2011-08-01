@@ -331,9 +331,6 @@ public class LocalCartesian extends GeoTransBase
          * 
          */
 
-        double X, Y, Z;
-        double U, V, W;
-
         if ((Latitude < -PI_OVER_2) || (Latitude > PI_OVER_2))
         { /* geodetic latitude out of range */
             throw new IllegalArgumentException("geodetic latitude out of range");

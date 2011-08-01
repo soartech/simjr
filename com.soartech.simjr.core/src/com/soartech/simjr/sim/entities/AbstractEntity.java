@@ -512,9 +512,8 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.AbstractAdaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object getAdapter(Class klass)
+    public Object getAdapter(Class<?> klass)
     {
         // First check "this"
         Object o = super.getAdapter(klass);
@@ -536,6 +535,5 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     {
         return getName();
     }
-
 
 }
