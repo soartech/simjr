@@ -35,6 +35,8 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
@@ -46,25 +48,28 @@ import com.soartech.simjr.ui.SimulationImages;
  */
 public class MapImage
 {
-    /**
-     * The origin, in meters, of the center of the map 
-     */
-    private Vector3 centerMeters = Vector3.ZERO;
-    
-    /**
-     * Number of meters represented by each pixel in the image
-     */
-    private double metersPerPixel = 1.0;
-    
-    private File imageFile;
-    
-    /**
-     * The image
-     */
-    private Image image;
-    
-    private float opacity = 1.0f;
-    
+    private class SingleMapImage
+    {
+        Vector3 centerMeters = Vector3.ZERO;
+        double metersPerPixel = 1.0;
+        File imageFile = null;
+        Image image = null;
+        float opacity = 1.0f;
+    }
+
+    private Map<Integer, SingleMapImage> imageList = new HashMap<Integer, SingleMapImage>();
+
+    private SingleMapImage getOrCreate(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        if (i == null)
+        {
+            i = new SingleMapImage();
+            imageList.put(index, i);
+        }
+        return i;
+    }
+
     /**
      * Construct a new map image
      * 
@@ -75,11 +80,12 @@ public class MapImage
      */
     public MapImage(File imageFile, Vector3 originMeters, double metersPerPixel)
     {
-        this.centerMeters = originMeters;
-        this.metersPerPixel = metersPerPixel;
+        SingleMapImage i = getOrCreate(0);
+        i.centerMeters = originMeters;
+        i.metersPerPixel = metersPerPixel;
         setImage(imageFile);
     }
-    
+
     /**
      * Construct a map image centered on the origin and 1 meter per pixel
      */
@@ -87,73 +93,127 @@ public class MapImage
     {
         this(null, Vector3.ZERO, 1.0);
     }
-    
-    public void setImage(File imageFile)
+
+    public void setImage(int index, File imageFile)
     {
-        this.imageFile = imageFile;
-        if(this.imageFile != null)
+        SingleMapImage i = getOrCreate(index);
+        i.imageFile = imageFile;
+        if (i.imageFile != null)
         {
-            this.image = SimulationImages.loadImageFromJar(imageFile.toString()).getImage();
+            i.image = SimulationImages.loadImageFromJar(imageFile.toString()).getImage();
         }
         else
         {
-            this.image = null;
+            i.image = null;
         }
     }
-    
+
+    public void setImage(File imageFile)
+    {
+        setImage(0, imageFile);
+    }
+
+    public Image getImage(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i==null ? null : i.image;
+    }
+
     public Image getImage()
     {
-        return image;
+        return getImage(0);
     }
-    
+
+    public File getImageFile(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i==null ? null : i.imageFile;
+    }
+
     /**
      * @return the imageFile
      */
     public File getImageFile()
     {
-        return imageFile;
+        return getImageFile(0);
+    }
+
+    public float getOpacity(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i==null ? null : i.opacity;
     }
 
     public float getOpacity()
     {
-        return opacity;
+        return getOpacity(0);
     }
-    
+
+    public void setOpacity(int index, float opacity)
+    {
+        SingleMapImage i = getOrCreate(index);
+        i.opacity = opacity;
+    }
+
     public void setOpacity(float opacity)
     {
-        this.opacity = opacity;
+        setOpacity(0, opacity);
     }
-    
+
     /**
      * @return the centerMeters
      */
+    public Vector3 getCenterMeters(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i==null ? null : i.centerMeters;
+    }
+
     public Vector3 getCenterMeters()
     {
-        return centerMeters;
+        return getCenterMeters(0);
     }
 
     /**
      * @param centerMeters the centerMeters to set
      */
+    public void setCenterMeters(int index, Vector3 centerMeters)
+    {
+        SingleMapImage i = getOrCreate(index);
+        i.centerMeters = centerMeters;
+    }
+
     public void setCenterMeters(Vector3 centerMeters)
     {
-        this.centerMeters = centerMeters;
+        setCenterMeters(0, centerMeters);
     }
 
     /**
      * @return the metersPerPixel
      */
+    public double getMetersPerPixel(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i==null ? 0.0 : i.metersPerPixel;
+    }
+
     public double getMetersPerPixel()
     {
-        return metersPerPixel;
+        return getMetersPerPixel(0);
     }
 
     /**
      * @param metersPerPixel the metersPerPixel to set
      */
+    public void setMetersPerPixel(int index, double metersPerPixel)
+    {
+        SingleMapImage i = getOrCreate(index);
+        i.metersPerPixel = metersPerPixel;
+    }
+
     public void setMetersPerPixel(double metersPerPixel)
     {
-        this.metersPerPixel = metersPerPixel;
+        setMetersPerPixel(0, metersPerPixel);
     }
 
     /**
@@ -164,33 +224,54 @@ public class MapImage
      */
     public void draw(Graphics2D g2dIn, CoordinateTransformer transformer)
     {
-        if(this.image == null)
-        {
-            return;
-        }
-     
         final Graphics2D g2d = (Graphics2D) g2dIn.create();
-        try
+        
+        int minIndex = 0;
+        int maxIndex = -1;
+        for (int index : imageList.keySet())
         {
-            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getOpacity());
-            g2d.setComposite(ac);
+            if (maxIndex < minIndex)
+            {
+                minIndex = maxIndex = index;
+            }
             
-            final SimplePosition centerPixels = transformer.metersToScreen(centerMeters.x, centerMeters.y);
+            if (index < minIndex)
+            {
+                minIndex = index;
+            }
             
-            final double widthInMeters = image.getWidth(null) * this.metersPerPixel;
-            final double heightInMeters = image.getHeight(null) * this.metersPerPixel;
-            
-            // Convert width and height from meters to pixels
-            double widthInPixels = transformer.metersXToScreen(widthInMeters) -
-                                   transformer.metersXToScreen(0.0);
-            double heightInPixels = -(transformer.metersYToScreen(heightInMeters) -
-                                    transformer.metersYToScreen(0.0));
-            
-            g2d.drawImage(image, 
-                          (int) (centerPixels.x - widthInPixels / 2), 
-                          (int) (centerPixels.y - heightInPixels / 2), 
-                          (int) widthInPixels, (int) heightInPixels, 
-                          null);
+            if (index > maxIndex)
+            {
+                maxIndex = index;
+            }
+        }
+        
+        try {
+            for (int index = maxIndex; index >= minIndex; --index)
+            {
+                SingleMapImage i = imageList.get(index);
+                if (i == null || i.image == null) continue;
+
+                AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, i.opacity);
+                g2d.setComposite(ac);
+
+                final SimplePosition centerPixels = transformer.metersToScreen(i.centerMeters.x, i.centerMeters.y);
+
+                final double widthInMeters = i.image.getWidth(null) * i.metersPerPixel;
+                final double heightInMeters = i.image.getHeight(null) * i.metersPerPixel;
+
+                // Convert width and height from meters to pixels
+                double widthInPixels = transformer.metersXToScreen(widthInMeters) -
+                        transformer.metersXToScreen(0.0);
+                double heightInPixels = -(transformer.metersYToScreen(heightInMeters) -
+                        transformer.metersYToScreen(0.0));
+
+                g2d.drawImage(i.image, 
+                        (int) (centerPixels.x - widthInPixels / 2), 
+                        (int) (centerPixels.y - heightInPixels / 2), 
+                        (int) widthInPixels, (int) heightInPixels, 
+                        null);
+            }
         }
         finally
         {
