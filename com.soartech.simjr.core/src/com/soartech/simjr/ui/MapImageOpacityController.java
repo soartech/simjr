@@ -31,10 +31,11 @@
  */
 package com.soartech.simjr.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -60,9 +61,11 @@ public class MapImageOpacityController extends JPanel
 
     public MapImageOpacityController(final Component mapContainer, final MapImage mapImage)
     {
-        super(new BorderLayout());
+        super();
+
+        Box box = new Box(BoxLayout.Y_AXIS);
         
-        add(new JLabel("Adjust map opacity"), BorderLayout.NORTH);
+        box.add(new JLabel("Adjust map opacity"));
         
         final JSlider slider = new JSlider(0, 100, (int) (mapImage.getOpacity() * 100));
         slider.addChangeListener(new ChangeListener()
@@ -75,6 +78,28 @@ public class MapImageOpacityController extends JPanel
             }
         });
         
-        add(slider, BorderLayout.CENTER);
+        box.add(slider);
+        
+        if (mapImage.getImage(1) == null)
+        {
+            return;
+        }
+        
+        box.add(new JLabel("Adjust terrain opacity"));
+        
+        final JSlider terrainSlider = new JSlider(0, 100, (int) (mapImage.getOpacity(1) * 100));
+        terrainSlider.addChangeListener(new ChangeListener()
+        {
+            public void stateChanged(ChangeEvent e)
+            {
+                int value = terrainSlider.getValue();
+                mapImage.setOpacity(1, ((float) value) / 100.0f);
+                mapContainer.repaint();
+            }
+        });
+        
+        box.add(terrainSlider);
+
+        this.add(box);
     }
 }

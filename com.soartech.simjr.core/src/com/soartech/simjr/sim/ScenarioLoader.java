@@ -170,6 +170,23 @@ public class ScenarioLoader
         	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
             pvdPro.getActivePlanViewDisplay().setMapImage(image);
         }
+        
+        final TerrainTypeElement tte = model.getTerrain().getTerrainType();
+        if (!tte.hasTerrainType())
+        {
+            return;
+        }
+        
+        final File terrainHref = tte.getTerrainTypeFile();
+        logger.info("Using terrain image from '" + terrainHref + "'");
+        
+        if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
+        {
+            MapImage mi = pvdPro.getActivePlanViewDisplay().getMapImage();
+            mi.setCenterMeters(1, origin);
+            mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
+            mi.setImage(1, terrainHref);
+        }
     }
 
     private String getScriptPath(String name)
