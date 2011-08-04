@@ -52,6 +52,7 @@ import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
 import com.soartech.simjr.ui.actions.ClearDistanceToolsAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
+import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
 import com.soartech.simjr.ui.editor.actions.NewAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
 import com.soartech.simjr.ui.editor.actions.OpenAction;
@@ -143,6 +144,12 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         final JMenu file = new JMenu("File");
         file.add(am.getAction(NewAction.class.getCanonicalName()));
         file.add(am.getAction(OpenAction.class.getCanonicalName()));
+        
+        // Putting importers into a sub menu just to keep things clean
+        final JMenu importMenu = new JMenu("Import");
+        importMenu.add(am.getAction(ImportOSMAction.class.getCanonicalName()));
+        file.add(importMenu);
+        
         file.add(am.getAction(SaveAction.SAVE));
         file.add(am.getAction(SaveAction.SAVE_AS));
         bar.add(file);

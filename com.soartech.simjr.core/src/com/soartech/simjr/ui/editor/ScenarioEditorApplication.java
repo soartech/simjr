@@ -67,6 +67,7 @@ import com.soartech.simjr.ui.actions.EditRouteAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
 import com.soartech.simjr.ui.editor.actions.CloneEntityAction;
 import com.soartech.simjr.ui.editor.actions.DeleteEntityAction;
+import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
 import com.soartech.simjr.ui.editor.actions.NewAction;
 import com.soartech.simjr.ui.editor.actions.OpenAction;
 import com.soartech.simjr.ui.editor.actions.RedoAction;
@@ -185,6 +186,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     {
         new NewAction(actionManager);
         new OpenAction(actionManager);
+        new ImportOSMAction(actionManager);
         new SaveAction(actionManager, false);
         new SaveAction(actionManager, true);
         new UndoAction(actionManager);
