@@ -33,15 +33,17 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.SimplePosition;
-import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * @author ray
@@ -53,7 +55,7 @@ public class MapImage
         Vector3 centerMeters = Vector3.ZERO;
         double metersPerPixel = 1.0;
         File imageFile = null;
-        Image image = null;
+        BufferedImage image = null;
         float opacity = 1.0f;
     }
 
@@ -94,17 +96,33 @@ public class MapImage
         this(null, Vector3.ZERO, 1.0);
     }
 
+    public void setImage(int index, BufferedImage image)
+    {
+        SingleMapImage i = getOrCreate(index);
+        i.imageFile = null;
+        i.image = image;
+    }
+
+    public void setImage(BufferedImage image)
+    {
+        setImage(0, image);
+    }
+    
     public void setImage(int index, File imageFile)
     {
         SingleMapImage i = getOrCreate(index);
         i.imageFile = imageFile;
+        i.image = null;
+
         if (i.imageFile != null)
         {
-            i.image = SimulationImages.loadImageFromJar(imageFile.toString()).getImage();
-        }
-        else
-        {
-            i.image = null;
+            try {
+                i.image = ImageIO.read(imageFile);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -113,13 +131,13 @@ public class MapImage
         setImage(0, imageFile);
     }
 
-    public Image getImage(int index)
+    public BufferedImage getImage(int index)
     {
         SingleMapImage i = imageList.get(index);
         return i==null ? null : i.image;
     }
 
-    public Image getImage()
+    public BufferedImage getImage()
     {
         return getImage(0);
     }

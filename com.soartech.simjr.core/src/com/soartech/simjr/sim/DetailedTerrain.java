@@ -1,5 +1,6 @@
 package com.soartech.simjr.sim;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
@@ -16,7 +17,7 @@ import com.soartech.math.geotrans.Geodetic;
  */
 public class DetailedTerrain extends SimpleTerrain
 {
-    private Raster detailedTerrainRaster = null;
+    private BufferedImage detailedTerrainImage = null;
     private int width = 0;
     private int height = 0;
     private Vector3 origin = new Vector3(0.0, 0.0, 0.0);
@@ -35,9 +36,9 @@ public class DetailedTerrain extends SimpleTerrain
         try
         {
             BufferedImage image = ImageIO.read(terrainTypeHref);
-            detailedTerrainRaster = image.getRaster();
-            width = detailedTerrainRaster.getWidth();
-            height = detailedTerrainRaster.getHeight();
+            detailedTerrainImage = image;
+            width = image.getWidth();
+            height = image.getHeight();
         }
         catch (IOException ie)
         {
@@ -67,16 +68,37 @@ public class DetailedTerrain extends SimpleTerrain
     @Override
     public TerrainTypeColor getTerrainTypeAtPoint(Vector3 point)
     {
-        Vector3 relativePointInPixels = point.subtract(origin).multiply(1.0 / metersPerPixel);
-        int pX = (int) (width / 2.0 + relativePointInPixels.x);
-        int pY = (int) (height / 2.0 - relativePointInPixels.y);
+        Point imageCoords = getTerrainImageCoords(point);
+        int pX = imageCoords.x;
+        int pY = imageCoords.y;
+        Raster raster = detailedTerrainImage.getRaster();
         int vals[] = new int[] { 0, 0, 0, 0 };
         if (pX >= 0 && pX < width && pY >= 0 && pY < height)
         {
-            detailedTerrainRaster.getPixel(pX, pY, vals);
+            raster.getPixel(pX, pY, vals);
         }
 
         return new TerrainTypeColor(vals);
+    }
+    
+    public Point getTerrainImageCoords(Vector3 point)
+    {
+        Vector3 relativePointInPixels = point.subtract(origin).multiply(1.0 / metersPerPixel);
+        int pX = (int) (width / 2.0 + relativePointInPixels.x);
+        int pY = (int) (height / 2.0 - relativePointInPixels.y);
+        if (pX >= 0 && pX < width && pY >= 0 && pY < height)
+        {
+            return new Point(pX, pY);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    public BufferedImage getTerrainImage()
+    {
+        return detailedTerrainImage;
     }
 
     public static class TerrainTypeColor

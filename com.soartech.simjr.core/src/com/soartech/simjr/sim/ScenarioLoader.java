@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.sim;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.StringReader;
 import java.util.List;
@@ -148,10 +149,10 @@ public class ScenarioLoader
         DetailedTerrain detailedTerrain = new DetailedTerrain(origin, href);
         sim.setTerrain(detailedTerrain);
         
-        loadTerrainImage(sim, detailedTerrain);
+        loadTerrainImages(sim, detailedTerrain);
     }
 
-    private void loadTerrainImage(Simulation sim, DetailedTerrain detailedTerrain)
+    private void loadTerrainImages(Simulation sim, DetailedTerrain detailedTerrain)
     {
         final TerrainImageElement tie = model.getTerrain().getImage();
         if (!tie.hasImage())
@@ -171,21 +172,20 @@ public class ScenarioLoader
             pvdPro.getActivePlanViewDisplay().setMapImage(image);
         }
         
-        final TerrainTypeElement tte = model.getTerrain().getTerrainType();
-        if (!tte.hasTerrainType())
+        BufferedImage terrainImage = detailedTerrain.getTerrainImage();
+        if (terrainImage == null)
         {
             return;
         }
         
-        final File terrainHref = tte.getTerrainTypeFile();
-        logger.info("Using terrain image from '" + terrainHref + "'");
+        logger.info("Using terrain image.");
         
         if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
         {
             MapImage mi = pvdPro.getActivePlanViewDisplay().getMapImage();
             mi.setCenterMeters(1, origin);
             mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
-            mi.setImage(1, terrainHref);
+            mi.setImage(1, terrainImage);
         }
     }
 
