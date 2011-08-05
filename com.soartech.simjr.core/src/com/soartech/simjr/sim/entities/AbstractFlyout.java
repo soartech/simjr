@@ -142,8 +142,8 @@ public abstract class AbstractFlyout extends AbstractEntity
         {
             hit = true;
             
-            getSimulation().removeEntity(this);
             getSimulation().detonate(new Detonation(getSimulation(), weapon, target, staticTarget));
+            getSimulation().removeEntity(this);
         }
     }
     
