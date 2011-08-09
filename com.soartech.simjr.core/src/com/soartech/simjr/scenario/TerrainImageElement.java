@@ -188,15 +188,6 @@ public class TerrainImageElement implements ModelElement
         return location;
     }
 
-    // FIXME: To get rid of the bug where map location for the image is not written out
-    // or read in properly (it is currently always zero in the xml), we need a setLocation
-    // function. This doesn't seem to work though. Need to wade through all that undo/redo
-    // and xpath code to figure out how to set the location properly.
-//    public UndoableEdit setLocation(double latDegrees, double lonDegrees, double altitude)
-//    {
-//        return location.setLocation(latDegrees, lonDegrees, altitude);        
-//    }
-    
     private UndoableEdit getOrCreateImageElement(String href, double metersPerPixel)
     {
         final UndoableEdit edit;
