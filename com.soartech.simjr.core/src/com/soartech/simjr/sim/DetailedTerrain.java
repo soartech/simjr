@@ -69,15 +69,18 @@ public class DetailedTerrain extends SimpleTerrain
     public TerrainTypeColor getTerrainTypeAtPoint(Vector3 point)
     {
         Point imageCoords = getTerrainImageCoords(point);
-        int pX = imageCoords.x;
-        int pY = imageCoords.y;
-        Raster raster = detailedTerrainImage.getRaster();
         int vals[] = new int[] { 0, 0, 0, 0 };
-        if (pX >= 0 && pX < width && pY >= 0 && pY < height)
+        if (imageCoords != null)
         {
-            raster.getPixel(pX, pY, vals);
+            int pX = imageCoords.x;
+            int pY = imageCoords.y;
+            Raster raster = detailedTerrainImage.getRaster();
+            if (pX >= 0 && pX < width && pY >= 0 && pY < height)
+            {
+                raster.getPixel(pX, pY, vals);
+            }
         }
-
+        
         return new TerrainTypeColor(vals);
     }
     
