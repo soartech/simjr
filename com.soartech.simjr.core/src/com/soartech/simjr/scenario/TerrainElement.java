@@ -31,6 +31,8 @@
  */
 package com.soartech.simjr.scenario;
 
+import java.io.File;
+
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -115,6 +117,12 @@ public class TerrainElement implements ModelElement
     public double getOriginLongitude()
     {
         return this.model.getDouble(lonPath, null);
+    }
+    
+    public void relativizePaths(File base)
+    {
+        image.relativizePaths(base);
+        terrainType.relativizePaths(base);
     }
     
     public UndoableEdit setOrigin(double latDegrees, double lonDegrees)

@@ -41,6 +41,7 @@ import javax.swing.undo.UndoableEdit;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import com.soartech.simjr.util.FileTools;
 import com.soartech.simjr.util.UndoTools;
 
 /**
@@ -160,6 +161,16 @@ public class TerrainImageElement implements ModelElement
             set = null;
         }
         return UndoTools.createCompound(create, set);
+    }
+    
+    public void relativizePaths(File base)
+    {
+        File target = getImageFile();
+        if (target == null)
+            return;
+        
+        String rel = FileTools.getRelativePath(target, base);
+        getModel().setText(imageHref, null, rel, null);
     }
     
     public double getImageMetersPerPixel()
@@ -311,4 +322,5 @@ public class TerrainImageElement implements ModelElement
             getOrCreateImageElement(oldHref, oldMetersPerPixel);
         }
     }
+
 }

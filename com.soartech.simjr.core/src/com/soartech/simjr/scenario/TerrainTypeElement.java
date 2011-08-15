@@ -11,6 +11,7 @@ import javax.swing.undo.UndoableEdit;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import com.soartech.simjr.util.FileTools;
 import com.soartech.simjr.util.UndoTools;
 
 /**
@@ -130,6 +131,16 @@ public class TerrainTypeElement implements ModelElement
         return UndoTools.createCompound(create, set);
     }
     
+    public void relativizePaths(File base)
+    {
+        File target = this.getTerrainTypeFile();
+        if (target == null)
+            return;
+        
+        String rel = FileTools.getRelativePath(target, base);
+        getModel().setText(terrainTypeHref, null, rel, null);
+    }
+
     private UndoableEdit getOrCreateTerrainTypeElement(String href)
     {
         final UndoableEdit edit;
@@ -226,4 +237,5 @@ public class TerrainTypeElement implements ModelElement
             getOrCreateTerrainTypeElement(oldHref);
         }
     }
+
 }
