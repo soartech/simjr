@@ -59,47 +59,45 @@ public class MapImageOpacityController extends JPanel
         popup.show();
     }
 
+    private static class IndexedChangeListener implements ChangeListener
+    {
+        final int index;
+        final JSlider slider;
+        final MapImage mapImage;
+        final Component mapContainer;
+        
+        public IndexedChangeListener(int index, JSlider slider, MapImage mapImage, Component mapContainer)
+        {
+            this.index = index;
+            this.slider = slider;
+            this.mapImage = mapImage;
+            this.mapContainer = mapContainer;
+        }
+        
+        public void stateChanged(ChangeEvent e)
+        {
+            int value = slider.getValue();
+            mapImage.setOpacity(index, ((float) value) / 100.0f);
+            mapContainer.repaint();
+        }
+    }
+    
     public MapImageOpacityController(final Component mapContainer, final MapImage mapImage)
     {
         super();
 
         Box box = new Box(BoxLayout.Y_AXIS);
         
-        box.add(new JLabel("Adjust map opacity"));
-        
-        final JSlider slider = new JSlider(0, 100, (int) (mapImage.getOpacity() * 100));
-        slider.addChangeListener(new ChangeListener()
+        for (int i = 0; mapImage.getImage(i) != null; ++i)
         {
-            public void stateChanged(ChangeEvent e)
-            {
-                int value = slider.getValue();
-                mapImage.setOpacity(((float) value) / 100.0f);
-                mapContainer.repaint();
-            }
-        });
-        
-        box.add(slider);
-        
-        if (mapImage.getImage(1) == null)
-        {
-            return;
+            String label = mapImage.getName(i);
+            box.add(new JLabel("Adjust " + label + " opacity"));
+            
+            final JSlider slider = new JSlider(0, 100, (int) (mapImage.getOpacity(i) * 100));
+            slider.addChangeListener(new IndexedChangeListener(i, slider, mapImage, mapContainer));
+            box.add(slider);
         }
         
-        box.add(new JLabel("Adjust terrain opacity"));
-        
-        final JSlider terrainSlider = new JSlider(0, 100, (int) (mapImage.getOpacity(1) * 100));
-        terrainSlider.addChangeListener(new ChangeListener()
-        {
-            public void stateChanged(ChangeEvent e)
-            {
-                int value = terrainSlider.getValue();
-                mapImage.setOpacity(1, ((float) value) / 100.0f);
-                mapContainer.repaint();
-            }
-        });
-        
-        box.add(terrainSlider);
-
         this.add(box);
     }
 }

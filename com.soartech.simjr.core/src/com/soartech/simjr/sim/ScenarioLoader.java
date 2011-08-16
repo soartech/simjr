@@ -186,6 +186,7 @@ public class ScenarioLoader
             mi.setCenterMeters(1, origin);
             mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
             mi.setImage(1, terrainImage);
+            mi.setName(1, "terrain");
         }
     }
 

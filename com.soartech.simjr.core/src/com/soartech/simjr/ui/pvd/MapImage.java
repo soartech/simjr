@@ -57,6 +57,7 @@ public class MapImage
         File imageFile = null;
         BufferedImage image = null;
         float opacity = 1.0f;
+        String name = "map";
     }
 
     private Map<Integer, SingleMapImage> imageList = new HashMap<Integer, SingleMapImage>();
@@ -295,5 +296,17 @@ public class MapImage
         {
             g2d.dispose();
         }
+    }
+
+    public void setName(int index, String name)
+    {
+        SingleMapImage i = imageList.get(index);
+        i.name = name;
+    }
+
+    public String getName(int index)
+    {
+        SingleMapImage i = imageList.get(index);
+        return i.name;
     }
 }
