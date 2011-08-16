@@ -164,7 +164,6 @@ public class TerrainTypeElement implements ModelElement
     {
         Element root = getModel().newElement("terrainType");
         root.setAttribute("href", href, Model.NAMESPACE);
-        root.addContent(LocationElement.buildDefault(getModel()));
         return root;
     }
 
