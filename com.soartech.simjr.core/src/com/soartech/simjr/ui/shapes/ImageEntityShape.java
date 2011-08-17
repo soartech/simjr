@@ -68,7 +68,7 @@ public class ImageEntityShape extends EntityShape
         return new Factory(imageFile, null, null);
     }
 
-    private static class Factory extends AbstractEntityShapeFactory 
+    public static class Factory extends AbstractEntityShapeFactory 
     {
         private String imageFile;
         private ImageIcon image;
