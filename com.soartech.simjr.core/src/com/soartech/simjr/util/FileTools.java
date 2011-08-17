@@ -214,15 +214,13 @@ public class FileTools
 
     /**
      * Returns targetFile expressed relatively from baseFile's parent (or
-     * baseFile directly if a directory) using separator character.
+     * baseFile directly if a directory).
      * 
      * @param targetFile
      * @param baseFile
-     * @param separator
      * @return
      */
-    public static String getRelativePath(File targetFile, File baseFile,
-            String separator)
+    public static String getRelativePath(File targetFile, File baseFile)
     {
         if (baseFile.isFile())
         {
@@ -242,10 +240,33 @@ public class FileTools
             targetPath = targetFile.getAbsolutePath();
             basePath = baseFile.getAbsolutePath();
         }
+        
+    	if (targetPath.isEmpty() || basePath.isEmpty())
+    		return targetFile.getAbsolutePath();
+    	
+        // Switch backs to forwards and rip off drive if possible. Super ugly but worth it.
+        final String FSLASH = "/";
+        if (File.separator.equals("\\"))
+        {
+	        // If drives are not the same, we can't relativize.
+        	if (targetPath.length() < 3 || basePath.length() < 3
+        			|| targetPath.charAt(0) != basePath.charAt(0)
+        			|| targetPath.charAt(1) != ':' 
+        			|| basePath.charAt(1) != ':')
+        	{
+        		return targetPath;
+        	}
+        	
+        	targetPath = targetPath.substring(2);
+        	basePath = basePath.substring(2);
+        	
+	        targetPath = targetPath.replaceAll("\\\\", FSLASH);
+	        basePath = basePath.replaceAll("\\\\", FSLASH);
+        }
 
         // find common path
-        String[] target = targetPath.split(separator);
-        String[] base = basePath.split(separator);
+        String[] target = targetPath.split(FSLASH);
+        String[] base = basePath.split(FSLASH);
         if (target.length == 0 || base.length == 0)
         {
             return targetFile.getPath();
@@ -265,27 +286,22 @@ public class FileTools
         {
             if (i != 0)
             {
-                relative.append(separator);
+                relative.append(FSLASH);
             }
             relative.append("..");
         }
 
         for (int i = commonIndex; i < target.length; ++i)
         {
-            relative.append(separator).append(target[i]);
+            relative.append(FSLASH).append(target[i]);
         }
 
         return relative.toString();
     }
 
-    public static String getRelativePath(File targetFile, File baseFile)
-    {
-        return getRelativePath(targetFile, baseFile, File.separator);
-    }
-
     public static String getRelativePath(File targetFile)
     {
         return getRelativePath(targetFile,
-                new File(System.getProperty("user.dir")), File.separator);
+                new File(System.getProperty("user.dir")));
     }
 }
