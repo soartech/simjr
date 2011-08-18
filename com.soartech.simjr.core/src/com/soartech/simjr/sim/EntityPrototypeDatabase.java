@@ -104,7 +104,7 @@ public class EntityPrototypeDatabase extends AbstractAdaptable implements Simula
         }
         try
         {
-            load(new InputStreamReader(input), EntityPrototypeDatabase.class.getClassLoader());
+            load(new InputStreamReader(input), classLoader);
         }
         finally
         {
