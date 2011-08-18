@@ -204,7 +204,7 @@ public class EntityElement implements ModelElement
     public UndoableEdit setForce(String force)
     {
         final String oldForce = getForce();
-        if(model.setText(forcePath, element, force, new ModelChangeEvent(model, this, PROTOTYPE)))
+        if(model.setText(forcePath, element, force, new ModelChangeEvent(model, this, FORCE)))
         {
             return new SetForceEdit(oldForce);
         }
