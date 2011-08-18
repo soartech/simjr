@@ -66,9 +66,11 @@ public class SaveAction extends AbstractEditorAction
      */
     public SaveAction(ActionManager manager, boolean saveAs)
     {
-        super(manager, saveAs ? "Save As..." : "Save", SimulationImages.SAVE);
-        
+        super(saveAs ? "Save As..." : "Save", SimulationImages.SAVE);
         this.saveAs = saveAs;
+        setActionManager(manager);
+        manager.addAction(this);
+        
         if(!saveAs)
         {
             setAcceleratorKey(KeyStroke.getKeyStroke("ctrl S"));
