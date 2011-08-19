@@ -57,4 +57,4 @@ simjr.timers = new (function() {
 	}
 })();
 
-logger.info("finished loading entities.js");
+logger.info("finished loading timers.js");
