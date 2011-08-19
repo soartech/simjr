@@ -64,3 +64,4 @@ new Packages.com.soartech.simjr.ui.actions.ShowHideEntityAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.AddToPolygonAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.RemoveFromPolygonAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.EditRouteAction(actionManager);
+new Packages.com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction(actionManager);

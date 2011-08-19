@@ -112,6 +112,7 @@ import com.soartech.simjr.ui.actions.RunAction;
 import com.soartech.simjr.ui.actions.SaveDockingLayoutAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
 import com.soartech.simjr.ui.actions.ShowGridAction;
+import com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction;
 import com.soartech.simjr.ui.actions.UnloadContainerAction;
 import com.soartech.simjr.ui.actions.ZoomInAction;
 import com.soartech.simjr.ui.actions.ZoomOutAction;
@@ -558,6 +559,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         toolsMenu.addSeparator();
         addAction(toolsMenu, AddToPolygonAction.class);
         addAction(toolsMenu, RemoveFromPolygonAction.class);
+        toolsMenu.addSeparator();
+        addAction(toolsMenu, ToggleCategoryLabelsAction.class);
         bar.add(toolsMenu);
         
         //create the help menu

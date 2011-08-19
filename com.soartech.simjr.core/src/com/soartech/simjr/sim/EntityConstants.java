@@ -119,6 +119,8 @@ public interface EntityConstants
         FORCE_OTHER
     };
     
+    // These all are in title case in the yaml files so equalsIgnoreCase
+    // needs to be used....
     public static final String CATEGORY_ROUTES = "Routes";
     public static final String CATEGORY_WAYPOINTS = "Waypoints";
     public static final String CATEGORY_VEHICLES = "Vehicles";
