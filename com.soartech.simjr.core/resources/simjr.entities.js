@@ -96,7 +96,7 @@ function createEntity(options, doNotAdd)
             y = options["y"];
         }
         if(options.hasOwnProperty("z")) {
-            y = options["z"];
+            z = options["z"];
         }
         e.setPosition(new Vector3(x, y, z));
 	}
