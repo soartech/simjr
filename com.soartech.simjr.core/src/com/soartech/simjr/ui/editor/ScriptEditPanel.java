@@ -108,7 +108,7 @@ public class ScriptEditPanel extends JPanel implements ModelChangeListener
             this.script.getModel().removeModelChangeListener(this);
             if(!this.script.getText().equals(area.getText()))
             {
-                area.setText(script.getText());
+                area.setText(this.script.getText());
             }
         }
         this.script = script;
