@@ -132,8 +132,8 @@ public class ScriptEditPanel extends JPanel implements ModelChangeListener
             return;
         }
         
-        final String newText = area.getText();
-        final String oldText = script.getText();
+        final String oldText = area.getText();
+        final String newText = script.getText();
         if(!oldText.equals(newText))
         {
             UndoableEdit edit = script.setText(newText);
