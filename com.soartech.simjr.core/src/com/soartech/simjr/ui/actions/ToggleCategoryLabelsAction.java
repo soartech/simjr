@@ -60,7 +60,7 @@ public class ToggleCategoryLabelsAction extends AbstractSimulationAction
         {
             Entity e = (Entity) o;
             
-            String cat = (String) e.getProperty(EntityConstants.PROPERTY_CATEGORY);
+            String cat = e.getPrototype().getCategory();
             if (cat != null)
             {
                 setEnabled(true);
@@ -93,20 +93,17 @@ public class ToggleCategoryLabelsAction extends AbstractSimulationAction
             
             // new state is opposite its current state
             boolean newState = (labelVisible != null && labelVisible == false) ? true : false;
-            String cat = (String) e.getProperty(EntityConstants.PROPERTY_CATEGORY);
+            String cat = e.getPrototype().getCategory();
             if (cat == null)
                 return;
             
             for (Entity entity : sim.getEntitiesFast())
             {
-                Object property = entity.getProperty(EntityConstants.PROPERTY_CATEGORY);
-                if (property != null)
+                String targetCat = entity.getPrototype().getCategory();
+
+                if (targetCat != null && targetCat.equalsIgnoreCase(cat))
                 {
-                    String targetCat = (String) property;
-                    if (targetCat.equalsIgnoreCase(cat))
-                    {
-                        entity.setProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, newState);
-                    }
+                    entity.setProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, newState);
                 }
             }
         }
