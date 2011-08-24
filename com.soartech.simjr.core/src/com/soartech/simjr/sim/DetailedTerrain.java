@@ -111,7 +111,7 @@ public class DetailedTerrain extends SimpleTerrain
         public final int blue;
         public final int alpha;
 
-        TerrainTypeColor(int[] vals)
+        public TerrainTypeColor(int[] vals)
         {
             this.red = vals[0];
             this.green = vals[1];
