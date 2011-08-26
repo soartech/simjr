@@ -222,6 +222,11 @@ public class FileTools
      */
     public static String getRelativePath(File targetFile, File baseFile)
     {
+    	if (baseFile == null)
+    	{
+            baseFile = new File(System.getProperty("user.dir"));
+    	}
+    	
         if (baseFile.isFile())
         {
             baseFile = baseFile.getParentFile();
@@ -293,7 +298,12 @@ public class FileTools
 
         for (int i = commonIndex; i < target.length; ++i)
         {
-            relative.append(FSLASH).append(target[i]);
+        	if (relative.length() > 0)
+        	{
+	        	relative.append(FSLASH);
+	        	
+        	}
+        	relative.append(target[i]);
         }
 
         return relative.toString();
@@ -301,7 +311,16 @@ public class FileTools
 
     public static String getRelativePath(File targetFile)
     {
-        return getRelativePath(targetFile,
-                new File(System.getProperty("user.dir")));
+        return getRelativePath(targetFile, null);
+    }
+    
+    public static File getRelativeFile(File targetFile)
+    {
+    	return new File(getRelativePath(targetFile), null);
+    }
+    
+    public static File getRelativeFile(File targetFile, File baseFile)
+    {
+    	return new File(getRelativePath(targetFile, baseFile));
     }
 }
