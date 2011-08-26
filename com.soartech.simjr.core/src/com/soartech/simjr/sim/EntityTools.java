@@ -120,6 +120,30 @@ public class EntityTools
     }
     
     /**
+     * Find an entity with a specific property and value of the property.
+     * 
+     * @param sim the simulation
+     * @param property the property to find
+     * @param value the value to find
+     * @return First entity with that property and value, or null
+     */
+    public static Entity findFirstWithProperty(Simulation sim, String property, Object value)
+    {
+        synchronized(sim.getLock())
+        {
+            for(Entity e : sim.getEntitiesFast())
+            {
+                Object theValue = e.getProperty(property);
+                if (theValue != null && theValue.equals(value))
+                {
+                    return e;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Returns the speed of an entity in m/s
      * 
      * @param e The entity
