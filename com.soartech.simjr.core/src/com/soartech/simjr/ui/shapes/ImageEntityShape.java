@@ -81,13 +81,13 @@ public class ImageEntityShape extends EntityShape
         {
             this.imageFile = imageFile;
             this.image = SimulationImages.loadImageFromJar(imageFile);
-            this.shadowImageFile = shadowImageFile;
-            this.destroyedImageFile = destroyedImageFile;
-            if(shadowImageFile != null)
+            this.shadowImageFile = shadowImageFile == null ? null : (shadowImageFile.isEmpty() ? null : shadowImageFile);
+            this.destroyedImageFile = destroyedImageFile == null ? null : (destroyedImageFile.isEmpty() ? null : destroyedImageFile);
+            if(this.shadowImageFile != null)
             {
                 this.shadowImage = SimulationImages.loadImageFromJar(shadowImageFile);
             }
-            if(destroyedImageFile != null)
+            if(this.destroyedImageFile != null)
             {
                 this.destroyedImage = SimulationImages.loadImageFromJar(destroyedImageFile);
             }            
