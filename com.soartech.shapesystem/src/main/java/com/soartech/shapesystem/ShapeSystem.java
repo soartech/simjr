@@ -32,6 +32,7 @@
 package com.soartech.shapesystem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -61,6 +62,12 @@ public class ShapeSystem
         {
             this.name = name;
             this.zorder = zorder;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return name + "{ " + Arrays.toString(shapes.toArray(new Shape[shapes.size()])) + " }";
         }
 
         /**

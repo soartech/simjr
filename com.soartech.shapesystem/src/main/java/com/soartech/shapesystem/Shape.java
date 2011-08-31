@@ -64,6 +64,12 @@ public abstract class Shape
         this.problemThisFrame = false;
     }
     
+    @Override
+    public String toString()
+    {
+        return name;
+    }
+    
     public String getName()
     {
         return name;
