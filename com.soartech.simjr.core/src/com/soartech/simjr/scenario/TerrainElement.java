@@ -136,10 +136,13 @@ public class TerrainElement implements ModelElement
         if(latChanged || lonChanged)
         {
             model.fireChange(new ModelChangeEvent(model, this, ORIGIN));
-            
             edit = new ChangeTerrainOriginEdit(oldLat, oldLon);
-            edit.addEdit(image.getLocation().setLatitude(latDegrees));
-            edit.addEdit(image.getLocation().setLongitude(lonDegrees));
+
+            if (image.hasImage())
+            {
+                edit.addEdit(image.getLocation().setLatitude(latDegrees));
+                edit.addEdit(image.getLocation().setLongitude(lonDegrees));
+            }
         }
         return edit;
     }
