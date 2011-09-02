@@ -72,6 +72,9 @@ public interface EntityConstants
     
     public static final String PROPERTY_MAXSPEED = "limits.maxSpeed";
     
+    public static final String PROPERTY_BEHOLDER_RANGE = "beholder.range";
+    public static final String PROPERTY_BEHOLDER_ARC = "beholder.arc";
+
     /**
      * Property holding visible range information for an entity. Must be of
      * type EntityVisibleRange.
