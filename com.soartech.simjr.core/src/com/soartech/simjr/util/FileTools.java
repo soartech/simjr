@@ -145,7 +145,7 @@ public class FileTools
         try
         {
             fromStream = new BufferedInputStream(new FileInputStream(from));
-            toStream = new BufferedOutputStream(new FileOutputStream(from));
+            toStream = new BufferedOutputStream(new FileOutputStream(to));
             copy(fromStream, toStream);
         }
         finally
