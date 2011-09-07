@@ -176,6 +176,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     private CControl control;
     
     private Dimension frameDimension;
+    
+    private SimulationTimePanel simTimePanel;
 
     private class PvdFrame extends DefaultMultipleCDockable
     {
@@ -662,7 +664,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         addAction(tools, RunAction.class);
         addAction(tools, PauseAction.class);
         
-        tools.add(new SimulationTimePanel(services));
+        simTimePanel = new SimulationTimePanel(services);
+        tools.add(simTimePanel);
         tools.addSeparator();
         addAction(tools, ZoomInAction.class);
         addAction(tools, ZoomOutAction.class);
@@ -875,6 +878,10 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public Object getAdapter(Class<?> klass)
     {
+        if (klass == SimulationTimePanel.class && simTimePanel != null)
+        {
+            return simTimePanel;
+        }
         return Adaptables.adaptUnchecked(this, klass, false);
     }
 

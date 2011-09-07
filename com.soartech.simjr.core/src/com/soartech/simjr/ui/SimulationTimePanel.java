@@ -96,6 +96,25 @@ public class SimulationTimePanel extends JPanel
         update();
     }
     
+    public void setScaleAtLeast(final int f)
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run()
+            {
+                ScaleFactor selected = null;
+                for (int i = 0; i < factor.getItemCount(); ++i)
+                {
+                    selected = (ScaleFactor) factor.getItemAt(i);
+                    if (f <= selected.factor)
+                    {
+                        factor.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    
     private void update()
     {
         final String t = String.format("  %5.1fs", sim.getTime());
