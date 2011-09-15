@@ -37,6 +37,18 @@
       <jre id="jdk16" location="${env.JAVA_HOME}" />
     </ant4eclipse:installedJREs>
 
+    <ant4eclipse:jdtClassPathLibrary name="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1">
+        <fileset dir="${basedir}/platform/plugins/org.junit_3.8.2.v20080602-1318"/>
+    </ant4eclipse:jdtClassPathLibrary>
+
+    <ant4eclipse:jdtClassPathLibrary name="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.5">
+        <fileset dir="${basedir}/platform/plugins/org.junit_3.8.2.v20080602-1318"/>
+    </ant4eclipse:jdtClassPathLibrary>
+
+    <ant4eclipse:jdtClassPathLibrary name="org.eclipse.jdt.junit.JUNIT_CONTAINER/4">
+        <fileset dir="${basedir}/platform/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705"/>
+    </ant4eclipse:jdtClassPathLibrary>
+
     <!-- define the target platform location -->
     <ant4eclipse:targetPlatform id="simjr.target.platform">
       <location dir="${basedir}/platform" />
