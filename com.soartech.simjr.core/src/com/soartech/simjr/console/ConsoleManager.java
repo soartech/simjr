@@ -46,7 +46,8 @@ import com.soartech.simjr.services.SimulationService;
 /**
  * Manages a set of consoles in Sim Jr. This allows various agents or other 
  * components to provide a simple command-line interface in Sim Jr. In 
- * particular it allows the console to work with either Soar 7 or Soar 8 agents.
+ * particular it allows the console to work with different versions of Soar
+ * agents.
  * 
  * @author ray
  */
