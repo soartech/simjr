@@ -72,6 +72,7 @@ public class EntityShape implements EntityPropertyListener
     private boolean updateVisibility = true;
     private boolean updateDamage = false;
     private boolean updateForce = false;
+    private boolean updateColor = false;
     private Frame labelFrame;
     private Text label;
     private EntityVisibleRangeShape visibleRange = new EntityVisibleRangeShape(this, EntityConstants.PROPERTY_VISIBLE_RANGE, Color.BLUE);
@@ -258,6 +259,18 @@ public class EntityShape implements EntityPropertyListener
             updateBodyFrame();
         }
         
+        if(updateColor)
+        {
+            updateColor = false;
+            Color fillColor = (Color) entity.getProperty(EntityConstants.PROPERTY_SHAPE_FILL_COLOR);
+            Color lineColor = (Color) entity.getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
+            
+            for ( Shape s : shapes ) {
+                s.getStyle().setFillColor(fillColor);
+                s.getStyle().setLineColor(lineColor);
+            }
+        }
+        
         if(updateVisibility)
         {
             updateVisibility = false;
@@ -414,5 +427,14 @@ public class EntityShape implements EntityPropertyListener
         {
             ccip.setNeedsUpdate();
         }
+        else if (propertyName.equals(EntityConstants.PROPERTY_SHAPE_FILL_COLOR) ) 
+        {
+            updateColor = true;
+        }
+        else if (propertyName.equals(EntityConstants.PROPERTY_SHAPE_LINE_COLOR) )
+        {
+            updateColor = true;
+        }
+
     }
 }
