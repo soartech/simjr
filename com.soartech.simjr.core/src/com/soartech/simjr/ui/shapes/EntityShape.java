@@ -266,8 +266,10 @@ public class EntityShape implements EntityPropertyListener
             Color lineColor = (Color) entity.getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
             
             for ( Shape s : shapes ) {
-                s.getStyle().setFillColor(fillColor);
-                s.getStyle().setLineColor(lineColor);
+                if ( s != label && s != labelFrame ) {
+                    s.getStyle().setFillColor(fillColor);
+                    s.getStyle().setLineColor(lineColor);
+                }
             }
         }
         
