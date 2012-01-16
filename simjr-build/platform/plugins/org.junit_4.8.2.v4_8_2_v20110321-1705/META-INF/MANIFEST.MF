@@ -7,8 +7,6 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.junit
 Eclipse-SourceReferences: scm:cvs:pserver:dev.eclipse.org:/cvsroot/too
  ls:org.eclipse.orbit/org.junit;tag=v4_8_2_v20110321-1705
-Require-Bundle: org.hamcrest.core;bundle-version="1.1.0";visibility:=r
- eexport
 Export-Package: junit.extensions;version="4.8.2",junit.framework;versi
  on="4.8.2",junit.runner;version="4.8.2",junit.textui;version="4.8.2",
  org.junit;version="4.8.2",org.junit.experimental;version="4.8.2",org.
