@@ -37,6 +37,7 @@ import com.soartech.math.geotrans.TestMgrs;
 import com.soartech.math.geotrans.TestUniversalTransverseMercator;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
@@ -49,7 +50,7 @@ public class AllTests
 {
     public static Test suite()
     {
-        final Class<?>[] tests = new Class[] {
+        final Class<? extends TestCase>[] tests = new Class[] {
             Vector3Test.class,
             AnglesTest.class,
             TestLineSegmentDistance.class,

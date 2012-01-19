@@ -32,6 +32,7 @@
 package com.soartech.simjr.core;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.soartech.simjr.SimJrPropsTest;
@@ -83,7 +84,7 @@ public class AllTests
 {
     public static Test suite()
     {
-        final Class<?>[] tests = new Class[] {
+    	final Class<? extends TestCase>[] tests = new Class[] {
             SimJrPropsTest.class,
             ConsoleManagerTest.class,
             SegmentFollowerTest.class,
