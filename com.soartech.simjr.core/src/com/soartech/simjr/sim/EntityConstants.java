@@ -60,6 +60,7 @@ public interface EntityConstants
     public static final String PROPERTY_POSITION = "position";
     public static final String PROPERTY_ORIENTATION = "orientation";
     public static final String PROPERTY_WEB_DISABLE_ONCLICK = "web.selection.allow";
+    public static final String PROPERTY_APPEARANCE = "appearance";
     
     /**
      * @see LazyMgrsProperty

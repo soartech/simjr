@@ -79,6 +79,10 @@ function setOrigin(props)
         {
             origin.longitude = java.lang.Math.toRadians(props.longitude);
         }
+        if(props.altitude !== undefined)
+        {
+            origin.altitude = props.altitude;
+        }
         sim.setTerrain(new SimpleTerrain(origin));
     }
     else
@@ -114,6 +118,7 @@ function toGeocentric(props)
     	{
         	origin.altitude = props.altitude;
     	}
+    	origin.altitude = origin.altitude + sim.getTerrain().getElevationAtPoint(origin);
         return sim.getTerrain().fromGeodetic(origin);
     }
     else

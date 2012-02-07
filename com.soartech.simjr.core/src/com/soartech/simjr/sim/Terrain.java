@@ -83,6 +83,14 @@ public interface Terrain
     double getElevationAtPoint(Vector3 point);
     
     /**
+     * Return the elevation (z) of the terrain at a given a geodetic point
+     *  
+     * @param point The point
+     * @return The elevation (z) of the terrain
+     */
+    double getElevationAtPoint(Geodetic.Point point);
+    
+    /**
      * Return the terrain type at the X/Y position of the given point.
      * 
      * @param point The point

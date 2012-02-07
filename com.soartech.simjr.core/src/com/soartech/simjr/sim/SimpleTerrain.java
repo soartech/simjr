@@ -82,9 +82,17 @@ public class SimpleTerrain implements Terrain
      */
     public double getElevationAtPoint(Vector3 point)
     {
-        return 0.0;
+    	return origin.altitude;
     }
 
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.sim.Terrain#getElevationAtPoint(com.soartech.math.geotrans.Geodetic.Point)
+     */
+    public double getElevationAtPoint(Geodetic.Point point)
+    {
+    	return origin.altitude;
+    }
+    
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Terrain#getTerrainTypeAtPoint(com.soartech.math.Vector3)
      */
