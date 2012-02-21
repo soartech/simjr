@@ -193,6 +193,12 @@ prototypes:
     properties:
         maxSpeed: 600.0
         
+- &e2c
+    id: e2c
+    parent: *generic-aircraft
+    properties:
+        maxSpeed: 600.0
+        
 - &dismounted-infantry
     id: dismounted-infantry
     parent: *ground
