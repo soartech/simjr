@@ -50,14 +50,12 @@ Import-Package: com.soartech.math,
  com.soartech.shapesystem.shapes,
  com.soartech.shapesystem.swing,
  com.soartech.simjr.apps,
- org.jaxen;version="1.1.1",
  org.jdom;version="1.0.0",
  org.jdom.input;version="1.0.0",
  org.jdom.output;version="1.0.0",
  org.jdom.xpath;version="1.0.0",
  org.mozilla.javascript,
- org.osgi.framework;version="1.3.0",
- org.osgi.util.tracker;version="1.3.3"
+ org.osgi.framework;version="1.3.0"
 Bundle-Activator: com.soartech.simjr.SimJrCoreActivator
 Require-Bundle: org.apache.log4j;bundle-version="[1.2.13,1.3.0)";visibility:=reexport
 Bundle-ActivationPolicy: lazy
