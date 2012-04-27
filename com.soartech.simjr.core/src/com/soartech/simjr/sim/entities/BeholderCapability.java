@@ -44,7 +44,7 @@ public class BeholderCapability extends AbstractEntityCapability
         Vector3 xyDisplacement = new Vector3(displacement.x, displacement.y, 0.0);
         double xyRange = xyDisplacement.length();
         double xyAngle = Math.atan2(xyDisplacement.y, xyDisplacement.x);
-        double agentAngle = Angles.boundedAngleRadians(getEntity().getOrientation());
+        double agentAngle = Angles.boundedAngleRadians(getEntity().getHeading());
         
         if(xyRange > visibleRange || Math.abs(Angles.angleDifference(xyAngle, agentAngle)) > 0.5* visibleAngle)
         {

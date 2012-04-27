@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.soartech.simjr.controllers;
@@ -42,7 +42,7 @@ import com.soartech.simjr.sim.Tickable;
  * Provides methods for setting desired speed and
  * heading.  This controller may be added directly
  * to a vehicle or may be nested in another controller such as a Soar agent.
- * 
+ *
  * @author glenn
  */
 public class GroundController extends AbstractEntityCapability implements
@@ -88,7 +88,7 @@ public class GroundController extends AbstractEntityCapability implements
             getEntity().setProperty("desired-heading", Math.toDegrees(desiredHeading));
         }
     }
-    
+
     public void setDesiredTurnRate(Double turnRate)
     {
         this.desiredTurnRate = turnRate;
@@ -100,8 +100,8 @@ public class GroundController extends AbstractEntityCapability implements
 
     public double getDesiredHeading() { return desiredHeading; }
     public double getDesiredSpeed() { return desiredSpeed; }
-    
-    
+
+
 
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.AbstractEntityCapability#attach(com.soartech.simjr.sim.Entity)
@@ -139,30 +139,30 @@ public class GroundController extends AbstractEntityCapability implements
     public void tick(double dt)
     {
         // Convert desired speed, bearing and altitude into a desired velocity
-        
+
         // Get X/Y part of desired velocity - sin/cos switched to account for 0 North.
         double x = Math.sin(desiredHeading);
         double y = Math.cos(desiredHeading);
         Vector3 desiredVelocity = new Vector3(x, y, 0);
-        
+
         // Scale by speed to get the right ground speed
         desiredVelocity = desiredVelocity.multiply(desiredSpeed);
-        
+
         // Create final desired velocity
         desiredVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, 0.0);
         if(desiredVelocity.epsilonEquals(Vector3.ZERO))
         {
             desiredVelocity = Vector3.ZERO;
         }
-        
+
         final Entity vehicle = getEntity();
-        
+
         // Store in properties so it's displayed in UI.
         vehicle.setProperty("desired-velocity", desiredVelocity);
-        
+
         // Calculated error between desired velocity and actual velocity
         Vector3 velocityError = desiredVelocity.subtract(vehicle.getVelocity());
-        
+
         // Move current velocity toward desired velocity
         double vfactor = 1.0 - 0.0; // Math.exp(-aggressiveness * dt);
         Vector3 newVelocity = vehicle.getVelocity().add(velocityError.multiply(vfactor));
@@ -171,7 +171,7 @@ public class GroundController extends AbstractEntityCapability implements
             newVelocity = Vector3.ZERO;
         }
         vehicle.setVelocity(newVelocity);
-        
+
         ///////////////////////////////////////////////////////////////////////
         // Now update the heading...
         double currentHeading = EntityTools.getHeading(vehicle);
@@ -184,11 +184,11 @@ public class GroundController extends AbstractEntityCapability implements
         {
             headingError += 2 * Math.PI;
         }
-        
+
         double hfactor = 1.0 - 0.0; // Math.exp(-aggressiveness * dt);
         double newHeading = currentHeading + hfactor * headingError;
-        
-        vehicle.setOrientation(Angles.navRadiansToMathRadians(newHeading));
+
+        vehicle.setHeading(Angles.navRadiansToMathRadians(newHeading));
     }
 
 }

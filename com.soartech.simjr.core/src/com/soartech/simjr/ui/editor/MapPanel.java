@@ -380,7 +380,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
     private void updateSimEntityOrientation(final EntityElement ee)
     {
         final Entity simEntity = getSimEntity(ee);
-        simEntity.setOrientation(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
+        simEntity.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
     }
     
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
@@ -433,7 +433,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
             polygon.setPointNames(source.getPoints().getPoints());
         }
         e.setPosition(sim.getTerrain().fromGeodetic(source.getLocation().toRadians()));
-        e.setOrientation(Angles.navRadiansToMathRadians(Math.toRadians(source.getOrientation().getHeading())));
+        e.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(source.getOrientation().getHeading())));
         e.setProperty(EntityConstants.PROPERTY_FORCE, source.getForce());
         e.setProperty(EDITOR_ENTITY_PROP, source);
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make routes stand out more in editor

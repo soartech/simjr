@@ -100,8 +100,10 @@ public interface Entity extends Adaptable
      */
     void setVelocity(Vector3 velocity);
     
+    // Keeping these around for backwards compatibility with old scripts
+    @Deprecated
     /**
-     * @return The yaw (rotation around Z) of the entity in radians (MATH radians)
+     * @return The heading (rotation around Z) of the entity in radians (MATH radians)
      */
     double getOrientation();
     
@@ -110,7 +112,44 @@ public interface Entity extends Adaptable
      * 
      * @param radians Angle in radians (MATH radians)
      */
+    @Deprecated
     void setOrientation(double radians);
+    
+    /**
+     * @return The heading (rotation around Z) of the entity in radians (MATH radians)
+     */
+    double getHeading();
+    
+    /**
+     * Set the yaw (rotation around Z of the entity in radians
+     * 
+     * @param radians Angle in radians (MATH radians)
+     */
+    void setHeading(double radians);
+    
+    /**
+     * @return the pitch (rotation around Y axis) of the entity in radians (MATH radians)
+     */
+    double getPitch();
+    
+    /**
+     * Set the pitch (rotation around the Y axis) of the entity in radians (MATH radians)
+     * 
+     * @param radians Angle in radians (MATH radians)
+     */
+    void setPitch(double radians);
+    
+    /**
+     * @return the roll (rotation around X axis) of the entity in radians (MATH radians)
+     */
+    double getRoll();
+    
+    /**
+     * Set the roll (rotation around the X axis) of the entity in radians (MATH radians)
+     * 
+     * @param radians Angle in radians (MATH radians)
+     */
+    void setRoll(double radians);
     
     /**
      * Tick method called by the simulation during each update phase.

@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on Sep 22, 2007
@@ -43,16 +43,16 @@ import com.soartech.simjr.sim.EntityTools;
  * desired speed, bearing, heading, and altitude.  This controller may be
  * added directly to a vehicle or may be nested in another controller such as
  * a Soar agent.
- * 
- * <p>Why is this not in the helicopter class? A few reasons. First, putting 
- * this model in the Helicopter makes it hard to re-use the functionality in 
+ *
+ * <p>Why is this not in the helicopter class? A few reasons. First, putting
+ * this model in the Helicopter makes it hard to re-use the functionality in
  * other classes. Second, if this is embedded in the Helicopter class, it is
  * difficult to install other controllers (like the virtual joystick) on the
  * helicopter because this code will fight with them.
- * 
+ *
  * TODO: This controller is just barely adequate, especially when running at
  * faster than 1x speed.
- * 
+ *
  * @author ray
  */
 public class RotaryWingFlightController extends AbstractEntityCapability implements
@@ -74,25 +74,25 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
      * Desired altitude rate in m/s
      */
     private double desiredAltitudeRate = 15.0;
-    
+
     private double desiredHeading = 0.0;
-    
+
     private double aggressiveness = 0.2;
 
     /**
      * The speed at which heading should be locked to bearing in m/s
-     * 
+     *
      * The constant value here was adopted from the MAK interface
-     * for AutoWingman. 
+     * for AutoWingman.
      */
     private static final double HeadingAlignThresholdSpeed = 15.0;
 
     public RotaryWingFlightController()
     {
     }
-    
-    
-    
+
+
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.controllers.FlightController#getDesiredSpeed()
      */
@@ -108,17 +108,17 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
             getEntity().setProperty(name, value);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.controllers.FlightController#setDesiredSpeed(double)
      */
     public void setDesiredSpeed(double speed)
     {
         this.desiredSpeed = speed;
-        
+
         setProperty("desired-speed", desiredSpeed);
     }
-    
+
     /**
      * @param desiredBearing The new desired bearing in radians
      */
@@ -126,7 +126,7 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
     {
         this.desiredBearing = desiredBearing;
         setProperty("desired-bearing", Math.toDegrees(desiredBearing));
-        
+
         // Once the aircraft reaches a certain speed, the heading
         // should be locked to the bearing to avoid instabilities.
         if (this.desiredSpeed >= HeadingAlignThresholdSpeed)
@@ -151,8 +151,8 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
         this.desiredHeading = desiredHeading;
         setProperty("desired-heading", Math.toDegrees(desiredHeading));
     }
-    
-    
+
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.controllers.FlightController#getDesiredAltitude()
      */
@@ -168,17 +168,17 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
     {
         this.desiredAltitude = altitude;
         setProperty("desired-altitude", desiredAltitude);
-        
-//        logger.debug(getEntity().getName() + ": desired altitude set to " + desiredAltitude + 
+
+//        logger.debug(getEntity().getName() + ": desired altitude set to " + desiredAltitude +
 //                " (rate=" + desiredAltitudeRate + " m/s)");
     }
-    
+
     public void setDesiredAltitudeRate(double rate)
     {
         this.desiredAltitudeRate = rate;
         setProperty("desired-altitude-rate", desiredAltitudeRate);
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.AbstractEntityCapability#attach(com.soartech.simjr.sim.Entity)
      */
@@ -225,20 +225,20 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
     public void tick(double dt)
     {
         // Convert desired speed, bearing and altitude into a desired velocity
-        
+
         // Get X/Y part of desired velocity - sin/cos switched to account for 0 North.
         double x = Math.sin(desiredBearing);
         double y = Math.cos(desiredBearing);
         Vector3 desiredVelocity = new Vector3(x, y, 0);
-        
+
         // Scale by speed to get the right ground speed
         desiredVelocity = desiredVelocity.multiply(desiredSpeed);
-        
+
         final Entity vehicle = getEntity();
         // Calculate desired Z velocity
         double altitudeError = desiredAltitude - EntityTools.getAltitude(vehicle);
         double desiredVelocityZ = altitudeError * dt;
-        
+
         // Clamp Z velocity to desired altitude rate
         if(desiredVelocityZ > desiredAltitudeRate)
         {
@@ -248,20 +248,20 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
         {
             desiredVelocityZ = -desiredAltitudeRate;
         }
-        
+
         // Create final desired velocity
         desiredVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocityZ);
         if(desiredVelocity.epsilonEquals(Vector3.ZERO))
         {
             desiredVelocity = Vector3.ZERO;
         }
-        
+
         // Store in properties so it's displayed in UI.
         vehicle.setProperty("desired-velocity", desiredVelocity);
-        
+
         // Calculated error between desired velocity and actual velocity
         Vector3 velocityError = desiredVelocity.subtract(vehicle.getVelocity());
-        
+
         // Move current velocity toward desired velocity
         double vfactor = 1.0 - Math.exp(-aggressiveness * dt);
         Vector3 newVelocity = vehicle.getVelocity().add(velocityError.multiply(vfactor));
@@ -270,7 +270,7 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
             newVelocity = Vector3.ZERO;
         }
         vehicle.setVelocity(newVelocity);
-        
+
         ///////////////////////////////////////////////////////////////////////
         // Now update the heading...
         double currentHeading = EntityTools.getHeading(vehicle);
@@ -283,11 +283,11 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
         {
             headingError += 2 * Math.PI;
         }
-        
+
         double hfactor = 1.0 - Math.exp(-aggressiveness * dt);
         double newHeading = currentHeading + hfactor * headingError;
-        
-        vehicle.setOrientation(Angles.navRadiansToMathRadians(newHeading));
+
+        vehicle.setHeading(Angles.navRadiansToMathRadians(newHeading));
     }
 
 }

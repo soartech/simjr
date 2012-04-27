@@ -354,7 +354,10 @@ public class Geocentric extends GeoTransBase
      * @param in_pitch radians
      * @param in_roll radians
      * @param in_hdg radians
-     * @return (pitch,roll,yaw)
+     * @return (pitch,roll,yaw) or (theta, phi, psi) in radians
+     * 
+     * This method I believe is a direct port from the DisNetDll code (used in xplane and redref) and I think in 
+     * turn comes from the old modsaf/jsaf libcoord library.
      */
     public static Vector3 fromGeodeticAngle(double lat, double lon, double in_pitch, double in_roll, double in_hdg)
     {

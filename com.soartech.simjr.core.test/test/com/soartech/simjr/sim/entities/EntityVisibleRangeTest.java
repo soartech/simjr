@@ -93,7 +93,7 @@ public class EntityVisibleRangeTest extends TestCase
         Vehicle a = new Vehicle("a", EntityPrototypes.NULL);
         Listener listener = new Listener(EntityConstants.PROPERTY_VISIBLE_RANGE);
         a.addPropertyListener(listener);
-        a.setOrientation(Angles.navRadiansToMathRadians(0.0)); // point up
+        a.setHeading(Angles.navRadiansToMathRadians(0.0)); // point up
         
         assertNull(EntityVisibleRange.get(a));
         
@@ -108,7 +108,7 @@ public class EntityVisibleRangeTest extends TestCase
         assertTrue(listener.checkAndReset());
         
         assertFalse(vr.isInRange(new Vector3(25, 0, 0)));
-        a.setOrientation(Angles.navRadiansToMathRadians(Math.toRadians(90.0))); // point right
+        a.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(90.0))); // point right
         assertTrue(vr.isInRange(new Vector3(25, 0, 0)));
         assertFalse(vr.isInRange(new Vector3(0, 25, 0)));
         assertFalse(vr.isInRange(new Vector3(51, 0, 0))); // just out of range

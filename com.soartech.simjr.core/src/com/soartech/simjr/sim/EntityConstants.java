@@ -59,6 +59,9 @@ public interface EntityConstants
     public static final String PROPERTY_VELOCITY = "velocity";
     public static final String PROPERTY_POSITION = "position";
     public static final String PROPERTY_ORIENTATION = "orientation";
+    public static final String PROPERTY_YAW = "yaw";
+    public static final String PROPERTY_PITCH = "pitch";
+    public static final String PROPERTY_ROLL = "roll";
     public static final String PROPERTY_WEB_DISABLE_ONCLICK = "web.selection.allow";
     public static final String PROPERTY_APPEARANCE = "appearance";
     

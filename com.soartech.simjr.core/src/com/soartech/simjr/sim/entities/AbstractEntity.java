@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on May 22, 2007
@@ -66,81 +66,87 @@ import com.soartech.simjr.sim.Tickable;
  * Base entity implementation that handles the details of properties and
  * basic movement. Typical sub-classes will only override updateProperties()
  * and tick()
- * 
+ *
  * @author ray
  */
 public abstract class AbstractEntity extends AbstractAdaptable implements Entity
 {
     private static final Logger logger = Logger.getLogger(AbstractEntity.class);
-    
+
     private final AtomicReference<Simulation> sim = new AtomicReference<Simulation>();
     private final String name;
     private final EntityPrototype prototype;
     private Vector3 position = Vector3.ZERO;
     private Vector3 velocity = Vector3.ZERO;
-    private double orientation = Angles.navRadiansToMathRadians(0);
-    
+
+    private double heading = Angles.navRadiansToMathRadians(0);
+    private double pitch = 0.;
+    private double roll = 0;
+
     private final List<EntityCapability> capabilities = new CopyOnWriteArrayList<EntityCapability>();
     private final List<Tickable> tickableCaps = new CopyOnWriteArrayList<Tickable>();
-    
+
     private final Stack<EntityPositionProvider> positionProviderStack = new Stack<EntityPositionProvider>();
     private EntityPositionProvider positionProvider;
-    
+
     /**
      * The base properties of the entity, i.e. those that are not calculated.
      */
     private final Map<String, Object> baseProperties = new ConcurrentHashMap<String, Object>();
-    
+
     /**
-     * The final properties of the entity including calculated properties. 
-     * Set to null if when properties need to be recalculated. 
+     * The final properties of the entity including calculated properties.
+     * Set to null if when properties need to be recalculated.
      */
     private final AtomicReference<Map<String, Object>> finalProperties = new AtomicReference<Map<String,Object>>();
-    
+
     private final Map<String, EntityPropertyAdapter> propertyAdapters = new ConcurrentHashMap<String, EntityPropertyAdapter>();
-    
-    private final List<EntityPropertyListener> propListeners = 
+
+    private final List<EntityPropertyListener> propListeners =
        Collections.synchronizedList(new ArrayList<EntityPropertyListener>());
-    
+
     public AbstractEntity(String name, EntityPrototype prototype)
     {
         this.name = name;
         this.prototype = prototype;
-        
+
         // Copy default properties from prototype
         baseProperties.putAll(prototype.getProperties());
-        
+
         // Calculate lat/lon/alt properties lazily
         final LazyGeodeticProperty lgp = new LazyGeodeticProperty(this);
         baseProperties.put(EntityConstants.PROPERTY_LATITUDE, lgp.latitude());
         baseProperties.put(EntityConstants.PROPERTY_LONGITUDE, lgp.longitude());
         baseProperties.put(EntityConstants.PROPERTY_ALTITUDE, lgp.altitude());
-        
+
         // Calculate MGRS property lazily
         baseProperties.put(EntityConstants.PROPERTY_MGRS, new LazyMgrsProperty(this));
-        
+
         baseProperties.remove("capabilities"); // caps is a special property of the prototype
 
         setProperty(EntityConstants.PROPERTY_CLASS, getClass().getCanonicalName());
         setProperty(EntityConstants.PROPERTY_NAME, name);
         setProperty(EntityConstants.PROPERTY_PROTOTYPE, this.prototype);
     }
-    
+
     /**
      * Method overloaded by sub-classes to add properties to the entity's
-     * property set. This approach is taken rather than overriding 
+     * property set. This approach is taken rather than overriding
      * getProperties() for performance reasons. Sub-classes should AWLAYS
      * call the super version first.
-     * 
+     *
      * @param properties Property map to fill in.
      */
     protected void updateProperties(Map<String, Object> properties)
     {
         properties.put(EntityConstants.PROPERTY_POSITION, getPosition());
         properties.put(EntityConstants.PROPERTY_VELOCITY, velocity);
-        properties.put(EntityConstants.PROPERTY_ORIENTATION, orientation);      
+        properties.put(EntityConstants.PROPERTY_ORIENTATION, heading);
+        properties.put(EntityConstants.PROPERTY_YAW, heading);
+        properties.put(EntityConstants.PROPERTY_PITCH, pitch);
+        properties.put(EntityConstants.PROPERTY_ROLL, roll);
     }
-    
+
     public void firePropertyChanged(String name)
     {
         synchronized(propListeners)
@@ -151,7 +157,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.Entity#getName()
      */
@@ -159,7 +165,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     {
         return name;
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Entity#getPrototype()
      */
@@ -204,19 +210,19 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             return baseProperties;
         }
-       
+
         final Map<String, Object> temp = finalProperties.get();
         if(temp != null)
         {
             return temp;
         }
-        
+
         // Recalculate properties
         final HashMap<String, Object> newFinalProps = new HashMap<String, Object>(baseProperties);
         finalProperties.set(newFinalProps);
-        
+
         updateProperties(newFinalProps);
-    
+
         return newFinalProps;
     }
 
@@ -240,11 +246,11 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     {
         finalProperties.set(null);
     }
-    
+
     private EntityPropertyAdapter getPropertyAdapter(String name)
     {
         EntityPropertyAdapter adapter = propertyAdapters.get(name);
-        
+
         return adapter != null ? adapter : EntityPropertyAdapters.getDefaultAdapter(name);
     }
 
@@ -262,7 +268,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
                 adapter.setValue(this, value);
                 return;
             }
-            
+
             baseProperties.put(name, value);
             if(tempFinalProps != null)
             {
@@ -277,10 +283,10 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
                 tempFinalProps.remove(name);
             }
         }
-        
+
         firePropertyChanged(name);
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.Entity#addPropertyAdapter(com.soartech.simjr.EntityPropertyAdapter)
      */
@@ -328,7 +334,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     {
         if(!this.sim.compareAndSet(null, sim))
         {
-            if (sim == null) 
+            if (sim == null)
             {
                 this.sim.set(sim);
                 return;
@@ -338,7 +344,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
                 throw new IllegalStateException("sim is already set");
             }
         }
-        
+
         // Once the sim is set, reset the position in case enforce-agl is on.
         setPosition(this.getPosition());
     }
@@ -346,25 +352,70 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     /* (non-Javadoc)
      * @see com.soartech.simjr.Entity#getOrientation()
      */
-    public double getOrientation()
+    public double getHeading()
     {
-        return orientation;
+        return heading;
     }
 
     /* (non-Javadoc)
      * @see com.soartech.simjr.Entity#setOrientation(double)
      */
+    public void setHeading(double radians)
+    {
+        double rotations = radians/(2.*Math.PI);
+        this.heading = (rotations - Math.floor(rotations))*2.*Math.PI;
+    }
+
+    public double getOrientation()
+    {
+        return getHeading();
+    }
+
     public void setOrientation(double radians)
     {
-        while(radians < 0.0)
+        setHeading(radians);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.sim.Entity#getPitch()
+     */
+    public double getPitch() {
+        return pitch;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.sim.Entity#setPitch(double)
+     */
+    public void setPitch(double radians) {
+        double rotations = radians/(2.*Math.PI);
+        this.pitch = (rotations - Math.floor(rotations))*2.*Math.PI;
+        if ( this.pitch > Math.PI ) 
         {
-            radians += 2 * Math.PI;
+            this.pitch -= 2.*Math.PI;
         }
-        while(radians >= 2 * Math.PI)
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.sim.Entity#getRoll()
+     */
+    public double getRoll() {
+        return roll;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.sim.Entity#setRoll(double)
+     */
+    public void setRoll(double radians) {
+        double rotations = radians/(2.*Math.PI);
+        this.roll = (rotations - Math.floor(rotations))*2.*Math.PI;
+        if ( this.roll > Math.PI ) 
         {
-        	radians -= 2 * Math.PI;
+            this.roll -= 2.*Math.PI;
         }
-        this.orientation = radians;
     }
 
     /* (non-Javadoc)
@@ -397,7 +448,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     public final void tick(double dt)
     {
         processTick(dt);
-    
+
         // Force recalculation of properties
         finalProperties.set(null);
     }
@@ -406,7 +457,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
      * The primary implementation of the tick method. Sub-classes may override
      * this method but must call the super implementation. Sub-classes should
      * not override tick.
-     * 
+     *
      * @param dt The time passed to tick().
      */
     protected void processTick(double dt)
@@ -415,7 +466,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             tickable.tick(dt);
         }
-        
+
         Entity container = (Entity) baseProperties.get(EntityConstants.PROPERTY_CONTAINER);
         if(container != null)
         {
@@ -430,12 +481,12 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
 
     /**
      * Returns true if the entity can currently move. This is called by tick() to
-     * decide whether {@link #updatePosition(double)} is called. The default 
+     * decide whether {@link #updatePosition(double)} is called. The default
      * implementation returns true if the entity is not destroyed.
-     * 
+     *
      * <p>Sub-classes may override this method. They should combine any additional
      * conditions with the return value of the super method.
-     * 
+     *
      * @return True if the entity can move
      */
     protected boolean canUpdatePosition()
@@ -443,17 +494,17 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         // Only update position if we're not destroyed
         return DamageStatus.destroyed != EntityTools.getDamage(baseProperties);
     }
-    
+
     /**
-     * Update the current position of the entity with the given time delta. 
+     * Update the current position of the entity with the given time delta.
      * The default implementation of this method simply multiplies the current
      * velocity by dt and adds that vector to the current position. It is not
      * called if the entity is destroyed, or it is currently in a container
      * entity.
-     * 
+     *
      * <p>This method may be overridden by sub-classes.  Sub-classes need not
      * call the super implementation.
-     * 
+     *
      * @param dt
      */
     protected void updatePosition(double dt)
@@ -478,9 +529,9 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             tickableCaps.add((Tickable) capability);
         }
-        
+
         logger.info("Added capability " + (tickable? "tickable " : " ") + "'" + capability + "' to entity '" + name + "'");
-        
+
         final EntityPositionProvider posProvider = Adaptables.adapt(capability, EntityPositionProvider.class);
         if(posProvider != null)
         {
@@ -508,7 +559,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
             positionProvider = !this.positionProviderStack.empty() ? this.positionProviderStack.pop() : null;
         }
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.adaptables.AbstractAdaptable#getAdapter(java.lang.Class)
      */
@@ -523,7 +574,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             o = Adaptables.findAdapter(capabilities, klass);
         }
-        
+
         return o;
     }
 

@@ -128,7 +128,9 @@ public class ScenarioExporter
         modelEntity.getLocation().setLocation(e.getSimulation().getTerrain().toGeodetic(e.getPosition()));
         
         // Orientation
-        modelEntity.getOrientation().setHeading(Math.toDegrees(Angles.mathRadiansToNavRadians(e.getOrientation())));
+        modelEntity.getOrientation().setHeading(Math.toDegrees(Angles.mathRadiansToNavRadians(e.getHeading())));
+        modelEntity.getOrientation().setPitch(Math.toDegrees(e.getPitch()));
+        modelEntity.getOrientation().setRoll(Math.toDegrees(e.getRoll()));
         
         // Points
         final AbstractPolygon poly = Adaptables.adapt(e, AbstractPolygon.class);

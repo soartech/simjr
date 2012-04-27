@@ -52,17 +52,18 @@ public class TestGeocentric extends TestCase
     
     public void testGeodeticToGeocentric()
     {
-        verifyGeodeticToGeocentric(42.0, -83.2, 562064, -4713606, 4245604);
-        verifyGeodeticToGeocentric(21.0, -43.2, 4342514, -4077892, 2271395);
-        verifyGeodeticToGeocentric(60, 21, 2984754, 1145740, 5500477);
-        verifyGeodeticToGeocentric(33, -175, -5334099, -466673, 3453959);
-        verifyGeodeticToGeocentric(-42.0, -83.2, 562064, -4713606, -4245604);
+        verifyGeodeticToGeocentric(42.0, -83.2, 0., 562064, -4713606, 4245604);
+        verifyGeodeticToGeocentric(21.0, -43.2, 0., 4342514, -4077892, 2271395);
+        verifyGeodeticToGeocentric(60, 21, 0., 2984754, 1145740, 5500477);
+        verifyGeodeticToGeocentric(33, -175, 0., -5334099, -466673, 3453959);
+        verifyGeodeticToGeocentric(-42.0, -83.2, 0., 562064, -4713606, -4245604);
+        verifyGeodeticToGeocentric(-34.9, 138.5, 10000.0, -3928261.0, 3475431.0, -3634495.0);        
     }
     
-    private void verifyGeodeticToGeocentric(double lat, double lon, double x, double y, double z)
+    private void verifyGeodeticToGeocentric(double lat, double lon, double alt, double x, double y, double z)
     {
         Vector3 out = g.fromGeodetic(Math.toRadians(lat), 
-                Math.toRadians(lon), 0);
+                Math.toRadians(lon), alt);
 
         assertEquals(x, out.x, 1.0);
         assertEquals(y, out.y, 1.0);
@@ -71,8 +72,33 @@ public class TestGeocentric extends TestCase
         Geodetic.Point llaout = g.toGeodetic(out.x, out.y, out.z);
         assertEquals(Math.toDegrees(llaout.latitude), lat, .1);
         assertEquals(Math.toDegrees(llaout.longitude), lon, .1);
-        assertEquals(llaout.altitude, 0, .1);
+        assertEquals(llaout.altitude, alt, .1);
         
+    }
+    
+    public void testGeocentricFromGeodeticAngle() {
+        
+        // Sample from DSTO–TN–0640
+        // Aircraft at lat = -34.9 deg lat and 138.5 deg long 
+        // heading southeast (135 deg) at pitch 20 degrees and roll 30 degrees
+        //
+        // should result in:
+        //    theta = 47.8 deg
+        //    phi = -29.7 deg
+        //    psi = -123.0 deg
+        Vector3 geocOrientation = Geocentric.fromGeodeticAngle( Math.toRadians(-34.9), 
+                                                                Math.toRadians(138.5), 
+                                                                Math.toRadians(20.0),  
+                                                                Math.toRadians(30.0), 
+                                                                Math.toRadians(135.0));
+        
+        double deg1 = Math.toDegrees(geocOrientation.x);
+        double deg2 = Math.toDegrees(geocOrientation.y);
+        double deg3 = Math.toDegrees(geocOrientation.z);
+        
+        assertEquals( 47.8, deg1, 0.1);
+        assertEquals(-29.7, deg2, 0.1);
+        assertEquals( -123.0, deg3, 0.1);
     }
     
 }

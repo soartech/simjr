@@ -258,7 +258,9 @@ public class ScenarioLoader
         entity.setPosition(sim.getTerrain().fromGeodetic(ee.getLocation().toRadians()));
         
         // Orientation
-        entity.setOrientation(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
+        entity.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
+        entity.setPitch(Math.toRadians(ee.getOrientation().getPitch()));
+        entity.setRoll(Math.toRadians(ee.getOrientation().getRoll()));
         
         // Points (for routes, areas, etc)
         final AbstractPolygon polygon = Adaptables.adapt(entity, AbstractPolygon.class);

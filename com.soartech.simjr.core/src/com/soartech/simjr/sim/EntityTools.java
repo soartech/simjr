@@ -264,7 +264,7 @@ public class EntityTools
      */
     public static double getHeading(Entity e)
     {
-        return Angles.mathRadiansToNavRadians(e.getOrientation());
+        return Angles.mathRadiansToNavRadians(e.getHeading());
     }
     
     public static String getForce(Entity e)
