@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on Jul 6, 2007
@@ -52,26 +52,26 @@ import com.soartech.simjr.sim.entities.DamageStatus;
  * route to follow are controlled by setters on the object, or with the
  * "routeFollower.route" and "routeFollower.speed" properties on the
  * attached entity.
- * 
+ *
  * @author ray
  */
 public class RouteFollower extends AbstractEntityCapability implements EntityController
 {
     private static final Logger logger = Logger.getLogger(RouteFollower.class);
-    
+
     private static final String ROUTE_PROPERTY = "routeFollower.route";
     private static final String SPEED_PROPERTY = "routeFollower.speed";
-    
+
     private double speed = 10.0;
     private Object route;
     private boolean pushingProps = false;
-    
+
     private int targetPoint = 0;
     private List<RouteFollowerListener> listeners = new CopyOnWriteArrayList<RouteFollowerListener>();
-    
+
     private final EntityPropertyListener propListener = new EntityPropertyListener()
     {
-        
+
         @Override
         public void onPropertyChanged(Entity entity, String propertyName)
         {
@@ -81,26 +81,26 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
             }
         }
     };
-    
+
     /**
      */
     public RouteFollower()
     {
     }
-    
+
     /**
      * Add a listener to this controller
-     * 
+     *
      * @param listener The listener to add
      */
     public void addListener(RouteFollowerListener listener)
     {
         listeners.add(listener);
     }
-    
+
     /**
      * Remove a listener from this controller
-     * 
+     *
      * @param listener The listener to remove
      */
     public void removeListener(RouteFollowerListener listener)
@@ -113,36 +113,36 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
         this.speed = speed;
         pushProps();
     }
-    
+
     public double getSpeed()
     {
         return speed;
     }
-    
+
     public void setRoute(Object route)
     {
         this.route = route;
         pushProps();
     }
-    
+
     public Object getRoute()
     {
         return route;
     }
-    
+
     private AbstractPolygon getRoutePolygon()
     {
         if(route == null)
         {
             return null;
         }
-        
+
         AbstractPolygon routePoly = Adaptables.adapt(route, AbstractPolygon.class);
         if(routePoly != null)
         {
             return routePoly;
         }
-        
+
         Entity e = getEntity().getSimulation().getEntity(route.toString());
         routePoly = Adaptables.adapt(e, AbstractPolygon.class);
         if(routePoly != null)
@@ -151,7 +151,7 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
         }
         return null;
     }
-    
+
     private Entity getTargetEntity(AbstractPolygon route)
     {
         List<Entity> points = route.getPoints();
@@ -163,7 +163,7 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
 
         return points.get(targetPoint);
     }
-    
+
     private Vector3 getTargetPoint(AbstractPolygon route)
     {
         Entity target = getTargetEntity(route);
@@ -171,7 +171,7 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
         {
             return Vector3.ZERO;
         }
-        
+
         Double enforceAgl = EntityTools.getEnforcedAboveGroundLevel(getEntity());
         if(enforceAgl != null)
         {
@@ -182,7 +182,7 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
             return target.getPosition();
         }
     }
-    
+
     private void pullProps()
     {
         if(pushingProps)
@@ -201,9 +201,9 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
         {
             logger.info(entity + ": using " + SPEED_PROPERTY + " property value '" + speed + "'");
             this.speed = speed;
-        }        
+        }
     }
-    
+
     private void pushProps()
     {
         final Entity e = getEntity();
@@ -226,7 +226,7 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
             pushingProps = false;
         }
     }
-    
+
     @Override
     public void attach(Entity entity)
     {
@@ -263,23 +263,23 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
         {
             return;
         }
-        
+
         AbstractPolygon route = getRoutePolygon();
         if(route == null)
         {
             logger.error(entity.getName() + ": No route specified for route follower. Route = " + this.route);
             return;
         }
-        
+
         Vector3 pos = entity.getPosition();
         Vector3 target = getTargetPoint(route);
-        
+
         double speed = getSpeed();
-        
+
         Vector3 dir = target.subtract(pos).normalized();
         entity.setVelocity(dir.multiply(speed));
-        entity.setOrientation(Math.atan2(dir.y, dir.x));
-        
+        entity.setHeading(Math.atan2(dir.y, dir.x));
+
         // If we'll  overshoot the target in the next tick, then consider it
         // achieved and move on to the next.
         if(pos.subtract(target).length() < speed * dt)
@@ -304,6 +304,6 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
     {
         return "RouteFollower";
     }
-    
-    
+
+
 }

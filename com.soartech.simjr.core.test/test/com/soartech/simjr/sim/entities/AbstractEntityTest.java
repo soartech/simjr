@@ -127,7 +127,7 @@ public class AbstractEntityTest extends TestCase
         
         entity.setPosition(position);
         entity.setVelocity(velocity);
-        entity.setOrientation(orientation);
+        entity.setHeading(orientation);
         
         entity.updateProperties();
         
@@ -185,11 +185,58 @@ public class AbstractEntityTest extends TestCase
         
         sim.addEntity(entity);
 
-        entity.setOrientation(3 * Math.PI);
-        assertEquals(Math.PI, entity.getOrientation(), 0.0001);
+        entity.setHeading(3 * Math.PI);
+        assertEquals(Math.PI, entity.getHeading(), 0.0001);
         
-        entity.setOrientation(-Math.PI);
-        assertEquals(Math.PI, entity.getOrientation(), 0.0001);
+        entity.setHeading(-Math.PI);
+        assertEquals(Math.PI, entity.getHeading(), 0.0001);
+        
+        entity.setHeading(-3*Math.PI);
+        assertEquals(Math.PI, entity.getHeading(), 0.0001);
+        
+        entity.setHeading(2.*Math.PI);
+        assertEquals(0., entity.getHeading(), 0.0001);
+        
+        entity.setHeading(0.);
+        assertEquals(0., entity.getHeading(), 0.0001);
+    }
+    
+    public void testPitchConstrainedToPlusMinusPI () throws Exception
+    {
+        final Entity entity = new TestEntity(getName());
+        
+        sim.addEntity(entity);
+
+        entity.setPitch(4*Math.PI);
+        assertEquals(0, entity.getPitch(), 0.0001);
+        
+        entity.setPitch(-4*Math.PI);
+        assertEquals(0, entity.getPitch(), 0.0001);
+        
+        entity.setPitch(-5*Math.PI);
+        assertEquals(Math.PI, entity.getPitch(), 0.0001);
+
+        entity.setPitch(5*Math.PI);
+        assertEquals(Math.PI, entity.getPitch(), 0.0001);
+    }
+    
+    public void testRollConstrainedToPlusMinusPI() throws Exception
+    {
+        final Entity entity = new TestEntity(getName());
+        
+        sim.addEntity(entity);
+
+        entity.setRoll(4*Math.PI);
+        assertEquals(0, entity.getRoll(), 0.0001);
+        
+        entity.setRoll(-4*Math.PI);
+        assertEquals(0, entity.getRoll(), 0.0001);
+        
+        entity.setRoll(-5*Math.PI);
+        assertEquals(Math.PI, entity.getRoll(), 0.0001);        
+
+        entity.setRoll(5*Math.PI);
+        assertEquals(Math.PI, entity.getRoll(), 0.0001);        
     }
     
     public void testDestroyedEntityDoesNotMove() throws Exception

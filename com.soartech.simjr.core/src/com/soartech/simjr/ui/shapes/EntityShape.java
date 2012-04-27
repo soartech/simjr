@@ -254,7 +254,7 @@ public class EntityShape implements EntityPropertyListener
         {
             Vector3 pos = entity.getPosition();
             frame.setPosition(Position.createWorldMeters(pos.x, pos.y));
-            frame.setRotation(Rotation.fromRadians(entity.getOrientation(), RotationType.WORLD));
+            frame.setRotation(Rotation.fromRadians(entity.getHeading(), RotationType.WORLD));
             
             updateBodyFrame();
         }
@@ -330,10 +330,10 @@ public class EntityShape implements EntityPropertyListener
 
         Vector3 position = adjustPositionForShadow(getEntity().getPosition(), z);
         bodyFrame.setPosition(Position.createWorldMeters(position.x, position.y));
-        bodyFrame.setRotation(Rotation.fromRadians(getEntity().getOrientation(), RotationType.WORLD));
+        bodyFrame.setRotation(Rotation.fromRadians(getEntity().getHeading(), RotationType.WORLD));
         if(shadowFrame != null)
         {
-            shadowFrame.setRotation(Rotation.fromRadians(getEntity().getOrientation(), RotationType.WORLD));
+            shadowFrame.setRotation(Rotation.fromRadians(getEntity().getHeading(), RotationType.WORLD));
         }
     }
     

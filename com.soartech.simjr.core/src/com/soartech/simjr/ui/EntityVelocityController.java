@@ -162,7 +162,7 @@ public class EntityVelocityController extends JPanel implements EntityController
         
         if(!new Vector3(v.x, v.y, 0.0).epsilonEquals(Vector3.ZERO))
         {
-            entity.setOrientation(Math.atan2(v.y, v.x));
+            entity.setHeading(Math.atan2(v.y, v.x));
         }
         repaint();
     }
