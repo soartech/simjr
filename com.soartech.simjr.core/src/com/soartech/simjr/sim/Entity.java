@@ -103,13 +103,17 @@ public interface Entity extends Adaptable
     // Keeping these around for backwards compatibility with old scripts
     @Deprecated
     /**
+     * Get heading (rotation around Z).
+     * 
+     * @deprecated Replaced by {@link #getHeading()}
      * @return The heading (rotation around Z) of the entity in radians (MATH radians)
      */
     double getOrientation();
     
     /**
-     * Set the yaw (rotation around Z of the entity in radians
+     * Set the yaw (rotation around Z of the entity in radians).
      * 
+     * @deprecated Replaced by {@link #setHeading()}
      * @param radians Angle in radians (MATH radians)
      */
     @Deprecated
