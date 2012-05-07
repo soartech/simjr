@@ -45,6 +45,14 @@ import com.soartech.simjr.sim.EntityTools;
  */
 public class FixedWingFlightController extends AbstractEntityCapability implements FlightController
 {
+    public static final String PROPERTY_USE_FULL_ORIENTATION = "use-full-orientation";
+    public static final String PROPERTY_DESIRED_VELOCITY = "desired-velocity";
+    public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
+    public static final String PROPERTY_DESIRED_ALTITUDE = "desired-altitude";
+    public static final String PROPERTY_DESIRED_FPA = "desired-fpa";
+    public static final String PROPERTY_DESIRED_HEADING = "desired-heading";
+    public static final String PROPERTY_DESIRED_SPEED = "desired-speed";
+    
     /**
      * Desired ground speed in m/s
      */
@@ -78,7 +86,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         this.desiredSpeed = speed;
         if(getEntity() != null)
         {
-            getEntity().setProperty("desired-speed", desiredSpeed);
+            getEntity().setProperty(PROPERTY_DESIRED_SPEED, desiredSpeed);
         }
     }
 
@@ -90,7 +98,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         this.desiredHeading = desiredHeading;
         if(getEntity() != null)
         {
-            getEntity().setProperty("desired-heading", Math.toDegrees(desiredHeading));
+            getEntity().setProperty(PROPERTY_DESIRED_HEADING, Math.toDegrees(desiredHeading));
         }
     }
 
@@ -99,7 +107,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         this.desiredFpa = desiredFpa;
         if(getEntity() != null)
         {
-            getEntity().setProperty("desired-fpa", Math.toDegrees(desiredFpa));
+            getEntity().setProperty(PROPERTY_DESIRED_FPA, Math.toDegrees(desiredFpa));
         }
     }
 
@@ -108,7 +116,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         this.desiredAltitude = altitude;
         if(getEntity() != null)
         {
-            getEntity().setProperty("desired-altitude", desiredAltitude);
+            getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, desiredAltitude);
         }
     }
 
@@ -117,7 +125,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         this.desiredTurnRate = turnRate;
         if(getEntity() != null)
         {
-            getEntity().setProperty("desired-turn-rate", Math.toDegrees(desiredTurnRate));
+            getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
         }
     }
 
@@ -133,11 +141,12 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     public void attach(Entity entity)
     {
         super.attach(entity);
-        getEntity().setProperty("desired-speed", desiredSpeed);
-        getEntity().setProperty("desired-heading", Math.toDegrees(desiredHeading));
-        getEntity().setProperty("desired-fpa", Math.toDegrees(desiredFpa));
-        getEntity().setProperty("desired-altitude", desiredAltitude);
-        getEntity().setProperty("desired-turn-rate", Math.toDegrees(desiredTurnRate));
+        getEntity().setProperty(PROPERTY_DESIRED_SPEED, desiredSpeed);
+        getEntity().setProperty(PROPERTY_DESIRED_HEADING, Math.toDegrees(desiredHeading));
+        getEntity().setProperty(PROPERTY_DESIRED_FPA, Math.toDegrees(desiredFpa));
+        getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, desiredAltitude);
+        getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
+        getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, true);
     }
 
     /* (non-Javadoc)
@@ -146,11 +155,12 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     @Override
     public void detach()
     {
-        getEntity().setProperty("desired-speed", null);
-        getEntity().setProperty("desired-heading", null);
-        getEntity().setProperty("desired-fpa", null);
-        getEntity().setProperty("desired-altitude", null);
-        getEntity().setProperty("desired-turn-rate", null);
+        getEntity().setProperty(PROPERTY_DESIRED_SPEED, null);
+        getEntity().setProperty(PROPERTY_DESIRED_HEADING, null);
+        getEntity().setProperty(PROPERTY_DESIRED_FPA, null);
+        getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, null);
+        getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, null);
+        getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, null);
         super.detach();
     }
 
@@ -200,7 +210,15 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
         
         // Setting the pitch based simply on the velocity vector
-        getEntity().setPitch( Math.atan2(desiredVelocityZ, desiredSpeed) );
+        boolean useFullOrientation = true;
+        Object ufoObj = getEntity().getProperty(PROPERTY_USE_FULL_ORIENTATION);
+        if ( ufoObj != null && ufoObj instanceof Boolean ) {
+            useFullOrientation = ((Boolean) ufoObj).booleanValue();
+        }
+        
+        if ( useFullOrientation ) {
+            getEntity().setPitch( Math.atan2(desiredVelocityZ, desiredSpeed) );
+        }
 
         // Create final desired velocity
         desiredVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocityZ);
@@ -210,7 +228,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
 
         // Store in properties so it's displayed in UI.
-        getEntity().setProperty("desired-velocity", desiredVelocity);
+        getEntity().setProperty(PROPERTY_DESIRED_VELOCITY, desiredVelocity);
 
         double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation);
         double maxDeltaAngle = desiredTurnRate * dt;
@@ -218,7 +236,9 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         double newOrientation = currentOrientation + desiredDeltaAngle;
         getEntity().setHeading(newOrientation);
         
-        getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngle);
+        if ( useFullOrientation ) {
+            getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngle);
+        }
 
         Vector3 newVelocity = new Vector3(Math.cos(newOrientation), Math.sin(newOrientation), 0.0);
         newVelocity = newVelocity.multiply(desiredSpeed);
