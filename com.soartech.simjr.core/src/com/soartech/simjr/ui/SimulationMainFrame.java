@@ -215,7 +215,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         setSize(frameDimension);
 
         //Dockable Frames integration
-        control = new CControl(this, false);
+        control = new CControl(this);
         add(control.getContentArea());
         
         //set the default theme
