@@ -33,8 +33,6 @@ package com.soartech.simjr.ui.editor.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.apache.log4j.Logger;
-
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.edits.DeleteEntityEdit;
@@ -47,7 +45,7 @@ import com.soartech.simjr.ui.editor.UndoService;
  */
 public class DeleteEntityAction extends AbstractEditorAction
 {
-    private static final Logger logger = Logger.getLogger(DeleteEntityAction.class);
+    //private static final Logger logger = Logger.getLogger(DeleteEntityAction.class);
     private static final long serialVersionUID = 1L;
     
     /**

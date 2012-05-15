@@ -35,13 +35,10 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import javax.swing.text.AbstractDocument.BranchElement;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
-import javax.swing.text.AbstractDocument.BranchElement;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
@@ -49,7 +46,6 @@ import org.apache.log4j.Logger;
 
 import com.soartech.simjr.scripting.ScriptRunSettings;
 import com.soartech.simjr.scripting.ScriptRunner;
-import com.soartech.simjr.util.StringTools;
 import com.soartech.simjr.util.WebBrowserTools;
 
 /**
@@ -205,29 +201,29 @@ public class CheatSheet
         }
     }
 
-    private static Map<String, String> parseQuery(URI uri)
-    {
-        Map<String, String> result = new HashMap<String, String>();
-        String query = uri.getQuery();
-        if(query == null)
-        {
-            return result;
-        }
-        
-        List<String> parts = StringTools.split(query, "&");
-        for(String part : parts)
-        {
-            int i = part.indexOf('=');
-            if(i >= 0)
-            {
-                result.put(part.substring(0, i), part.substring(i+1));
-            }
-            else
-            {
-                result.put(part, "");
-            }
-        }
-        
-        return result;
-    }
+//    private static Map<String, String> parseQuery(URI uri)
+//    {
+//        Map<String, String> result = new HashMap<String, String>();
+//        String query = uri.getQuery();
+//        if(query == null)
+//        {
+//            return result;
+//        }
+//        
+//        List<String> parts = StringTools.split(query, "&");
+//        for(String part : parts)
+//        {
+//            int i = part.indexOf('=');
+//            if(i >= 0)
+//            {
+//                result.put(part.substring(0, i), part.substring(i+1));
+//            }
+//            else
+//            {
+//                result.put(part, "");
+//            }
+//        }
+//        
+//        return result;
+//    }
 }

@@ -66,7 +66,6 @@ import com.soartech.simjr.ui.SimulationImages;
 public class CheatSheetView extends DefaultSingleCDockable implements HyperlinkListener, SimulationService
 {
     private static final Logger logger = Logger.getLogger(CheatSheetView.class);
-    private static final long serialVersionUID = 6391575660063797762L;
     
     private ServiceManager services;
     private CheatSheetHtmlPane htmlPane;

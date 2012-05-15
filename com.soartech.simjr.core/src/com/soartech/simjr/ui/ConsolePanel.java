@@ -57,8 +57,6 @@ import com.soartech.simjr.util.SwingTools;
  */
 public class ConsolePanel extends DefaultSingleCDockable
 {
-    private static final long serialVersionUID = 4927911084432287867L;
-
     private ServiceManager services;
     
     private DefaultComboBoxModel consoleListModel = new DefaultComboBoxModel();

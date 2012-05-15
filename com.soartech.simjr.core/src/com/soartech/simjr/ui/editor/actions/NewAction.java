@@ -35,8 +35,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.KeyStroke;
 
-import org.apache.log4j.Logger;
-
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.actions.ActionManager;
 
@@ -45,7 +43,7 @@ import com.soartech.simjr.ui.actions.ActionManager;
  */
 public class NewAction extends AbstractEditorAction
 {
-    private static final Logger logger = Logger.getLogger(NewAction.class);
+    //private static final Logger logger = Logger.getLogger(NewAction.class);
     private static final long serialVersionUID = 1L;
     
     /**

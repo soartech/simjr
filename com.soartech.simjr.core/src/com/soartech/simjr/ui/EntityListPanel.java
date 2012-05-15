@@ -68,8 +68,6 @@ import com.soartech.simjr.ui.actions.CenterViewOnEntityAction;
  */
 public class EntityListPanel extends DefaultSingleCDockable
 {
-    private static final long serialVersionUID = -6833121917989575975L;
-
     private ServiceManager services;
     private Simulation sim;
     private ObjectContextMenu contextMenu;

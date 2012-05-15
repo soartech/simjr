@@ -161,10 +161,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private Map<String,SingleCDockable> singleDockables = new HashMap<String,SingleCDockable>();
     
-//    private Map<String, PvdFrame> pvdFrames = new HashMap<String, PvdFrame>();
-    
-    private String layoutFilepath = ""; 
-    
     /**
      * The factory for PVD frames for DF
      */
@@ -331,7 +327,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
             OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
             XIO.writeUTF(element, out);
             
-            layoutFilepath = file;
+            //layoutFilepath = file;
         }
         catch( IOException ex ){
             ex.printStackTrace();
@@ -348,7 +344,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
             readXML( XIO.readUTF( in ) );
             in.close();
             
-            layoutFilepath = file;
+            //layoutFilepath = file;
             
             applyDefaultDockingLayout();
         }

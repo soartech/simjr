@@ -66,7 +66,7 @@ public class LoadKmlFileAction extends AbstractSimulationAction
             return;
         }
         
-        File file = chooser.getSelectedFile();
+        //File file = chooser.getSelectedFile();
 //        frame.loadDockingLayoutFromFile(file.getAbsolutePath());
         
     }

@@ -40,8 +40,6 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
-import org.apache.log4j.Logger;
-
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;
@@ -56,7 +54,7 @@ import com.soartech.simjr.util.MultiSelectDialog;
  */
 public class NewEntityAction extends AbstractEditorAction
 {
-    private static final Logger logger = Logger.getLogger(NewEntityAction.class);
+    //private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
     private Geodetic.Point initialPosition;

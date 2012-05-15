@@ -67,8 +67,6 @@ import com.soartech.simjr.ui.actions.AbstractSimulationAction;
  */
 public class RadioMessagePanel extends DefaultSingleCDockable
 {
-    private static final long serialVersionUID = 4975278223849115286L;
-
     private ServiceManager services;
     private RadioHistory history;
     
