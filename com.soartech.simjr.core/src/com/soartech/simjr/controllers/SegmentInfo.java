@@ -46,6 +46,7 @@ public class SegmentInfo
 {
     private final String waypoint;
     private final SpeedProvider speed;
+    private final DelayProvider delay;
     private final SegmentInfo next;
     
     /**
@@ -89,13 +90,64 @@ public class SegmentInfo
     }
     
     /**
+     * An interface that provides the current delay for a segment
+     * 
+     * @author rjones
+     */
+    public interface DelayProvider
+    {
+        /**
+         * @return the current delay for the segment
+         */
+        double getDelay();
+    }
+    
+    private static class ConstantDelayProvider implements DelayProvider
+    {
+        private final double delay;
+        
+        public ConstantDelayProvider(double delay)
+        {
+            this.delay = delay;
+        }
+
+        /* (non-Javadoc)
+         * @see com.soartech.simjr.controllers.SegmentInfo.DelayProvider#getDelay()
+         */
+        public double getDelay()
+        {
+            return delay;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString()
+        {
+            return delay + " seconds";
+        }
+    }
+    
+    /**
      * @param waypoint the target waypoint of this segment
      * @param speed the speed to use getting to the target waypoint.
      * @param next the next segment or {@code null}
      */
     public SegmentInfo(String waypoint, double speed, SegmentInfo next)
     {
-        this(waypoint, new ConstantSpeedProvider(speed), next);
+        this(waypoint, new ConstantSpeedProvider(speed), new ConstantDelayProvider(0.0), next);
+    }
+
+    /**
+     * @param waypoint the target waypoint of this segment
+     * @param speed the speed to use getting to the target waypoint.
+     * @param delay the delay to use before proceeding to the segment's waypoint.
+     * @param next the next segment or {@code null}
+     */
+    public SegmentInfo(String waypoint, double speed, double delay, SegmentInfo next)
+    {
+        this(waypoint, new ConstantSpeedProvider(speed), new ConstantDelayProvider(delay), next);
     }
 
     /**
@@ -105,6 +157,17 @@ public class SegmentInfo
      */
     public SegmentInfo(String waypoint, SpeedProvider speed, SegmentInfo next)
     {
+        this(waypoint, speed, new ConstantDelayProvider(0.0), next);
+    }
+
+    /**
+     * @param waypoint the target waypoint of this segment
+     * @param speed the speed provider used to get the current speed of the segment
+     * @param delay the delay provider used to get the delay time at the start of the segment
+     * @param next the next segment or {@code null}
+     */
+    public SegmentInfo(String waypoint, SpeedProvider speed, DelayProvider delay, SegmentInfo next)
+    {
         if(waypoint == null)
         {
             throw new IllegalArgumentException("waypoint cannot be null");
@@ -113,8 +176,13 @@ public class SegmentInfo
         {
             throw new IllegalArgumentException("speed cannot be null");
         }
+        if(delay == null)
+        {
+            throw new IllegalArgumentException("delay cannot be null");
+        }
         this.waypoint = waypoint;
         this.speed = speed;
+        this.delay = delay;
         this.next = next;
     }
     
@@ -147,6 +215,19 @@ public class SegmentInfo
     public SpeedProvider getSpeedProvider()
     {
         return speed;
+    }
+    
+    /**
+     * @return the current delay used on the segment
+     */
+    public double getDelay()
+    {
+        return delay.getDelay();
+    }
+    
+    public DelayProvider getDelayProvider()
+    {
+        return delay;
     }
     
     public SegmentInfo getNext()

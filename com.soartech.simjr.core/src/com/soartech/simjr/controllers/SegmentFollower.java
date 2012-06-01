@@ -71,6 +71,7 @@ public class SegmentFollower extends AbstractEntityCapability implements
     private Entity constructedRoute = null;
     private int nameIndex = 0;
     private boolean routeVisible = true;
+    private double currentSegmentDelay;
 
     /**
      * Adapt the given object to a SegmentFollower. This method is a convenience method for scripting.
@@ -165,6 +166,8 @@ public class SegmentFollower extends AbstractEntityCapability implements
             {
                 listener.onCompletedAssignedSegments(this);
             }
+        } else {
+            currentSegmentDelay = currentSegment.getDelay();
         }
     }
 
@@ -275,23 +278,32 @@ public class SegmentFollower extends AbstractEntityCapability implements
 
         final Entity entity = getEntity();
         final Vector3 target = currentSegment.getWaypoint(entity.getSimulation()).getPosition();
-        final double speed = currentSegment.getSpeed();
         final Vector3 pos = entity.getPosition();
-
         Vector3 dir = target.subtract(pos).normalized();
-        entity.setVelocity(dir.multiply(speed));
         entity.setHeading(Math.atan2(dir.y, dir.x));
-
-        // If we'll  overshoot the target in the next tick, then consider it
-        // achieved and move on to the next.
-        if(pos.subtract(target).length() < speed * dt)
+       
+        currentSegmentDelay -= dt;
+        
+        if (currentSegmentDelay > 0.0)
         {
-            final SegmentInfo completedSegment = currentSegment;
-            startFollowingSegment(currentSegment.getNext());
+            entity.setVelocity(new Vector3(0.0, 0.0, 0.0));
+        } else {
+            dt = -currentSegmentDelay;
+            currentSegmentDelay = 0.0;
+            final double speed = currentSegment.getSpeed();
+            entity.setVelocity(dir.multiply(speed));
 
-            for(SegmentFollowerListener listener : listeners)
+            // If we'll  overshoot the target in the next tick, then consider it
+            // achieved and move on to the next.
+            if(pos.subtract(target).length() < speed * dt)
             {
-                listener.onCompletedSegment(this, completedSegment);
+                final SegmentInfo completedSegment = currentSegment;
+                startFollowingSegment(currentSegment.getNext());
+
+                for(SegmentFollowerListener listener : listeners)
+                {
+                    listener.onCompletedSegment(this, completedSegment);
+                }
             }
         }
     }
