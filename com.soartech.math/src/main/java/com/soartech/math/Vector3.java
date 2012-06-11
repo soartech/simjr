@@ -256,6 +256,12 @@ public class Vector3
         return subtract(normal.multiply(dot(normal)));
     }
     
+    public double cosAngle(Vector3 otherVector)
+    {
+        Double angle = Math.acos((this.dot(otherVector)/(this.length() * otherVector.length())));
+        return !angle.equals(Double.NaN) ? angle : 0.0;
+    }
+    
     public String toString()
     {
         return "(" + x + ", " + y + ", " + z + ")";
