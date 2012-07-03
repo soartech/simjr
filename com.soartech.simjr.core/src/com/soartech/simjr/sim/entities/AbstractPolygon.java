@@ -54,7 +54,7 @@ import com.soartech.simjr.sim.Simulation;
 public abstract class AbstractPolygon extends AbstractEntityCapability implements EntityPositionProvider
 {
     private final String defaultName;
-    private List<String> points = Collections.synchronizedList(new ArrayList<String>());
+    protected List<String> points = Collections.synchronizedList(new ArrayList<String>());
 
     public static final Comparator<AbstractPolygon> NAME_COMPARATOR = new Comparator<AbstractPolygon>() {
 
