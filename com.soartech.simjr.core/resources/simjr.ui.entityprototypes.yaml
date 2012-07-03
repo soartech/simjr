@@ -59,6 +59,12 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$ComplexHullFactory []
         category: Areas
+        
+- &complex-area-static
+    id: complex-area-static
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.AreaShape$ComplexHullFactory []
+        category: Areas 
 
 ###############################################################################
 

@@ -127,6 +127,8 @@ simjr.polygons = new (function() {
 		
 		complexArea: factoryForPrototype("complex-area"),
 		
+		complexAreaStatic: factoryForPrototype("complex-area-static"),
+		
 		segments: function createSegments(points) {
 		    var lastSegment = null;
 			for(var i = points.length - 1; i >= 0; i--)	{

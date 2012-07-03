@@ -72,6 +72,17 @@ prototypes:
     properties:
         capabilities: 
         - !class com.soartech.simjr.sim.entities.DefaultPolygon
+        
+- &polygon-static
+    id: polygon-static
+    parent: *polygon
+    domain: polygon
+    category: polygon
+    subcategory: polygon
+    abstract: true
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.StaticPolygon
    
 - &route
     id: route
@@ -96,6 +107,14 @@ prototypes:
     subcategory: area
     properties:
         polygon.closed: true
+        
+- &complex-area-static
+    id: complex-area-static
+    parent: *polygon-static
+    category: area
+    subcategory: area
+    properties:
+        polygon.closed: true        
 
 ###############################################################################
 
