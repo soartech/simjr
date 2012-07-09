@@ -10,7 +10,9 @@ The setup instructions for development differ here compared to Google Code becau
 
 ## Overview ##
 
-1. Clone the repository
-1. Open Eclipse (Java EE Juno recommended, otherwise PDT plugin needs to be installed)
+Sim Jr is composed of a set of OSGi plugins. As such, Sim Jr must be developed in Eclipse. Note that these instructions do *not* use the built in Eclipse team Git support.
+
+1. Clone the repository (native Github client recommended if you are not comfortable with the command-line)
+1. Open Eclipse (Java EE Juno recommended, otherwise other plugins need to be installed)
 1. Import -> All projects in the Git root (don't copy)
-1. Open simjr-build/default.target in Eclipse and select *Set as Target Platform* (upper-right corner)
+1. Open `simjr-build/default.target` in Eclipse and select *Set as Target Platform* (upper-right corner)
