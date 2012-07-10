@@ -47,12 +47,35 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
-    
+        
+- &saafr
+    id: saafr
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
+        category: Routes
+- &aircor
+    id: aircor
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
+        category: Routes
+- &roz
+    id: roz
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
+        category: Areas  
+                
+- &Special_use_airspace
+    id: Special_use_airspace
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
+        category: Areas   
 - &area
     id: area
     properties:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
         category: Areas
+        
+        
         
 - &complex-area
     id: complex-area

@@ -63,6 +63,7 @@ import com.soartech.simjr.scenario.OrientationElement;
 import com.soartech.simjr.scenario.PointElementList;
 import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
+import com.soartech.simjr.scenario.ThreeDDataElement;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
@@ -103,8 +104,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         super(new BorderLayout());
         
         this.app = app;
-        this.sim = app.findService(Simulation.class);
-        
+        this.sim = app.findService(Simulation.class);
         this.pvd = new PlanViewDisplay(app, null) {
 
             private static final long serialVersionUID = 2647338467484833244L;
@@ -280,6 +280,11 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         {
             updateMapImage((TerrainImageElement) e.source, e.property);
         }
+        else if(e.property.equals(ThreeDDataElement.THREEDDATA))
+        {
+            final EntityElement ee = ((ThreeDDataElement) e.source).getEntity();
+            updateSimEntityThreeDData(ee);
+        }
     }
     
     private MapImage ensureMapImageExists(TerrainImageElement tie)
@@ -383,6 +388,13 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         simEntity.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
     }
     
+    private void updateSimEntityThreeDData(final EntityElement ee)
+    {
+        final Entity simEntity = getSimEntity(ee);
+        simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
+        simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
+        simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
+    }
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
     {
         final Entity simEntity = getSimEntity(source);
@@ -437,6 +449,9 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         e.setProperty(EntityConstants.PROPERTY_FORCE, source.getForce());
         e.setProperty(EDITOR_ENTITY_PROP, source);
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make routes stand out more in editor
+        e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getThreeDData().getMinAltitude());
+        e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getThreeDData().getMaxAltitude());
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getThreeDData().getRouteWidth());
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);
     }
@@ -505,8 +520,6 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
             active = true;
             app.findService(UndoService.class).addEdit(ee.getPoints().setPoints(polygon.getPointNames()));
             active = false;
-        }
-
-        
+        }  
     }
 }

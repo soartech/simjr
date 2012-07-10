@@ -113,7 +113,8 @@ public class RouteShape extends EntityShape implements EntityConstants
                                           LAYER_ROUTE).toString();
         
         ShapeStyle style = new ShapeStyle();
-        Color lineColor = (Color) EntityTools.getProperty(props, PROPERTY_SHAPE_LINE_COLOR, Color.YELLOW);
+        
+        Color lineColor = (Color) EntityTools.getLineColor(route.getEntity(), Color.YELLOW);
         style.setLineColor(lineColor);
         
         Number opacity = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_OPACITY, 1.0);
@@ -127,7 +128,7 @@ public class RouteShape extends EntityShape implements EntityConstants
         addHitableShape(new SystemShape(route, route.getName() + ".route", layer, style));
     }
 
-    private static void setLineWidth(Map<String, Object> props, ShapeStyle style, boolean selection)
+    public static void setLineWidth(Map<String, Object> props, ShapeStyle style, boolean selection)
     {
         // First check for width in meters
         Number lineWidth = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_WIDTH_METERS, null);
@@ -213,7 +214,17 @@ public class RouteShape extends EntityShape implements EntityConstants
             for(ShapeStyle style : new ShapeStyle[] {backStyle, frontStyle} )
             {
                 final PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
-
+                // First check for width in meters
+                Map<String, Object> props = route.getEntity().getProperties();
+                Number lineWidth = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_WIDTH_METERS, null);
+                if(lineWidth != null && lineWidth.doubleValue() > 0.5)
+                {
+                    style.setLineThickness(Scalar.createMeter(lineWidth.doubleValue() * (1.0)));
+                }
+                else
+                {
+                    style.setLineThickness(Scalar.createMeter(10));
+                }
                 renderer.drawPolyline(cachedPoints);
                 
                 for(SimplePosition point : cachedPoints)

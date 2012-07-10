@@ -34,6 +34,10 @@ package com.soartech.simjr.ui.editor;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -44,6 +48,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -60,11 +65,12 @@ import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityPrototypeDatabase;
+import com.soartech.simjr.sim.entities.DefaultPolygon;
 
 /**
  * @author ray
  */
-public class EntityPropertiesPanel extends JPanel implements ModelChangeListener, ActionListener
+public class EntityPropertiesPanel extends JPanel implements ModelChangeListener, ActionListener, KeyListener
 {
     private static final long serialVersionUID = -6065915301912538128L;
 
@@ -72,6 +78,9 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
     private final Model model;
     private EntityElement entity;
     private final JTextField nameField;
+    final JFormattedTextField minimumAltitude= new JFormattedTextField(NumberFormat.getNumberInstance());
+    final JFormattedTextField maximumAltitude = new JFormattedTextField(NumberFormat.getNumberInstance());
+    final JFormattedTextField routeWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
     private final DefaultComboBoxModel typeModel = new DefaultComboBoxModel();
     private final JComboBox typeCombo = new JComboBox(typeModel);
     private final DefaultComboBoxModel forceModel = new DefaultComboBoxModel(EntityConstants.ALL_FORCES);
@@ -102,8 +111,25 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         
         add(new JLabel("Heading"), "gap unrelated");
         add(headingSpinner = new HeadingSpinner(undoService), "wrap");
+        
+        add(new JLabel("Min Altitude"));
+        minimumAltitude.setColumns(5);
+        minimumAltitude.addKeyListener(this);
+        add(minimumAltitude);
+        
+        add(new JLabel("Max Altitude"), "gap unrelated");
+        maximumAltitude.setColumns(5);
+        maximumAltitude.addKeyListener(this);
+        add(maximumAltitude);
+        
+        add(new JLabel("Route Width"), "gap unrelated");
+        routeWidth.setColumns(5);
+        routeWidth.addKeyListener(this);
+        add(routeWidth, "wrap");
+        
         add(new JLabel("Init Script"), "top");
         add(initScript = new ScriptEditPanel(undoService, 50), "span, growx, growy");
+
         
         new EntryCompletionHandler(nameField) {
 
@@ -184,12 +210,35 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
     public void setEntity(EntityElement entity)
     {
         this.entity = entity;
-        
         final boolean enabled = this.entity != null;
         nameField.setEnabled(enabled);
         typeCombo.setEnabled(enabled);
         forceCombo.setEnabled(enabled);
         visibleCheckBox.setEnabled(enabled);
+        boolean isArea= false;
+        boolean isRoute = false;
+        if(entity != null)
+        {
+            isArea = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
+                    .getCategory().equals("area");
+            isRoute = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
+                    .getCategory().equals("route");
+        }
+        if(entity != null && (isArea || isRoute))
+        {
+            minimumAltitude.setEnabled(enabled);
+            maximumAltitude.setEnabled(enabled);
+        }
+        else
+        {
+            minimumAltitude.setEnabled(false);
+            maximumAltitude.setEnabled(false);
+        }
+        
+        if(entity != null && isRoute)
+            routeWidth.setEnabled(enabled);
+        else
+            routeWidth.setEnabled(false);
         
         if(enabled)
         {
@@ -201,6 +250,9 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             headingSpinner.setElement(entity.getOrientation());
             initScript.setScript(entity.getInitScript());
             visibleCheckBox.setSelected(entity.isVisible());
+            minimumAltitude.setValue(entity.getThreeDData().getMinAltitude());
+            maximumAltitude.setValue(entity.getThreeDData().getMaxAltitude());
+            routeWidth.setValue(entity.getThreeDData().getRouteWidth());
         }
         else
         {
@@ -255,8 +307,59 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
 
     public void actionPerformed(ActionEvent e)
     {
-        final UndoableEdit edit = entity.setVisible(visibleCheckBox.isSelected());
-        services.findService(UndoService.class).addEdit(edit);
+        if(e.getSource().equals(visibleCheckBox))
+        {
+            final UndoableEdit edit = entity.setVisible(visibleCheckBox.isSelected());
+            services.findService(UndoService.class).addEdit(edit);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e){}
+    @Override
+    public void keyPressed(KeyEvent e){}
+    @Override
+    public void keyReleased(KeyEvent e){
+        if(e.getSource().equals(minimumAltitude))
+        {
+            try
+            {
+                minimumAltitude.commitEdit();
+            }
+            catch (ParseException e1)
+            {
+                return;
+            }
+            final UndoableEdit edit = entity.getThreeDData().setMinAltitude(((Long)minimumAltitude.getValue()).doubleValue());
+            services.findService(UndoService.class).addEdit(edit);
+        }
+        if(e.getSource().equals(maximumAltitude))
+        {
+            try
+            {
+                maximumAltitude.commitEdit();
+            }
+            catch (ParseException e1)
+            {
+                return;
+            }
+            final UndoableEdit edit = entity.getThreeDData().setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
+            services.findService(UndoService.class).addEdit(edit);
+        }
+        if(e.getSource().equals(routeWidth))
+        {
+            try
+            {
+                routeWidth.commitEdit();
+            }
+            catch (ParseException e1)
+            {
+                return;
+            }
+            final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)routeWidth.getValue()).doubleValue());
+            services.findService(UndoService.class).addEdit(edit);
+        }
+
     }
     
     

@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.sim.entities;
 
+import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 
 /**
@@ -67,4 +68,73 @@ public class DefaultPolygon extends AbstractPolygon
         Boolean closed = (Boolean) getEntity().getPrototype().getProperty("polygon.closed");
         return closed != null ? closed.booleanValue() : false;
     }
+    
+    
+    /*TODO:  Setup properties and accessors for the Following
+     *  Min Altitude
+     *  Max Altitude
+     *  Width
+     *  Other(area type, shape)
+     */
+    
+    public int getMinAltitude()
+    {
+        //return ThreeDData.getMinAltitude();
+        Integer minProperty = (Integer)getEntity().getProperty("min_altitude");
+        //added to set legacy routes default minimumAltitude to zero
+        if(minProperty == null)
+        {
+            this.setMinAltitude(0);
+            return 0;
+        }
+        Integer minAltitude = Integer.valueOf(minProperty);
+        return minAltitude.intValue();
+    }
+    public int getMaxAltitude()
+    {
+       // return ThreeDData.getMaxAltitude();
+        Integer maxProperty = (Integer)getEntity().getProperty("max_altitude");
+        //added to set legacy routes default minimumAltitude to zero
+        if(maxProperty == null)
+        {
+            this.setMaxAltitude(0);
+            return 0;
+        }
+        Integer maxAltitude = Integer.valueOf(maxProperty);
+        return maxAltitude.intValue();
+    }
+    public int getRouteWidth()
+    {
+        //return ThreeDData.getWidth();
+        Integer routeProperty = (Integer)getEntity().getProperty("route_width");
+        //added to set legacy routes default minimumAltitude to zero
+        if(routeProperty == null)
+        {
+            this.setRouteWidth(0);
+            return 0;
+        }
+        Integer routeWidth= Integer.valueOf(routeProperty);
+        return routeWidth.intValue();
+    }
+    
+    public void setMinAltitude(int minAltitude)
+    {
+       // ThreeDData.setMinAltitude(minAltitude);
+       getEntity().setProperty("min_altitude", new Integer(minAltitude));
+  
+    }
+    public void setMaxAltitude(int maxAltitude)
+    {
+        //ThreeDData.setMaxAltitude(maxAltitude);
+        getEntity().setProperty("max_altitude", new Integer(maxAltitude));
+        
+    }
+    public void setRouteWidth(int width)
+    {
+        //ThreeDData.setWidth(width);
+        getEntity().setProperty("route_width", new Integer(width));
+       
+    }
+    
+    
 }

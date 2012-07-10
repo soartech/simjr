@@ -31,10 +31,12 @@
  */
 package com.soartech.simjr.sim;
 
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.lang.reflect.*;
 
 import org.apache.log4j.Logger;
 
@@ -361,7 +363,43 @@ public class EntityTools
             return o1.getName().compareTo(o2.getName());
         }
     }
+    /**
+     * Returns the line color or default line color of an entity as a Color.
+     * 
+     * @param e The entity, def The default color
+     * @return The Color of the entity.
+     */
+    public static Color getLineColor(Entity e, Color def)
+    {
+        String color = (String)e.getPrototype().getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
+        Color entityColor;
+        try{
+            Field field = Color.class.getField(color);
+            entityColor = (Color)field.get(null);
+        }catch (Exception E){
+            entityColor = def;
+        }
+        return entityColor;
+    }
     
+    /**
+     * Returns the fill color or default fill  color of an entity as a Color.
+     * 
+     * @param e The entity, def The default color
+     * @return The Color of the entity.
+     */
+    public static Color getFillColor(Entity e, Color def)
+    {
+        String color = (String)e.getPrototype().getProperty(EntityConstants.PROPERTY_SHAPE_FILL_COLOR);
+        Color entityColor;
+        try{
+            Field field = Color.class.getField(color);
+            entityColor = (Color)field.get(null);
+        }catch (Exception E){
+            entityColor = def;
+        }
+        return entityColor;
+    }    
     // TODO: Roll
     // TODO: Pitch
     // TODO: Yaw

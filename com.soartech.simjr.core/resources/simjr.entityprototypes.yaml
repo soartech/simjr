@@ -91,7 +91,25 @@ prototypes:
     subcategory: route
     properties:
         polygon.closed: false
-    
+        threeDData: true;
+   
+- &saafr
+    id: saafr
+    parent: *route
+    category: route
+    subcategory: saafr
+    properties:
+        shape.line.color: green
+        threeDData: true
+        
+- &aircor
+    id: aircor
+    parent: *route
+    category: route
+    subcategory: aircor
+    properties:
+        shape.line.color: red  
+        threeDData: true          
 - &area
     id: area
     parent: *polygon
@@ -99,6 +117,24 @@ prototypes:
     subcategory: area
     properties:
         polygon.closed: true
+        
+- &roz
+    id: roz
+    parent: *area
+    category: area
+    subcategory: roz
+    properties:
+        shape.fill.color: red  
+        threeDData: true
+        
+- &Special_use_airspace
+    id: Special_use_airspace
+    parent: *area
+    category: area
+    subcategory: Special_use_airspace
+    properties:
+        shape.fill.color: cyan
+        threeDData: true
         
 - &complex-area
     id: complex-area
