@@ -91,7 +91,7 @@ prototypes:
     subcategory: route
     properties:
         polygon.closed: false
-        threeDData: true;
+
    
 - &SAAFR
     id: SAAFR

@@ -132,6 +132,7 @@ public class RouteShape extends EntityShape implements EntityConstants
     {
         // First check for width in meters
         Number lineWidth = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_WIDTH_METERS, null);
+        
         if(lineWidth != null)
         {
             style.setLineThickness(Scalar.createMeter(lineWidth.doubleValue() * (selection ? 1.5 : 1.0)));
