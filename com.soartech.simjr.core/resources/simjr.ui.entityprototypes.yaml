@@ -48,18 +48,18 @@ prototypes:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
         
-- &saafr
-    id: saafr
+- &SAAFR
+    id: SAAFR
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
-- &aircor
-    id: aircor
+- &AIRCOR
+    id: AIRCOR
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
-- &roz
-    id: roz
+- &ROZ
+    id: ROZ
     properties:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
         category: Areas  

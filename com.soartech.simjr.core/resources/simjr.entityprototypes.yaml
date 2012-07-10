@@ -93,20 +93,20 @@ prototypes:
         polygon.closed: false
         threeDData: true;
    
-- &saafr
-    id: saafr
+- &SAAFR
+    id: SAAFR
     parent: *route
     category: route
-    subcategory: saafr
+    subcategory: SAAFR
     properties:
         shape.line.color: green
         threeDData: true
         
-- &aircor
-    id: aircor
+- &AIRCOR
+    id: AIRCOR
     parent: *route
     category: route
-    subcategory: aircor
+    subcategory: AIRCOR
     properties:
         shape.line.color: red  
         threeDData: true          
@@ -118,11 +118,11 @@ prototypes:
     properties:
         polygon.closed: true
         
-- &roz
-    id: roz
+- &ROZ
+    id: ROZ
     parent: *area
     category: area
-    subcategory: roz
+    subcategory: ROZ
     properties:
         shape.fill.color: red  
         threeDData: true

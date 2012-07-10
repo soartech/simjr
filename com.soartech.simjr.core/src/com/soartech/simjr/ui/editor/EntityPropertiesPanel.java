@@ -122,7 +122,7 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         maximumAltitude.addKeyListener(this);
         add(maximumAltitude);
         
-        add(new JLabel("Route Width"), "gap unrelated");
+        add(new JLabel("Width"), "gap unrelated");
         routeWidth.setColumns(5);
         routeWidth.addKeyListener(this);
         add(routeWidth, "wrap");
