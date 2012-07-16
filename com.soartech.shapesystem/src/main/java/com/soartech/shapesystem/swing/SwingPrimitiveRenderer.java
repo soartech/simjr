@@ -200,7 +200,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         int topLeftY = (int) center.y - h / 2;
         
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
-                           RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                           RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         AffineTransform transform = new AffineTransform();
         transform.rotate(-rotation.inRadians(), center.x, center.y);
         transform.translate(topLeftX, topLeftY);
