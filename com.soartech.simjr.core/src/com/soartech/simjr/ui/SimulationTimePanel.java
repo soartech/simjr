@@ -140,7 +140,7 @@ public class SimulationTimePanel extends JPanel
             }});
     }
     
-    private class ScaleFactor
+    private static class ScaleFactor
     {
         public final int factor;
         

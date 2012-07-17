@@ -347,7 +347,7 @@ public class EntityListPanel extends DefaultSingleCDockable
         
     }
     
-    private class EntityListAdapter implements Comparable<EntityListAdapter>
+    private static class EntityListAdapter implements Comparable<EntityListAdapter>
     {
         public Entity entity;
         
