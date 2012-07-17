@@ -65,7 +65,7 @@ public class ConsoleManagerTest extends TestCase
         
     }
     
-    private class Listener implements ConsoleManagerListener
+    private static class Listener implements ConsoleManagerListener
     {
         int changeCount = 0;
         public void onChanged(ConsoleManager manager)
