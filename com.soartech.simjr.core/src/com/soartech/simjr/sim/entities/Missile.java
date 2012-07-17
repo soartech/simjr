@@ -47,7 +47,7 @@ public class Missile extends AbstractFlyout
      * Construct a missile that hits an entity target.
      * 
      * @param weapon The associated weapon
-     * @param target THe target entity
+     * @param target The target entity
      */
     public Missile(Weapon weapon, Entity target, EntityPrototype prototype)
     {

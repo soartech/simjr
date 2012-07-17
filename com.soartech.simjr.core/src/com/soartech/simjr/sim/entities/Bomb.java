@@ -46,7 +46,7 @@ public class Bomb extends AbstractFlyout
      * Construct a bomb that hits an entity target.
      * 
      * @param weapon The associated weapon
-     * @param target THe target entity
+     * @param target The target entity
      */
     public Bomb(Weapon weapon, Entity target, EntityPrototype prototype)
     {
