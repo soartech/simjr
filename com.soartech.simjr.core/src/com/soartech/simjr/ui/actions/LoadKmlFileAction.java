@@ -66,6 +66,8 @@ public class LoadKmlFileAction extends AbstractSimulationAction
             return;
         }
         
+        // TODO: This action was never finished. Whatever we do here should
+        // probably also be done for the OSM importer.
         //File file = chooser.getSelectedFile();
 //        frame.loadDockingLayoutFromFile(file.getAbsolutePath());
         
