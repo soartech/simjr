@@ -34,6 +34,7 @@ package com.soartech.simjr.ui.actions;
 import java.awt.event.ActionEvent;
 
 import com.soartech.simjr.ui.SimulationMainFrame;
+import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 
 /**
  * @author ray
@@ -41,6 +42,8 @@ import com.soartech.simjr.ui.SimulationMainFrame;
 public class NewPlanViewDisplayAction extends AbstractSimulationAction
 {
     private static final long serialVersionUID = 2908235336218191351L;
+    
+    private PlanViewDisplay pvd;
     
     /**
      * @param label
@@ -63,7 +66,11 @@ public class NewPlanViewDisplayAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent e)
     {
-        findService(SimulationMainFrame.class).createPlanViewDisplay(false);
+        pvd = findService(SimulationMainFrame.class).createPlanViewDisplay(false);
     }
-
+    
+    public PlanViewDisplay getPvd()
+    {
+        return pvd;
+    }
 }
