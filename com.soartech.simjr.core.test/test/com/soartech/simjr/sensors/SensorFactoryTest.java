@@ -27,33 +27,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import junit.framework.TestCase;
 
-/**
- * @author ray
- */
-public class DismountedInfantry extends AbstractEntity
+public class SensorFactoryTest extends TestCase
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
+    
+    public void testLoadGodsEyeSensor() 
     {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+        Sensor s = SensorFactory.load("gods-eye");
+        assertNotNull(s);
+        assertTrue(s instanceof GodsEyeSensor);
+        assertEquals("gods-eye",s.getName());
+        assertNull(s.getEntity());
+        assertTrue(s.getDetections().isEmpty());
     }
+    
+    public void testLoadGenericRadarSensor() 
+    {
+        Sensor s = SensorFactory.load("generic-radar");
+        assertNotNull(s);
+        assertTrue(s instanceof GenericRadarSensor);
+        assertEquals("generic-radar",s.getName());
+        assertNull(s.getEntity());
+        assertTrue(s.getDetections().isEmpty());        
+    }
+    
+    public void testLoadGenericVisualSensor() 
+    {
+        Sensor s = SensorFactory.load("generic-visual");
+        assertNotNull(s);
+        assertTrue(s instanceof GenericVisualSensor);
+        assertEquals("generic-visual",s.getName());
+        assertNull(s.getEntity());
+        assertTrue(s.getDetections().isEmpty());
+    }
+
 }

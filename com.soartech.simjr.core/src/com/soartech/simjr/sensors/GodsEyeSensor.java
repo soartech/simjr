@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
-/**
- * @author ray
- */
-public class DismountedInfantry extends AbstractEntity
+import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityTools;
+
+public class GodsEyeSensor extends AbstractSensor
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
-    {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+    private List<Detection> detections = new ArrayList<Detection>();
+    
+    public GodsEyeSensor(String name, Properties props) {
+        super(name);
     }
+    
+    @Override
+    public void tick(double dt)
+    {
+        detections.clear();
+        if ( isEnabled() ) {
+            List<Entity> simEntities = this.getEntity().getSimulation().getEntitiesFast();
+            for ( Entity entity : simEntities ) {
+                // Only adding detections for visible entities who don't own this sensor
+                if ( entity != this.getEntity() ) {
+                    if ( EntityTools.isVisible(entity) ) {
+                        detections.add(new Detection(entity, new HashMap<String,Object>()));
+                    }
+                }
+            }        
+        }
+    }
+
+    @Override
+    public List<Detection> getDetections()
+    {
+        return Collections.unmodifiableList(detections);
+    }
+
 }

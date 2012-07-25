@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,62 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import java.util.List;
+
+import com.soartech.simjr.sim.Entity;
 
 /**
- * @author ray
+ * Abstract sensor implementation for new Sensor interface @see com.soartech.simjr.sensor.Senor.
+ * 
+ * @author rdf
  */
-public class DismountedInfantry extends AbstractEntity
+public abstract class AbstractSensor implements Sensor
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
+
+    private Entity entity;
+    private String name;
+    private boolean enabled = true;
+
+    public AbstractSensor(String name)
     {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+        this.name = name;
     }
+    
+    @Override
+    public void setEntity(Entity entity)
+    {
+        this.entity = entity;
+    }
+    
+    @Override
+    public Entity getEntity()
+    {
+        return entity;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+    
+    @Override
+    public abstract void tick(double dt);
+    
+    @Override
+    public abstract List<Detection> getDetections();
 }

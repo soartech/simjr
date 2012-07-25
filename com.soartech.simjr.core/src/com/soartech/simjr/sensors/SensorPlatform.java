@@ -31,34 +31,36 @@
  */
 package com.soartech.simjr.sensors;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityCapability;
+import com.soartech.simjr.sim.Tickable;
 
-public interface SensorPlatform
+public interface SensorPlatform extends EntityCapability, Tickable
 {
     /**
-     * @return The entity that owns this sensor.
+     * @return The entity that owns this sensor platform.
      */
     Entity getEntity();
     
     /**
-     * @return Collection of sensors
+     * @return Collection of sensors on the platform.
      */
-    List<Sensor> getSensors();
+    Collection<Sensor> getSensors();
     
     /**
      * Retrieve a sensor by name.
      */
-    Sensor getName(String name);
+    Sensor getSensorByName(String name);
     
     /**
      * Add a sensor to this platform.
      */
-    void addSensor(Sensor sensor);
+    void addSensor(String name, Sensor sensor);
     
     /**
      * Remove a sensor from this platform.
      */
-    void removeSensor(Sensor sensor);
+    void removeSensor(String name);
 }

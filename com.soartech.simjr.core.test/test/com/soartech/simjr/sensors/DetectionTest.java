@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import java.util.HashMap;
 
-/**
- * @author ray
- */
-public class DismountedInfantry extends AbstractEntity
+import junit.framework.TestCase;
+
+import com.soartech.simjr.sim.EntityPrototypes;
+import com.soartech.simjr.sim.entities.Vehicle;
+
+public class DetectionTest extends TestCase
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
-    {
-        super(name, prototype);
+    public void testBasicProperties() {
         
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
+        Vehicle veh = new Vehicle("fwa", EntityPrototypes.NULL);
         
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+        HashMap<String,Object> props = new HashMap<String,Object>();
+        props.put("test-prop-1", Integer.valueOf(10));
+        props.put("test-prop-2", "MyTestString");
+        props.put("test-prop-3", 3.0);
+        
+        Detection detection = new Detection(veh, props);
+        
+        // This property is used to test if the detection makes a copy of the properties
+        props.put("test-prop-4", "Shouldn't end up in detection properties.");
+        
+        assertEquals(veh, detection.getEntity());
+        assertEquals(10, detection.getProperty("test-prop-1"));
+        assertEquals("MyTestString", detection.getProperty("test-prop-2"));
+        assertEquals(3.0, detection.getProperty("test-prop-3"));
+        assertNull( detection.getProperty("test-prop-4") );
     }
 }

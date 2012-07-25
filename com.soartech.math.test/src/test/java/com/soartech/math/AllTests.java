@@ -50,7 +50,7 @@ public class AllTests
 {
     public static Test suite()
     {
-        final Class<? extends TestCase>[] tests = new Class[] {
+        TestSuite suite = new TestSuite(
             Vector3Test.class,
             AnglesTest.class,
             TestLineSegmentDistance.class,
@@ -60,8 +60,8 @@ public class AllTests
             TestGeocentric.class,
             TestLocalCartesian.class,
             TestMgrs.class,
-            TestUniversalTransverseMercator.class,
-        };
-        return new TestSuite(tests, AllTests.class.getName());
+            TestUniversalTransverseMercator.class);
+        suite.setName(AllTests.class.getName());
+        return suite;
     }
 }

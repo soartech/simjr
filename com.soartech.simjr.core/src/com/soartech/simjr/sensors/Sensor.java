@@ -31,34 +31,63 @@
  */
 package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.sim.Entity;
+import java.util.List;
 
-public abstract class Sensor
+import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.Tickable;
+
+public interface Sensor extends Tickable
 {
 
-    private Entity entity;
-    private String name;
+    /**
+     * Sets the owning entity of the sensor.
+     * 
+     * @param entity
+     */
+    public void setEntity(Entity entity);
+    
+    /**
+     * Returns the owning entity of the sensor.
+     * 
+     * @return
+     */
+    public Entity getEntity();
 
-    public Sensor(String name)
-    {
-        this.name = name;
-    }
-    
-    public void setEntity(Entity entity)
-    {
-        this.entity = entity;
-    }
-    
-    public Entity getEntity()
-    {
-        return entity;
-    }
+    /**
+     * Returns the name of the sensor type.
+     * 
+     * @return
+     */
+    public String getName();
 
-    public String getName()
-    {
-        return name;
-    }
+    /**
+     * Turns the sensor on (true) and off (false).
+     */
+    public void setEnabled(boolean enabled);
     
-    public abstract void enable(boolean enabled);
-    public abstract void doUpdate();
+    /**
+     * Returns true if sensor is enable and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isEnabled();
+    
+    // TODO: Could also just loop over tickable items. This may also 
+    // require that the sensor platform is tickable
+    /**
+     * A tick function that should get called every tick cycle that allows the 
+     * sensor implementation to do any processing that it needs to do.
+     * 
+     * @param dt
+     */
+    @Override 
+    public void tick(double dt);
+    
+    /**
+     * Returns the detections as seen by the sensor. 
+     * 
+     * @return
+     */
+    public List<Detection> getDetections();
+   
 }

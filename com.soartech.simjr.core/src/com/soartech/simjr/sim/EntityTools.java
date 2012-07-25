@@ -42,6 +42,7 @@ import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sensors.SensorPlatform;
 import com.soartech.simjr.sim.entities.DamageStatus;
 import com.soartech.simjr.sim.entities.FuelModel;
 import com.soartech.simjr.weapons.WeaponPlatform;
@@ -339,6 +340,18 @@ public class EntityTools
         return Adaptables.adapt(entity, WeaponPlatform.class);
     }
     
+    /**
+     * Retrieve an entity's sensor platform. This is mostly for use by scripts
+     * so DO NOT REMOVE IT even if it appears to not be used by any Java code.
+     * 
+     * @param entity The entity
+     * @return The sensor platform or null if there is none.
+     */
+    public static SensorPlatform getSensorPlatform(Entity entity)
+    {
+        return Adaptables.adapt(entity, SensorPlatform.class);
+    }
+
     /**
      * Retrieve an entity's fuel model. This is mostly for use by scripts
      * so DO NOT REMOVE IT even if it appears to not be used by any Java code.

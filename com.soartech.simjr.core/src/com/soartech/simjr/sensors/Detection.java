@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.soartech.simjr.sim.Entity;
 
 /**
- * @author ray
+ * Simple data structure that represents a detection from a sensor. It has extensible
+ * properties so that future sensor implementations can add additional information.
+ * 
+ * @author rdf
  */
-public class DismountedInfantry extends AbstractEntity
+public class Detection
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
-    {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+    private final Entity entity;
+    private final Map<String,Object> properties;
+    
+    public Detection(Entity entity, Map<String,Object> properties) {
+        this.entity = entity;
+        this.properties = new HashMap<String,Object>(properties);
     }
+    
+    public Map<String,Object> getProperties() {
+        return Collections.unmodifiableMap(this.properties);
+    }
+    
+    /**
+     * Returns the entity that was detected. Some implementations may return
+     * null for false detections.
+     * 
+     * @return
+     */
+    public Entity getEntity() {
+        return this.entity;
+    }
+    
+    public Object getProperty(String key) {
+        return this.properties.get(key);
+    }
+
 }

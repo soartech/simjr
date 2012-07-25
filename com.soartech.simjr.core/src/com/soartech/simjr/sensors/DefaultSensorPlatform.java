@@ -31,34 +31,37 @@
  */
 package com.soartech.simjr.sensors;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.soartech.simjr.sim.AbstractEntityCapability;
 import com.soartech.simjr.sim.Entity;
 
 public class DefaultSensorPlatform extends AbstractEntityCapability implements SensorPlatform
 {
-    private final List<Sensor> sensors = new ArrayList<Sensor>();
+    private final Map<String,Sensor> sensors = new HashMap<String,Sensor>();
     
-    public DefaultSensorPlatform()
+    public DefaultSensorPlatform() 
     {
-        
+        // Intentionally left blank
     }
     
     @Override
     public void attach(Entity e)
     {
         super.attach(e);
-        for(Sensor s : sensors)
+        for(Sensor s : sensors.values())
         {
             s.setEntity(e);
         }
     }
     
+    @Override
     public void detach()
     {
-        for(Sensor s : sensors)
+        for(Sensor s : sensors.values())
         {
             s.setEntity(null);
         }
@@ -66,40 +69,38 @@ public class DefaultSensorPlatform extends AbstractEntityCapability implements S
     }
 
     @Override
-    public List<Sensor> getSensors()
+    public Collection<Sensor> getSensors()
     {
-        return sensors;
+        return Collections.unmodifiableCollection( sensors.values() );
     }
 
     @Override
-    public Sensor getName(String name)
+    public Sensor getSensorByName(String name)
     {
-        for(Sensor sensor : sensors)
+        return sensors.get(name);
+    }
+
+    @Override
+    public void addSensor(String name, Sensor sensor)
+    {
+        sensors.put(name, sensor);
+        sensor.setEntity(getEntity());
+    }
+
+    @Override
+    public void removeSensor(String name)
+    {
+        Sensor removedSensor = sensors.remove(name);
+        if( removedSensor != null )
         {
-            if(name.equals(sensor.getName()))
-            {
-                return sensor;
-            }
+            removedSensor.setEntity(null);
         }
-        return null;
     }
-
+    
     @Override
-    public void addSensor(Sensor sensor)
-    {
-        if(!sensors.contains(sensor))
-        {
-            sensors.add(sensor);
-            sensor.setEntity(getEntity());
-        }
-    }
-
-    @Override
-    public void removeSensor(Sensor sensor)
-    {
-        if(sensors.remove(sensor))
-        {
-            sensor.setEntity(null);
+    public void tick(double dt) {
+        for ( Sensor sensor : sensors.values() ) {
+            sensor.tick(dt);
         }
     }
     

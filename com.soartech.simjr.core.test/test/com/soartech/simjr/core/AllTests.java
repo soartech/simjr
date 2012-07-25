@@ -32,7 +32,6 @@
 package com.soartech.simjr.core;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.soartech.simjr.SimJrPropsTest;
@@ -51,6 +50,11 @@ import com.soartech.simjr.scenario.TerrainImageElementTest;
 import com.soartech.simjr.scripting.DefaultScriptProviderManagerTest;
 import com.soartech.simjr.scripting.ResourceScriptProviderTest;
 import com.soartech.simjr.scripting.ScriptRunnerTest;
+import com.soartech.simjr.sensors.DetectionTest;
+import com.soartech.simjr.sensors.GenericRadarSensorTest;
+import com.soartech.simjr.sensors.GenericVisualSensorTest;
+import com.soartech.simjr.sensors.GodsEyeSensorTest;
+import com.soartech.simjr.sensors.SensorFactoryTest;
 import com.soartech.simjr.services.DefaultServiceManagerTest;
 import com.soartech.simjr.sim.AbstractEntityCapabilityTest;
 import com.soartech.simjr.sim.DefaultEntityPrototypeTest;
@@ -84,7 +88,7 @@ public class AllTests
 {
     public static Test suite()
     {
-    	final Class<? extends TestCase>[] tests = new Class[] {
+        TestSuite suite = new TestSuite(
             SimJrPropsTest.class,
             ConsoleManagerTest.class,
             SegmentFollowerTest.class,
@@ -128,8 +132,15 @@ public class AllTests
             
             BombWeaponTest.class,
             MissileWeaponTest.class,
-            WeaponTest.class
-        };
-        return new TestSuite(tests, AllTests.class.getName());
+            WeaponTest.class,
+            
+            SensorFactoryTest.class,
+            GenericRadarSensorTest.class,
+            GenericVisualSensorTest.class,
+            GodsEyeSensorTest.class,
+            DetectionTest.class
+        );
+        suite.setName(AllTests.class.getName());
+        return suite;
     }
 }

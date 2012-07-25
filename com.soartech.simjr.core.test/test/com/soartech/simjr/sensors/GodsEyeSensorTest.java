@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,69 +27,60 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Feb 12, 2008
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
+
+import java.util.Properties;
 
 import junit.framework.TestCase;
 
 import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.SensorPlatform;
-import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototypes;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.SimpleTerrain;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import com.soartech.simjr.sim.entities.Vehicle;
 
-public class VehicleTest extends TestCase
+public class GodsEyeSensorTest extends TestCase
 {
-    private Simulation sim;
-    
-    private static class TestVehicle extends Vehicle
-    {
 
-        public TestVehicle(String name)
-        {
-            super(name, EntityPrototypes.NULL);
-        }
-        
-    }
-    
-    protected void setUp() throws Exception
+    public void testBasicSensing()
     {
-        super.setUp();
+        Simulation sim = new Simulation(SimpleTerrain.createExampleTerrain(), false);
         
-        this.sim = new Simulation(SimpleTerrain.createExampleTerrain(), false);
-    }
+        Vehicle fwa = new Vehicle("fwa", EntityPrototypes.NULL);
+        SensorPlatform sp = Adaptables.adapt(fwa, SensorPlatform.class);
+        assertNotNull(sp);
+        
+        GodsEyeSensor sensor = new GodsEyeSensor("gods-eye", new Properties());
+        assertTrue(sensor.isEnabled());
+        assertTrue(sensor.getDetections().isEmpty());
+        sp.addSensor("main",sensor);
+        assertEquals(1, sp.getSensors().size());
+        assertEquals(sensor, sp.getSensorByName("main"));
+        assertEquals(fwa, sp.getEntity());
+        
+        sim.addEntity(fwa);        
+        assertEquals(1, sim.getEntities().size());
+        
+        sim.tick(1.0);
+        
+        // After the first tick there should still be no detections
+        assertTrue(sensor.getDetections().isEmpty());
+        
+        // Now add another vehicle to the sim and tick it. There should be one detection
+        Vehicle target = new Vehicle("target", EntityPrototypes.NULL);
+        sim.addEntity(target);
+        
+        sim.tick(1.0);
+        assertEquals(1, sensor.getDetections().size());
+        assertEquals(target, sensor.getDetections().get(0).getEntity());
 
-    protected void tearDown() throws Exception
-    {
-        sim.shutdown();
-        super.tearDown();
-    }
-    
-    public void testEntityGetsWeaponPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        WeaponPlatform weapons = Adaptables.adapt(entity, WeaponPlatform.class);
-
-        assertNotNull(weapons);
-        assertSame(entity, weapons.getEntity());
-    }
-
-    public void testEntityGetsSensorPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        SensorPlatform sensors = Adaptables.adapt(entity, SensorPlatform.class);
-
-        assertNotNull(sensors);
-        assertSame(entity, sensors.getEntity());
+        // There should be no detections of invisible vehicles
+        EntityTools.setVisible(target, false);
+        sim.tick(1.0);
+        assertTrue(sensor.getDetections().isEmpty());
     }
 
 }
