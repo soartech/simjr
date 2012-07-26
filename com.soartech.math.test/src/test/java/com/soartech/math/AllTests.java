@@ -31,14 +31,13 @@
  */
 package com.soartech.math;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import com.soartech.math.geotrans.TestGeocentric;
 import com.soartech.math.geotrans.TestLocalCartesian;
 import com.soartech.math.geotrans.TestMgrs;
 import com.soartech.math.geotrans.TestUniversalTransverseMercator;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Test suite for this plugin. Add all test classes here so they'll be included
