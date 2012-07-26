@@ -65,5 +65,15 @@ public class SensorFactoryTest extends TestCase
         assertNull(s.getEntity());
         assertTrue(s.getDetections().isEmpty());
     }
+    
+    public void testLoadGenericRadarWarningSensor()
+    {
+        Sensor s = SensorFactory.load("generic-radar-warning");
+        assertNotNull(s);
+        assertTrue(s instanceof GenericRadarWarningSensor);
+        assertEquals("generic-radar-warning",s.getName());
+        assertNull(s.getEntity());
+        assertTrue(s.getDetections().isEmpty());
+    }
 
 }

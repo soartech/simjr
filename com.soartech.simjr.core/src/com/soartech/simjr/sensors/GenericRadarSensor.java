@@ -33,32 +33,47 @@ package com.soartech.simjr.sensors;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-public class GenericRadarSensor extends AbstractSensor
-{
+import com.soartech.simjr.sim.Entity;
 
+public class GenericRadarSensor extends AbstractSensor implements RadarSensor
+{
+    private List<Detection> detections = new ArrayList<Detection>();
+    private EntityFilter filter;
+    
     public GenericRadarSensor(String name, Properties props) {
         super(name);
     }
     
     @Override
+    public void setEntity(Entity entity) 
+    {
+        super.setEntity(entity);
+        filter = new EntityFilter(getEntity());
+    }
+    
+    @Override
     public void tick(double dt)
     {
-        // TODO Auto-generated method stub
-
+        detections.clear();
+        if ( isEnabled() ) {
+            List<Entity> simEntities = this.getEntity().getSimulation().getEntitiesFast();
+            for ( Entity entity : simEntities ) {
+                // Only adding detections for visible entities who don't own this sensor
+                if ( filter.isContactOfInterest(entity) ) {
+                    detections.add(new Detection(this,entity, new HashMap<String,Object>()));
+                }
+            }        
+        }
     }
 
     @Override
     public List<Detection> getDetections()
     {
-        if ( !isEnabled() ) {
-            return Collections.emptyList();
-        }   
-        
-        List<Detection> retval = new ArrayList<Detection>();
-        return retval;
+        return Collections.unmodifiableList(detections);
     }
 
 }

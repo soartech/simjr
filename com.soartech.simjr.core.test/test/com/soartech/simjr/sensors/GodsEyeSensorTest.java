@@ -75,7 +75,7 @@ public class GodsEyeSensorTest extends TestCase
         
         sim.tick(1.0);
         assertEquals(1, sensor.getDetections().size());
-        assertEquals(target, sensor.getDetections().get(0).getEntity());
+        assertEquals(target, sensor.getDetections().get(0).getTargetEntity());
 
         // There should be no detections of invisible vehicles
         EntityTools.setVisible(target, false);

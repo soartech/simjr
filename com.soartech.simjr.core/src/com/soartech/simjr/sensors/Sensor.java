@@ -72,15 +72,13 @@ public interface Sensor extends Tickable
      */
     public boolean isEnabled();
     
-    // TODO: Could also just loop over tickable items. This may also 
-    // require that the sensor platform is tickable
     /**
      * A tick function that should get called every tick cycle that allows the 
      * sensor implementation to do any processing that it needs to do.
      * 
      * @param dt
      */
-    @Override 
+    @Override
     public void tick(double dt);
     
     /**

@@ -38,14 +38,21 @@ import java.util.List;
 import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
-import com.soartech.simjr.sim.EntityTools;
 
 public class GodsEyeSensor extends AbstractSensor
 {
     private List<Detection> detections = new ArrayList<Detection>();
+    private EntityFilter filter;
     
     public GodsEyeSensor(String name, Properties props) {
         super(name);
+    }
+    
+    @Override
+    public void setEntity(Entity entity) 
+    {
+        super.setEntity(entity);
+        filter = new EntityFilter(getEntity());
     }
     
     @Override
@@ -56,10 +63,8 @@ public class GodsEyeSensor extends AbstractSensor
             List<Entity> simEntities = this.getEntity().getSimulation().getEntitiesFast();
             for ( Entity entity : simEntities ) {
                 // Only adding detections for visible entities who don't own this sensor
-                if ( entity != this.getEntity() ) {
-                    if ( EntityTools.isVisible(entity) ) {
-                        detections.add(new Detection(entity, new HashMap<String,Object>()));
-                    }
+                if ( filter.isContactOfInterest(entity) ) {
+                    detections.add(new Detection(this,entity, new HashMap<String,Object>()));
                 }
             }        
         }

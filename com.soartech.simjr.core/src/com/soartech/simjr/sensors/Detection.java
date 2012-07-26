@@ -45,14 +45,19 @@ import com.soartech.simjr.sim.Entity;
  */
 public class Detection
 {
-    private final Entity entity;
+    private final Entity target;
+    private final Sensor source;
     private final Map<String,Object> properties;
     
-    public Detection(Entity entity, Map<String,Object> properties) {
-        this.entity = entity;
+    public Detection(Sensor source, Entity target, Map<String,Object> properties) {
+        this.source = source;
+        this.target = target;
         this.properties = new HashMap<String,Object>(properties);
     }
     
+    /**
+     * @return an unmodifiable version of the detections property map
+     */
     public Map<String,Object> getProperties() {
         return Collections.unmodifiableMap(this.properties);
     }
@@ -61,12 +66,27 @@ public class Detection
      * Returns the entity that was detected. Some implementations may return
      * null for false detections.
      * 
-     * @return
+     * @return the detected/target entity
      */
-    public Entity getEntity() {
-        return this.entity;
+    public Entity getTargetEntity() {
+        return this.target;
     }
     
+    /**
+     * Returns the sensor that detected the entity.
+     * 
+     * @return the sensor that detected the entity
+     */
+    public Sensor getSourceSensor() {
+        return this.source;
+    }
+    
+    /**
+     * Returns a 
+     * 
+     * @param key
+     * @return
+     */
     public Object getProperty(String key) {
         return this.properties.get(key);
     }
