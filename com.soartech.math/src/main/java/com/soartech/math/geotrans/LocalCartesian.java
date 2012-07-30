@@ -99,16 +99,6 @@ public class LocalCartesian extends GeoTransBase
                                                  * cos(LocalCart_Orientation)
                                                  */
 
-    private double Cos_Lat_Cos_Orient = 1.0; /*
-                                                 * cos(LocalCart_Origin_Lat) *
-                                                 * cos(LocalCart_Orientation)
-                                                 */
-
-    private double Cos_Lat_Sin_Orient = 0.0; /*
-                                                 * cos(LocalCart_Origin_Lat) *
-                                                 * sin(LocalCart_Orientation)
-                                                 */
-
     /**
      * 
      */
@@ -189,10 +179,6 @@ public class LocalCartesian extends GeoTransBase
                 * Sin_LocalCart_Orientation;
         Sin_Lat_Cos_Orient = Sin_LocalCart_Origin_Lat
                 * Cos_LocalCart_Orientation;
-        Cos_Lat_Cos_Orient = Cos_LocalCart_Origin_Lat
-                * Cos_LocalCart_Orientation;
-        Cos_Lat_Sin_Orient = Cos_LocalCart_Origin_Lat
-                * Sin_LocalCart_Orientation;
 
         N0 = LocalCart_a
                 / sqrt(1 - es2 * Sin_LocalCart_Origin_Lat

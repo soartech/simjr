@@ -462,7 +462,6 @@ public class TransverseMercator extends GeoTransBase
         double eta4;
         double ftphi; /* Footpoint latitude                              */
         int i; /* Loop iterator                   */
-        double s; /* Sine of latitude                        */
         double sn; /* Radius of curvature in the prime vertical       */
         double sr; /* Radius of curvature in the meridian             */
         double t; /* Tangent of latitude                             */
@@ -516,8 +515,7 @@ public class TransverseMercator extends GeoTransBase
         /* Radius of Curvature in the meridian */
         sn = SPHSN(ftphi);
 
-        /* Sine Cosine terms */
-        s = sin(ftphi);
+        /* Cosine term */
         c = cos(ftphi);
 
         /* Tangent Value  */
