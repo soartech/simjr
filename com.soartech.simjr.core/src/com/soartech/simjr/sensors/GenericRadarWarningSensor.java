@@ -37,7 +37,10 @@ public class GenericRadarWarningSensor extends AbstractSensor
                             if ( radar != null ) {
                                 for ( Detection detection : radar.getDetections() ) {
                                     if ( detection.getTargetEntity() == this.getEntity() ) {
-                                        detections.add(new Detection(this, detection.getSourceSensor().getEntity(), new HashMap<String,Object>()));
+                                        detections.add(new Detection(this, 
+                                                                     detection.getSourceSensor().getEntity(), 
+                                                                     new HashMap<String,Object>(),
+                                                                     DetectionType.RADAR_WARNING));
                                     }
                                 }
                             }

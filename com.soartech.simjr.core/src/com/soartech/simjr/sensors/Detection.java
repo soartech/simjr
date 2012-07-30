@@ -48,11 +48,13 @@ public class Detection
     private final Entity target;
     private final Sensor source;
     private final Map<String,Object> properties;
+    private final DetectionType type;
     
-    public Detection(Sensor source, Entity target, Map<String,Object> properties) {
+    public Detection(Sensor source, Entity target, Map<String,Object> properties, DetectionType type) {
         this.source = source;
         this.target = target;
         this.properties = new HashMap<String,Object>(properties);
+        this.type = type;
     }
     
     /**
@@ -82,13 +84,17 @@ public class Detection
     }
     
     /**
-     * Returns a 
+     * Returns a property of the detection or null if none has been set.
      * 
-     * @param key
-     * @return
+     * @param key name of property
+     * @return the value of the property or null if none has been set.
      */
     public Object getProperty(String key) {
         return this.properties.get(key);
     }
 
+    public DetectionType getType() 
+    {
+        return this.type;
+    }
 }

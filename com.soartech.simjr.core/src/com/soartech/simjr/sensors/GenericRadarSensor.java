@@ -64,7 +64,7 @@ public class GenericRadarSensor extends AbstractSensor implements RadarSensor
             for ( Entity entity : simEntities ) {
                 // Only adding detections for visible entities who don't own this sensor
                 if ( filter.isContactOfInterest(entity) ) {
-                    detections.add(new Detection(this,entity, new HashMap<String,Object>()));
+                    detections.add(new Detection(this,entity, new HashMap<String,Object>(), DetectionType.RADAR));
                 }
             }        
         }

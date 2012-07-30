@@ -1,10 +1,9 @@
 package com.soartech.simjr.sensors;
 
 /**
+ * Marker interface for distinguishing between Vision and Radar Sensors
  * 
- * 
- * @author Rich Frederiksen
- *
+ * @author rdf
  */
 public interface RadarSensor extends Sensor
 {

@@ -50,7 +50,10 @@ import com.soartech.simjr.scenario.TerrainImageElementTest;
 import com.soartech.simjr.scripting.DefaultScriptProviderManagerTest;
 import com.soartech.simjr.scripting.ResourceScriptProviderTest;
 import com.soartech.simjr.scripting.ScriptRunnerTest;
+import com.soartech.simjr.sensors.ContactManagerTest;
+import com.soartech.simjr.sensors.ContactTest;
 import com.soartech.simjr.sensors.DetectionTest;
+import com.soartech.simjr.sensors.EntityFilterTest;
 import com.soartech.simjr.sensors.GenericRadarSensorTest;
 import com.soartech.simjr.sensors.GenericVisualSensorTest;
 import com.soartech.simjr.sensors.GodsEyeSensorTest;
@@ -135,12 +138,15 @@ public class AllTests
             MissileWeaponTest.class,
             WeaponTest.class,
             
-            SensorFactoryTest.class,
+            ContactManagerTest.class,
+            ContactTest.class,
+            DetectionTest.class,
+            EntityFilterTest.class,
             GenericRadarSensorTest.class,
             GenericVisualSensorTest.class,
             GodsEyeSensorTest.class,
-            DetectionTest.class,
-            NotchFilterTest.class
+            NotchFilterTest.class,
+            SensorFactoryTest.class
         );
         suite.setName(AllTests.class.getName());
         return suite;

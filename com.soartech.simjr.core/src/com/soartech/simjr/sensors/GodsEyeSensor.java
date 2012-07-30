@@ -39,7 +39,7 @@ import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
 
-public class GodsEyeSensor extends AbstractSensor
+public class GodsEyeSensor extends AbstractSensor implements VisionSensor
 {
     private List<Detection> detections = new ArrayList<Detection>();
     private EntityFilter filter;
@@ -64,7 +64,7 @@ public class GodsEyeSensor extends AbstractSensor
             for ( Entity entity : simEntities ) {
                 // Only adding detections for visible entities who don't own this sensor
                 if ( filter.isContactOfInterest(entity) ) {
-                    detections.add(new Detection(this,entity, new HashMap<String,Object>()));
+                    detections.add(new Detection(this,entity, new HashMap<String,Object>(), DetectionType.VISIBLE));
                 }
             }        
         }

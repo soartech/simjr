@@ -22,11 +22,6 @@ public class EntityFilter
             return false;
         }
         
-        if (isDefaultContact(entity))
-        {
-            return false;
-        }
-        
         // This refers to visibility through the ui, its
         // common to add entities to the scenario and set their visibility
         // to false until they are needed.
@@ -38,9 +33,5 @@ public class EntityFilter
         return entity instanceof DismountedInfantry || entity instanceof Vehicle;
 
     }
-    
-    private boolean isDefaultContact(Entity entity)
-    {
-    	return entity.getPrototype().hasSubcategory("control");
-    }
+
 }

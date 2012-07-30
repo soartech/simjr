@@ -50,13 +50,14 @@ public class DetectionTest extends TestCase
         props.put("test-prop-3", 3.0);
         
         Sensor sensor = SensorFactory.load("generic-radar");
-        Detection detection = new Detection(sensor, veh, props);
+        Detection detection = new Detection(sensor, veh, props, DetectionType.RADAR);
         
         // This property is used to test if the detection makes a copy of the properties
         props.put("test-prop-4", "Shouldn't end up in detection properties.");
         
         assertEquals(sensor, detection.getSourceSensor());
         assertEquals(veh, detection.getTargetEntity());
+        assertEquals(DetectionType.RADAR, detection.getType());
         assertEquals(10, detection.getProperty("test-prop-1"));
         assertEquals("MyTestString", detection.getProperty("test-prop-2"));
         assertEquals(3.0, detection.getProperty("test-prop-3"));

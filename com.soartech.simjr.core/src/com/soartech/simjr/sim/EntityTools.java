@@ -44,6 +44,7 @@ import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sensors.SensorPlatform;
 import com.soartech.simjr.sim.entities.DamageStatus;
+import com.soartech.simjr.sim.entities.EntityVisibleRange;
 import com.soartech.simjr.sim.entities.FuelModel;
 import com.soartech.simjr.weapons.WeaponPlatform;
 
@@ -362,6 +363,10 @@ public class EntityTools
     public static FuelModel getFuelModel(Entity entity)
     {
         return Adaptables.adapt(entity, FuelModel.class);
+    }
+
+    public static EntityVisibleRange getVisibleRange(Entity entity) {
+        return (EntityVisibleRange) entity.getProperty(EntityConstants.PROPERTY_VISIBLE_RANGE);
     }
     
     /**

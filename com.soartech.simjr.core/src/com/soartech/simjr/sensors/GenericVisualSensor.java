@@ -38,9 +38,10 @@ import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
 
-public class GenericVisualSensor extends AbstractSensor
+public class GenericVisualSensor extends AbstractSensor implements VisionSensor
 {
     private EntityFilter filter;
+    private List<Detection> detections = new ArrayList<Detection>();
     
     public GenericVisualSensor(String name, Properties props) {
         super(name);
@@ -62,12 +63,7 @@ public class GenericVisualSensor extends AbstractSensor
     @Override
     public List<Detection> getDetections()
     {
-        if ( !isEnabled() ) {
-            return Collections.emptyList();
-        }   
-        
-        List<Detection> retval = new ArrayList<Detection>();
-        return retval;
+        return Collections.unmodifiableList(detections);
     }
 
 }
