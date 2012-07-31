@@ -16,7 +16,7 @@ public class ContactTest extends TestCase
         
         assertEquals(entity, contact.getEntity());
         assertEquals(ContactState.UNKNOWN, contact.getState());
-        assertEquals(Double.MIN_VALUE, contact.getExpirationTime());
+        assertEquals(Double.NEGATIVE_INFINITY, contact.getExpirationTime());
     }
     
     public void testSetInitialStateVisible()
@@ -28,7 +28,7 @@ public class ContactTest extends TestCase
         
         assertEquals(entity, contact.getEntity());
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());
     }
     
     public void testSetInitialStateRadar()
@@ -40,7 +40,7 @@ public class ContactTest extends TestCase
         
         assertEquals(entity, contact.getEntity());
         assertEquals(ContactState.RADAR, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());
     }
     
     public void testSetInitialStateProjected()
@@ -77,19 +77,19 @@ public class ContactTest extends TestCase
         double curtime = 0.0;
         contact.updateState(ContactState.VISIBLE, curtime);
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());  
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());  
 
         contact.updateState(ContactState.RADAR, curtime);
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());  
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());  
 
         contact.updateState(ContactState.PROJECTED, curtime);
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());  
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());  
 
         contact.updateState(ContactState.PROJECTED_DISAPPEARING, curtime);
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());  
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());  
 
         // Now increasing the time and updating in increasing priority order (should change every time)
         curtime = 1.0;
@@ -103,11 +103,11 @@ public class ContactTest extends TestCase
         
         contact.updateState(ContactState.RADAR, 1.0);
         assertEquals(ContactState.RADAR, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());
 
         contact.updateState(ContactState.VISIBLE, 1.0);
         assertEquals(ContactState.VISIBLE, contact.getState());
-        assertEquals(Double.MAX_VALUE, contact.getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contact.getExpirationTime());
     }
     
     public void testUpdatePosition() {

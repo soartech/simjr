@@ -31,6 +31,11 @@ public class ContactManager
         listeners.remove(listener);
     }
     
+    public Contact getContact(String name)
+    {
+        return contactMap.get(name);
+    }
+    
     public Map<String,Contact> getContacts() 
     {
         return Collections.unmodifiableMap(contactMap);
@@ -153,6 +158,12 @@ public class ContactManager
         {
             listener.createdContact(contact);
         }
+    }
+    
+    public void addContact(Contact contact) 
+    {
+        this.contactMap.put(contact.getEntity().getName(), contact);
+        contact.updateState(ContactState.PROJECTED, entity.getSimulation().getTime());
     }
 
 }

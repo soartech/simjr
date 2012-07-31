@@ -63,7 +63,7 @@ public class GodsEyeSensor extends AbstractSensor implements VisionSensor
             List<Entity> simEntities = this.getEntity().getSimulation().getEntitiesFast();
             for ( Entity entity : simEntities ) {
                 // Only adding detections for visible entities who don't own this sensor
-                if ( filter.isContactOfInterest(entity) ) {
+                if ( filter.isEntityOfInterest(entity) ) {
                     detections.add(new Detection(this,entity, new HashMap<String,Object>(), DetectionType.VISIBLE));
                 }
             }        

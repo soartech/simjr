@@ -14,7 +14,7 @@ public class EntityFilter
         this.source = source;
     }
     
-    public boolean isContactOfInterest(Entity entity)
+    public boolean isEntityOfInterest(Entity entity)
     {
         // Don't report self as contact
         if(entity == source)

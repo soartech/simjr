@@ -141,15 +141,15 @@ public class ContactManagerTest extends TestCase
         assertEquals(3, contacts.size());
         
         assertEquals("vehicle-1", contacts.get("vehicle-1").getEntity().getName());
-        assertEquals(Double.MAX_VALUE, contacts.get("vehicle-1").getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contacts.get("vehicle-1").getExpirationTime());
         assertEquals(ContactState.VISIBLE, contacts.get("vehicle-1").getState());
         
         assertEquals("vehicle-2", contacts.get("vehicle-2").getEntity().getName());
-        assertEquals(Double.MAX_VALUE, contacts.get("vehicle-2").getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contacts.get("vehicle-2").getExpirationTime());
         assertEquals(ContactState.RADAR, contacts.get("vehicle-2").getState());
 
         assertEquals("vehicle-3", contacts.get("vehicle-3").getEntity().getName());
-        assertEquals(Double.MAX_VALUE, contacts.get("vehicle-3").getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contacts.get("vehicle-3").getExpirationTime());
         assertEquals(ContactState.VISIBLE, contacts.get("vehicle-3").getState());
     }
 
@@ -274,7 +274,7 @@ public class ContactManagerTest extends TestCase
         contactManager.update(1.0);
 
         assertEquals(1, contacts.size());        
-        assertEquals(Double.MAX_VALUE, contacts.get("vehicle-1").getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contacts.get("vehicle-1").getExpirationTime());
         assertEquals(ContactState.RADAR, contacts.get("vehicle-1").getState());
 
         simulation.setTime(5.0);
@@ -299,7 +299,7 @@ public class ContactManagerTest extends TestCase
         contactManager.update(1.0);
 
         assertEquals(1, contacts.size());        
-        assertEquals(Double.MAX_VALUE, contacts.get("vehicle-1").getExpirationTime());
+        assertEquals(Double.POSITIVE_INFINITY, contacts.get("vehicle-1").getExpirationTime());
         assertEquals(ContactState.VISIBLE, contacts.get("vehicle-1").getState());
     }
 
