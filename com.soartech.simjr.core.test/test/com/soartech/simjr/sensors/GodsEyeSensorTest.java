@@ -31,8 +31,6 @@
  */
 package com.soartech.simjr.sensors;
 
-import java.util.Properties;
-
 import junit.framework.TestCase;
 
 import com.soartech.simjr.adaptables.Adaptables;
@@ -41,6 +39,7 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.SimpleTerrain;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.entities.Vehicle;
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class GodsEyeSensorTest extends TestCase
 {
@@ -53,7 +52,7 @@ public class GodsEyeSensorTest extends TestCase
         SensorPlatform sp = Adaptables.adapt(fwa, SensorPlatform.class);
         assertNotNull(sp);
         
-        GodsEyeSensor sensor = new GodsEyeSensor("gods-eye", new Properties());
+        GodsEyeSensor sensor = new GodsEyeSensor("gods-eye", new ExtendedProperties());
         assertTrue(sensor.isEnabled());
         assertTrue(sensor.getDetections().isEmpty());
         sp.addSensor("main",sensor);

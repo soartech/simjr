@@ -33,19 +33,50 @@ package com.soartech.simjr.sensors;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityConstants;
+import com.soartech.simjr.sim.entities.EntityVisibleRange;
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class GenericRadarSensor extends AbstractSensor implements RadarSensor
 {
-    private List<Detection> detections = new ArrayList<Detection>();
     private EntityFilter filter;
+    private List<Detection> detections = new ArrayList<Detection>();
     
-    public GenericRadarSensor(String name, Properties props) {
+    private double visualRange;
+    private double visualAngle;
+    
+    public GenericRadarSensor(String name, ExtendedProperties props) {
         super(name);
+        
+        visualRange = props.getDouble(name+".range", 200000.);
+        visualAngle = props.getDouble(name+".angle", Math.PI/2.);
+    }    
+    
+    public void setVisualRange(double visualRange)
+    {
+        this.visualRange = visualRange;
+        updateEntityVisibleRange();
+    }
+    
+    public void setVisualAngle(double visualAngle)
+    {
+        this.visualAngle = visualAngle;
+        updateEntityVisibleRange();
+    }
+    
+    private void updateEntityVisibleRange()
+    {
+        Entity entity = getEntity();
+        if ( entity != null )
+        {
+            EntityVisibleRange evr = new EntityVisibleRange(entity,EntityConstants.PROPERTY_RADAR);
+            evr.setVisibleAngle(visualAngle);
+            evr.setVisibleRange(visualRange);
+            entity.setProperty(EntityConstants.PROPERTY_RADAR, evr);        
+        }
     }
     
     @Override
@@ -53,20 +84,29 @@ public class GenericRadarSensor extends AbstractSensor implements RadarSensor
     {
         super.setEntity(entity);
         filter = new EntityFilter(getEntity());
+        updateEntityVisibleRange();
     }
-    
+
     @Override
     public void tick(double dt)
     {
         detections.clear();
-        if ( isEnabled() ) {
-            List<Entity> simEntities = this.getEntity().getSimulation().getEntitiesFast();
-            for ( Entity entity : simEntities ) {
-                // Only adding detections for visible entities who don't own this sensor
-                if ( filter.isEntityOfInterest(entity) ) {
-                    detections.add(new Detection(this,entity, new HashMap<String,Object>(), DetectionType.RADAR));
+        EntityVisibleRange evr = (EntityVisibleRange) getEntity().getProperty(EntityConstants.PROPERTY_RADAR);
+        if ( evr == null ) 
+        {
+            return;
+        }
+        
+        List<Entity> entities = this.getEntity().getSimulation().getEntitiesFast();
+        for ( Entity entity : entities ) 
+        {
+            if ( filter.isEntityOfInterest(entity) ) 
+            {
+                if ( evr.isInRange(entity.getPosition()) )
+                {
+                    detections.add(new Detection(this, entity, DetectionType.RADAR));
                 }
-            }        
+            }
         }
     }
 
@@ -75,5 +115,4 @@ public class GenericRadarSensor extends AbstractSensor implements RadarSensor
     {
         return Collections.unmodifiableList(detections);
     }
-
 }

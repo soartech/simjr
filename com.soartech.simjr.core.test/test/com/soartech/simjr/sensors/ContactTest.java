@@ -1,9 +1,10 @@
 package com.soartech.simjr.sensors;
 
+import junit.framework.TestCase;
+
+import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.EntityPrototypes;
 import com.soartech.simjr.sim.entities.Vehicle;
-
-import junit.framework.TestCase;
 
 public class ContactTest extends TestCase
 {
@@ -111,7 +112,27 @@ public class ContactTest extends TestCase
     }
     
     public void testUpdatePosition() {
-        fail("Not yet implemented!");        
+        Vehicle entity = new Vehicle("test", EntityPrototypes.NULL);
+        entity.setVelocity(new Vector3(1.,2.,0.));
+        entity.setPosition(new Vector3(1.,0.5,0.));
+        
+        Contact contact = new Contact(entity);
+        contact.updateState(ContactState.PROJECTED, 0.);
+        
+        // Testing that the last known position and velocity are properly cached
+        // the changes below should have no effect on the position calculation
+        entity.setVelocity(Vector3.ZERO);
+        entity.setPosition(Vector3.ZERO);
+        
+        contact.updatePosition(1.0);
+        
+        assertEquals(2., contact.getPosition().x);
+        assertEquals(2.5, contact.getPosition().y);
+        assertEquals(0., contact.getPosition().z);
+        
+        assertEquals(1., contact.getVelocity().x);
+        assertEquals(2., contact.getVelocity().y);
+        assertEquals(0., contact.getVelocity().z);
     }
 
 }

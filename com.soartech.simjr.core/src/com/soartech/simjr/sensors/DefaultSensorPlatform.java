@@ -100,7 +100,10 @@ public class DefaultSensorPlatform extends AbstractEntityCapability implements S
     @Override
     public void tick(double dt) {
         for ( Sensor sensor : sensors.values() ) {
-            sensor.tick(dt);
+            if ( sensor.isEnabled() ) 
+            {
+                sensor.tick(dt);                
+            }
         }
     }
     

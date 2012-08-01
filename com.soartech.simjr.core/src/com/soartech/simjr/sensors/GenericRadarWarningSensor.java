@@ -2,18 +2,17 @@ package com.soartech.simjr.sensors;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class GenericRadarWarningSensor extends AbstractSensor
 {
     private List<Detection> detections = new ArrayList<Detection>();
     
-    public GenericRadarWarningSensor(String name, Properties props) 
+    public GenericRadarWarningSensor(String name, ExtendedProperties props) 
     {
         super(name);
     }
@@ -38,8 +37,7 @@ public class GenericRadarWarningSensor extends AbstractSensor
                                 for ( Detection detection : radar.getDetections() ) {
                                     if ( detection.getTargetEntity() == this.getEntity() ) {
                                         detections.add(new Detection(this, 
-                                                                     detection.getSourceSensor().getEntity(), 
-                                                                     new HashMap<String,Object>(),
+                                                                     detection.getSourceSensor().getEntity(),
                                                                      DetectionType.RADAR_WARNING));
                                     }
                                 }

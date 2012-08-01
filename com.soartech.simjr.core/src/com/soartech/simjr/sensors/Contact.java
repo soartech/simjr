@@ -3,8 +3,11 @@ package com.soartech.simjr.sensors;
 import com.soartech.math.Vector3;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.sim.Simulation;
+import com.soartech.simjr.sim.EntityTools;
+import com.soartech.simjr.sim.entities.DismountedInfantry;
+import com.soartech.simjr.sim.entities.Vehicle;
 
 public class Contact
 {
@@ -12,6 +15,8 @@ public class Contact
     private ContactState state = ContactState.UNKNOWN;
     private double expirationTime = Double.NEGATIVE_INFINITY;
     private double lastUpdateTime = Double.NEGATIVE_INFINITY;
+    private Vector3 projectedPosition;
+    private Vector3 projectedVelocity;
     
     public static final double projectionDuration = SimJrProps.get("simjr.contacts.projectionDuration", 10.0);
     public static final double disappearingDuration = SimJrProps.get("simjr.contacts.disappearingDuration", 5.0);
@@ -19,6 +24,8 @@ public class Contact
     public Contact(Entity entity) 
     {
         this.entity = entity;
+        projectedVelocity = this.entity.getVelocity();
+        projectedPosition = this.entity.getPosition();
     }
 
     public double getExpirationTime()
@@ -38,6 +45,9 @@ public class Contact
     
     public void updateState(ContactState newState, double currentTime)
     {
+        projectedVelocity = this.entity.getVelocity();
+        projectedPosition = this.entity.getPosition();
+        
         ContactState oldState = this.state;
         if ( currentTime <= this.lastUpdateTime ) 
         {
@@ -78,75 +88,94 @@ public class Contact
         }
     }
     
-    public void updatePosition(Simulation simulation, double dt)
+    public void updatePosition(double dt)
     {
-        // TODO Auto-generated method stub
+        // There's roundoff error in force AGL which can cause the entity
+        // to move event if velocity is zero, so we do a special check here.
+        if (!projectedVelocity.equals(Vector3.ZERO))
+        {
+            projectedPosition = projectedPosition.add(projectedVelocity.multiply(dt));
+        }
     }
 
     public EntityPrototype getPrototype()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.entity.getPrototype();
     }
 
-    public Object getName()
+    public String getName()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.entity.getName();
     }
 
     public Object getForceString()
     {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO: Helo-Soar should be fixed to use "opposing" rather than "red" for this.
+        String force = EntityTools.getForce(entity);
+        if(force.equals(EntityConstants.FORCE_OPPOSING))
+        {
+            force = "red";
+        }
+        return force;
     }
 
     public boolean isDismountedInfantry()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return this.entity instanceof DismountedInfantry;
     }
 
     public Object getDamageStatus()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return EntityTools.getDamage(this.entity);
     }
 
     public boolean isVehicle()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return this.entity instanceof Vehicle;
+    }
+    
+    public boolean isProjected()
+    {
+        return (state == ContactState.PROJECTED) || (state == ContactState.PROJECTED_DISAPPEARING);
     }
 
     public Vector3 getVelocity()
     {
-        // TODO Auto-generated method stub
-        return null;
+        if ( isProjected() ) 
+        {
+            return this.projectedVelocity;
+        }
+        else 
+        {
+            return this.entity.getVelocity();
+        }
     }
 
     public double getAboveGroundLevel()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return EntityTools.getAboveGroundLevel(this.entity);
     }
 
     public Vector3 getPosition()
     {
-        // TODO Auto-generated method stub
-        return null;
+        if ( isProjected() ) 
+        {
+            return this.projectedPosition;
+        }
+        else
+        {
+            return this.entity.getPosition();
+        }
     }
 
     public double getHeading()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.entity.getHeading();
     }
 
     public double getGroundSpeed()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return EntityTools.getGroundSpeed(this.entity);
     }
 
 }

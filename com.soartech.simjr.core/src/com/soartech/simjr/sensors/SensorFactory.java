@@ -34,15 +34,16 @@ package com.soartech.simjr.sensors;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
+
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class SensorFactory
 {
     private static final Logger logger = Logger.getLogger(SensorFactory.class);
     
-    private static Properties properties = new Properties();
+    private static ExtendedProperties properties = new ExtendedProperties();
     private static final String PROPFILENAME = "/simjr.sensors.properties";
     static
     {
@@ -94,7 +95,7 @@ public class SensorFactory
             // TODO: This probably needs to be done differently to load sensors from other OSGI plugins
             // investigate Bundle.loadClass or other OSGI specific mechanisms.
             Class<?> sensorClass = Class.forName(klass);        
-            Constructor<?> constructor = sensorClass.getConstructor(String.class, Properties.class);        
+            Constructor<?> constructor = sensorClass.getConstructor(String.class, ExtendedProperties.class);        
             retval = constructor.newInstance(name, properties);
         } catch (Exception e) {
             throw new IllegalStateException("Unable to instantiate an instance of sensor '"+name+"'", e);

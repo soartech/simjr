@@ -59,6 +59,7 @@ import com.soartech.simjr.sensors.GenericVisualSensorTest;
 import com.soartech.simjr.sensors.GodsEyeSensorTest;
 import com.soartech.simjr.sensors.NotchFilterTest;
 import com.soartech.simjr.sensors.SensorFactoryTest;
+import com.soartech.simjr.sensors.radar.AdvancedModalRadarTest;
 import com.soartech.simjr.services.DefaultServiceManagerTest;
 import com.soartech.simjr.sim.AbstractEntityCapabilityTest;
 import com.soartech.simjr.sim.DefaultEntityPrototypeTest;
@@ -146,7 +147,9 @@ public class AllTests
             GenericVisualSensorTest.class,
             GodsEyeSensorTest.class,
             NotchFilterTest.class,
-            SensorFactoryTest.class
+            SensorFactoryTest.class,
+            
+            AdvancedModalRadarTest.class
         );
         suite.setName(AllTests.class.getName());
         return suite;

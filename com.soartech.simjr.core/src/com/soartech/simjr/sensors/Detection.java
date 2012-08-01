@@ -57,6 +57,13 @@ public class Detection
         this.type = type;
     }
     
+    public Detection(Sensor source, Entity target, DetectionType type) {
+        this.source = source;
+        this.target = target;
+        this.properties = Collections.emptyMap();
+        this.type = type;
+    }
+    
     /**
      * @return an unmodifiable version of the detections property map
      */

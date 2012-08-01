@@ -33,6 +33,8 @@ package com.soartech.simjr.sensors;
 
 import junit.framework.TestCase;
 
+import com.soartech.simjr.sensors.radar.AdvancedModalRadar;
+
 public class SensorFactoryTest extends TestCase
 {
     
@@ -72,6 +74,16 @@ public class SensorFactoryTest extends TestCase
         assertNotNull(s);
         assertTrue(s instanceof GenericRadarWarningSensor);
         assertEquals("generic-radar-warning",s.getName());
+        assertNull(s.getEntity());
+        assertTrue(s.getDetections().isEmpty());
+    }
+    
+    public void testLoadAdvancedModalRadarSensor()
+    {
+        Sensor s = SensorFactory.load("advanced-modal-radar");
+        assertNotNull(s);
+        assertTrue(s instanceof AdvancedModalRadar);
+        assertEquals("advanced-modal-radar",s.getName());
         assertNull(s.getEntity());
         assertTrue(s.getDetections().isEmpty());
     }

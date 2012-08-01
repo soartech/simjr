@@ -62,5 +62,11 @@ public class DetectionTest extends TestCase
         assertEquals("MyTestString", detection.getProperty("test-prop-2"));
         assertEquals(3.0, detection.getProperty("test-prop-3"));
         assertNull( detection.getProperty("test-prop-4") );
+        
+        Detection detection2 = new Detection(sensor, veh, DetectionType.VISIBLE);
+        assertEquals(sensor, detection2.getSourceSensor());
+        assertEquals(veh, detection2.getTargetEntity());
+        assertEquals(DetectionType.VISIBLE, detection2.getType());
+        assertTrue(detection2.getProperties().isEmpty());
     }
 }

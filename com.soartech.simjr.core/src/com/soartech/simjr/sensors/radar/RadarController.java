@@ -5,7 +5,6 @@ import com.soartech.simjr.sim.Entity;
 
 public class RadarController
 {
-    private Entity entity;
     private RadarMode radarMode;
     private double azimuthCenter;
     private double inclinationCenter;
@@ -14,10 +13,11 @@ public class RadarController
     private double azimuthSlew;
     private double inclinationSlew;
     
-    public RadarController(Entity e, RadarMode radarMode)
+    // TODO: Radar controller should probably provide all the externally available
+    // radar controls at the moment its lacking the mode switching and target 
+    // specifying ones. This would hide radar mode from the rest of the system.
+    public RadarController(RadarMode radarMode)
     {
-        this.entity = e;
-        
         // Largest possible values (these will get paired down in setRadarMode)
         lowRange = 0.0;
         highRange = Double.MAX_VALUE;
@@ -35,7 +35,7 @@ public class RadarController
      * @param otherPos The position to test.
      * @return True iff otherPos is within this radar range.
      */
-    public boolean isInRange(Vector3 otherPos)
+    public boolean isInRange(Entity entity, Vector3 otherPos)
     {
         Vector3 agentPos = entity.getPosition();
         Vector3 displacement = otherPos.subtract(agentPos);
@@ -71,7 +71,12 @@ public class RadarController
     
     public void setRadarMode(RadarMode radarMode)
     {
+        if ( this.radarMode != null ) 
+        {
+            radarMode.addTargets(this.radarMode);
+        }
         this.radarMode = radarMode;
+        
         setAzimuthCenter(azimuthCenter);
         setInclinationCenter(inclinationCenter);
         setLowRange(lowRange);

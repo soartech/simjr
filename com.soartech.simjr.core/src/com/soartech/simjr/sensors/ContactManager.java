@@ -62,7 +62,7 @@ public class ContactManager
         double currentTime = entity.getSimulation().getTime();
         for (Contact contact : undetectedContacts.values() ) 
         {
-            contact.updatePosition( entity.getSimulation(), dt );
+            contact.updatePosition( dt );
             boolean hasExpired = contact.getExpirationTime() <= currentTime;
             
             if ( contact.getState() == ContactState.PROJECTED_DISAPPEARING ) 
@@ -135,17 +135,17 @@ public class ContactManager
 
     private void updateContactWithDetection(Contact contact, Detection detection)
     {
-        ContactState initialState = ContactState.UNKNOWN;
+        ContactState state = ContactState.UNKNOWN;
         if ( detection.getType() == DetectionType.VISIBLE ) 
         {
-            initialState = ContactState.VISIBLE;
+            state = ContactState.VISIBLE;
         } 
         else if ( detection.getType() == DetectionType.RADAR )
         {
-            initialState = ContactState.RADAR;
+            state = ContactState.RADAR;
         }
         
-        contact.updateState(initialState, entity.getSimulation().getTime());
+        contact.updateState(state, entity.getSimulation().getTime());
     }
 
     private void createContactWithDetection(Detection detection)

@@ -20,6 +20,10 @@ public abstract class RadarMode
         put(Full.getRadarName(), Full.class);
     }};
     
+    // Preserves insertion ordering which is used if a target
+    // is added when the mode is already at its maximum allowed number of targets
+    private LinkedHashSet<Entity> targets = new LinkedHashSet<Entity>();
+    
     public static Set<String> getModes()
     {
         return radarModes.keySet();
@@ -45,10 +49,6 @@ public abstract class RadarMode
         // Intentionally left blank
     }
 
-    // Preserves insertion ordering which is used if a target
-    // is added when the mode is already at its maximum allowed number of targets
-    private LinkedHashSet<Entity> targets = new LinkedHashSet<Entity>();
-    
     public void addTarget(Entity e)
     {
         if (getAllowedTargetCount() <= 0)

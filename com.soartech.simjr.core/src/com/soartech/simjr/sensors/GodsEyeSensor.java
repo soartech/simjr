@@ -33,18 +33,17 @@ package com.soartech.simjr.sensors;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class GodsEyeSensor extends AbstractSensor implements VisionSensor
 {
     private List<Detection> detections = new ArrayList<Detection>();
     private EntityFilter filter;
     
-    public GodsEyeSensor(String name, Properties props) {
+    public GodsEyeSensor(String name, ExtendedProperties props) {
         super(name);
     }
     
@@ -64,7 +63,7 @@ public class GodsEyeSensor extends AbstractSensor implements VisionSensor
             for ( Entity entity : simEntities ) {
                 // Only adding detections for visible entities who don't own this sensor
                 if ( filter.isEntityOfInterest(entity) ) {
-                    detections.add(new Detection(this,entity, new HashMap<String,Object>(), DetectionType.VISIBLE));
+                    detections.add(new Detection(this, entity, DetectionType.VISIBLE));
                 }
             }        
         }

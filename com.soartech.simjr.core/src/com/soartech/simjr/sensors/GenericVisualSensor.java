@@ -34,30 +34,80 @@ package com.soartech.simjr.sensors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityConstants;
+import com.soartech.simjr.sim.entities.EntityVisibleRange;
+import com.soartech.simjr.util.ExtendedProperties;
 
 public class GenericVisualSensor extends AbstractSensor implements VisionSensor
 {
     private EntityFilter filter;
     private List<Detection> detections = new ArrayList<Detection>();
     
-    public GenericVisualSensor(String name, Properties props) {
+    private double visualRange;
+    private double visualAngle;
+    
+    public GenericVisualSensor(String name, ExtendedProperties props) {
         super(name);
+        
+        visualRange = props.getDouble(name+".range", 7500.);
+        visualAngle = props.getDouble(name+".angle", 2.*Math.PI);
     }    
+    
+    public void setVisualRange(double visualRange)
+    {
+        this.visualRange = visualRange;
+        updateEntityVisibleRange();
+    }
+    
+    public void setVisualAngle(double visualAngle)
+    {
+        this.visualAngle = visualAngle;
+        updateEntityVisibleRange();
+    }
+    
+    private void updateEntityVisibleRange()
+    {
+        Entity entity = getEntity();
+        if ( entity != null )
+        {
+            EntityVisibleRange evr = new EntityVisibleRange(entity,EntityConstants.PROPERTY_VISIBLE_RANGE);
+            evr.setVisibleAngle(visualAngle);
+            evr.setVisibleRange(visualRange);
+            entity.setProperty(EntityConstants.PROPERTY_VISIBLE_RANGE, evr);        
+        }
+    }
     
     @Override
     public void setEntity(Entity entity) 
     {
         super.setEntity(entity);
         filter = new EntityFilter(getEntity());
+        updateEntityVisibleRange();
     }
 
     @Override
     public void tick(double dt)
     {
-        // TODO Auto-generated method stub
+        detections.clear();
+        EntityVisibleRange evr = EntityVisibleRange.get(this.getEntity());
+        if ( evr == null ) 
+        {
+            return;
+        }
+        
+        List<Entity> entities = this.getEntity().getSimulation().getEntitiesFast();
+        for ( Entity entity : entities ) 
+        {
+            if ( filter.isEntityOfInterest(entity) ) 
+            {
+                if ( evr.isInRange(entity.getPosition()) )
+                {
+                    detections.add(new Detection(this, entity, DetectionType.VISIBLE));
+                }
+            }
+        }
     }
 
     @Override
@@ -65,5 +115,4 @@ public class GenericVisualSensor extends AbstractSensor implements VisionSensor
     {
         return Collections.unmodifiableList(detections);
     }
-
 }
