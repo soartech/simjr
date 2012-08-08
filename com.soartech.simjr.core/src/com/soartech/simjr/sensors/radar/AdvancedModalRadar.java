@@ -33,7 +33,7 @@ public class AdvancedModalRadar extends AbstractSensor implements RadarSensor
     
     public RadarController getRadarController()
     {
-        return this.getRadarController();
+        return controller;
     }
     
     public RadarMode getRadarMode()

@@ -12,11 +12,18 @@ public class ContactTools
         if ( cstate == ContactState.VISIBLE ) {
             return DetectionMode.FULL;
         } else if ( cstate == ContactState.RADAR ) {
-            boolean isTarget = radar.getRadarMode().isTarget(contact.getEntity());
-            if ( isTarget ) {
-                return radar.getRadarMode().getTargetDetectionMode();
-            } else {
-                return radar.getRadarMode().getRegularDetectionMode();
+            if ( radar != null)
+            {
+                boolean isTarget = radar.getRadarMode().isTarget(contact.getEntity());
+                if ( isTarget ) {
+                    return radar.getRadarMode().getTargetDetectionMode();
+                } else {
+                    return radar.getRadarMode().getRegularDetectionMode();
+                }
+            }
+            else
+            {
+                return DetectionMode.FULL;
             }
         }
         return currentMode;

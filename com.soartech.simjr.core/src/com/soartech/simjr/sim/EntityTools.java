@@ -42,6 +42,7 @@ import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sensors.Sensor;
 import com.soartech.simjr.sensors.SensorPlatform;
 import com.soartech.simjr.sim.entities.DamageStatus;
 import com.soartech.simjr.sim.entities.EntityVisibleRange;
@@ -378,6 +379,22 @@ public class EntityTools
         {
             return o1.getName().compareTo(o2.getName());
         }
+    }
+
+    public static <T extends Sensor> T getSensorOfType(Entity entity, Class<T> sensorClass)
+    {
+        SensorPlatform platform = EntityTools.getSensorPlatform(entity);
+        if ( platform != null )
+        {
+            for (Sensor s : platform.getSensors() ) 
+            {
+                if ( sensorClass.isInstance(s) ) 
+                {
+                    return sensorClass.cast(s);
+                }
+            }
+        }
+        return null;
     }
     
     // TODO: Roll
