@@ -11,7 +11,10 @@ Bundle-ClassPath: .,
  lib/miglayout-3.7-swing.jar,
  lib/jsyntaxpane-0.9.4.jar,
  lib/dockingFramesCommon.jar,
- lib/dockingFramesCore.jar
+ lib/dockingFramesCore.jar,
+ lib/gluegen-rt.jar,
+ lib/jogl.jar,
+ lib/jReality.jar
 Export-Package: .,
  bibliothek.extension.gui.dock,
  bibliothek.extension.gui.dock.preference,
