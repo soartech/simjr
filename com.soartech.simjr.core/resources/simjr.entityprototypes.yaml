@@ -76,7 +76,7 @@ prototypes:
     subcategory: Special_use_airspace
     properties:
         threeDData: true
-        shape.line.color: cyan
+        shape.fill.color: cyan
         
 - &ROZ-cylinder
     id: ROZ-cylinder
