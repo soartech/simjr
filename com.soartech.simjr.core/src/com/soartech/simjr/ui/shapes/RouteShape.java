@@ -147,7 +147,7 @@ public class RouteShape extends EntityShape implements EntityConstants
             }
             else
             {
-                // No setting. Assume one pixel wide
+                // No setting
                 style.setLineThickness(Scalar.createPixel(selection ? 10.0 : 2.0));
             }
         }
@@ -204,7 +204,10 @@ public class RouteShape extends EntityShape implements EntityConstants
             
             final ShapeStyle frontStyle = getStyle();
             final ShapeStyle backStyle = frontStyle.copy();
-            backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
+            if(!route.getEntity().getProperty(PROPERTY_3DData).equals(true))
+                backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
+            else
+                backStyle.setLineThickness(backStyle.getLineThickness().scale(1.0));
             backStyle.setLineColor(backStyle.getLineColor().darker());
             
             boolean first = true;

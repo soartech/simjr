@@ -141,7 +141,7 @@ public class AreaShape extends EntityShape implements EntityConstants
             style.setOpacity(opacity.floatValue());
         }
         
-        hull = new Hull(name + ".hull", LAYER_AREA, style, polygon.getPointNames(), convex);
+        hull = new Hull(name + ".hull", LAYER_AREA, style, polygon.getPointNames(), false);
                 
         createLabel(0, 0, polygon.getName());
         

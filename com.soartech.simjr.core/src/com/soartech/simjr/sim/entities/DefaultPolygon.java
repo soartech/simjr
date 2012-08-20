@@ -69,14 +69,6 @@ public class DefaultPolygon extends AbstractPolygon
         return closed != null ? closed.booleanValue() : false;
     }
     
-    
-    /*TODO:  Setup properties and accessors for the Following
-     *  Min Altitude
-     *  Max Altitude
-     *  Width
-     *  Other(area type, shape)
-     */
-    
     public int getMinAltitude()
     {
         //return ThreeDData.getMinAltitude();

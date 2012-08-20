@@ -839,7 +839,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
 //            name = in.readUTF();
         }
 
-        public void readXML( XElement element ) {
+        public void readXML(XElement element ) {
             name = element.getString();
         }
 

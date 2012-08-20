@@ -217,14 +217,17 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         visibleCheckBox.setEnabled(enabled);
         boolean isArea= false;
         boolean isRoute = false;
+        boolean isCylinder = false;
         if(entity != null)
         {
             isArea = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
                     .getCategory().equals("area");
             isRoute = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
                     .getCategory().equals("route");
+            isCylinder = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
+                    .getCategory().equals("cylinder");
         }
-        if(entity != null && (isArea || isRoute))
+        if(entity != null && (isArea || isRoute || isCylinder))
         {
             minimumAltitude.setEnabled(enabled);
             maximumAltitude.setEnabled(enabled);
@@ -235,7 +238,7 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             maximumAltitude.setEnabled(false);
         }
         
-        if(entity != null && isRoute)
+        if(entity != null && (isRoute || isCylinder))
             routeWidth.setEnabled(enabled);
         else
             routeWidth.setEnabled(false);

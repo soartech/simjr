@@ -132,6 +132,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
                 actions.add(new NewEntityAction(getActionManager(), "New Waypoint", "waypoint", lla));
                 actions.add(new NewEntityAction(getActionManager(), "New Route", "route", lla));
                 actions.add(new NewEntityAction(getActionManager(), "New Area", "area", lla));
+                actions.add(new NewEntityAction(getActionManager(), "New Circular Region", "cylinder", lla));
                 actions.add(null);
                 actions.add(new SetTerrainImageAction(getActionManager()));
                 actions.add(new ClearTerrainImageAction(getActionManager()));

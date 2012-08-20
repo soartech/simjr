@@ -28,7 +28,6 @@
 
 # Prototype fragments which add shape and other UI info to prototypes.
 # 
-
 prototypes:
 - &any
     id: any
@@ -47,6 +46,12 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
+        
+- &cylinder
+    id: cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
         
 - &SAAFR
     id: SAAFR

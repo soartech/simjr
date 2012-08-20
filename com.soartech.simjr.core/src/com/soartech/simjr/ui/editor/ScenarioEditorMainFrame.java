@@ -178,6 +178,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         insert.add(new NewEntityAction(am, "New Waypoint", "waypoint", (String) null));
         insert.add(new NewEntityAction(am, "New Route", "route", (String) null));
         insert.add(new NewEntityAction(am, "New Area", "area", (String) null));
+        insert.add(new NewEntityAction(am, "New Circular Region", "cylinder", (String) null));
         bar.add(insert);
         
         final JMenu run = new JMenu("Run");
