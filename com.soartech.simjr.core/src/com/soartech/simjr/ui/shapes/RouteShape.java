@@ -204,10 +204,9 @@ public class RouteShape extends EntityShape implements EntityConstants
             
             final ShapeStyle frontStyle = getStyle();
             final ShapeStyle backStyle = frontStyle.copy();
-            if(!route.getEntity().getProperty(PROPERTY_3DData).equals(true))
-                backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
-            else
-                backStyle.setLineThickness(backStyle.getLineThickness().scale(1.0));
+            
+         
+            backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
             backStyle.setLineColor(backStyle.getLineColor().darker());
             
             boolean first = true;
