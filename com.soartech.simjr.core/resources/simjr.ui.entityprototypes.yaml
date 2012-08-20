@@ -53,6 +53,18 @@ prototypes:
         shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
         category: Cylinder
         
+- &Special_use_airspace-cylinder
+    id: Special_use_airspace-cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
+        
+- &ROZ-cylinder
+    id: ROZ-cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
+        
 - &SAAFR
     id: SAAFR
     properties:

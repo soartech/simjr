@@ -12443,3 +12443,225 @@
 [ INFO] 690 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
 [ INFO] 58411 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint2'
 [ INFO] 66382 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint2'
+[ INFO] 1537051 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Waiting for simulation thread to exit
+[ INFO] 1537052 com.soartech.simjr.ui.editor.ScenarioEditorApplication: AWT-EventQueue-0 - Exiting
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 130 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 130 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 137 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 138 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 139 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 139 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 139 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 236 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 245 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@3d0c51ef' ...
+[ INFO] 367 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'SAAFR'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'AIRCOR'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 393 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 394 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 18 fragments to entity prototypes
+[ INFO] 396 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 396 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 397 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 595 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 164916 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Waiting for simulation thread to exit
+[ INFO] 164916 com.soartech.simjr.ui.editor.ScenarioEditorApplication: AWT-EventQueue-0 - Exiting
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 137 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 137 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 144 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 145 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 146 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 146 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 146 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 243 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 252 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@3ba0d916' ...
+[ INFO] 375 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace-cylinder'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ-cylinder'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'SAAFR'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'AIRCOR'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 405 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 20 fragments to entity prototypes
+[ INFO] 407 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 407 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 408 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 611 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 31779 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Waiting for simulation thread to exit
+[ INFO] 31779 com.soartech.simjr.ui.editor.ScenarioEditorApplication: AWT-EventQueue-0 - Exiting
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 135 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 136 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 143 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 144 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 145 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 145 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 145 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 239 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 248 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@3ba0d916' ...
+[ INFO] 371 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 395 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 396 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 16 fragments to entity prototypes
+[ INFO] 398 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 398 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 399 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 594 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 19415 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint2'
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 132 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 132 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 139 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 141 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 141 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 142 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 142 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 240 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 250 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@3d0c51ef' ...
+[ INFO] 371 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace-cylinder'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ-cylinder'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'SAAFR'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'AIRCOR'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 399 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 400 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 20 fragments to entity prototypes
+[ INFO] 402 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 402 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 403 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 599 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 11970 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint2'
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 135 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 135 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 142 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 143 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 144 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 144 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 144 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 241 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 251 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@11d8f879' ...
+[ INFO] 374 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace-cylinder'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ-cylinder'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'SAAFR'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'AIRCOR'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 403 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 404 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 20 fragments to entity prototypes
+[ INFO] 406 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 406 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 407 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 603 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 12316 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint1'
+[ INFO] 0 com.soartech.simjr.SimJrCoreActivator: Start Level Event Dispatcher - Sim Jr core plugin activated
+[ INFO] 132 com.soartech.simjr.startup.SimJrStartupActivator: Start Level Event Dispatcher - Started with app 'editor' and args ''
+[ INFO] 132 com.soartech.simjr.startup.EditorApplication: Start Level Event Dispatcher - Scenario editor application started with args: []
+[ INFO] 139 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - Sim Jr Scenario Editor started
+[ INFO] 141 com.soartech.simjr.SimJrProps: Start Level Event Dispatcher - Loading properties from 'simjr.default.properties' (class-path)
+[ INFO] 141 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    simjr.home=D:\GitHub\simjr\simjr-resources
+[ INFO] 142 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher -    current directory = D:\GitHub\simjr\simjr-resources
+[ INFO] 142 com.soartech.simjr.ui.editor.ScenarioEditorApplication: Start Level Event Dispatcher - 
+[ INFO] 237 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.ui.SelectionManager'
+[ INFO] 246 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loading entity prototypes from resource '/simjr.entityprototypes.yaml' with class loader 'org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@11d8f879' ...
+[ INFO] 368 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Loaded 44 prototypes
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'any'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'waypoint'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'route'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'cylinder'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace-cylinder'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ-cylinder'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'SAAFR'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'AIRCOR'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'ROZ'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'Special_use_airspace'
+[ INFO] 397 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'area'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'complex-area-static'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'flyout'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'missile'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'bomb'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'dismounted-infantry'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'truck'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'tank'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applying prototype fragment to 'mobile-sam'
+[ INFO] 398 com.soartech.simjr.sim.EntityPrototypeDatabase: AWT-EventQueue-0 - Applied 20 fragments to entity prototypes
+[ INFO] 400 com.soartech.simjr.sim.DefaultSimulationTickPolicy: AWT-EventQueue-0 - created with tickPeriod 0.2
+[ INFO] 400 com.soartech.simjr.sim.SimulationThread: AWT-EventQueue-0 - Starting simulation thread
+[ INFO] 401 com.soartech.simjr.sim.SimulationThread: Sim Jr. simulation thread - Simulation thread started
+[ INFO] 602 com.soartech.simjr.services.DefaultServiceManager: AWT-EventQueue-0 - Attempting to construct default instance of 'com.soartech.simjr.radios.RadioHistory'
+[ INFO] 8225 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint1'
+[ INFO] 14078 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint1'
+[ INFO] 16629 com.soartech.simjr.sim.entities.AbstractEntity: AWT-EventQueue-0 - Added capability  'Open polygon: []' to entity 'waypoint-waypoint1'

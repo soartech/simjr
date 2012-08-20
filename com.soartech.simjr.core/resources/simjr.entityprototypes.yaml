@@ -75,8 +75,8 @@ prototypes:
     category: cylinder
     subcategory: Special_use_airspace
     properties:
-        shape.line.color: cyan
         threeDData: true
+        shape.line.color: cyan
         
 - &ROZ-cylinder
     id: ROZ-cylinder
