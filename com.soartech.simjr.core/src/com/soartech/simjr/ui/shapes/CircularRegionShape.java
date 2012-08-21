@@ -71,7 +71,29 @@ public class CircularRegionShape extends EntityShape
         public EntityShape create(Entity entity, ShapeSystem system)
         {
             return new CircularRegionShape(entity, system);
-        }        
+        }
+        
+        public Shape createSelection(String id, Entity selected)
+        {
+            Circle highlightedRegion;
+            final Map<String, Object> props = selected.getProperties();
+            Number lineWidth = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_WIDTH_METERS,null);
+            if(lineWidth == null || Math.abs(lineWidth.doubleValue()) <.5)
+            {
+                highlightedRegion = new Circle(id, EntityConstants.LAYER_SELECTION,
+                        new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
+                        Scalar.createPixel(20));    
+            }
+            else
+            {
+                highlightedRegion = 
+                        new Circle(id, EntityConstants.LAYER_SELECTION,
+                                new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
+                                Scalar.createMeter(lineWidth.doubleValue()/2));         
+            }
+            return highlightedRegion;
+        }
+        
         public String toString() { return NAME; }
     };
     
@@ -200,6 +222,18 @@ public class CircularRegionShape extends EntityShape
         {
             this.updateWidth = true;
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.pvd.EntityShapeFactory#createSelection(java.lang.String, com.soartech.simjr.Entity)
+     */
+    public Shape createSelection(String id, Entity selected)
+    {
+       /*
+        *  return new Circle(id, EntityConstants.LAYER_SELECTION,
+                new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
+                Scalar.createPixel(20));   */ 
+        return null;
     }
 
 }

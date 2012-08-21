@@ -267,6 +267,7 @@ public class EntityShapeManager
         
         final Shape selection = factory.createSelection(highlightId, selected);
         ShapeStyle style = selection.getStyle();
+        
         style.setOpacity(selection.getStyle().getOpacity() / 2.0f);
         if (color != null)
         {
