@@ -1,17 +1,17 @@
 package com.soartech.simjr.sim.entities;
 
-public class Cylinder extends DefaultPolygon
+import com.soartech.simjr.sim.EntityPrototype;
+
+public class Cylinder extends DefaultEntity
 {
     
-    public Cylinder()
+    public Cylinder(EntityPrototype prototype)
     {
-        super("");
+        super("", prototype);
     }
     
-    public Cylinder(String defaultName)
+    public Cylinder(String defaultName, EntityPrototype prototype)
     {
-        super(defaultName);
+        super(defaultName, prototype);
     }
-    
-    
 }

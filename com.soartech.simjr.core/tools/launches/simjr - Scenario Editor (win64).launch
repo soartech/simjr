@@ -21,6 +21,6 @@
 <booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILE_TO_FILE" value="false"/>
 <stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_SET" value="tptp-dummy-profiling-set-SimulationApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.soartech.simjr.ui.editor.ScenarioEditorApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="simjr"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.soartech.simjr.core"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1000M"/>
 </launchConfiguration>

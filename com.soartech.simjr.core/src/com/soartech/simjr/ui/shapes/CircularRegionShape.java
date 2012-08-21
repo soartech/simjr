@@ -111,7 +111,7 @@ public class CircularRegionShape extends EntityShape
         }
         
         Number lineWidth = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_WIDTH_METERS,null);
-        if(Math.abs(lineWidth.doubleValue()) <.5)
+        if(lineWidth == null || Math.abs(lineWidth.doubleValue()) <.5)
         {
             region = new Circle(name + ".body", EntityConstants.LAYER_AREA, 
                                 new Position(name),

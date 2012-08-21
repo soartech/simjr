@@ -63,7 +63,7 @@ public class AreaShape extends EntityShape implements EntityConstants
          */
         public EntityShape create(Entity entity, ShapeSystem system)
         {
-            return new AreaShape(Adaptables.adapt(entity, AbstractPolygon.class), system, true);
+            return new AreaShape(Adaptables.adapt(entity, AbstractPolygon.class), system, false);
         }
         
         /* (non-Javadoc)
@@ -141,7 +141,7 @@ public class AreaShape extends EntityShape implements EntityConstants
             style.setOpacity(opacity.floatValue());
         }
         
-        hull = new Hull(name + ".hull", LAYER_AREA, style, polygon.getPointNames(), false);
+        hull = new Hull(name + ".hull", LAYER_AREA, style, polygon.getPointNames(), convex);
                 
         createLabel(0, 0, polygon.getName());
         
