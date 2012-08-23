@@ -34,6 +34,8 @@ package com.soartech.simjr.ui.editor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -47,10 +49,12 @@ import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.ModelElement;
 import com.soartech.simjr.scenario.PointElementList;
-import com.soartech.simjr.sim.Detonation;
+import com.soartech.simjr.scenario.TerrainImageElement;
+import com.soartech.simjr.scenario.ThreeDDataElement;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.sim.SimulationListener;
+//import com.soartech.simjr.sim.Detonation;
+//import com.soartech.simjr.sim.SimulationListener;
 
 import de.jreality.jogl.Viewer;
 //import de.jreality.scene.Viewer;
@@ -74,14 +78,14 @@ import de.jreality.util.RenderTrigger;
 /**
  * @author Dan Silverglate
  */
-public class View3DPanel extends JPanel implements ModelChangeListener, SimulationListener
+public class View3DPanel extends JPanel implements ModelChangeListener/*, SimulationListener*/
 {
     private static final long serialVersionUID = -4534167209676146675L;
     private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
     private final Model model;
     private final Simulation sim;
     private final SceneGraphComponent constructs;
-    private final HashMap<EntityElement, Object> map = new HashMap<EntityElement, Object>();
+    private final HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
     public View3DPanel(ScenarioEditorServiceManager app)    {
         super(new BorderLayout());
 
@@ -144,9 +148,9 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     
     private Entity getSimEntity(EntityElement ee)
     {
-        for(Entity e : sim.getEntities())
+        for (Entity e : sim.getEntities())
         {
-            if(ee == e.getProperty(EDITOR_ENTITY_PROP))
+            if (ee == e.getProperty(EDITOR_ENTITY_PROP))
             {
                 return e;
             }
@@ -156,77 +160,201 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     
     public void onModelChanged(ModelChangeEvent e)
     {
-        System.out.println("onModelChanged["+EDITOR_ENTITY_PROP);
-        System.out.println("  model("+e.model.getEntities().getEntities().size()+")");
-        System.out.println("  source("+e.source.getClass().getName()+")");
-        System.out.println("  property("+e.property+")");
-        if (e.source instanceof ModelElement)
-        {
-            ModelElement me = (ModelElement)e.source;
-            System.out.println("  modelElement("+me+")");
-        }
-        System.out.println("]");
+        System.out.println("onModelChanged("+e.property+") source("+e.source.getClass().getName()+") sourceID("+e.source.hashCode()+")");
+        //System.out.println("onModelChanged["+EDITOR_ENTITY_PROP);
+        //System.out.println("  model("+e.model.getEntities().getEntities().size()+")");
+        //System.out.println("  source("+e.source.getClass().getName()+")");
+        //System.out.println("  property("+e.property+")");
+        //if (e.source instanceof ModelElement)
+        //{
+        //    ModelElement me = (ModelElement)e.source;
+        //    System.out.println("  modelElement("+me+")");
+        //}
+        //System.out.println("]");
         
         EntityElement ee = (e.source instanceof EntityElement) ? (EntityElement)e.source : null;
         
-        if (e.property.equals(EntityElementList.ENTITY_ADDED))
+        // file loaded
+        if (e.property.equals(Model.LOADED))
         {
-          //if (ee.getPrototype().equals("area")) {
-          if (ee.getPrototype().equals("cylinder")) {
-              Cylinder cyl = new Cylinder(sim);
-              map.put(ee, cyl);
-              constructs.addChild(cyl);
-          }
-          else if (ee.getPrototype().equals("area")) {
-              Area area = new Area(sim);
-              map.put(ee, area);
-              constructs.addChild(area);
-          }
-          else if (ee.getPrototype().equals("route")) {
-              Route route = new Route(sim);
-              map.put(ee, route);
-              constructs.addChild(route);
-          }
+            rebuildScene();
         }
+        
+        // new entity add by user
+        else if (e.property.equals(EntityElementList.ENTITY_ADDED))
+        {
+            add3DConstruct(ee, null);
+        }
+        
+        // entity removed by user
         else if (e.property.equals(EntityElementList.ENTITY_REMOVED))
         {
-            Object obj = map.get(ee);
-            if (obj != null && obj instanceof SceneGraphComponent)
+            AbstractConstruct construct = map.get(ee);
+            if (construct != null)
             {
-                constructs.removeChild((SceneGraphComponent)obj);
+                constructs.removeChild(construct);
             }
         }
+        
+        // update to some entity's list of points
         else if (e.property.equals(PointElementList.POINTS))
         {
             PointElementList points = (PointElementList)e.source;
             ModelElement parent = points.getParent();
-            Object obj = map.get(parent);
-            
-            if (obj != null && obj instanceof AbstractConstruct)
-            {
-                AbstractConstruct construct = (AbstractConstruct)obj;
-                Entity entity = getSimEntity((EntityElement)parent);
-                construct.buildFromEntity(entity);
-            }
+            updateConstruct((EntityElement)parent);
         }
+        
+        // update to the location of an entity
         else if(e.property.equals(LocationElement.LOCATION))
         {
-            // need to query all entities affected by the parent element
+            // what kind of entity has a new location
             ModelElement parent = ((ModelElement)e.source).getParent();
-            Entity entity = getSimEntity((EntityElement)parent);
-            Iterator<Object> i = map.values().iterator();
-            while (i.hasNext())
+            
+            if (parent instanceof EntityElement)
             {
-                Object obj = i.next();
-                if (obj instanceof AbstractConstruct)
+                Entity entity = getSimEntity((EntityElement)parent);
+                
+                // if the location belongs to a waypoint
+                if (((EntityElement)parent).getPrototype().equals("waypoint"))
                 {
-                    ((AbstractConstruct)obj).testAndUpdateFromEntity(entity);
+                    //see if any of the constructs reference this waypoint
+                    for (AbstractConstruct construct : map.values())
+                    {
+                        construct.testAndUpdateFromEntity(entity);
+                    }
                 }
+                
+                // if the location belongs to a cylinder
+                else if (((EntityElement)parent).getPrototype().equals("cylinder"))
+                {
+                    updateConstruct((EntityElement)parent);
+                }                
             }
+        }
+        
+        // handle terrain
+        else if (e.property.equals(TerrainImageElement.HREF))
+        {
+            File f = ((TerrainImageElement)e.source).getImageFile();
+            try { System.out.println("image file("+f.getCanonicalPath()+")"); } catch (IOException ioe) { ioe.printStackTrace(); }
+        }
+        
+        // remove terrain image
+        else if (e.property.equals(TerrainImageElement.REMOVED))
+        {
+            //
+        }
+        
+        // update to an entity's 3D data
+        else if(e.property.equals(ThreeDDataElement.THREEDDATA))
+        {
+            // right now this does not appear to be needed
+            // update3DData(e.source);
+        }
+        
+        // the prototype for an entity is changed entity's
+        else if(e.property.equals(EntityElement.PROTOTYPE))
+        {
+            //updateConstruct(ee);
+            rebuildScene();
+        }
+    }
+
+    private boolean add3DConstruct(EntityElement ee, Entity entity)
+    {
+        try {
+            if (entity != null && entity instanceof TerrainImageEntity)
+            {
+                // currently the EntityElement is null
+                
+                return true;
+            }
+
+            String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getId();
+            AbstractConstruct construct = null;
+            boolean secondPassAllowed = false;
+            
+            // allow a second pass trying the prototype parent if the entity is not null
+            do
+            {
+                System.out.println("add3DConstruct("+id+")");
+                if (id.equals("cylinder")) {
+                    construct = new Cylinder(sim);
+                }
+                else if (id.equals("area")) {
+                    construct = new Area(sim);
+                }
+                else if (id.equals("route")) {
+                    construct = new Route(sim);
+                }
+                
+                if (construct != null)
+                {
+                  System.out.println("handled("+id+")");
+                  constructs.addChild(construct);
+                  map.put(ee, construct);
+                  if (entity != null) construct.updateFromEntity(entity);
+                  return true;
+                }
+                
+                if (entity != null)
+                {
+                    id = entity.getPrototype().getParent().getId();
+                    secondPassAllowed = !secondPassAllowed;
+                }
+            } while (secondPassAllowed);
+            
+            System.out.println("No 3D Construct for type("+id+")");
+        } catch (Exception ex) { ex.printStackTrace(); }
+        
+        return false;
+    }
+    
+    private void rebuildScene()
+    {
+        for (AbstractConstruct construct : map.values())
+        {
+            constructs.removeChild(construct);
+        }
+        map.clear();
+        for (Entity entity : sim.getEntities())
+        {
+            add3DConstruct((EntityElement)entity.getProperty(EDITOR_ENTITY_PROP), entity);
         }
     }
     
-    public void onTimeSet(double oldTime) { }
+    public boolean update3DData(Object source)
+    {
+        ThreeDDataElement data = (ThreeDDataElement)source;
+        EntityElement ee = data.getEntity();
+        System.out.println("3D entity("+ee+") ("+ee.hashCode()+")");
+        Object obj = map.get(ee);
+        if (obj != null && obj instanceof AbstractConstruct)
+        {
+            Entity entity = getSimEntity((EntityElement)ee);
+            AbstractConstruct construct = (AbstractConstruct)obj;
+            construct.updateFromEntity(entity);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean updateConstruct(EntityElement ee)
+    {
+        Object obj = map.get(ee);
+        if (obj != null && obj instanceof AbstractConstruct)
+        {
+            Entity entity = getSimEntity(ee);
+            AbstractConstruct construct = (AbstractConstruct)obj;
+            construct.updateFromEntity(entity);
+            return true;
+        }
+
+        return false;
+    }
+    
+/*    public void onTimeSet(double oldTime) { }
     public void onPause() { }
     public void onStart() { }
     public void onTick(double dt) { }
@@ -234,18 +362,11 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     
     public void onEntityAdded(Entity e)
     {
-        System.out.println("onEntityAdded("+e.getPrototype().getId()+", cat("+e.getPrototype().getCategory()+"), sub("+e.getPrototype().getSubcategory()+"), 3D("+e.getProperty("PROPERTY_3DData")+"))");
-        if (true)//e.getProperty("PROPERTY_3DData") != null && e.getProperty("PROPERTY_3DData").equals("true"))
-        {
-            if (e.getPrototype().getId().equals("area"))
-            {
-                constructs.addChild(new Area(e, sim));
-            }
-        }
+        System.out.println("onEntityAdded("+e.getPrototype().getId()+", cat("+e.getPrototype().getCategory()+"), sub("+e.getPrototype().getSubcategory()+"), 3D("+e.getProperty(ThreeDDataElement.THREEDDATA)+"))");
     }
     
     public void onEntityRemoved(Entity e)
     {
-        //System.out.println("onEntityRemoved("+e.getClass().getName()+")");
-    }
+        System.out.println("onEntityRemoved("+e.getClass().getName()+")");
+    }*/
 }

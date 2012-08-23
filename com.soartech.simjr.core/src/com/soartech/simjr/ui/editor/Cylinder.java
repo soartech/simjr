@@ -33,14 +33,18 @@ package com.soartech.simjr.ui.editor;
 
 import java.awt.Color;
 
+import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 
 import de.jreality.geometry.IndexedFaceSetFactory;
+import de.jreality.math.MatrixBuilder;
 import de.jreality.scene.Appearance;
 import de.jreality.scene.SceneGraphComponent;
+import de.jreality.scene.Transformation;
 import de.jreality.shader.CommonAttributes;
 
 /**
@@ -48,7 +52,7 @@ import de.jreality.shader.CommonAttributes;
  */
 public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
 {
-    double radius = 100.0;
+    double diameter = 100.0;
     
     public Cylinder(Simulation sim)
     {
@@ -58,10 +62,13 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         
         this.endCapComp = new SceneGraphComponent("EndCaps");
         addChild(endCapComp);
-        
+    }
+    
+    private void setColor(Color color)
+    {
         Appearance ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
-        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(1f, 0f, 0f));
+        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
         ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
@@ -69,7 +76,7 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         
         ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
-        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(1f, 0f, 0f));
+        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
         ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
@@ -93,6 +100,7 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         double[][] path = new double[n][2];
         double angle = 0;
         double delta = (Math.PI*2)/n;
+        double radius = diameter/2;
         for (int i=0; i<n; i++) {
             angle = i*delta;
             path[i][0] = radius*Math.cos(angle);
@@ -101,28 +109,35 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         
         return path;
     }
-    public void buildFromEntity(Entity entity)
+    public void updateFromEntity(Entity entity)
     {
-        radius = 100.0;
+        if (this.entity != entity)
+        {
+            this.entity = entity;
+            entity.addPropertyListener(this);
+        }
+        Vector3 pos = entity.getPosition();
+        MatrixBuilder.euclidean().translate(pos.x, 0, -pos.y).assignTo(this);
+        diameter = ((Double)entity.getProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS)).doubleValue();;
         minAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MINALTITUDE)).doubleValue();
         maxAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MAXALTITUDE)).doubleValue();
-        entity.addPropertyListener(this);
+        final Color color =(Color) EntityTools.getFillColor(entity, Color.LIGHT_GRAY);
+        setColor(color);
         rebuild();
     }
-    
+       
     public void testAndUpdateFromEntity(Entity entity) { }
     
     public void onPropertyChanged(Entity entity, String propertyName)
     {
         System.out.println("onPropertyChanged("+entity.getClass().getName()+", "+propertyName+")");
         
-        /*if (propertyName.equals(EntityConstants.PROPERTY_RADIUS))
+        if (propertyName.equals(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS))
         {
-            radius = ((Double)entity.getProperty(EntityConstants.PROPERTY_RADIUS)).doubleValue();
+            diameter = ((Double)entity.getProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS)).doubleValue();
             rebuild();
         }
-        else */
-        if (propertyName.equals(EntityConstants.PROPERTY_MINALTITUDE))
+        else if (propertyName.equals(EntityConstants.PROPERTY_MINALTITUDE))
         {
             minAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MINALTITUDE)).doubleValue();
             rebuild();

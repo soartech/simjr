@@ -39,6 +39,7 @@ import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 
 import de.jreality.geometry.IndexedFaceSetFactory;
@@ -51,18 +52,24 @@ import de.jreality.shader.CommonAttributes;
  */
 public class Route extends AbstractConstruct implements EntityPropertyListener
 {
-    Simulation sim;
     List<?> points = null;
     double minAltitude = 0.0;
     double maxAltitude = 100.0;
     double width = 10.0;
     
-    public Route(Simulation sim)
+    public Route(double[][] waypoints, double width, double height)
+    {
+        this(waypoints, width, height, false);
+    }
+    
+    public Route(double[][] waypoints, double width, double height, boolean generateJoiners)
     {
         super("Route");
         
-        this.sim = sim;
-
+        IndexedFaceSetFactory ifsf = buildRoute(waypoints, width, height, generateJoiners);
+        
+        setGeometry(ifsf.getIndexedFaceSet());
+        
         Appearance ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, false);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(0f, 0f, 1f));
@@ -75,13 +82,40 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
         setAppearance(ap);
     }
     
-    public void buildFromEntity(Entity entity)
+    public Route(Simulation sim)
     {
+        super("Route");
+        
+        this.sim = sim;
+    }
+    
+    private void setColor(Color color)
+    {
+        Appearance ap = new Appearance();
+        ap.setAttribute(CommonAttributes.VERTEX_DRAW, false);
+        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
+        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
+        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
+        
+        setAppearance(ap);
+    }
+    
+    public void updateFromEntity(Entity entity)
+    {
+        if (this.entity != entity)
+        {
+            this.entity = entity;
+            entity.addPropertyListener(this);
+        }
         points = (List<?>)entity.getProperty(EntityConstants.PROPERTY_POINTS);
         minAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MINALTITUDE)).doubleValue();
         maxAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MAXALTITUDE)).doubleValue();
         width = ((Double)entity.getProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS)).doubleValue();
-        entity.addPropertyListener(this);
+        Color color = (Color) EntityTools.getLineColor(entity, Color.yellow);
+        setColor(color);
         rebuild();
     }
     
@@ -102,7 +136,7 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
                     }
                 }
             }
-            System.out.println("NO MATCH!");
+            //System.out.println("NO MATCH!");
         }
     }
     
@@ -133,30 +167,6 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
             
             setGeometry(ifsf.getIndexedFaceSet());
         }
-    }
-    
-    public Route(double[][] waypoints, double width, double height)
-    {
-        this(waypoints, width, height, false);
-    }
-    
-    public Route(double[][] waypoints, double width, double height, boolean generateJoiners)    {
-        super("Route");
-        
-        IndexedFaceSetFactory ifsf = buildRoute(waypoints, width, height, generateJoiners);
-        
-        setGeometry(ifsf.getIndexedFaceSet());
-        
-        Appearance ap = new Appearance();
-        ap.setAttribute(CommonAttributes.VERTEX_DRAW, false);
-        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(0f, 0f, 1f));
-        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
-        ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
-        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
-        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
-        
-        setAppearance(ap);
     }
      
     public IndexedFaceSetFactory buildRoute(double[][] waypoints, double width, double height, boolean generateJoiners)

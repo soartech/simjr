@@ -39,6 +39,7 @@ import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 
 import de.jreality.geometry.IndexedFaceSetFactory;
@@ -113,10 +114,13 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         
         this.endCapComp = new SceneGraphComponent("EndCaps");
         addChild(endCapComp);
-        
+    }
+
+    private void setColor(Color color)
+    {
         Appearance ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
-        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(1f, 0f, 0f));
+        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
         ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
@@ -126,19 +130,25 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         
         ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
-        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(1f, 0f, 0f));
+        ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
         ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
         endCapComp.setAppearance(ap);
     }
-
-    public void buildFromEntity(Entity entity)
+    
+    public void updateFromEntity(Entity entity)
     {
+        if (this.entity != entity)
+        {
+            this.entity = entity;
+            entity.addPropertyListener(this);
+        }
         points = (List<?>)entity.getProperty(EntityConstants.PROPERTY_POINTS);
         minAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MINALTITUDE)).doubleValue();
         maxAltitude = ((Double)entity.getProperty(EntityConstants.PROPERTY_MAXALTITUDE)).doubleValue();
-        entity.addPropertyListener(this);
+        final Color color =(Color) EntityTools.getFillColor(entity, Color.LIGHT_GRAY);
+        setColor(color);
         rebuild();
     }
 
@@ -159,7 +169,7 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
                     }
                 }
             }
-            System.out.println("NO MATCH!");
+            //System.out.println("NO MATCH!");
         }
     }
         

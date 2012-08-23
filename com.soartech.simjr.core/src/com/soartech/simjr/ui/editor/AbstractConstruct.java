@@ -42,13 +42,14 @@ import de.jreality.scene.SceneGraphComponent;
 public abstract class AbstractConstruct extends SceneGraphComponent
 {
     Simulation sim;
+    Entity entity = null;
     
     public AbstractConstruct(String name)
     {
         super(name);
     }
 
-    abstract public void buildFromEntity(Entity entity);
+    abstract public void updateFromEntity(Entity entity);
     
     abstract public void testAndUpdateFromEntity(Entity entity);
 }
