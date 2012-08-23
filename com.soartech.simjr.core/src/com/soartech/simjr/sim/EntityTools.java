@@ -399,7 +399,17 @@ public class EntityTools
             entityColor = def;
         }
         return entityColor;
-    }    
+    } 
+    
+    public static boolean getThreeDSupported(Entity e)
+    {
+        Boolean ThreeDSupported = (Boolean)e.getProperty(EntityConstants.PROPERTY_3DData);
+        if(ThreeDSupported == null || ThreeDSupported == false)
+            return false;
+        else
+            return true;
+    }
+    
     // TODO: Roll
     // TODO: Pitch
     // TODO: Yaw

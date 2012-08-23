@@ -50,6 +50,7 @@ public class ThreeDDataElement
     private final XPath minAltitude;
     private final XPath maxAltitude;
     private final XPath routeWidth;
+    private final XPath view3DSupported;
     //private final XPath AreaType;
 
     
@@ -59,7 +60,7 @@ public class ThreeDDataElement
         root.setAttribute("minAltitude", "0.0", Model.NAMESPACE);
         root.setAttribute("maxAltitude", "0.0", Model.NAMESPACE);
         root.setAttribute("routeWidth", "0.0", Model.NAMESPACE);
-        
+        root.setAttribute("view3DSupported", "false", Model.NAMESPACE);
         return root;
     }
     
@@ -72,6 +73,8 @@ public class ThreeDDataElement
         this.minAltitude = this.entity.getModel().newXPath("simjr:threeddata/@simjr:minAltitude");
         this.maxAltitude = this.entity.getModel().newXPath("simjr:threeddata/@simjr:maxAltitude");
         this.routeWidth = this.entity.getModel().newXPath("simjr:threeddata/@simjr:routeWidth");
+        this.view3DSupported = this.entity.getModel().newXPath("simjr:threeddata/@simjr:view3DSupported");
+        
     }
     
     public EntityElement getEntity()
@@ -79,6 +82,16 @@ public class ThreeDDataElement
         return entity;
     }
 
+    public boolean get3dSupported()
+    {
+        boolean supported = this.entity.getModel().getBoolean(view3DSupported, entity.getElement());
+        return supported;
+        
+    }
+    public UndoableEdit set3dSupported(boolean supported)
+    {
+        return setThreeDData(getMinAltitude(), getMaxAltitude(), getRouteWidth(), supported);
+    }
     public double getMinAltitude()
     {
         Double value = this.entity.getModel().getDouble(minAltitude, entity.getElement());
@@ -93,7 +106,7 @@ public class ThreeDDataElement
     
     public UndoableEdit setMinAltitude(double altitude)
     {
-        return setThreeDData(altitude, getMaxAltitude(), getRouteWidth());
+        return setThreeDData(altitude, getMaxAltitude(), getRouteWidth(),get3dSupported());
     }
     
     public double getMaxAltitude()
@@ -110,7 +123,7 @@ public class ThreeDDataElement
     
     public UndoableEdit setMaxAltitude(double altitude)
     {
-        return setThreeDData(getMinAltitude(), altitude, getRouteWidth());
+        return setThreeDData(getMinAltitude(), altitude, getRouteWidth(),get3dSupported());
     }
     public double getRouteWidth()
     {
@@ -126,10 +139,10 @@ public class ThreeDDataElement
     
     public UndoableEdit setRouteWidth(double width)
     {
-        return setThreeDData(getMinAltitude(), getMaxAltitude(), width);
+        return setThreeDData(getMinAltitude(), getMaxAltitude(), width,get3dSupported());
     }
    
-    public UndoableEdit setThreeDData(double min, double max, double width)
+    public UndoableEdit setThreeDData(double min, double max, double width, boolean threeDSupported)
     {
         final Model model = this.entity.getModel();
         final Element context = entity.getElement();
@@ -137,6 +150,7 @@ public class ThreeDDataElement
         final double oldMinAltitude = this.getMinAltitude();
         final double oldMaxAltitude = this.getMaxAltitude();
         final double oldRouteWidth = this.getRouteWidth();
+        final boolean oldthreeDSupported= this.get3dSupported();
         
         /*
          * This try catch is here so that older style senario files will have data added
@@ -146,6 +160,7 @@ public class ThreeDDataElement
             changedOccured = model.setText(minAltitude, context, Double.toString(min), null);
             changedOccured = model.setText(maxAltitude, context, Double.toString(max), null) | changedOccured;        
             changedOccured = model.setText(routeWidth, context, Double.toString(width), null) | changedOccured;
+            changedOccured = model.setText(view3DSupported, context,Boolean.toString(threeDSupported), null) | changedOccured;
         }
         catch(Exception e)
         {
@@ -153,13 +168,14 @@ public class ThreeDDataElement
             changedOccured = model.setText(minAltitude, context, Double.toString(min), null);
             changedOccured = model.setText(maxAltitude, context, Double.toString(max), null) | changedOccured;        
             changedOccured = model.setText(routeWidth, context, Double.toString(width), null) | changedOccured;
+            changedOccured = model.setText(view3DSupported, context,Boolean.toString(threeDSupported), null) | changedOccured;
         }
         
         UndoableEdit edit = null;
         if(changedOccured)
         {
             model.fireChange(newEvent(THREEDDATA));
-            edit = new Edit(oldMinAltitude, oldMaxAltitude, oldRouteWidth);
+            edit = new Edit(oldMinAltitude, oldMaxAltitude, oldRouteWidth, oldthreeDSupported);
         }
         return edit;
     }
@@ -174,16 +190,20 @@ public class ThreeDDataElement
         private static final long serialVersionUID = -8050360351980227293L;
 
         private final double oldMinAltitude, oldMaxAltitude, oldRouteWidth;
+        private final boolean oldThreeDSupported;
         private final double newMinAltitude, newMaxAltitude, newRouteWidth;
+        private final boolean newThreeDSupported;
         
-        public Edit(double oldMinAltitude, double oldMaxAltitude, double oldRouteWidth)
+        public Edit(double oldMinAltitude, double oldMaxAltitude, double oldRouteWidth, boolean oldThreeDSupported)
         {
             this.oldMinAltitude = oldMinAltitude;
             this.oldMaxAltitude = oldMaxAltitude;
             this.oldRouteWidth = oldRouteWidth;
+            this.oldThreeDSupported = oldThreeDSupported;
             this.newMinAltitude = getMinAltitude();
             this.newMaxAltitude = getMaxAltitude();
             this.newRouteWidth = getRouteWidth();
+            this.newThreeDSupported = get3dSupported();
         }
 
         /* (non-Javadoc)
@@ -193,7 +213,7 @@ public class ThreeDDataElement
         public void redo() throws CannotRedoException
         {
             super.redo();
-            setThreeDData(newMinAltitude, newMaxAltitude, newRouteWidth);
+            setThreeDData(newMinAltitude, newMaxAltitude, newRouteWidth, newThreeDSupported);
         }
 
         /* (non-Javadoc)
@@ -203,7 +223,7 @@ public class ThreeDDataElement
         public void undo() throws CannotUndoException
         {
             super.undo();
-            setThreeDData(oldMinAltitude, oldMaxAltitude, oldRouteWidth);
+            setThreeDData(oldMinAltitude, oldMaxAltitude, oldRouteWidth, oldThreeDSupported);
         }
     }
 

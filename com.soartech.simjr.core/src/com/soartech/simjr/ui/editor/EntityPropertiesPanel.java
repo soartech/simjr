@@ -65,6 +65,7 @@ import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityPrototypeDatabase;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.entities.DefaultPolygon;
 
 /**
@@ -80,12 +81,13 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
     private final JTextField nameField;
     final JFormattedTextField minimumAltitude= new JFormattedTextField(NumberFormat.getNumberInstance());
     final JFormattedTextField maximumAltitude = new JFormattedTextField(NumberFormat.getNumberInstance());
-    final JFormattedTextField routeWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
+    final JFormattedTextField width = new JFormattedTextField(NumberFormat.getNumberInstance());
     private final DefaultComboBoxModel typeModel = new DefaultComboBoxModel();
     private final JComboBox typeCombo = new JComboBox(typeModel);
     private final DefaultComboBoxModel forceModel = new DefaultComboBoxModel(EntityConstants.ALL_FORCES);
     private final JComboBox forceCombo = new JComboBox(forceModel);
     private final JCheckBox visibleCheckBox = new JCheckBox();
+    private final JCheckBox threeDCheckBox = new JCheckBox();
     private final HeadingSpinner headingSpinner;
     private final ScriptEditPanel initScript;
     
@@ -112,7 +114,16 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         add(new JLabel("Heading"), "gap unrelated");
         add(headingSpinner = new HeadingSpinner(undoService), "wrap");
         
-        add(new JLabel("Min Altitude"));
+        add(new JLabel("Width"));
+        width.setColumns(5);
+        width.addKeyListener(this);
+        add(width);
+        
+        add(new JLabel("3D Region"), "gap unrelated");
+        add(threeDCheckBox);
+        threeDCheckBox.addActionListener(this);
+        
+        add(new JLabel("Min Altitude"), "gap unrelated");
         minimumAltitude.setColumns(5);
         minimumAltitude.addKeyListener(this);
         add(minimumAltitude);
@@ -120,12 +131,10 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         add(new JLabel("Max Altitude"), "gap unrelated");
         maximumAltitude.setColumns(5);
         maximumAltitude.addKeyListener(this);
-        add(maximumAltitude);
+        add(maximumAltitude, "wrap, span 2");
         
-        add(new JLabel("Width"), "gap unrelated");
-        routeWidth.setColumns(5);
-        routeWidth.addKeyListener(this);
-        add(routeWidth, "wrap");
+        
+        
         
         add(new JLabel("Init Script"), "top");
         add(initScript = new ScriptEditPanel(undoService, 50), "span, growx, growy");
@@ -215,9 +224,16 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
         typeCombo.setEnabled(enabled);
         forceCombo.setEnabled(enabled);
         visibleCheckBox.setEnabled(enabled);
+        threeDCheckBox.setEnabled(enabled);
         boolean isArea= false;
         boolean isRoute = false;
         boolean isCylinder = false;
+        boolean is3DRegion = (entity != null && entity.getThreeDData().get3dSupported());
+        
+        width.setEnabled(false);
+        minimumAltitude.setEnabled(false);
+        maximumAltitude.setEnabled(false);
+        
         if(entity != null)
         {
             isArea = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
@@ -227,21 +243,17 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             isCylinder = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
                     .getCategory().equals("cylinder");
         }
-        if(entity != null && (isArea || isRoute || isCylinder))
+
+
+        if(entity != null && (isArea || isRoute || isCylinder) && is3DRegion)
         {
             minimumAltitude.setEnabled(enabled);
             maximumAltitude.setEnabled(enabled);
         }
-        else
-        {
-            minimumAltitude.setEnabled(false);
-            maximumAltitude.setEnabled(false);
-        }
+        
         
         if(entity != null && (isRoute || isCylinder))
-            routeWidth.setEnabled(enabled);
-        else
-            routeWidth.setEnabled(false);
+            width.setEnabled(enabled);
         
         if(enabled)
         {
@@ -253,9 +265,10 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             headingSpinner.setElement(entity.getOrientation());
             initScript.setScript(entity.getInitScript());
             visibleCheckBox.setSelected(entity.isVisible());
+            threeDCheckBox.setSelected(is3DRegion);
             minimumAltitude.setValue(entity.getThreeDData().getMinAltitude());
             maximumAltitude.setValue(entity.getThreeDData().getMaxAltitude());
-            routeWidth.setValue(entity.getThreeDData().getRouteWidth());
+            width.setValue(entity.getThreeDData().getRouteWidth());
         }
         else
         {
@@ -315,6 +328,12 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             final UndoableEdit edit = entity.setVisible(visibleCheckBox.isSelected());
             services.findService(UndoService.class).addEdit(edit);
         }
+        if(e.getSource().equals(threeDCheckBox))
+        {
+            final UndoableEdit edit = entity.getThreeDData().set3dSupported(threeDCheckBox.isSelected());
+            services.findService(UndoService.class).addEdit(edit);
+            setEntity(entity);
+        }
     }
 
     @Override
@@ -349,17 +368,17 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
             final UndoableEdit edit = entity.getThreeDData().setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
-        if(e.getSource().equals(routeWidth))
+        if(e.getSource().equals(width))
         {
             try
             {
-                routeWidth.commitEdit();
+                width.commitEdit();
             }
             catch (ParseException e1)
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)routeWidth.getValue()).doubleValue());
+            final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)width.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
 

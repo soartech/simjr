@@ -395,7 +395,9 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
         simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
         simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
+        simEntity.setProperty(EntityConstants.PROPERTY_3DData, ee.getThreeDData().get3dSupported());
     }
+    
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
     {
         final Entity simEntity = getSimEntity(source);

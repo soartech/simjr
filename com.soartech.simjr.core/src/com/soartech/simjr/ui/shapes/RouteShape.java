@@ -47,6 +47,7 @@ import com.soartech.shapesystem.PrimitiveRenderer;
 import com.soartech.shapesystem.PrimitiveRendererFactory;
 import com.soartech.shapesystem.Rotation;
 import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.ScalarUnit;
 import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
@@ -205,8 +206,20 @@ public class RouteShape extends EntityShape implements EntityConstants
             final ShapeStyle frontStyle = getStyle();
             final ShapeStyle backStyle = frontStyle.copy();
             
-         
-            backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
+            //Calculate the size of the route outline rather than applying a default scale.
+                // Using the scale transform causes the line to appear much thicker than it really is
+            double size = backStyle.getLineThickness().getValue();
+            ScalarUnit unit = backStyle.getLineThickness().getUnit();
+            Scalar backGroundThickness;
+            if(unit.equals(ScalarUnit.Meters))
+            {
+                backGroundThickness = Scalar.createMeter(size +5);
+            }
+            else
+            {
+                backGroundThickness = Scalar.createPixel(size +5);
+            }
+            backStyle.setLineThickness(backGroundThickness);
             backStyle.setLineColor(backStyle.getLineColor().darker());
             
             boolean first = true;

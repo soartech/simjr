@@ -80,14 +80,14 @@ public class CircularRegionShape extends EntityShape
             Number lineWidth = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_WIDTH_METERS,null);
             if(lineWidth == null || Math.abs(lineWidth.doubleValue()) <.5)
             {
-                highlightedRegion = new Circle(id, EntityConstants.LAYER_SELECTION,
+                highlightedRegion = new Circle(id, EntityConstants.LAYER_AREA,
                         new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
                         Scalar.createPixel(20));    
             }
             else
             {
                 highlightedRegion = 
-                        new Circle(id, EntityConstants.LAYER_SELECTION,
+                        new Circle(id, EntityConstants.LAYER_AREA,
                                 new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
                                 Scalar.createMeter(lineWidth.doubleValue()/2));         
             }
@@ -116,17 +116,16 @@ public class CircularRegionShape extends EntityShape
         final Map<String, Object> props = entity.getProperties();
         String layer = EntityTools.getProperty(props, 
                EntityConstants.PROPERTY_SHAPE_LAYER, 
-               EntityConstants.LAYER_ROUTE).toString();
+               EntityConstants.LAYER_AREA).toString();
         String name = getRootFrame().getName();
         
         final ShapeStyle style = new ShapeStyle();
         style.setFillStyle(FillStyle.FILLED);
         final Color fillColor =(Color) EntityTools.getFillColor(entity, Color.LIGHT_GRAY);
         style.setFillColor(fillColor);
-        //final Color lineColor = (Color) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_LINE_COLOR, Color.BLUE);
-        //style.setLineColor(lineColor);
         
-        final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 1.0);
+        
+        final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 0.5f);
         if(opacity != null)
         {
             style.setOpacity(opacity.floatValue());
@@ -185,7 +184,7 @@ public class CircularRegionShape extends EntityShape
         //final Color lineColor = (Color) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_LINE_COLOR, Color.BLUE);
         //style.setLineColor(lineColor);
         
-        final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 1.0);
+        final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 0.5);
         if(opacity != null)
         {
             style.setOpacity(opacity.floatValue());

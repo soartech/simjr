@@ -94,6 +94,7 @@ public class EntityShapeManager
         factory.put(TankShape.NAME, TankShape.FACTORY);
         factory.put(TruckShape.NAME, TruckShape.FACTORY);
         factory.put(WaypointShape.NAME, WaypointShape.FACTORY);
+        factory.put(CircularRegionShape.NAME, CircularRegionShape.FACTORY);
         factory.put(RouteShape.NAME, RouteShape.FACTORY);
     }
     

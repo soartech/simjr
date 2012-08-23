@@ -71,7 +71,6 @@ public class DefaultPolygon extends AbstractPolygon
     
     public int getMinAltitude()
     {
-        //return ThreeDData.getMinAltitude();
         Integer minProperty = (Integer)getEntity().getProperty("min_altitude");
         //added to set legacy routes default minimumAltitude to zero
         if(minProperty == null)
@@ -82,9 +81,9 @@ public class DefaultPolygon extends AbstractPolygon
         Integer minAltitude = Integer.valueOf(minProperty);
         return minAltitude.intValue();
     }
+    
     public int getMaxAltitude()
     {
-       // return ThreeDData.getMaxAltitude();
         Integer maxProperty = (Integer)getEntity().getProperty("max_altitude");
         //added to set legacy routes default minimumAltitude to zero
         if(maxProperty == null)
@@ -95,9 +94,9 @@ public class DefaultPolygon extends AbstractPolygon
         Integer maxAltitude = Integer.valueOf(maxProperty);
         return maxAltitude.intValue();
     }
+    
     public int getRouteWidth()
     {
-        //return ThreeDData.getWidth();
         Integer routeProperty = (Integer)getEntity().getProperty("route_width");
         //added to set legacy routes default minimumAltitude to zero
         if(routeProperty == null)
@@ -111,19 +110,16 @@ public class DefaultPolygon extends AbstractPolygon
     
     public void setMinAltitude(int minAltitude)
     {
-       // ThreeDData.setMinAltitude(minAltitude);
        getEntity().setProperty("min_altitude", new Integer(minAltitude));
   
     }
     public void setMaxAltitude(int maxAltitude)
     {
-        //ThreeDData.setMaxAltitude(maxAltitude);
         getEntity().setProperty("max_altitude", new Integer(maxAltitude));
         
     }
     public void setRouteWidth(int width)
     {
-        //ThreeDData.setWidth(width);
         getEntity().setProperty("route_width", new Integer(width));
        
     }

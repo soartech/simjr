@@ -314,6 +314,19 @@ public class Model
         }
     }
     
+    public boolean getBoolean(XPath xpath, Object context)
+    {
+        try
+        {
+            return xpath.valueOf(context != null ? context : doc).equalsIgnoreCase("true");
+        }
+        catch (JDOMException e)
+        {
+            logger.error(e);
+            throw new RuntimeException(e);
+        }
+    }
+    
     public boolean setText(XPath xpath, Object context, String text, ModelChangeEvent event)
     {
         final String oldValue = getText(xpath, context);
