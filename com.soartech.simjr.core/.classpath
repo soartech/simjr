@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry exported="true" kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jReality.jar" sourcepath="C:/_work/TigerBoard/jreality/jreality/src-core"/>
+	<classpathentry exported="true" kind="lib" path="lib/jReality.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCommon.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCore.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/snakeyaml-1.6.jar"/>
