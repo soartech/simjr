@@ -87,7 +87,12 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         tabs.addTab("Run", runPanel);
         app.addService(runPanel);
         
+
         tabs.addTab("3D View", new View3DPanel(app));
+
+      /* JFrame view3D = new JFrame();
+        view3D.add(new View3DPanel(app));
+        view3D.setVisible(true);*/
         
         content.add(tabs, BorderLayout.CENTER);
         
