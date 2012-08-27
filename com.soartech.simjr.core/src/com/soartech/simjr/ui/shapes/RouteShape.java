@@ -149,7 +149,7 @@ public class RouteShape extends EntityShape implements EntityConstants
             else
             {
                 // No setting
-                style.setLineThickness(Scalar.createPixel(selection ? 10.0 : 2.0));
+                style.setLineThickness(Scalar.createPixel(selection ? 20.0 : 2.0));
             }
         }
     }
@@ -239,7 +239,7 @@ public class RouteShape extends EntityShape implements EntityConstants
                 }
                 else
                 {
-                    style.setLineThickness(Scalar.createMeter(10));
+                    style.setLineThickness(Scalar.createPixel(5));
                 }
                 renderer.drawPolyline(cachedPoints);
                 
