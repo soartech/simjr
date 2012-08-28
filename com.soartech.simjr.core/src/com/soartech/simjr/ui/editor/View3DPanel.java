@@ -49,6 +49,7 @@ import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.ModelElement;
 import com.soartech.simjr.scenario.PointElementList;
+import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.ThreeDDataElement;
 import com.soartech.simjr.sim.Entity;
@@ -102,7 +103,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
 
         rootNode.addChild(constructs);
         rootNode.addChild(cameraNode);
-        constructs.addChild(new Grid(50, 50, 100));
+        constructs.addChild(new Grid(300, 200, 200));
         cameraNode.addChild(lightNode);
         
         //double path[][] = new double[][] { {-10, -10}, {-10, 10}, {10, 10}, {10, -10}};
@@ -117,8 +118,9 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         ClickWheelCameraZoomTool zoomTool = new ClickWheelCameraZoomTool();
         constructs.addTool(zoomTool);
         
-        MatrixBuilder.euclidean().translate(0, 250, 1000).assignTo(cameraNode);
-        //MatrixBuilder.euclidean().rotate(1.57, 1, 0, 0).assignTo(cameraNode);
+        //MatrixBuilder.euclidean().translate(0, 250, 1000).assignTo(cameraNode);
+        MatrixBuilder.euclidean().translate(0, 250, 10000).assignTo(cameraNode);
+        
 
         Appearance rootApp = new Appearance();
         rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
@@ -127,7 +129,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
             
         Camera camera = new Camera();
         camera.setNear(1);
-        camera.setFar(10000);
+        camera.setFar(100000);
         cameraNode.setCamera(camera);
         SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
         camPath.push(camera);
@@ -171,7 +173,6 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         //    System.out.println("  modelElement("+me+")");
         //}
         //System.out.println("]");
-        
         EntityElement ee = (e.source instanceof EntityElement) ? (EntityElement)e.source : null;
         
         // file loaded
