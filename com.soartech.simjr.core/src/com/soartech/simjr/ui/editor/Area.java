@@ -205,7 +205,7 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
 
     public void onPropertyChanged(Entity entity, String propertyName)
     {
-        System.out.println("onPropertyChanged("+entity.getClass().getName()+", "+propertyName+")");
+        //System.out.println("onPropertyChanged("+entity.getClass().getName()+", "+propertyName+")");
 
         if (propertyName.equals(EntityConstants.PROPERTY_MINALTITUDE))
         {

@@ -208,10 +208,8 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
             {
                 Entity entity = getSimEntity((EntityElement)parent);
                 
-                //System.out.println("prototype("+((EntityElement)parent).getPrototype()+")");
-                
                 // if the location belongs to a waypoint
-                if (((EntityElement)parent).getPrototype().equals("waypoint"))
+                if (entity.getPrototype().getCategory().equals("waypoint"))
                 {
                     //see if any of the constructs reference this waypoint
                     for (AbstractConstruct construct : map.values())
@@ -221,7 +219,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
                 }
                 
                 // if the location belongs to a cylinder
-                else if (((EntityElement)parent).getPrototype().equals("cylinder"))
+                else if (entity.getPrototype().getCategory().equals("cylinder"))
                 {
                     updateConstruct((EntityElement)parent);
                 }                
@@ -272,6 +270,38 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
     private boolean add3DConstruct(EntityElement ee, Entity entity)
     {
         try {
+            String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getCategory();
+            AbstractConstruct construct = null;
+            
+            //System.out.println("add3DConstruct("+id+")");
+            if (id.equals("cylinder")) {
+                construct = new Cylinder(sim);
+            }
+            else if (id.equals("area")) {
+                construct = new Area(sim);
+            }
+            else if (id.equals("route")) {
+                construct = new Route(sim);
+            }
+            
+            if (construct != null)
+            {
+              //System.out.println("handled("+id+")");
+              constructs.addChild(construct);
+              map.put(ee, construct);
+              if (entity != null) construct.updateFromEntity(entity);
+              return true;
+            }
+            
+            //System.out.println("No 3D Construct for type("+id+")");
+        } catch (Exception ex) { ex.printStackTrace(); }
+        
+        return false;
+    }
+    
+    /*private boolean _add3DConstruct(EntityElement ee, Entity entity)
+    {
+        try {
             String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getId();
             AbstractConstruct construct = null;
             boolean secondPassAllowed = false;
@@ -310,7 +340,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         } catch (Exception ex) { ex.printStackTrace(); }
         
         return false;
-    }
+    }*/
     
     private void rebuildScene()
     {
