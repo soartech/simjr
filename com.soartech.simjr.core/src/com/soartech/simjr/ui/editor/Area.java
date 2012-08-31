@@ -121,8 +121,8 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         Appearance ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        //ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        //ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
@@ -131,8 +131,8 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        //ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        //ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
         endCapComp.setAppearance(ap);
     }
