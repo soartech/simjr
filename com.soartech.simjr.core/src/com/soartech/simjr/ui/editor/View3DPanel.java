@@ -208,7 +208,8 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
             if (parent instanceof EntityElement)
             {
                 Entity entity = getSimEntity((EntityElement)parent);
-                
+                if(entity == null)
+                    return;
                 // if the location belongs to a waypoint
                 if (entity.getPrototype().getCategory().equals("waypoint"))
                 {
