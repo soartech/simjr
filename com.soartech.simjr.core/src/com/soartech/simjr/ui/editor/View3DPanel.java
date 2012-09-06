@@ -77,7 +77,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
     private final SceneGraphComponent constructs;
     private final HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
     private final Grid grid;
-    private final ImagePoly imagePoly;
+    private final ImagePoly imagePoly;
     public View3DPanel(ScenarioEditorServiceManager app)    {
         super(new BorderLayout());
 
@@ -104,6 +104,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         Light dl = new DirectionalLight();
         lightNode.setLight(dl);
    
+
         MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
 
         Appearance rootApp = new Appearance();
@@ -141,9 +142,13 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
     
     private Entity getSimEntity(EntityElement ee)
     {
+        /*The previous way of getting the entity given entityelement by looking for a property does not interop with
+         *  the tigerboard editor.  We can assume that entity names SHOULD have unique names.
+         */
         for (Entity e : sim.getEntities())
         {
-            if (ee == e.getProperty(EDITOR_ENTITY_PROP))
+            
+            if (ee.getName().equals(e.getName()))
             {
                 return e;
             }
@@ -193,6 +198,8 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         {
             PointElementList points = (PointElementList)e.source;
             ModelElement parent = points.getParent();
+            if(parent == null)
+                return;
             updateConstruct((EntityElement)parent);
         }
         
