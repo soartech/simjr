@@ -59,6 +59,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -117,6 +118,7 @@ import com.soartech.simjr.ui.actions.UnloadContainerAction;
 import com.soartech.simjr.ui.actions.ZoomInAction;
 import com.soartech.simjr.ui.actions.ZoomOutAction;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
+import com.soartech.simjr.ui.editor.View3DPanel;
 import com.soartech.simjr.ui.properties.EntityPropertiesView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
@@ -246,6 +248,16 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         addDockable(this.propertiesView = new EntityPropertiesView(services), defaultEntityPropertiesLocation, ENTITY_PROPERTIES_FRAME_KEY);
         addDockable(new RadioMessagePanel(services), defaultRadioMessagesLocation, RADIO_MESSAGES_FRAME_KEY);
         addDockable(new ConsolePanel(services), defaultConsoleLocation, CONSOLE_FRAME_KEY);
+        
+        /*
+        JFrame view3dWindow = new JFrame();
+        JPanel view3d = new View3DPanel(services);
+        view3dWindow.add(view3d);
+        view3dWindow.setSize(800, 600);
+        view3d.setVisible(true);
+        view3dWindow.setVisible(true);
+        */
+        
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);
         
         initMenus();
