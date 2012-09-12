@@ -50,6 +50,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
     public static final String PROPERTY_DESIRED_ALTITUDE = "desired-altitude";
     public static final String PROPERTY_DESIRED_FPA = "desired-fpa";
+    public static final String PROPERTY_DESIRED_ALTITUDE_RATE = "desired-altitude-rate";
+    public static final String PROPERTY_USE_DESIRED_FPA = "use-desired-fpa";
     public static final String PROPERTY_DESIRED_HEADING = "desired-heading";
     public static final String PROPERTY_DESIRED_SPEED = "desired-speed";
     
@@ -69,6 +71,16 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      * Desired flight path angle in radians
      */
     private double desiredFpa = Math.toRadians(20.0);
+    /**
+     * Desired altitude rate in meters/second
+     * This class should ensure that FPA overrides altitude rate if useDesiredFpa
+     * is true.
+     */
+    private double desiredAltitudeRate = 0.0;  // Okay because default useDesiredFpa is true
+    /**
+     * Are we using desiredFpa or desiredAltitudeRate to adjust altitude?
+     */
+    private boolean useDesiredFpa = true;
     /**
      * Desired turning rate in radians per second
      */
@@ -104,10 +116,23 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
 
     public void setDesiredFpa(Double desiredFpa)
     {
-        this.desiredFpa = desiredFpa;
+        this.desiredFpa = Math.abs(desiredFpa);
+        this.useDesiredFpa = true;
         if(getEntity() != null)
         {
             getEntity().setProperty(PROPERTY_DESIRED_FPA, Math.toDegrees(desiredFpa));
+            getEntity().setProperty(PROPERTY_USE_DESIRED_FPA, useDesiredFpa);
+        }
+    }
+
+    public void setDesiredAltitudeRate(double rate)
+    {
+        this.desiredAltitudeRate = Math.abs(rate);
+        this.useDesiredFpa = false;
+        if(getEntity() != null)
+        {
+            getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, desiredAltitudeRate);
+            getEntity().setProperty(PROPERTY_USE_DESIRED_FPA, useDesiredFpa);
         }
     }
 
@@ -143,7 +168,9 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         super.attach(entity);
         getEntity().setProperty(PROPERTY_DESIRED_SPEED, desiredSpeed);
         getEntity().setProperty(PROPERTY_DESIRED_HEADING, Math.toDegrees(desiredHeading));
+        getEntity().setProperty(PROPERTY_USE_DESIRED_FPA, useDesiredFpa);
         getEntity().setProperty(PROPERTY_DESIRED_FPA, Math.toDegrees(desiredFpa));
+        getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, desiredAltitudeRate);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, desiredAltitude);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, true);
@@ -157,7 +184,9 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     {
         getEntity().setProperty(PROPERTY_DESIRED_SPEED, null);
         getEntity().setProperty(PROPERTY_DESIRED_HEADING, null);
+        getEntity().setProperty(PROPERTY_USE_DESIRED_FPA, null);
         getEntity().setProperty(PROPERTY_DESIRED_FPA, null);
+        getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, null);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, null);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, null);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, null);
@@ -197,7 +226,9 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         double desiredVelocityZ = altitudeError/dt;
 
         // Decide how fast we're allowed to change altitude
-        double desiredAltitudeRate = Math.abs(desiredVelocity.length() * Math.sin(desiredFpa));
+        if (useDesiredFpa) {
+            desiredAltitudeRate = Math.abs(desiredVelocity.length() * Math.sin(desiredFpa));
+        }
 
         // Clamp Z velocity to desired altitude rate
         if(desiredVelocityZ > desiredAltitudeRate)
