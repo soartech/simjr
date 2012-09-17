@@ -46,6 +46,7 @@ import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.ModelException;
+import com.soartech.simjr.scenario.ModelService;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.TerrainTypeElement;

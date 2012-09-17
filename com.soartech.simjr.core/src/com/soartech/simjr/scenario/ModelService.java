@@ -29,12 +29,11 @@
  *
  * Created on Sept 17, 2012
  */
-package com.soartech.simjr.sim;
+package com.soartech.simjr.scenario;
 
 import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.services.SimulationService;
 
 /**
