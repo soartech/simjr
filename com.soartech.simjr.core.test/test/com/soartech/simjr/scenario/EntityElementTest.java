@@ -34,7 +34,7 @@ package com.soartech.simjr.scenario;
 import javax.swing.undo.UndoableEdit;
 
 import com.soartech.simjr.scenario.EntityElement;
-import com.soartech.simjr.scenario.Model;
+import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.sim.EntityConstants;
 
 import junit.framework.TestCase;

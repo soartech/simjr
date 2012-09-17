@@ -31,8 +31,8 @@
  */
 package com.soartech.simjr.scenario;
 
-import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.scenario.ScriptBlockElement;
+import com.soartech.simjr.scenario.model.Model;
 
 import junit.framework.TestCase;
 

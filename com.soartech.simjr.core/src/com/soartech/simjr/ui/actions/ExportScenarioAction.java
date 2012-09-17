@@ -39,8 +39,8 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelException;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelException;
 import com.soartech.simjr.sim.ScenarioExporter;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.SimulationImages;

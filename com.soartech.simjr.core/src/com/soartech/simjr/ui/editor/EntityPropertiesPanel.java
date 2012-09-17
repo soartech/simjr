@@ -58,9 +58,9 @@ import javax.swing.undo.UndoableEdit;
 import net.miginfocom.swing.MigLayout;
 
 import com.soartech.simjr.scenario.EntityElement;
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;

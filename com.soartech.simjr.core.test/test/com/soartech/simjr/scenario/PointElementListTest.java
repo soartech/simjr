@@ -34,6 +34,8 @@ package com.soartech.simjr.scenario;
 import java.util.Arrays;
 import java.util.List;
 
+import com.soartech.simjr.scenario.model.Model;
+
 import junit.framework.TestCase;
 
 public class PointElementListTest extends TestCase

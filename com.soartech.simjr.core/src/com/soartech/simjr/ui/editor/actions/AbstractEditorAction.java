@@ -33,7 +33,7 @@ package com.soartech.simjr.ui.editor.actions;
 
 import javax.swing.Icon;
 
-import com.soartech.simjr.scenario.Model;
+import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;

@@ -33,6 +33,8 @@ package com.soartech.simjr.scenario;
 
 import javax.swing.undo.UndoableEdit;
 
+import com.soartech.simjr.scenario.model.Model;
+
 import junit.framework.TestCase;
 
 public class TerrainImageElementTest extends TestCase

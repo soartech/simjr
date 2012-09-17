@@ -29,7 +29,7 @@
  *
  * Created on Mar 27, 2009
  */
-package com.soartech.simjr.scenario;
+package com.soartech.simjr.scenario.model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -55,6 +55,10 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.SimJrProps;
+import com.soartech.simjr.scenario.EntityElementList;
+import com.soartech.simjr.scenario.MetadataElement;
+import com.soartech.simjr.scenario.ScriptBlockElement;
+import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.util.JDomTools;
 
 /**

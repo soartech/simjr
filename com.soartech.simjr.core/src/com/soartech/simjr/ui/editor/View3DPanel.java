@@ -42,14 +42,14 @@ import javax.swing.JPanel;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.LocationElement;
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
-import com.soartech.simjr.scenario.ModelElement;
 import com.soartech.simjr.scenario.PointElementList;
 import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.ThreeDDataElement;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
+import com.soartech.simjr.scenario.model.ModelElement;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 

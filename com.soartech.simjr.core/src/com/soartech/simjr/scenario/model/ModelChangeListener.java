@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Soar Technology, Inc.
+ * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,61 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Sept 17, 2012
+ * Created on Mar 27, 2009
  */
-package com.soartech.simjr.scenario;
-
-import com.soartech.simjr.ProgressMonitor;
-import com.soartech.simjr.SimulationException;
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.services.SimulationService;
+package com.soartech.simjr.scenario.model;
 
 /**
- * Encapsulation for the Model ({@link com.soartech.simjr.scenario.Model}) object.
- * 
- * @see com.soartech.simjr.scenario.Model
- * @author charles.newton
+ * @author ray
  */
-public class ModelService implements SimulationService
+public interface ModelChangeListener
 {
-    private final Model model;
-    
-    public ModelService()
-    {
-        this.model = new Model();
-    }
-    
-    public Model getModel()
-    {
-        return model;
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
-     */
-    @Override
-    public Object getAdapter(Class<?> klass)
-    {
-        return Adaptables.adaptUnchecked(this, klass, false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.soartech.simjr.services.SimulationService#start(com.soartech.simjr.ProgressMonitor)
-     */
-    @Override
-    public void start(ProgressMonitor progress) throws SimulationException
-    {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.soartech.simjr.services.SimulationService#shutdown()
-     */
-    @Override
-    public void shutdown() throws SimulationException
-    {
-    }
-
+    void onModelChanged(ModelChangeEvent e);
 }

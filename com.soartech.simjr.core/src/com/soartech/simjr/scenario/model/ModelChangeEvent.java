@@ -27,21 +27,40 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Apr 15, 2009
+ * Created on Mar 27, 2009
  */
-package com.soartech.simjr.scenario;
-
-import org.jdom.Element;
-
+package com.soartech.simjr.scenario.model;
 
 /**
  * @author ray
  */
-public interface ModelElement
+public class ModelChangeEvent
 {
-    Model getModel();
+    public final Model model;
+    public final Object source;
+    public final String property;
     
-    ModelElement getParent();
+    /**
+     * @param model
+     * @param object
+     * @param property
+     */
+    public ModelChangeEvent(Model model, Object source, String property)
+    {
+        this.model = model;
+        this.source = source;
+        this.property = property;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        return source + ":" + property;
+    }
+
     
-    Element getElement();
+    
 }

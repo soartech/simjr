@@ -31,6 +31,8 @@
  */
 package com.soartech.simjr.scenario;
 
+import com.soartech.simjr.scenario.model.Model;
+
 import junit.framework.TestCase;
 
 public class MetadataElementTest extends TestCase

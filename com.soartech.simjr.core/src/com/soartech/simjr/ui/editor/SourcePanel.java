@@ -38,9 +38,9 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * XML display of model source code. Note that JSyntaxPane is pretty slow and

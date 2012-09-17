@@ -29,13 +29,45 @@
  *
  * Created on Mar 27, 2009
  */
-package com.soartech.simjr.scenario;
+package com.soartech.simjr.scenario.model;
 
 /**
  * @author ray
  */
-public interface ModelChangeListener
+public class ModelException extends Exception
 {
+    private static final long serialVersionUID = 7198184429755087719L;
 
-    void onModelChanged(ModelChangeEvent e);
+    /**
+     * 
+     */
+    public ModelException()
+    {
+    }
+
+    /**
+     * @param message
+     */
+    public ModelException(String message)
+    {
+        super(message);
+    }
+
+    /**
+     * @param cause
+     */
+    public ModelException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    /**
+     * @param message
+     * @param cause
+     */
+    public ModelException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
 }

@@ -36,6 +36,8 @@ import junit.framework.TestCase;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import com.soartech.simjr.scenario.model.Model;
+
 public class LocationElementTest extends TestCase
 {
     public void testXPath() throws Exception

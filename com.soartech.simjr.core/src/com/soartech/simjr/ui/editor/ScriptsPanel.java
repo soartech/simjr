@@ -39,9 +39,9 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * @author ray

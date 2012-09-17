@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,47 +27,61 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Mar 27, 2009
+ * Created on Sept 17, 2012
  */
-package com.soartech.simjr.scenario;
+package com.soartech.simjr.scenario.model;
+
+import com.soartech.simjr.ProgressMonitor;
+import com.soartech.simjr.SimulationException;
+import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.services.SimulationService;
 
 /**
- * @author ray
+ * Encapsulation for the Model ({@link com.soartech.simjr.scenario.model.Model}) object.
+ * 
+ * @see com.soartech.simjr.scenario.model.Model
+ * @author charles.newton
  */
-public class ModelException extends Exception
+public class ModelService implements SimulationService
 {
-    private static final long serialVersionUID = 7198184429755087719L;
+    private final Model model;
+    
+    public ModelService()
+    {
+        this.model = new Model();
+    }
+    
+    public Model getModel()
+    {
+        return model;
+    }
 
-    /**
-     * 
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)
      */
-    public ModelException()
+    @Override
+    public Object getAdapter(Class<?> klass)
+    {
+        return Adaptables.adaptUnchecked(this, klass, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.services.SimulationService#start(com.soartech.simjr.ProgressMonitor)
+     */
+    @Override
+    public void start(ProgressMonitor progress) throws SimulationException
     {
     }
 
-    /**
-     * @param message
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.simjr.services.SimulationService#shutdown()
      */
-    public ModelException(String message)
+    @Override
+    public void shutdown() throws SimulationException
     {
-        super(message);
-    }
-
-    /**
-     * @param cause
-     */
-    public ModelException(Throwable cause)
-    {
-        super(cause);
-    }
-
-    /**
-     * @param message
-     * @param cause
-     */
-    public ModelException(String message, Throwable cause)
-    {
-        super(message, cause);
     }
 
 }

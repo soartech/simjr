@@ -40,6 +40,8 @@ import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.scenario.edits.DeleteEntityEdit;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
 
 /**
  * @author ray
