@@ -44,7 +44,7 @@ import com.soartech.simjr.services.SimulationService;
  */
 public class ModelService implements SimulationService
 {
-    private final Model model;
+    private Model model;
     
     public ModelService()
     {
@@ -55,7 +55,12 @@ public class ModelService implements SimulationService
     {
         return model;
     }
-
+    
+    public Model newModel()
+    {
+        this.model = new Model();
+        return this.model;
+    }
     /*
      * (non-Javadoc)
      * @see com.soartech.simjr.adaptables.Adaptable#getAdapter(java.lang.Class)

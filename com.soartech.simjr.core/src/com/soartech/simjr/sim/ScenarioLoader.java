@@ -48,6 +48,7 @@ import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.TerrainTypeElement;
+import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelException;
 import com.soartech.simjr.scenario.model.ModelService;
 import com.soartech.simjr.scripting.ScriptRunSettings;
@@ -83,8 +84,12 @@ public class ScenarioLoader
      */
     public void loadScenario(File file, ProgressMonitor progress) throws SimulationException
     {
-        this.model = new ModelService();
-        services.addService(this.model);
+        this.model = services.findService(ModelService.class);
+        if(this.model == null)
+        {
+            this.model = new ModelService();
+            services.addService(this.model);
+        }
         try
         {
             logger.info("Loading scenario from '" + file + "'");
@@ -271,6 +276,12 @@ public class ScenarioLoader
             polygon.setPointNames(ee.getPoints().getPoints());
         }
         
+        //3D data stuff
+        entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make
+        entity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
+        entity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
+        entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
+        entity.setProperty(EntityConstants.PROPERTY_3DData, ee.getThreeDData().get3dSupported());
         runEntityInitScript(ee, entity);
         
         sim.addEntity(entity);

@@ -92,6 +92,7 @@ import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.scenario.model.ModelService;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -212,6 +213,10 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         this.services = serviceManager;
         this.services.addService(this);
         
+        ModelService model = services.findService(ModelService.class);
+        if(model == null)
+            services.addService(new ModelService());
+        
         setTitle(SimJrProps.get("simjr.window.title","Sim Jr"));
         frameDimension = new Dimension(SimJrProps.get("simjr.window.width", 1000), SimJrProps.get("simjr.window.height", 800));
         setSize(frameDimension);
@@ -249,14 +254,14 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         addDockable(new RadioMessagePanel(services), defaultRadioMessagesLocation, RADIO_MESSAGES_FRAME_KEY);
         addDockable(new ConsolePanel(services), defaultConsoleLocation, CONSOLE_FRAME_KEY);
         
-        /*
+        
         JFrame view3dWindow = new JFrame();
         JPanel view3d = new View3DPanel(services);
         view3dWindow.add(view3d);
         view3dWindow.setSize(800, 600);
         view3d.setVisible(true);
         view3dWindow.setVisible(true);
-        */
+        
         
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);
         

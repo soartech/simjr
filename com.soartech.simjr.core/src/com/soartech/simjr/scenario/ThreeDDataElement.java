@@ -43,7 +43,7 @@ import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 
 /**
- * @author ray
+ * @author Haley
  */
 public class ThreeDDataElement
 {
@@ -54,7 +54,6 @@ public class ThreeDDataElement
     private final XPath maxAltitude;
     private final XPath routeWidth;
     private final XPath view3DSupported;
-    //private final XPath AreaType;
 
     
     public static Element buildDefault(Model model)

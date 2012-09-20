@@ -88,23 +88,23 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 /**
  * @author ray
  */
-public class MapPanel extends JPanel implements ModelChangeListener, SelectionManagerListener, PlanViewDisplayProvider, TerrainImageListener
+public class MapPanel extends JPanel implements ModelChangeListener, SelectionManagerListener, PlanViewDisplayProvider, TerrainImageListener
 {
     private static final long serialVersionUID = -6829507868179277224L;
     
     private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
-    private final ScenarioEditorServiceManager app;
+    private final ScenarioEditorServiceManager app;
     private final Simulation sim;
     private final PlanViewDisplay pvd;
     private final Set<Entity> movedEntities = new HashSet<Entity>();
     private final EntityPropertiesPanel propsPanel;
 
-    public MapPanel(ScenarioEditorServiceManager app)
+    public MapPanel(ScenarioEditorServiceManager app)
     {
         super(new BorderLayout());
         
         this.app = app;
-        this.sim = app.findService(Simulation.class);
+        this.sim = app.findService(Simulation.class);
         this.pvd = new PlanViewDisplay(app, null) {
 
             private static final long serialVersionUID = 2647338467484833244L;
@@ -309,8 +309,8 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         return (TerrainImageEntity) sim.getEntity("@@@___TERRAIN___@@@");
     }
     
-    @Override
-    public void terrainImageMoved(TerrainImageEntity tie)
+    @Override
+    public void terrainImageMoved(TerrainImageEntity tie)
     {
         this.pvd.getMapImage().setCenterMeters(tie.getPosition());
         if(pvd.isDraggingEntity())
@@ -455,6 +455,7 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getThreeDData().getMinAltitude());
         e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getThreeDData().getMaxAltitude());
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getThreeDData().getRouteWidth());
+        e.setProperty(EntityConstants.PROPERTY_3DData, source.getThreeDData().get3dSupported());
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);
     }

@@ -50,8 +50,12 @@ import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
 import com.soartech.simjr.scenario.model.ModelElement;
+import com.soartech.simjr.scenario.model.ModelService;
+import com.soartech.simjr.services.ServiceManager;
+import com.soartech.simjr.sim.Detonation;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
+import com.soartech.simjr.sim.SimulationListener;
 
 import de.jreality.jogl.Viewer;
 import de.jreality.math.MatrixBuilder;
@@ -68,7 +72,7 @@ import de.jreality.util.RenderTrigger;
 /**
  * @author Dan Silverglate
  */
-public class View3DPanel extends JPanel implements ModelChangeListener/*, SimulationListener*/
+public class View3DPanel extends JPanel implements ModelChangeListener, SimulationListener
 {
     private static final long serialVersionUID = -4534167209676146675L;
     private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
@@ -78,12 +82,78 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
     private final HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
     private final Grid grid;
     private final ImagePoly imagePoly;
+    private ServiceManager services;
+    
+    public View3DPanel(ServiceManager services)
+    {
+        super(new BorderLayout());
+
+        this.model =  services.findService(ModelService.class).getModel();
+        model.addModelChangeListener(this);
+        this.services = services;
+        this.sim = services.findService(Simulation.class);
+        sim.addListener(this);
+
+        SceneGraphComponent rootNode = new SceneGraphComponent("root");
+        SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
+        constructs = new SceneGraphComponent("constructs");
+        SceneGraphComponent lightNode = new SceneGraphComponent("light");
+
+        rootNode.addChild(constructs);
+        rootNode.addChild(cameraNode);
+
+        grid = new Grid(50, 50, 100);
+        constructs.addChild(grid);
+        imagePoly = new ImagePoly();
+        constructs.addChild(imagePoly);
+        cameraNode.addChild(lightNode);
+        
+        Light dl = new DirectionalLight();
+        lightNode.setLight(dl);
+   
+
+        MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
+
+        Appearance rootApp = new Appearance();
+        rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
+        rootApp.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(.5f, .5f, .5f));
+        rootNode.setAppearance(rootApp);
+            
+        Camera camera = new Camera();
+        camera.setNear(1);
+        camera.setFar(100000);
+        cameraNode.setCamera(camera);
+        SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
+        camPath.push(camera);
+        
+        Viewer viewer = new Viewer();
+        
+        viewer.setSceneRoot(rootNode);
+        viewer.setCameraPath(camPath);
+        ToolSystem toolSystem = ToolSystem.toolSystemForViewer(viewer);
+        toolSystem.initializeSceneTools();
+        
+        add((Component)viewer.getViewingComponent(), BorderLayout.CENTER);
+        
+        SimNavigationTool t = new SimNavigationTool();
+        t.setGain(400);
+        t.setGravitEnabled(false);
+        t.setMinHeight(10);
+        t.setRunFactor(4);
+        cameraNode.addTool(t);
+        
+        RenderTrigger rt = new RenderTrigger();
+        rt.addSceneGraphComponent(rootNode);
+        rt.addViewer(viewer);
+    }
+    
     public View3DPanel(ScenarioEditorServiceManager app)    {
         super(new BorderLayout());
 
         this.model = app.getModel();
         model.addModelChangeListener(this);
         
+        this.services = app;
         this.sim = app.findService(Simulation.class);
         //sim.addListener(this);
 
@@ -281,6 +351,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         try {
             String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getCategory();
             AbstractConstruct construct = null;
+
             
             //System.out.println("add3DConstruct("+id+")");
             if (id.equals("cylinder")) {
@@ -357,9 +428,9 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         {
             constructs.removeChild(construct);
         }
+        Simulation newSim = services.findService(Simulation.class);
         map.clear();
         imagePoly.setImageFile(null);
-        
         TerrainImageEntity imageEntity = (TerrainImageEntity)sim.getEntity("@@@___TERRAIN___@@@");
         if (imageEntity != null)
         {
@@ -409,6 +480,54 @@ public class View3DPanel extends JPanel implements ModelChangeListener/*, Simula
         }
 
         return false;
+    }
+
+    @Override
+    public void onTimeSet(double oldTime)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onEntityAdded(Entity e)
+    {
+        this.rebuildScene();
+    }
+
+    @Override
+    public void onEntityRemoved(Entity e)
+    {
+        this.rebuildScene();
+        
+    }
+
+    @Override
+    public void onPause()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onStart()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onTick(double dt)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onDetonation(Detonation detonation)
+    {
+        // TODO Auto-generated method stub
+        
     }
     
 /*    public void onTimeSet(double oldTime) { }
