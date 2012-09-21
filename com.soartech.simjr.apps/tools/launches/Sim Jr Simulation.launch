@@ -17,7 +17,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-clean -console -os ${target.os} -arch ${target.arch} -nl ${target.nl}"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.app=sim"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.app=sim &quot;-Djava.library.path=${workspace_loc}/simjr/com.soartech.simjr.core/jni/${target.os}/${target.arch}&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:simjr-resources}"/>
 <booleanAttribute key="pde.generated.config" value="true"/>
 <stringAttribute key="pde.version" value="3.3"/>
@@ -26,5 +26,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.example.simjr.hello@default:default,com.soartech.math.test@default:false,com.soartech.math@default:default,com.soartech.shapesystem@default:default,com.soartech.simjr.apps@default:default,com.soartech.simjr.core.test@default:false,com.soartech.simjr.core@default:default,com.soartech.simjr.log4j@default:false,com.soartech.simjr.osgi@default:default,com.soartech.simjr.rhino@default:default,com.soartech.simjr.startup@5:default,com.soartech.simjr.web@default:default,ecgf_tigerboard_plugin@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.jidesoft@default:default,com.soartech.ate@default:default,com.soartech.ims@default:default,com.soartech.math.test@default:false,com.soartech.math@default:default,com.soartech.shapesystem@default:default,com.soartech.simjr.apps@default:default,com.soartech.simjr.core.test@default:false,com.soartech.simjr.core@default:default,com.soartech.simjr.ecgf@default:default,com.soartech.simjr.helosoar@default:default,com.soartech.simjr.jsoar@default:default,com.soartech.simjr.osgi@default:default,com.soartech.simjr.rhino@default:default,com.soartech.simjr.sml@default:default,com.soartech.simjr.soar@default:default,com.soartech.simjr.soarcomm2@default:default,com.soartech.simjr.soarspeak@default:default,com.soartech.simjr.startup@5:default,com.soartech.simjr.stringtemplate@default:default,com.soartech.simjr.tas9@default:default,com.soartech.simjr.web@default:default,com.soartech.spatr@default:default,com.soartech.tigerboard@default:default,net.miginfocom@default:default,org.jdom@default:default"/>
 </launchConfiguration>
