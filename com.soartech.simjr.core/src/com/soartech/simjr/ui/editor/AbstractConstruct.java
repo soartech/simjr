@@ -31,10 +31,21 @@
  */
 package com.soartech.simjr.ui.editor;
 
+import java.awt.Color;
+
+import javax.swing.SwingConstants;
+
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 
+import de.jreality.geometry.PointSetFactory;
+import de.jreality.math.MatrixBuilder;
+import de.jreality.scene.Appearance;
 import de.jreality.scene.SceneGraphComponent;
+import de.jreality.shader.DefaultGeometryShader;
+import de.jreality.shader.DefaultPointShader;
+import de.jreality.shader.DefaultTextShader;
+import de.jreality.shader.ShaderUtility;
 
 /**
  * @author Dan Silverglate
@@ -43,10 +54,45 @@ public abstract class AbstractConstruct extends SceneGraphComponent
 {
     Simulation sim;
     Entity entity = null;
+    SceneGraphComponent label = null;
     
     public AbstractConstruct(String name)
     {
-        super(name);
+        super(name); 
+    }
+    
+    public void setPosition()
+    {
+        
+    }
+    
+    public void setupLabel(String text, double x, double y, double z)
+    {
+        if (label == null)
+        {
+            label = new SceneGraphComponent(this.getName()+"_"+label);
+            addChild(label);
+            
+            Appearance ap = new Appearance();
+            DefaultGeometryShader dgs = ShaderUtility.createDefaultGeometryShader(ap, false);
+            DefaultPointShader ps = (DefaultPointShader)dgs.getPointShader();
+            ps.setSpheresDraw(true);
+            DefaultTextShader pts = (DefaultTextShader)ps.getTextShader();
+            pts.setScale(1.0);
+            pts.setOffset(new double[]{0,0,0});
+            pts.setAlignment(SwingConstants.LEFT);
+            pts.setDiffuseColor(Color.black);
+            label.setAppearance(ap);
+        }
+        
+        PointSetFactory lf = new PointSetFactory();
+        lf.setVertexCount(1);
+        lf.setVertexCoordinates(new double[]{x, y, z});
+        lf.setVertexLabels(new String[]{text});
+        lf.update();
+        label.setGeometry(lf.getPointSet());
+        
+        //MatrixBuilder.euclidean().translate(x, y, z).assignTo(label);
     }
 
     abstract public void updateFromEntity(Entity entity);

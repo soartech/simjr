@@ -92,10 +92,10 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
     private void setColor(Color color)
     {
         Appearance ap = new Appearance();
-        ap.setAttribute(CommonAttributes.VERTEX_DRAW, false);
+        ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
@@ -107,6 +107,10 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
     {
         if (this.entity != entity)
         {
+            if (entity != null)
+            {
+                entity.removePropertyListener(this);
+            }
             this.entity = entity;
             entity.addPropertyListener(this);
         }
@@ -167,6 +171,9 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
             
             setGeometry(ifsf.getIndexedFaceSet());
         }
+        
+        Vector3 pos = entity.getPosition();
+        setupLabel(entity.getName(), pos.x, maxAltitude, -pos.y);
     }
      
     public IndexedFaceSetFactory buildRoute(double[][] waypoints, double width, double height, boolean generateJoiners)

@@ -121,8 +121,8 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         Appearance ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
@@ -131,8 +131,8 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         ap = new Appearance();
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        //ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
         endCapComp.setAppearance(ap);
     }
@@ -141,6 +141,10 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
     {
         if (this.entity != entity)
         {
+            if (entity != null)
+            {
+                entity.removePropertyListener(this);
+            }
             this.entity = entity;
             entity.addPropertyListener(this);
         }
@@ -201,6 +205,9 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
             IndexedFaceSetFactory endCaps = buildEndCapFaces(path, minAltitude, maxAltitude);
             endCapComp.setGeometry(endCaps.getIndexedFaceSet());
         }
+        
+        Vector3 pos = entity.getPosition();
+        setupLabel(entity.getName(), pos.x, maxAltitude, -pos.y);
     }
 
     public void onPropertyChanged(Entity entity, String propertyName)
