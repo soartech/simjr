@@ -33,6 +33,7 @@ package com.soartech.simjr.sim.entities;
 
 import java.util.Map;
 
+import com.soartech.simjr.sensors.DefaultSensorPlatform;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityTools;
@@ -56,6 +57,8 @@ public class Vehicle extends AbstractEntity
         setProperty(EntityConstants.PROPERTY_CALLSIGN, name);
         
         addCapability(new DefaultWeaponPlatform());
+        addCapability(new DefaultSensorPlatform());
+        
         addCapability(new EntityContainerCapability());
         addCapability(fuelModel = new FuelModel());
         addCapability(new DisableRadarWhenDestroyed());

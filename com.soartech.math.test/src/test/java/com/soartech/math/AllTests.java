@@ -31,14 +31,13 @@
  */
 package com.soartech.math;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import com.soartech.math.geotrans.TestGeocentric;
 import com.soartech.math.geotrans.TestLocalCartesian;
 import com.soartech.math.geotrans.TestMgrs;
 import com.soartech.math.geotrans.TestUniversalTransverseMercator;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Test suite for this plugin. Add all test classes here so they'll be included
@@ -50,7 +49,7 @@ public class AllTests
 {
     public static Test suite()
     {
-        final Class<? extends TestCase>[] tests = new Class[] {
+        TestSuite suite = new TestSuite(
             Vector3Test.class,
             AnglesTest.class,
             TestLineSegmentDistance.class,
@@ -60,8 +59,8 @@ public class AllTests
             TestGeocentric.class,
             TestLocalCartesian.class,
             TestMgrs.class,
-            TestUniversalTransverseMercator.class,
-        };
-        return new TestSuite(tests, AllTests.class.getName());
+            TestUniversalTransverseMercator.class);
+        suite.setName(AllTests.class.getName());
+        return suite;
     }
 }

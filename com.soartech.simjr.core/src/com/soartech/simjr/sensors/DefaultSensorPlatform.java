@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,69 +27,84 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Feb 12, 2008
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import junit.framework.TestCase;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.SensorPlatform;
+import com.soartech.simjr.sim.AbstractEntityCapability;
 import com.soartech.simjr.sim.Entity;
-import com.soartech.simjr.sim.EntityPrototypes;
-import com.soartech.simjr.sim.SimpleTerrain;
-import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.weapons.WeaponPlatform;
 
-public class VehicleTest extends TestCase
+public class DefaultSensorPlatform extends AbstractEntityCapability implements SensorPlatform
 {
-    private Simulation sim;
+    private final Map<String,Sensor> sensors = new HashMap<String,Sensor>();
     
-    private static class TestVehicle extends Vehicle
+    public DefaultSensorPlatform() 
     {
-
-        public TestVehicle(String name)
+        // Intentionally left blank
+    }
+    
+    @Override
+    public void attach(Entity e)
+    {
+        super.attach(e);
+        for(Sensor s : sensors.values())
         {
-            super(name, EntityPrototypes.NULL);
+            s.setEntity(e);
         }
-        
     }
     
-    protected void setUp() throws Exception
+    @Override
+    public void detach()
     {
-        super.setUp();
-        
-        this.sim = new Simulation(SimpleTerrain.createExampleTerrain(), false);
+        for(Sensor s : sensors.values())
+        {
+            s.setEntity(null);
+        }
+        super.detach();
     }
 
-    protected void tearDown() throws Exception
+    @Override
+    public Collection<Sensor> getSensors()
     {
-        sim.shutdown();
-        super.tearDown();
+        return Collections.unmodifiableCollection( sensors.values() );
+    }
+
+    @Override
+    public Sensor getSensorByName(String name)
+    {
+        return sensors.get(name);
+    }
+
+    @Override
+    public void addSensor(String name, Sensor sensor)
+    {
+        sensors.put(name, sensor);
+        sensor.setEntity(getEntity());
+    }
+
+    @Override
+    public void removeSensor(String name)
+    {
+        Sensor removedSensor = sensors.remove(name);
+        if( removedSensor != null )
+        {
+            removedSensor.setEntity(null);
+        }
     }
     
-    public void testEntityGetsWeaponPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        WeaponPlatform weapons = Adaptables.adapt(entity, WeaponPlatform.class);
-
-        assertNotNull(weapons);
-        assertSame(entity, weapons.getEntity());
+    @Override
+    public void tick(double dt) {
+        for ( Sensor sensor : sensors.values() ) {
+            if ( sensor.isEnabled() ) 
+            {
+                sensor.tick(dt);                
+            }
+        }
     }
-
-    public void testEntityGetsSensorPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        SensorPlatform sensors = Adaptables.adapt(entity, SensorPlatform.class);
-
-        assertNotNull(sensors);
-        assertSame(entity, sensors.getEntity());
-    }
-
+    
 }

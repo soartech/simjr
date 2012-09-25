@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,69 +27,46 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Feb 12, 2008
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
+
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.SensorPlatform;
-import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototypes;
-import com.soartech.simjr.sim.SimpleTerrain;
-import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import com.soartech.simjr.sim.entities.Vehicle;
 
-public class VehicleTest extends TestCase
+public class DetectionTest extends TestCase
 {
-    private Simulation sim;
-    
-    private static class TestVehicle extends Vehicle
-    {
-
-        public TestVehicle(String name)
-        {
-            super(name, EntityPrototypes.NULL);
-        }
+    public void testBasicProperties() {
         
+        Vehicle veh = new Vehicle("fwa", EntityPrototypes.NULL);
+        
+        HashMap<String,Object> props = new HashMap<String,Object>();
+        props.put("test-prop-1", Integer.valueOf(10));
+        props.put("test-prop-2", "MyTestString");
+        props.put("test-prop-3", 3.0);
+        
+        Sensor sensor = SensorFactory.load("generic-radar");
+        Detection detection = new Detection(sensor, veh, props, DetectionType.RADAR);
+        
+        // This property is used to test if the detection makes a copy of the properties
+        props.put("test-prop-4", "Shouldn't end up in detection properties.");
+        
+        assertEquals(sensor, detection.getSourceSensor());
+        assertEquals(veh, detection.getTargetEntity());
+        assertEquals(DetectionType.RADAR, detection.getType());
+        assertEquals(10, detection.getProperty("test-prop-1"));
+        assertEquals("MyTestString", detection.getProperty("test-prop-2"));
+        assertEquals(3.0, detection.getProperty("test-prop-3"));
+        assertNull( detection.getProperty("test-prop-4") );
+        
+        Detection detection2 = new Detection(sensor, veh, DetectionType.VISIBLE);
+        assertEquals(sensor, detection2.getSourceSensor());
+        assertEquals(veh, detection2.getTargetEntity());
+        assertEquals(DetectionType.VISIBLE, detection2.getType());
+        assertTrue(detection2.getProperties().isEmpty());
     }
-    
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        
-        this.sim = new Simulation(SimpleTerrain.createExampleTerrain(), false);
-    }
-
-    protected void tearDown() throws Exception
-    {
-        sim.shutdown();
-        super.tearDown();
-    }
-    
-    public void testEntityGetsWeaponPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        WeaponPlatform weapons = Adaptables.adapt(entity, WeaponPlatform.class);
-
-        assertNotNull(weapons);
-        assertSame(entity, weapons.getEntity());
-    }
-
-    public void testEntityGetsSensorPlatform()
-    {
-        final Entity entity = new TestVehicle(getName());
-        
-        sim.addEntity(entity);
-        
-        SensorPlatform sensors = Adaptables.adapt(entity, SensorPlatform.class);
-
-        assertNotNull(sensors);
-        assertSame(entity, sensors.getEntity());
-    }
-
 }

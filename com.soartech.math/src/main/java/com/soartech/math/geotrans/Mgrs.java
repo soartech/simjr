@@ -234,7 +234,7 @@ public class Mgrs extends GeoTransBase
 
     private double MGRS_f = GeoTransConstants.WGS84_FLATTENING; /* Flattening of ellipsoid */
 
-    private double MGRS_recpf = 298.257223563;
+    //private double MGRS_recpf = 298.257223563;
 
     private String MGRS_Ellipsoid_Code = "WE";
 
@@ -269,7 +269,6 @@ public class Mgrs extends GeoTransBase
         }
         MGRS_a = a;
         MGRS_f = f;
-        MGRS_recpf = inv_f;
         MGRS_Ellipsoid_Code = Ellipsoid_Code;
     } /* Set_MGRS_Parameters */
 

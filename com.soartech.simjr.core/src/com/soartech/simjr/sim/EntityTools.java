@@ -42,7 +42,10 @@ import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sensors.Sensor;
+import com.soartech.simjr.sensors.SensorPlatform;
 import com.soartech.simjr.sim.entities.DamageStatus;
+import com.soartech.simjr.sim.entities.EntityVisibleRange;
 import com.soartech.simjr.sim.entities.FuelModel;
 import com.soartech.simjr.weapons.WeaponPlatform;
 
@@ -340,6 +343,18 @@ public class EntityTools
     }
     
     /**
+     * Retrieve an entity's sensor platform. This is mostly for use by scripts
+     * so DO NOT REMOVE IT even if it appears to not be used by any Java code.
+     * 
+     * @param entity The entity
+     * @return The sensor platform or null if there is none.
+     */
+    public static SensorPlatform getSensorPlatform(Entity entity)
+    {
+        return Adaptables.adapt(entity, SensorPlatform.class);
+    }
+
+    /**
      * Retrieve an entity's fuel model. This is mostly for use by scripts
      * so DO NOT REMOVE IT even if it appears to not be used by any Java code.
      * 
@@ -349,6 +364,10 @@ public class EntityTools
     public static FuelModel getFuelModel(Entity entity)
     {
         return Adaptables.adapt(entity, FuelModel.class);
+    }
+
+    public static EntityVisibleRange getVisibleRange(Entity entity) {
+        return (EntityVisibleRange) entity.getProperty(EntityConstants.PROPERTY_VISIBLE_RANGE);
     }
     
     /**
@@ -360,6 +379,22 @@ public class EntityTools
         {
             return o1.getName().compareTo(o2.getName());
         }
+    }
+
+    public static <T extends Sensor> T getSensorOfType(Entity entity, Class<T> sensorClass)
+    {
+        SensorPlatform platform = EntityTools.getSensorPlatform(entity);
+        if ( platform != null )
+        {
+            for (Sensor s : platform.getSensors() ) 
+            {
+                if ( sensorClass.isInstance(s) ) 
+                {
+                    return sensorClass.cast(s);
+                }
+            }
+        }
+        return null;
     }
     
     // TODO: Roll

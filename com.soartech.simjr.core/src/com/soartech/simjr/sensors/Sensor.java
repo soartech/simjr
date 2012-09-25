@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,65 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on July 24, 2012
  */
-package com.soartech.simjr.sim.entities;
+package com.soartech.simjr.sensors;
 
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import java.util.List;
 
-/**
- * @author ray
- */
-public class DismountedInfantry extends AbstractEntity
+import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.Tickable;
+
+public interface Sensor extends Tickable
 {
+
     /**
-     * @param name
+     * Sets the owning entity of the sensor.
+     * 
+     * @param entity
      */
-    public DismountedInfantry(String name, EntityPrototype prototype)
-    {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
-    }
+    public void setEntity(Entity entity);
+    
+    /**
+     * Returns the owning entity of the sensor.
+     * 
+     * @return
+     */
+    public Entity getEntity();
+
+    /**
+     * Returns the name of the sensor type.
+     * 
+     * @return
+     */
+    public String getName();
+
+    /**
+     * Turns the sensor on (true) and off (false).
+     */
+    public void setEnabled(boolean enabled);
+    
+    /**
+     * Returns true if sensor is enable and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isEnabled();
+    
+    /**
+     * A tick function that should get called every tick cycle that allows the 
+     * sensor implementation to do any processing that it needs to do.
+     * 
+     * @param dt
+     */
+    @Override
+    public void tick(double dt);
+    
+    /**
+     * Returns the detections as seen by the sensor. 
+     * 
+     * @return
+     */
+    public List<Detection> getDetections();
+   
 }

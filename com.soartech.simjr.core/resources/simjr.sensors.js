@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
- */
-package com.soartech.simjr.sim.entities;
-
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+ */ 
+/*
+    Common utilities for working with entity sensors in scripts.
+    
+    Load with: requireScript("sensors");
+*/
 
 /**
- * @author ray
- */
-public class DismountedInfantry extends AbstractEntity
+    Add a sensor to an entity's sensor platform.
+    
+    @param entity The entity
+    @param sensorType The name of the sensor type. Must be in simjr.sensors.properties
+    @param name The name of the sensor used as a unique sensor id w.r.t. the vehicle (e.g "main radar", ...)
+    @return The added sensor or null if the entity does not have a sensor platform or the sensor type can't be found
+*/
+function addSensor(entity, sensorType, sensorName)
 {
-    /**
-     * @param name
-     */
-    public DismountedInfantry(String name, EntityPrototype prototype)
+    var sensorPlatform = EntityTools.getSensorPlatform(entity);
+    if ( sensorPlatform == null)
     {
-        super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
-        
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+        logger.error("simjr.sensors.js:addSensor(): Entity '" + entity.getName() + "' has no sensor platform");
+        return null;
     }
+    var sensor = Packages.com.soartech.simjr.sensors.Sensor.load(sensorType);
+    sensorPlatform.addSensor(sensorName, sensor);
+    return sensor;
 }
