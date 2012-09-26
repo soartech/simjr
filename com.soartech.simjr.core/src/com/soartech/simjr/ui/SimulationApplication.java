@@ -36,6 +36,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import javax.swing.UIManager;
+
 import org.apache.log4j.Logger;
 
 import com.soartech.math.geotrans.Geodetic;

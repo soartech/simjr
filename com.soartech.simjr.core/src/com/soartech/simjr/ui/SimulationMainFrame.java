@@ -64,6 +64,8 @@ import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -136,17 +138,17 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
 
     public static final String ENTITY_PROPERTIES_FRAME_KEY = "__entityProperties";
     public static final String CHEAT_SHEET_FRAME_KEY = "__cheatSheet";
-
+    public static final String VIEW3D_FRAME_KEY = "__view3D";
     public static final String ENTITIES_FRAME_KEY = "__entities";
     
     private final CLocation defaultPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
+    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
     
     private final CLocation defaultEntityListLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
     private final CLocation defaultEntityPropertiesLocation = CLocation.base().normalRectangle(0.8, 0.5, 0.2, 0.5);
     private final CLocation defaultRadioMessagesLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3);
     private final CLocation defaultConsoleLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
     private final CLocation defaultCheatSheetLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
-    
     private final CLocation defaultSingleDockableLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
     
     public static final CLocation defaultSAPLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
@@ -232,7 +234,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //set the default look and feel
         LookAndFeelList lafList = LookAndFeelList.getDefaultList();
         lafList.setLookAndFeel(lafList.getSystem());
-        
+
         // Listen for window closing event so we can save dock layout before
         // the frame is dispose.
         this.addWindowListener(new WindowAdapter() {
@@ -254,13 +256,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         addDockable(new RadioMessagePanel(services), defaultRadioMessagesLocation, RADIO_MESSAGES_FRAME_KEY);
         addDockable(new ConsolePanel(services), defaultConsoleLocation, CONSOLE_FRAME_KEY);
         
-        
-        JFrame view3dWindow = new JFrame();
-        JPanel view3d = new View3DPanel(services);
-        view3dWindow.add(view3d);
-        view3dWindow.setSize(800, 600);
-        view3d.setVisible(true);
-        view3dWindow.setVisible(true);
+        //Add the 3D display
+        addDockable(new view3DPanel(services), defaultView3DLocation, VIEW3D_FRAME_KEY);
         
         
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);

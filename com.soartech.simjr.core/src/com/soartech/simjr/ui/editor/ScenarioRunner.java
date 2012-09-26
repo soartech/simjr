@@ -34,11 +34,7 @@ package com.soartech.simjr.ui.editor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.SwingUtilities;
@@ -47,15 +43,14 @@ import javax.swing.Timer;
 import org.apache.log4j.Logger;
 
 import com.soartech.simjr.ProgressMonitor;
-import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
-import com.soartech.simjr.ui.SimulationApplication;
+import com.soartech.simjr.startup.SimJrStartupActivator;
+import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.util.ProcessStreamConsumer;
 
 /**
  * @author ray
@@ -89,7 +84,29 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
     
     public void runScenario(Model model)
     {
-        if(process.get() != null)
+        if(model.isDirty())
+        {
+            throw new IllegalStateException("Model is not saved");
+        }
+        
+        // Get the bundle context
+        SimJrStartupActivator startupActivator = SimJrStartupActivator.getDefault();
+        
+        if(startupActivator.isStarted("sim"))
+        {
+            throw new IllegalStateException("Already running a scenario");
+        }
+        
+        try
+        {
+            startupActivator.startup(startupActivator.getBundleContext(), "sim", model.getFile().getAbsolutePath());
+        }
+        catch (Exception e)
+        {
+            logger.error(e);
+        }
+        
+        /*if(process.get() != null)
         {
             throw new IllegalStateException("Already running a scenario");
         }
@@ -136,9 +153,9 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
             new ProcessStreamConsumer(process.get(), process.get().getInputStream(), logStream);
             new Thread("ScenarioRunner process monitor") {
 
-                /* (non-Javadoc)
-                 * @see java.lang.Thread#run()
-                 */
+                // (non-Javadoc)
+                 // @see java.lang.Thread#run()
+                 //
                 @Override
                 public void run()
                 {
@@ -157,7 +174,7 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
         catch (IOException e)
         {
             logger.error(e);
-        }
+        }*/
     }
     
     private void handleSimJrExit(int code)

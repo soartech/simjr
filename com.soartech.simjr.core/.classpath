@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry exported="true" kind="lib" path="lib/docking-frames-common.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/docking-frames-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docking-frames-common.jar" sourcepath="C:/Users/joshua.haley/Desktop/src/docking-frames-common"/>
+	<classpathentry exported="true" kind="lib" path="lib/docking-frames-core.jar" sourcepath="C:/Users/joshua.haley/Desktop/src/docking-frames-core"/>
 	<classpathentry exported="true" kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jReality.jar"/>
