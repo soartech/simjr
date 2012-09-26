@@ -51,11 +51,9 @@ import com.soartech.simjr.ui.editor.View3DPanel;
 import com.soartech.simjr.util.SwingTools;
 
 /**
- * This is the console panel. It displays a list of consoles, retrieved from the
- * console manager, a message log, and a command entry box. Executed commands
- * are routed to the selected console participant.
+ * This is the wrapper to the View3DPanel that allows that panel to interropt with the tab framework
  * 
- * @author ray
+ * @author Joshua Haley
  */
 public class view3DPanel extends DefaultSingleCDockable
 {
