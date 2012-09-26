@@ -49,7 +49,6 @@ import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.startup.SimJrStartupActivator;
-import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
 
 /**
