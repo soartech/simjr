@@ -36,15 +36,20 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
 
 /**
- * A controller that provides an interface for controlling a fixed-wing-
+ * A controller that provides an interface for controlling a fixed-wing 
  * aircraft such as an F-18.  Provides methods for setting desired speed,
- * bearing, heading, and altitude.  This controller may be added directly
+ * bearing, heading, and altitude. The rate of change of the entity's heading
+ * and altitude are limited by the desiredTurnRate and flight path angle 
+ * (or altitude rate). This controller may be added directly
  * to a vehicle or may be nested in another controller such as a Soar agent.
  *
  * @author piegdon
  */
 public class FixedWingFlightController extends AbstractEntityCapability implements FlightController
 {
+    /**
+     * The names of various properties used by this controller.
+     */
     public static final String PROPERTY_USE_FULL_ORIENTATION = "use-full-orientation";
     public static final String PROPERTY_DESIRED_VELOCITY = "desired-velocity";
     public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
@@ -59,38 +64,50 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      * Desired ground speed in m/s
      */
     private double desiredSpeed = 0.0;
+    
     /**
      * Desired heading in nav radians (0 north)
      */
     private double desiredHeading = 0.0;
+    
     /**
      * Desired altitude in meters
      */
     private double desiredAltitude = 0.0;
+    
     /**
      * Desired flight path angle in radians
      */
     private double desiredFpa = Math.toRadians(20.0);
+    
     /**
      * Desired altitude rate in meters/second
      * This class should ensure that FPA overrides altitude rate if useDesiredFpa
      * is true.
      */
     private double desiredAltitudeRate = 0.0;  // Okay because default useDesiredFpa is true
+    
     /**
      * Are we using desiredFpa or desiredAltitudeRate to adjust altitude?
      */
     private boolean useDesiredFpa = true;
+    
     /**
-     * Desired turning rate in radians per second
+     * Maximum turning rate in radians per second
      */
     private double desiredTurnRate = Math.toRadians(15.0);
 
+    /**
+     * Basic constructor, does nothing but initialize member variables to default values.
+     */
     public FixedWingFlightController()
     {
     }
 
     /**
+     * Sets the target ground speed of the controlled entity. Currently acceleration is instantaneous 
+     * so the ground speed of the entity should be this value after the next tick.
+     * 
      * @param speed The new desired speed in m/s.
      */
     public void setDesiredSpeed(double speed)
@@ -103,7 +120,10 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     }
 
     /**
-     * @param desiredBearing The new desired bearing in radians
+     * Sets the target heading of the controlled entity. The rate of change of the heading 
+     * is limited by the desiredTurnRate.
+     * 
+     * @param desiredHeading The new desired bearing in radians
      */
     public void setDesiredHeading(double desiredHeading)
     {
@@ -114,6 +134,13 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
     }
 
+    /**
+     * Sets the maximum flight path angle the entity will use to achieve the 
+     * desired target altitude. If set this will override any previous desired
+     * altitude rate settings.
+     * 
+     * @param desiredFpa The flight path angle in radians
+     */
     public void setDesiredFpa(Double desiredFpa)
     {
         this.desiredFpa = Math.abs(desiredFpa);
@@ -125,6 +152,13 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
     }
 
+    /**
+     * Sets the maximum vertical velocity the entity will use to achieve the
+     * desired target altitude. If set this will override any previous flight path
+     * angle settings.
+     * 
+     * @param rate The maximum vertical velocity in meters/sec
+     */
     public void setDesiredAltitudeRate(double rate)
     {
         this.desiredAltitudeRate = Math.abs(rate);
@@ -136,6 +170,13 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
     }
 
+    /**
+     * Sets the target altitude of the entity. The number of ticks it will take to reach
+     * this altitude is determined by the flight path angle or the altitude rate (and the
+     * entity's current deviation from the target).
+     * 
+     * @param altitude The target altitude for the entity in meters above ground level
+     */
     public void setDesiredAltitude(double altitude)
     {
         this.desiredAltitude = altitude;
@@ -145,6 +186,11 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
     }
 
+    /**
+     * Sets the maximum turn rate the entity will use to reach the desired target heading.
+     * 
+     * @param turnRate in radians/second
+     */
     public void setDesiredTurnRate(Double turnRate)
     {
         this.desiredTurnRate = turnRate;
@@ -154,8 +200,25 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         }
     }
 
+    /**
+     * Simple accessor for the desired heading setting.
+     * 
+     * @return the desired target heading in radians CW from due north
+     */
     public double getDesiredHeading() { return desiredHeading; }
+    
+    /**
+     * Simple accessor for the desired altitude setting.
+     * 
+     * @return the desired target heading in meters above ground level
+     */
     public double getDesiredAltitude() { return desiredAltitude; }
+    
+    /**
+     * Simple accessor for the desired ground speed.
+     * 
+     * @return the desired target ground speed in meters/sec
+     */
     public double getDesiredSpeed() { return desiredSpeed; }
 
 
