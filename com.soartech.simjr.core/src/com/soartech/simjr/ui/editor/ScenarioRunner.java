@@ -37,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.apache.log4j.Logger;
@@ -49,7 +48,6 @@ import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.startup.SimJrStartupActivator;
-import com.soartech.simjr.ui.actions.ActionManager;
 
 /**
  * @author ray
@@ -60,9 +58,7 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
     
     private final ServiceManager services;
     private final AtomicReference<Process> process = new AtomicReference<Process>();
-    private ByteArrayOutputStream logStream = new ByteArrayOutputStream(8092);
-    private PrintStream printStream = new PrintStream(logStream);
-    
+    private ByteArrayOutputStream logStream = new ByteArrayOutputStream(8092);    
     public ScenarioRunner(ServiceManager services)
     {
         this.services = services;
@@ -174,20 +170,6 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
         {
             logger.error(e);
         }*/
-    }
-    
-    private void handleSimJrExit(int code)
-    {
-        logger.info("Sim Jr process exited with code " + code);
-        printStream.println("\nSim Jr process exited with code " + code);
-        process.set(null);
-        
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run()
-            {
-                services.findService(ActionManager.class).updateActions();
-            }});
     }
     
     private void clearLog()
