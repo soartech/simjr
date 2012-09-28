@@ -116,15 +116,8 @@ public class SourcePanel extends DefaultSingleCDockable implements ModelChangeLi
      */
     public void onModelChanged(ModelChangeEvent e)
     {
-        if(Model.DIRTY.equals(e.property) || Model.FILE.equals(e.property))
-        {
-            return;
-        }
-        
-        if(activated)
-        {
-            textArea.setText(app.getModel().toString());
-        }
+        textArea.setText(app.getModel().toString());
+
     }
     
 }

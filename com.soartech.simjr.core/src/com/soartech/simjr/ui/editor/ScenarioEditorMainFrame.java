@@ -31,10 +31,8 @@
  */
 package com.soartech.simjr.ui.editor;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
@@ -50,8 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -60,16 +56,20 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import bibliothek.gui.dock.StackDockStation;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.location.CStackLocation;
+import bibliothek.gui.dock.common.menu.CLayoutChoiceMenuPiece;
+import bibliothek.gui.dock.common.menu.CLookAndFeelMenuPiece;
+import bibliothek.gui.dock.common.menu.CThemeMenuPiece;
 import bibliothek.gui.dock.common.menu.SingleCDockableListMenuPiece;
 import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.facile.menu.FreeMenuPiece;
 import bibliothek.gui.dock.facile.menu.RootMenuPiece;
+import bibliothek.gui.dock.facile.menu.SubmenuPiece;
 import bibliothek.gui.dock.support.lookandfeel.LookAndFeelList;
 import bibliothek.util.xml.XElement;
 import bibliothek.util.xml.XIO;
@@ -104,19 +104,16 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
     public static final String ENTITYPROPERTIES_FRAME_KEY ="_entityPropertyFrame";
     public static final String SCENARIOEDITOR_FRAME_KEY = "_scenarioPropertyFrame";
     
-    private final CLocation defaultMAPLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
-    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
-    private final CLocation defaultScriptPanelLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(2);
-    private final CLocation defaultSourcePanelLocation  = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(3);
-    private final CLocation defaultEntityPropertiesLocation= CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
-    private final CLocation defaultScenarioPropertiesLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(1);
-    private final CLocation defaultSingleDockableLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(2);
+    private final CStackLocation defaultMAPLocation = CStackLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
+    private final CStackLocation defaultView3DLocation = defaultMAPLocation.stack(1);
+    private final CStackLocation defaultScriptPanelLocation = defaultMAPLocation.stack(2);
+    private final CStackLocation defaultSourcePanelLocation  = defaultMAPLocation.stack(3);
+    private final CStackLocation defaultEntityPropertiesLocation= CStackLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
+    private final CStackLocation defaultScenarioPropertiesLocation = defaultEntityPropertiesLocation.stack(1);
+    private final CStackLocation defaultSingleDockableLocation = defaultEntityPropertiesLocation.stack(2);
     
     private static final long serialVersionUID = 691070210836482404L;
     private final ScenarioEditorApplication app;
-    private JPanel content;
-    private JTabbedPane tabs;
-    private EditorTab lastActiveTab;
     private Map<String,SingleCDockable> singleDockables = new HashMap<String,SingleCDockable>();
     
     
@@ -137,6 +134,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
 
         //Dockable Frames integration
         control = new CControl(this);
+ 
         add(control.getContentArea());
         
         //set the default theme
@@ -157,8 +155,9 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
             }});
 
         
-        addDockable(new SourcePanel(app), defaultSourcePanelLocation, SOURCE_FRAME_KEY);
+        
         addDockable(new ScriptsPanel(app), defaultScriptPanelLocation, SCRIPTS_FRAME_KEY);
+        addDockable(new SourcePanel(app), defaultSourcePanelLocation, SOURCE_FRAME_KEY);
         addDockable(new view3DPanel(app), defaultView3DLocation, VIEW3D_FRAME_KEY);
         EntityPropertiesPanel props = new EntityPropertiesPanel(app, app.getModel());
         
@@ -167,9 +166,14 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         addDockable(props, this.defaultEntityPropertiesLocation, ENTITYPROPERTIES_FRAME_KEY);
         initMenu();
 
-
+       
 
         this.app.getModel().addModelChangeListener(this);
+        resetDockingLayout();
+        
+        //Kludge-- Seems to be the only way to ensure that mapPanel gets default visability
+        singleDockables.get(MAP_FRAME_KEY).setVisible(false);
+        singleDockables.get(MAP_FRAME_KEY).setVisible(true);
     }
     private void addDockable(SingleCDockable dockable, CLocation location, String key)
     {
@@ -182,7 +186,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
     private void updateTitle()
     {
         final File file = app.getModel().getFile();
-        setTitle((file != null ? file.getAbsolutePath() : "untitled") + (app.getModel().isDirty() ? " *" : ""));
+        setTitle("SimJr Scenario Editor: " + (file != null ? file.getAbsolutePath() : "untitled") + (app.getModel().isDirty() ? " *" : ""));
     }
     
     /* (non-Javadoc)
@@ -286,13 +290,13 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         }
 
         //reset the location of each single dockable
-        singleDockables.get(MAP_FRAME_KEY).setLocation(this.defaultMAPLocation);
-        singleDockables.get(SCRIPTS_FRAME_KEY).setLocation(this.defaultScriptPanelLocation);
-        singleDockables.get(SOURCE_FRAME_KEY).setLocation(this.defaultSourcePanelLocation);
-        singleDockables.get(VIEW3D_FRAME_KEY).setLocation(defaultView3DLocation);
-        singleDockables.get(ENTITYPROPERTIES_FRAME_KEY).setLocation(this.defaultEntityPropertiesLocation);
-        singleDockables.get(SCENARIOEDITOR_FRAME_KEY).setLocation(this.defaultScenarioPropertiesLocation);
-
+        singleDockables.get(MAP_FRAME_KEY).setLocation(defaultMAPLocation.getParent());
+        singleDockables.get(VIEW3D_FRAME_KEY).setLocation(defaultView3DLocation.getParent());
+        singleDockables.get(SCRIPTS_FRAME_KEY).setLocation(defaultScriptPanelLocation.getParent());
+        singleDockables.get(SOURCE_FRAME_KEY).setLocation(defaultSourcePanelLocation.getParent());
+        
+        singleDockables.get(SCENARIOEDITOR_FRAME_KEY).setLocation(defaultScenarioPropertiesLocation.getParent());
+        singleDockables.get(ENTITYPROPERTIES_FRAME_KEY).setLocation(defaultEntityPropertiesLocation.getParent());
 
         //show each single dockable
         for(SingleCDockable dockable : singleDockables.values())
@@ -377,6 +381,28 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
             {
                 am.updateActions();
             }});*/
+        
+        //add the layouts submenu to the view menu
+        CLayoutChoiceMenuPiece piece4 = new CLayoutChoiceMenuPiece(control, false);
+        SubmenuPiece submenuPiece = new SubmenuPiece(); 
+        submenuPiece.getRoot().add(piece4);
+        submenuPiece.getMenu().setText("Layouts");
+        view.add(submenuPiece);
+        
+        //add look and feel submenu to the view menu
+        CLookAndFeelMenuPiece piece5 = new CLookAndFeelMenuPiece(control);
+        SubmenuPiece submenuPiece2 = new SubmenuPiece(); 
+        submenuPiece2.getRoot().add(piece5);
+        submenuPiece2.getMenu().setText("LookAndFeel");
+        view.add(submenuPiece2);
+        
+        //add theme submenu to the view menu
+        CThemeMenuPiece piece6 = new CThemeMenuPiece(control);
+        SubmenuPiece submenuPiece3 = new SubmenuPiece(); 
+        submenuPiece3.getRoot().add(piece6);
+        submenuPiece3.getMenu().setText("Theme");
+        view.add(submenuPiece3);
+
         bar.add(view.getMenu());
         
         final JMenu insert = new JMenu("Insert");

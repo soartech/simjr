@@ -160,20 +160,10 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         
         add(pvd);
         
-        /*propsPanel = new EntityPropertiesPanel(app, app.getModel());
-        propsPanel.setBorder(BorderFactory.createTitledBorder("Entity Properties"));
-        
-        final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pvd, propsPanel);
-        split.setDividerSize(5);
-        split.setResizeWeight(0.95);
-        
-        add(split, BorderLayout.CENTER);
-        
+
         this.app.addService(this); // So PVD actions can access
         this.app.getModel().addModelChangeListener(this);
         
-        SwingUtilities.invokeLater(new Runnable() { public void run() {split.setDividerLocation(0.7); }});
-        */
     }
     
 
