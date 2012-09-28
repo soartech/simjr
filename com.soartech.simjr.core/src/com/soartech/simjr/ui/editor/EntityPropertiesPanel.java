@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.ui.editor;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,6 +58,8 @@ import javax.swing.undo.UndoableEdit;
 
 import net.miginfocom.swing.MigLayout;
 
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
@@ -67,11 +70,12 @@ import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityPrototypeDatabase;
 import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.entities.DefaultPolygon;
+import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * @author ray
  */
-public class EntityPropertiesPanel extends JPanel implements ModelChangeListener, ActionListener, KeyListener
+public class EntityPropertiesPanel extends DefaultSingleCDockable implements ModelChangeListener, ActionListener, KeyListener
 {
     private static final long serialVersionUID = -6065915301912538128L;
 
@@ -93,7 +97,19 @@ public class EntityPropertiesPanel extends JPanel implements ModelChangeListener
     
     public EntityPropertiesPanel(final ServiceManager services, final Model model)
     {
-        super(new MigLayout());
+        
+        super("EntityProperties");
+        
+        
+        //DF settings
+        setLayout(new MigLayout());
+        setCloseable(true);
+        setMinimizable(true);
+        setExternalizable(true);
+        setMaximizable(true);
+        setTitleText("Entity Properties");
+        setResizeLocked(true);
+
         
         this.model = model;
         this.services = services;

@@ -47,6 +47,7 @@ import com.soartech.simjr.console.ConsoleManagerListener;
 import com.soartech.simjr.console.ConsoleParticipant;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
+import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
 import com.soartech.simjr.ui.editor.View3DPanel;
 import com.soartech.simjr.util.SwingTools;
 
@@ -57,7 +58,6 @@ import com.soartech.simjr.util.SwingTools;
  */
 public class view3DPanel extends DefaultSingleCDockable
 {
-    private final ServiceManager services;
     private final JPanel view3d;
 
     
@@ -65,8 +65,27 @@ public class view3DPanel extends DefaultSingleCDockable
     {
         super("View3DPanel");
         
-        this.services = services;
+        setUpDockable();
+
+        this.view3d = new View3DPanel(services);
+        this.add(view3d);
+        view3d.setVisible(true);
+
+    }
+    
+    public view3DPanel(final ScenarioEditorServiceManager app)
+    {
+        super("View3DPanel");
         
+        setUpDockable();
+
+        this.view3d = new View3DPanel(app);
+        this.add(view3d);
+        view3d.setVisible(true);
+    }
+    
+    private void setUpDockable()
+    {
         //DF settings
         setLayout(new BorderLayout());
         setCloseable(true);
@@ -76,10 +95,6 @@ public class view3DPanel extends DefaultSingleCDockable
         setTitleText("3D View");
         setResizeLocked(true);
         setTitleIcon(SimulationImages.PVD);
-         
-        this.view3d = new View3DPanel(services);
-        this.add(view3d);
-        view3d.setVisible(true);
-
     }
+    
 }

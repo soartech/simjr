@@ -32,21 +32,52 @@
 package com.soartech.simjr.ui.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CLocation;
+import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.menu.SingleCDockableListMenuPiece;
+import bibliothek.gui.dock.common.theme.ThemeMap;
+import bibliothek.gui.dock.facile.menu.FreeMenuPiece;
+import bibliothek.gui.dock.facile.menu.RootMenuPiece;
+import bibliothek.gui.dock.support.lookandfeel.LookAndFeelList;
+import bibliothek.util.xml.XElement;
+import bibliothek.util.xml.XIO;
+
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
+import com.soartech.simjr.ui.view3DPanel;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
@@ -66,67 +97,86 @@ import com.soartech.simjr.ui.editor.actions.UndoAction;
  */
 public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListener
 {
+    public static final String MAP_FRAME_KEY ="__mapFrame";
+    public static final String SCRIPTS_FRAME_KEY = "_scriptFrame";
+    public static final String SOURCE_FRAME_KEY = "_sourceFrame";
+    public static final String VIEW3D_FRAME_KEY ="_view3DFrame";
+    public static final String ENTITYPROPERTIES_FRAME_KEY ="_entityPropertyFrame";
+    public static final String SCENARIOEDITOR_FRAME_KEY = "_scenarioPropertyFrame";
+    
+    private final CLocation defaultMAPLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
+    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
+    private final CLocation defaultScriptPanelLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(2);
+    private final CLocation defaultSourcePanelLocation  = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(3);
+    private final CLocation defaultEntityPropertiesLocation= CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
+    private final CLocation defaultScenarioPropertiesLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(1);
+    private final CLocation defaultSingleDockableLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(2);
+    
     private static final long serialVersionUID = 691070210836482404L;
     private final ScenarioEditorApplication app;
     private JPanel content;
     private JTabbedPane tabs;
     private EditorTab lastActiveTab;
+    private Map<String,SingleCDockable> singleDockables = new HashMap<String,SingleCDockable>();
+    
+    
+    /**
+     * The common controller for Docking Frames.
+     */
+    private CControl control;
+    
+    private Dimension frameDimension;
     
     public ScenarioEditorMainFrame(ScenarioEditorApplication scenarioEditorApplication)
     {
         this.app = scenarioEditorApplication;
         
-        this.content = new JPanel(new BorderLayout());
-        
-        tabs = new JTabbedPane();
-        tabs.addTab("Map", new MapPanel(app));
-        tabs.addTab("Scripts", new ScriptsPanel(app));
-        tabs.addTab("Source", new SourcePanel(app));
-                
-        final RunPanel runPanel = new RunPanel();
-        tabs.addTab("Run", runPanel);
-        app.addService(runPanel);
-        
+        setTitle(SimJrProps.get("simjr.window.title","Sim Jr Scenario Editor"));
+        frameDimension = new Dimension(SimJrProps.get("simjr.window.width", 1000), SimJrProps.get("simjr.window.height", 800));
+        setSize(frameDimension);
 
-        tabs.addTab("3D View", new View3DPanel(app));
+        //Dockable Frames integration
+        control = new CControl(this);
+        add(control.getContentArea());
+        
+        //set the default theme
+        ThemeMap themes = control.getThemes();
+        themes.select(ThemeMap.KEY_FLAT_THEME);
+        
+        //set the default look and feel
+        LookAndFeelList lafList = LookAndFeelList.getDefaultList();
+        lafList.setLookAndFeel(lafList.getSystem());
 
-      /* JFrame view3D = new JFrame();
-        view3D.add(new View3DPanel(app));
-        view3D.setVisible(true);*/
+        // Listen for window closing event so we can save dock layout before
+        // the frame is dispose.
+        this.addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent arg0)
+            {
+                control.destroy();
+            }});
+
         
-        content.add(tabs, BorderLayout.CENTER);
+        addDockable(new SourcePanel(app), defaultSourcePanelLocation, SOURCE_FRAME_KEY);
+        addDockable(new ScriptsPanel(app), defaultScriptPanelLocation, SCRIPTS_FRAME_KEY);
+        addDockable(new view3DPanel(app), defaultView3DLocation, VIEW3D_FRAME_KEY);
+        EntityPropertiesPanel props = new EntityPropertiesPanel(app, app.getModel());
         
-        add(content, BorderLayout.CENTER);
-        
+        addDockable(new MapPanel(app, props), this.defaultMAPLocation, MAP_FRAME_KEY);
+        addDockable(new ScenarioPropertyEditor(app), this.defaultScenarioPropertiesLocation, SCENARIOEDITOR_FRAME_KEY);
+        addDockable(props, this.defaultEntityPropertiesLocation, ENTITYPROPERTIES_FRAME_KEY);
         initMenu();
 
-        tabs.addChangeListener(new ChangeListener()
-        {
-            public void stateChanged(ChangeEvent e)
-            {
-                final Object tab = tabs.getSelectedComponent();
-                if(lastActiveTab != null)
-                {
-                    lastActiveTab.onTabDeactivated();
-                    lastActiveTab = null;
-                }
-                if(tab instanceof EditorTab)
-                {
-                    ((EditorTab) tab).onTabActivated();
-                    lastActiveTab = (EditorTab) tab;
-                }
-            }
-        });
+
 
         this.app.getModel().addModelChangeListener(this);
     }
-
-    public void showPanel(JComponent component)
+    private void addDockable(SingleCDockable dockable, CLocation location, String key)
     {
-        if(component != null)
-        {
-            tabs.setSelectedComponent(component);
-        }
+        dockable.setLocation(location);
+        singleDockables.put(key, dockable);
+        control.addDockable(dockable);
+        dockable.setVisible(true);        
     }
     
     private void updateTitle()
@@ -143,6 +193,145 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         updateTitle();
     }
 
+    
+    /**
+     * Writes all the settings of this application.
+     * @param element the xml element to write into
+     */
+    public void writeXML(XElement element)
+    {
+        control.getResources().writeXML(element.addElement("resources"));
+        
+        //create a new element to store main frame info in the layout file
+        XElement mainFrameElement = element.addElement("mainFrame");
+
+        //save the main frame's size to the layout file
+        mainFrameElement.addElement("size").addInt("width", this.getSize().width).addInt("height", this.getSize().height);
+
+        //save the main frame's location to the layout file
+        mainFrameElement.addElement("location").addInt("x", this.getLocationOnScreen().x).addInt("y", this.getLocationOnScreen().y);
+    }
+    
+    /**
+     * Reads all the settings of this application.
+     * @param element the element to read from
+     */
+    public void readXML(XElement element)
+    {
+        control.getResources().readXML(element.getElement("resources"));
+        
+        if(element.getElement("mainFrame") != null)
+        {
+            //restore the saved main frame's size from the layout file
+            XElement sizeElement = element.getElement("mainFrame").getElement("size");
+            Dimension sizeDimension = new Dimension(sizeElement.getInt("width"), sizeElement.getInt("height")); 
+            this.setSize(sizeDimension);
+            
+            //restore the saved main frame's size from the layout file
+            XElement locationElement = element.getElement("mainFrame").getElement("location");
+            Point locationPoint = new Point(locationElement.getInt("x"), locationElement.getInt("y")); 
+            this.setLocation(locationPoint);
+        }
+    }
+    
+    public void saveDockingLayoutToFile(String file)
+    {
+        try{
+            XElement element = new XElement("config");
+            writeXML(element);
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+            XIO.writeUTF(element, out);
+            
+            //layoutFilepath = file;
+        }
+        catch( IOException ex ){
+            ex.printStackTrace();
+        }
+    }
+    
+    public void loadDockingLayoutFromFile(final String file)
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+        //read in the persisted layout file with DF
+        try{
+            InputStream in = new BufferedInputStream( new FileInputStream(file));
+            readXML( XIO.readUTF( in ) );
+            in.close();
+            
+            //layoutFilepath = file;
+            
+            applyDefaultDockingLayout();
+        }
+        catch( IOException ex ){
+            ex.printStackTrace();
+        }
+            }});
+    }
+    /**
+     * Reset the frames to show the built-in layout as determined by the 
+     * default frame locations in this class's CLocation member variables. 
+     * 
+     * This should be the same layout you see upon creating a new simulation.
+     * 
+     * This method does not save the layout, it only resets the frame's positions.
+     * 
+     */
+    public void resetDockingLayout()
+    {
+        //close each single dockable
+        for(SingleCDockable dockable : singleDockables.values())
+        {
+            dockable.setVisible(false);
+        }
+
+        //reset the location of each single dockable
+        singleDockables.get(MAP_FRAME_KEY).setLocation(this.defaultMAPLocation);
+        singleDockables.get(SCRIPTS_FRAME_KEY).setLocation(this.defaultScriptPanelLocation);
+        singleDockables.get(SOURCE_FRAME_KEY).setLocation(this.defaultSourcePanelLocation);
+        singleDockables.get(VIEW3D_FRAME_KEY).setLocation(defaultView3DLocation);
+        singleDockables.get(ENTITYPROPERTIES_FRAME_KEY).setLocation(this.defaultEntityPropertiesLocation);
+        singleDockables.get(SCENARIOEDITOR_FRAME_KEY).setLocation(this.defaultScenarioPropertiesLocation);
+
+
+        //show each single dockable
+        for(SingleCDockable dockable : singleDockables.values())
+        {
+            dockable.setVisible(true);
+        }
+    }
+    
+    /**
+     * Apply the default docking layout from the set that has been loaded.
+     * 
+     * The default is the one named "default". If a layout named "default" 
+     * does not exist, then the first layout in the set will be loaded.
+     */
+    public void applyDefaultDockingLayout()
+    {
+        List<String> layouts = Arrays.asList(control.layouts());
+        if(layouts.contains("default"))
+        {
+            control.load("default");
+        }
+        
+        if(layouts.size() > 0)
+        {
+            control.load(layouts.get(0));
+        }
+    }
+    
+    private JMenuItem createMenuItemFromAction(FreeMenuPiece piece, Class<?> klass)
+    {
+        ActionManager am = app.findService(ActionManager.class);
+        
+        //add the action to the menu to create the component, 
+        //then remove it from the menu and return it so it can be used
+        JMenuItem item = piece.getMenu().add(am.getAction(klass.getCanonicalName()));
+        piece.getMenu().remove(item);
+        return item;
+    }
+    
     private void initMenu()
     {
         final JMenuBar bar = new JMenuBar();
@@ -166,19 +355,29 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         edit.add(am.getAction(RedoAction.class.getCanonicalName()));
         bar.add(edit);
         
-        final JMenu view = new JMenu("View");
-        view.add(am.getAction(ShowAllAction.class.getCanonicalName()));
-        view.add(am.getAction(AddDistanceToolAction.class.getCanonicalName()));
-        view.add(am.getAction(ClearDistanceToolsAction.class.getCanonicalName()));
-        view.add(am.getAction(AdjustMapOpacityAction.class.getCanonicalName()));
-        view.add(new AbstractAction("Refresh") {
+        RootMenuPiece view = new RootMenuPiece( "View", false );
+        //add components to the piece, then add pieces to the viewMenuRoot
+        FreeMenuPiece piece1 = new FreeMenuPiece();
+        view.add(piece1);
+        piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));//(am.getAction(ShowAllAction.class.getCanonicalName()));
+        piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));//am.getAction(AddDistanceToolAction.class.getCanonicalName()));
+        piece1.add(createMenuItemFromAction(piece1, ClearDistanceToolsAction.class));//am.getAction(ClearDistanceToolsAction.class.getCanonicalName()));
+        piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));//am.getAction(AdjustMapOpacityAction.class.getCanonicalName()));
+        piece1.add(new JSeparator());
+        
+        //add the list of views to show/hide to the view menu
+        SingleCDockableListMenuPiece piece2 = new SingleCDockableListMenuPiece(control);
+        view.add(piece2);
+        //FreeMenuPiece piece2 = new FreeMenuPiece();
+        //view.add(new JSeparator());
+        /*view.add(new AbstractAction("Refresh") {
             private static final long serialVersionUID = -7408029630861071126L;
 
             public void actionPerformed(ActionEvent e)
             {
                 am.updateActions();
-            }});
-        bar.add(view);
+            }});*/
+        bar.add(view.getMenu());
         
         final JMenu insert = new JMenu("Insert");
         insert.add(new NewEntityAction(am, "New Entity", "any", "ctrl E"));
