@@ -90,6 +90,7 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
  * @author ray
+ * Modified to support the dockable framework  ~ Joshua Haley
  */
 public class MapPanel extends DefaultSingleCDockable implements ModelChangeListener, SelectionManagerListener, PlanViewDisplayProvider, TerrainImageListener
 {

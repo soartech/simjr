@@ -94,6 +94,7 @@ import com.soartech.simjr.ui.editor.actions.UndoAction;
 
 /**
  * @author ray
+ * Modified to support the dockable framework  ~ Joshua Haley
  */
 public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListener
 {
@@ -171,7 +172,9 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         this.app.getModel().addModelChangeListener(this);
         resetDockingLayout();
         
-        //Kludge-- Seems to be the only way to ensure that mapPanel gets default visability
+        /*Kludge-- Seems to be the only way to ensure that mapPanel gets default visibility 
+         * At some point I am going to have to find out the best way to actually control layout/ordering ~ Josh Haley
+         */
         singleDockables.get(MAP_FRAME_KEY).setVisible(false);
         singleDockables.get(MAP_FRAME_KEY).setVisible(true);
     }
@@ -197,81 +200,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         updateTitle();
     }
 
-    
-    /**
-     * Writes all the settings of this application.
-     * @param element the xml element to write into
-     */
-    public void writeXML(XElement element)
-    {
-        control.getResources().writeXML(element.addElement("resources"));
-        
-        //create a new element to store main frame info in the layout file
-        XElement mainFrameElement = element.addElement("mainFrame");
-
-        //save the main frame's size to the layout file
-        mainFrameElement.addElement("size").addInt("width", this.getSize().width).addInt("height", this.getSize().height);
-
-        //save the main frame's location to the layout file
-        mainFrameElement.addElement("location").addInt("x", this.getLocationOnScreen().x).addInt("y", this.getLocationOnScreen().y);
-    }
-    
-    /**
-     * Reads all the settings of this application.
-     * @param element the element to read from
-     */
-    public void readXML(XElement element)
-    {
-        control.getResources().readXML(element.getElement("resources"));
-        
-        if(element.getElement("mainFrame") != null)
-        {
-            //restore the saved main frame's size from the layout file
-            XElement sizeElement = element.getElement("mainFrame").getElement("size");
-            Dimension sizeDimension = new Dimension(sizeElement.getInt("width"), sizeElement.getInt("height")); 
-            this.setSize(sizeDimension);
-            
-            //restore the saved main frame's size from the layout file
-            XElement locationElement = element.getElement("mainFrame").getElement("location");
-            Point locationPoint = new Point(locationElement.getInt("x"), locationElement.getInt("y")); 
-            this.setLocation(locationPoint);
-        }
-    }
-    
-    public void saveDockingLayoutToFile(String file)
-    {
-        try{
-            XElement element = new XElement("config");
-            writeXML(element);
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-            XIO.writeUTF(element, out);
-            
-            //layoutFilepath = file;
-        }
-        catch( IOException ex ){
-            ex.printStackTrace();
-        }
-    }
-    
-    public void loadDockingLayoutFromFile(final String file)
-    {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-        //read in the persisted layout file with DF
-        try{
-            InputStream in = new BufferedInputStream( new FileInputStream(file));
-            readXML( XIO.readUTF( in ) );
-            in.close();
-            
-            //layoutFilepath = file;
-            
-            applyDefaultDockingLayout();
-        }
-        catch( IOException ex ){
-            ex.printStackTrace();
-        }
-            }});
-    }
     /**
      * Reset the frames to show the built-in layout as determined by the 
      * default frame locations in this class's CLocation member variables. 

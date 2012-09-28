@@ -50,6 +50,8 @@ import com.soartech.simjr.ui.SimulationImages;
  * appears to maybe have a memory leak so some special precautions are taken in the 
  * code to ensure that it's only updated when it's the active tab.
  * 
+ * Modified to support the dockable framework  ~ Joshua Haley
+ * 
  * @author ray
  */
 public class SourcePanel extends DefaultSingleCDockable implements ModelChangeListener, EditorTab
