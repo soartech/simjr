@@ -199,7 +199,13 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
                 ++index;
             }
             
+            
             path = cleanPath(path);
+            
+            //Fix race condition where sometimes the area event fires as created when the points have not yet been added ~Josh Haley
+            if(path.length == 0)
+                return;
+            
             IndexedFaceSetFactory sides = buildSides(path, minAltitude, maxAltitude);
             setGeometry(sides.getIndexedFaceSet());
             IndexedFaceSetFactory endCaps = buildEndCapFaces(path, minAltitude, maxAltitude);

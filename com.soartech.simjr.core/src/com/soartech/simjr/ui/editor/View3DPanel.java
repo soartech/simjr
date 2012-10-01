@@ -102,7 +102,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         rootNode.addChild(constructs);
         rootNode.addChild(cameraNode);
 
-        grid = new Grid(50, 50, 100);
+        grid = new Grid(1000, 1000, 100);
         constructs.addChild(grid);
         imagePoly = new ImagePoly();
         constructs.addChild(imagePoly);

@@ -142,7 +142,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     public static final String ENTITIES_FRAME_KEY = "__entities";
     
     private final CLocation defaultPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
-    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.7).stack(0);
+    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
     
     private final CLocation defaultEntityListLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
     private final CLocation defaultEntityPropertiesLocation = CLocation.base().normalRectangle(0.8, 0.5, 0.2, 0.5);
@@ -265,8 +265,11 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);
         
+        resetDockingLayout();
         initMenus();
         initToolbar();
+        
+
     }
 
     private void addDockable(SingleCDockable dockable, CLocation location, String key)
@@ -411,6 +414,12 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
             frame.setLocation(defaultPvdLocation);
         }
         
+        //show each single dockable
+        for(SingleCDockable dockable : singleDockables.values())
+        {
+            dockable.setVisible(true);
+        }
+        
         //show the first pvd frame
         for(PvdFrame frame : pvds)
         {
@@ -421,11 +430,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
             }
         }
 
-        //show each single dockable
-        for(SingleCDockable dockable : singleDockables.values())
-        {
-            dockable.setVisible(true);
-        }
+
     }
     
     /**
