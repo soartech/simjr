@@ -34,28 +34,20 @@ package com.soartech.simjr.ui.editor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.apache.log4j.Logger;
 
 import com.soartech.simjr.ProgressMonitor;
-import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
-import com.soartech.simjr.ui.SimulationApplication;
-import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.util.ProcessStreamConsumer;
+import com.soartech.simjr.startup.SimJrStartupActivator;
 
 /**
  * @author ray
@@ -66,9 +58,7 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
     
     private final ServiceManager services;
     private final AtomicReference<Process> process = new AtomicReference<Process>();
-    private ByteArrayOutputStream logStream = new ByteArrayOutputStream(8092);
-    private PrintStream printStream = new PrintStream(logStream);
-    
+    private ByteArrayOutputStream logStream = new ByteArrayOutputStream(8092);    
     public ScenarioRunner(ServiceManager services)
     {
         this.services = services;
@@ -89,7 +79,29 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
     
     public void runScenario(Model model)
     {
-        if(process.get() != null)
+        if(model.isDirty())
+        {
+            throw new IllegalStateException("Model is not saved");
+        }
+        
+        // Get the bundle context
+        SimJrStartupActivator startupActivator = SimJrStartupActivator.getDefault();
+        
+        if(startupActivator.isStarted("sim"))
+        {
+            throw new IllegalStateException("Already running a scenario");
+        }
+        
+        try
+        {
+            startupActivator.startup(startupActivator.getBundleContext(), "sim", model.getFile().getAbsolutePath());
+        }
+        catch (Exception e)
+        {
+            logger.error(e);
+        }
+        
+        /*if(process.get() != null)
         {
             throw new IllegalStateException("Already running a scenario");
         }
@@ -136,9 +148,9 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
             new ProcessStreamConsumer(process.get(), process.get().getInputStream(), logStream);
             new Thread("ScenarioRunner process monitor") {
 
-                /* (non-Javadoc)
-                 * @see java.lang.Thread#run()
-                 */
+                // (non-Javadoc)
+                 // @see java.lang.Thread#run()
+                 //
                 @Override
                 public void run()
                 {
@@ -157,21 +169,7 @@ public class ScenarioRunner extends AbstractAdaptable implements SimulationServi
         catch (IOException e)
         {
             logger.error(e);
-        }
-    }
-    
-    private void handleSimJrExit(int code)
-    {
-        logger.info("Sim Jr process exited with code " + code);
-        printStream.println("\nSim Jr process exited with code " + code);
-        process.set(null);
-        
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run()
-            {
-                services.findService(ActionManager.class).updateActions();
-            }});
+        }*/
     }
     
     private void clearLog()

@@ -221,7 +221,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     
     public void showPanel(JComponent component)
     {
-        frame.showPanel(component);
+       
     }
     
     public File selectFile(Object... filters)

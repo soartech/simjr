@@ -102,7 +102,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         rootNode.addChild(constructs);
         rootNode.addChild(cameraNode);
 
-        grid = new Grid(50, 50, 100);
+        grid = new Grid(1000, 1000, 100);
         constructs.addChild(grid);
         imagePoly = new ImagePoly();
         constructs.addChild(imagePoly);
@@ -153,10 +153,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         super(new BorderLayout());
 
         this.model = app.getModel();
-        model.addModelChangeListener(this);
+        app.getModel().addModelChangeListener(this);
 
         this.sim = app.findService(Simulation.class);
-        //sim.addListener(this);
+        sim.addListener(this);
 
         SceneGraphComponent rootNode = new SceneGraphComponent("root");
         SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
@@ -246,7 +246,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         EntityElement ee = (e.source instanceof EntityElement) ? (EntityElement)e.source : null;
 
         // file loaded
-        if (e.property.equals(Model.LOADED))
+        if (e.property.equals(Model.LOADED) || e.property.equals(Model.FILE))
         {
             rebuildScene();
         }
@@ -514,7 +514,6 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     @Override
     public void onEntityRemoved(Entity e)
     {
-        this.rebuildScene();
         
     }
 

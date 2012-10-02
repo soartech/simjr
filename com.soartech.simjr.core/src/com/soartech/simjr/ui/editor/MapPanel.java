@@ -46,6 +46,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+
 import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
@@ -78,6 +80,7 @@ import com.soartech.simjr.sim.entities.DefaultPolygon;
 import com.soartech.simjr.ui.ObjectContextMenu;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
+import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.editor.actions.ClearTerrainImageAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
 import com.soartech.simjr.ui.editor.actions.SetTerrainImageAction;
@@ -87,8 +90,9 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
  * @author ray
+ * Modified to support the dockable framework  ~ Joshua Haley
  */
-public class MapPanel extends JPanel implements ModelChangeListener, SelectionManagerListener, PlanViewDisplayProvider, TerrainImageListener
+public class MapPanel extends DefaultSingleCDockable implements ModelChangeListener, SelectionManagerListener, PlanViewDisplayProvider, TerrainImageListener
 {
     private static final long serialVersionUID = -6829507868179277224L;
     
@@ -99,9 +103,23 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
     private final Set<Entity> movedEntities = new HashSet<Entity>();
     private final EntityPropertiesPanel propsPanel;
 
-    public MapPanel(ScenarioEditorServiceManager app)
+    public MapPanel(ScenarioEditorServiceManager app, EntityPropertiesPanel props)
     {
-        super(new BorderLayout());
+        
+        
+        super("MapPanel");
+        
+        this.propsPanel = props;
+        
+        //DF settings
+        setLayout(new BorderLayout());
+        setCloseable(true);
+        setMinimizable(true);
+        setExternalizable(true);
+        setMaximizable(true);
+        setTitleText("Map Panels");
+        setResizeLocked(true);
+        setTitleIcon(SimulationImages.PVD);
         
         this.app = app;
         this.sim = app.findService(Simulation.class);
@@ -141,37 +159,15 @@ public class MapPanel extends JPanel implements ModelChangeListener, SelectionMa
         
         SelectionManager.findService(app).addListener(this);
         
-        addOverview();
+        add(pvd);
         
-        propsPanel = new EntityPropertiesPanel(app, app.getModel());
-        propsPanel.setBorder(BorderFactory.createTitledBorder("Entity Properties"));
-        
-        final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pvd, propsPanel);
-        split.setDividerSize(5);
-        split.setResizeWeight(0.95);
-        
-        add(split, BorderLayout.CENTER);
-        
+
         this.app.addService(this); // So PVD actions can access
         this.app.getModel().addModelChangeListener(this);
         
-        SwingUtilities.invokeLater(new Runnable() { public void run() {split.setDividerLocation(0.7); }});
     }
     
-    private void addOverview()
-    {
-        final JPanel panel = new JPanel(new BorderLayout());
-        
-        final OverviewPanel overview = new OverviewPanel(app);
-        overview.setBorder(BorderFactory.createTitledBorder("Overview"));
-        panel.add(overview, BorderLayout.CENTER);
-        
-        final TerrainPanel terrain = new TerrainPanel(app);
-        terrain.setBorder(BorderFactory.createTitledBorder("Terrain"));
-        panel.add(terrain, BorderLayout.EAST);
-        
-        add(panel, BorderLayout.NORTH);
-    }
+
 
     public PlanViewDisplay getActivePlanViewDisplay()
     {

@@ -38,18 +38,23 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
+import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * XML display of model source code. Note that JSyntaxPane is pretty slow and
  * appears to maybe have a memory leak so some special precautions are taken in the 
  * code to ensure that it's only updated when it's the active tab.
  * 
+ * Modified to support the dockable framework  ~ Joshua Haley
+ * 
  * @author ray
  */
-public class SourcePanel extends JPanel implements ModelChangeListener, EditorTab
+public class SourcePanel extends DefaultSingleCDockable implements ModelChangeListener, EditorTab
 {
     private static final long serialVersionUID = 7341341823156862606L;
 
@@ -67,10 +72,18 @@ public class SourcePanel extends JPanel implements ModelChangeListener, EditorTa
      */
     public SourcePanel(ScenarioEditorServiceManager app)
     {
-        super(new BorderLayout());
+        super("SourcePanel");
         
         this.app = app;
         
+        //DF settings
+        setLayout(new BorderLayout());
+        setCloseable(true);
+        setMinimizable(true);
+        setExternalizable(true);
+        setMaximizable(true);
+        setTitleText("Source Panel");
+        setResizeLocked(true);
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -105,15 +118,8 @@ public class SourcePanel extends JPanel implements ModelChangeListener, EditorTa
      */
     public void onModelChanged(ModelChangeEvent e)
     {
-        if(Model.DIRTY.equals(e.property) || Model.FILE.equals(e.property))
-        {
-            return;
-        }
-        
-        if(activated)
-        {
-            textArea.setText(app.getModel().toString());
-        }
+        textArea.setText(app.getModel().toString());
+
     }
     
 }

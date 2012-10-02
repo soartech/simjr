@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
+	<classpathentry exported="true" kind="lib" path="lib/docking-frames-common.jar" sourcepath="C:/Users/joshua.haley/Desktop/src/docking-frames-common"/>
+	<classpathentry exported="true" kind="lib" path="lib/docking-frames-core.jar" sourcepath="C:/Users/joshua.haley/Desktop/src/docking-frames-core"/>
 	<classpathentry exported="true" kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jReality.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCommon.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/dockingFramesCore.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/snakeyaml-1.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/swingx-0.9.4.jar"/>

@@ -18,7 +18,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-clean -console -os ${target.os} -arch ${target.arch} -nl ${target.nl}"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.app=editor &quot;-Djava.library.path=${workspace_loc}/simjr/com.soartech.simjr.core/jni/${target.os}/${target.arch}&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.app=editor &quot;-Djava.library.path=${workspace_loc}/simjr/com.soartech.simjr.core/jni/${target.os}/${target.arch}&quot;  -Djsoar.agent.interpreter=tcl"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:simjr-resources}"/>
 <booleanAttribute key="pde.generated.config" value="true"/>
 <stringAttribute key="pde.version" value="3.3"/>

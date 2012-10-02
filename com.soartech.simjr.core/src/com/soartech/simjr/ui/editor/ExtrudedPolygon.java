@@ -53,6 +53,10 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
 
     public double[][] cleanPath(double[][] path)
     {
+       //This check fixes a race condition where sometimes the area is constructed before points are actually added.  ~ Josh Haley
+        if(path.length ==0)
+            return new double[0][0];
+        
         int numSides;
         if (path[0][0] == path[path.length-1][0]
          && path[0][1] == path[path.length-1][1])

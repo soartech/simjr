@@ -169,6 +169,9 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
             
             IndexedFaceSetFactory ifsf = buildRoute(path, width, maxAltitude-minAltitude, false);
             
+          //This check fixes a race condition where sometimes the route is populated before points are actually added.  ~ Josh Haley
+            if(ifsf == null)
+                return;
             setGeometry(ifsf.getIndexedFaceSet());
         }
         
@@ -179,12 +182,15 @@ public class Route extends AbstractConstruct implements EntityPropertyListener
     public IndexedFaceSetFactory buildRoute(double[][] waypoints, double width, double height, boolean generateJoiners)
     {   
         int numBoxes = waypoints.length-1;
-        
+        //This check fixes a race condition where sometimes the route is populated before points are actually added.  ~ Josh Haley
+        if(numBoxes <0)
+            return null;
         int numJoiners = 0;
         if (generateJoiners)
         {
             numJoiners = numBoxes - 1;
         }
+        
         
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
         
