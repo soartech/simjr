@@ -508,7 +508,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     @Override
     public void onEntityAdded(Entity e)
     {
-        this.rebuildScene();
+        //this.rebuildScene();
     }
 
     @Override
