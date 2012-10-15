@@ -35,7 +35,7 @@
 # These files must be moved from plugins up to the root...
 # org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar
 
-export JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Declipse.ignoreApp=true -Dosgi.noShutdown=true"
 export SIMJR_HOME="`dirname $0`"
-java ${JAVA_OPTS} ${SIMJR_OPTS} -Dsimjr.home=${SIMJR_HOME} -Dsimjr.app=sim "-Dsimjr.args=$@" -jar org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar -console
+java ${JAVA_OPTS} ${SIMJR_OPTS} -Dsimjr.home=${SIMJR_HOME} -Dsimjr.app=sim "-Dsimjr.args=$@" -jar org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar -console -consoleLog
 
