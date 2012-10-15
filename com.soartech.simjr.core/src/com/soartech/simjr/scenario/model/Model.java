@@ -109,6 +109,7 @@ public class Model
         setFile(null);
         
         fireChange(new ModelChangeEvent(this, this, LOADED));
+        fireChange(new ModelChangeEvent(this, this, FILE));
     }
     
 
@@ -121,6 +122,7 @@ public class Model
             setFile(file);
             setDirty(false);
             fireChange(new ModelChangeEvent(this, this, LOADED));
+            fireChange(new ModelChangeEvent(this, this, FILE));
         } 
         catch (JDOMException e)
         {

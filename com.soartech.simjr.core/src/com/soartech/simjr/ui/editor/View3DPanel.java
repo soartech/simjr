@@ -156,7 +156,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         app.getModel().addModelChangeListener(this);
 
         this.sim = app.findService(Simulation.class);
-        sim.addListener(this);
+        //sim.addListener(this);
 
         SceneGraphComponent rootNode = new SceneGraphComponent("root");
         SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
@@ -508,7 +508,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     @Override
     public void onEntityAdded(Entity e)
     {
-        this.rebuildScene();
+        //this.rebuildScene();
     }
 
     @Override
