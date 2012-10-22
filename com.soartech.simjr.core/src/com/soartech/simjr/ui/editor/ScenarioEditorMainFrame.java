@@ -155,14 +155,15 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
                 control.destroy();
             }});
 
-        
+        EntityPropertiesPanel props = new EntityPropertiesPanel(app, app.getModel());
+        MapPanel mapPanel = new MapPanel(app, props);
         
         addDockable(new ScriptsPanel(app), defaultScriptPanelLocation, SCRIPTS_FRAME_KEY);
         addDockable(new SourcePanel(app), defaultSourcePanelLocation, SOURCE_FRAME_KEY);
         addDockable(new view3DPanel(app), defaultView3DLocation, VIEW3D_FRAME_KEY);
-        EntityPropertiesPanel props = new EntityPropertiesPanel(app, app.getModel());
         
-        addDockable(new MapPanel(app, props), this.defaultMAPLocation, MAP_FRAME_KEY);
+        
+        addDockable(mapPanel, this.defaultMAPLocation, MAP_FRAME_KEY);
         addDockable(new ScenarioPropertyEditor(app), this.defaultScenarioPropertiesLocation, SCENARIOEDITOR_FRAME_KEY);
         addDockable(props, this.defaultEntityPropertiesLocation, ENTITYPROPERTIES_FRAME_KEY);
         initMenu();
