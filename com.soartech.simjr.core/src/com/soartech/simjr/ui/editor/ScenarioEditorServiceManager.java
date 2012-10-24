@@ -34,7 +34,7 @@ import java.io.File;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import com.soartech.simjr.scenario.Model;
+import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 

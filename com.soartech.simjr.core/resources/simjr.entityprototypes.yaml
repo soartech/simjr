@@ -62,6 +62,31 @@ prototypes:
     parent: *control
     category: waypoint
     
+- &cylinder
+    id: cylinder
+    parent: *waypoint
+    category: cylinder
+    properties:
+        polygon.closed: false
+
+- &Special_use_airspace-cylinder
+    id: Special_use_airspace-cylinder
+    parent: *cylinder
+    category: cylinder
+    subcategory: Special_use_airspace
+    properties:
+        threeDData: true
+        shape.fill.color: cyan
+        
+- &ROZ-cylinder
+    id: ROZ-cylinder
+    parent: *cylinder
+    category: cylinder
+    subcategory: ROZ
+    properties:
+        shape.fill.color: red  
+        threeDData: true
+            
 - &polygon
     id: polygon
     parent: *control
@@ -91,7 +116,25 @@ prototypes:
     subcategory: route
     properties:
         polygon.closed: false
-    
+
+   
+- &SAAFR
+    id: SAAFR
+    parent: *route
+    category: route
+    subcategory: SAAFR
+    properties:
+        shape.line.color: green
+        threeDData: true
+        
+- &AIRCOR
+    id: AIRCOR
+    parent: *route
+    category: route
+    subcategory: AIRCOR
+    properties:
+        shape.line.color: red  
+        threeDData: true          
 - &area
     id: area
     parent: *polygon
@@ -99,6 +142,24 @@ prototypes:
     subcategory: area
     properties:
         polygon.closed: true
+       
+- &ROZ
+    id: ROZ
+    parent: *area
+    category: area
+    subcategory: ROZ
+    properties:
+        shape.fill.color: red  
+        threeDData: true
+        
+- &Special_use_airspace
+    id: Special_use_airspace
+    parent: *area
+    category: area
+    subcategory: Special_use_airspace
+    properties:
+        shape.fill.color: cyan
+        threeDData: true
         
 - &complex-area
     id: complex-area

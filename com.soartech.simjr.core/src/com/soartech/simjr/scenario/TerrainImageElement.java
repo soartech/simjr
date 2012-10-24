@@ -41,6 +41,9 @@ import javax.swing.undo.UndoableEdit;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelElement;
 import com.soartech.simjr.util.FileTools;
 import com.soartech.simjr.util.UndoTools;
 

@@ -44,6 +44,9 @@ import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.SimJrProps;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelElement;
 
 /**
  * @author ray
@@ -64,6 +67,7 @@ public class EntityElement implements ModelElement
     private final XPath visiblePath;
     private final LocationElement location;
     private final OrientationElement orientation;
+    private final ThreeDDataElement threeDData;
     private final ScriptBlockElement initScript;
     private final PointElementList points;
     
@@ -86,7 +90,7 @@ public class EntityElement implements ModelElement
         root.addContent(OrientationElement.buildDefault(model));
         root.addContent(ScriptBlockElement.buildDefault(model, "initScript", SimJrProps.get("simjr.editor.entityInitScript.default", "")));
         root.addContent(PointElementList.buildDefault(model));
-        
+        root.addContent(ThreeDDataElement.buildDefault(model));
         return root;
     }
     
@@ -98,7 +102,7 @@ public class EntityElement implements ModelElement
     /**
      * @param model
      */
-    private EntityElement(Model model, Element element)
+    EntityElement(Model model, Element element)
     {
         this.model = model;
         this.element = element;
@@ -109,6 +113,7 @@ public class EntityElement implements ModelElement
         
         this.location = new LocationElement(this);
         this.orientation = new OrientationElement(this);
+        this.threeDData = new ThreeDDataElement(this);
         this.initScript = ScriptBlockElement.attach(model, this.element, "initScript");
         this.points = PointElementList.attach(model, this);
     }
@@ -233,6 +238,11 @@ public class EntityElement implements ModelElement
     public OrientationElement getOrientation()
     {
         return orientation;
+    }
+    
+    public ThreeDDataElement getThreeDData()
+    {
+        return threeDData;
     }
 
     public ScriptBlockElement getInitScript()

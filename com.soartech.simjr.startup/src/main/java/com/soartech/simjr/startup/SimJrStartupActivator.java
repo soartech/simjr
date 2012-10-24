@@ -31,9 +31,12 @@
  */
 package com.soartech.simjr.startup;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -55,6 +58,8 @@ public class SimJrStartupActivator implements BundleActivator
     
     private BundleContext bundleContext;
     
+    private HashMap<String, Boolean> startedApps = new HashMap<String, Boolean>();
+    
     public static SimJrStartupActivator getDefault() { return instance; }
     
     public BundleContext getBundleContext()
@@ -62,18 +67,11 @@ public class SimJrStartupActivator implements BundleActivator
         return bundleContext;
     }
     
-    /* (non-Javadoc)
-     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+    /**
+     * Start up a Sim Jr instance with an app name and arguments.
      */
-    @Override
-    public void start(final BundleContext context) throws Exception
+    public void startup(final BundleContext context, final String appName, final String rawArgs) throws Exception
     {
-        instance = this;
-        this.bundleContext = context;
-        
-        final String appName = System.getProperty("simjr.app", "none");
-        final String rawArgs = System.getProperty("simjr.args", "");
-        
         logger.info("Started with app '" + appName + "' and args '" + rawArgs + "'");
         
         final String[] parsedArgs = parseArgs(rawArgs);
@@ -88,6 +86,7 @@ public class SimJrStartupActivator implements BundleActivator
                 {
                     if(appName.equals(app.getName()))
                     {
+                        startedApps.put(appName, true);
                         app.start(context, parsedArgs);
                         break;
                     }
@@ -137,6 +136,21 @@ public class SimJrStartupActivator implements BundleActivator
     }
     
     /* (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void start(final BundleContext context) throws Exception
+    {
+        instance = this;
+        this.bundleContext = context;
+        
+        String appName = System.getProperty("simjr.app", "none");
+        String rawArgs = System.getProperty("simjr.args", "");
+        
+        startup(context, appName, rawArgs);
+    }
+    
+    /* (non-Javadoc)
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
     @Override
@@ -155,4 +169,14 @@ public class SimJrStartupActivator implements BundleActivator
         return rawArgs.split(";");
     }
 
+    public boolean isStarted(String appName)
+    {
+        if (!startedApps.containsKey(appName))
+        {
+            return false;
+        }
+        
+        return startedApps.get(appName);
+    }
+    
 }

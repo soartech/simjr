@@ -42,9 +42,9 @@ import javax.swing.undo.UndoableEdit;
 import net.miginfocom.swing.MigLayout;
 
 import com.soartech.simjr.scenario.MetadataElement;
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * @author ray
@@ -53,11 +53,11 @@ public class OverviewPanel extends JPanel implements ModelChangeListener
 {
     private static final long serialVersionUID = 5881221908791785184L;
 
-    private final ScenarioEditorServiceManager app;
+    private final ScenarioEditorServiceManager app;
     private final JTextField nameField = new JTextField(50);
     private final JTextArea descArea = new JTextArea();
     
-    public OverviewPanel(final ScenarioEditorServiceManager app)
+    public OverviewPanel(final ScenarioEditorServiceManager app)
     {
         super(new MigLayout());
         this.app = app;

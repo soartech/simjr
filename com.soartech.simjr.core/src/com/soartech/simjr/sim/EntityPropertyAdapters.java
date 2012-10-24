@@ -62,6 +62,7 @@ public final class EntityPropertyAdapters
             {
                 entity.setPosition(Vector3.parseVector(newValue.toString()));
             }});
+     
         
     };
     
@@ -130,6 +131,7 @@ public final class EntityPropertyAdapters
             double newZ = terrain.fromGeodetic(newGeoPoint).z;
             
             entity.setPosition(new Vector3(newPos.x, newPos.y, newZ));
+           
         }
     }
 }

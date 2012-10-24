@@ -38,8 +38,8 @@ import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
 
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelException;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelException;
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;

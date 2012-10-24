@@ -36,6 +36,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import javax.swing.UIManager;
+
 import org.apache.log4j.Logger;
 
 import com.soartech.math.geotrans.Geodetic;
@@ -46,6 +48,7 @@ import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.DefaultApplicationStateService;
+import com.soartech.simjr.scenario.model.ModelService;
 import com.soartech.simjr.scripting.ScriptRunner;
 import com.soartech.simjr.services.DefaultServiceManager;
 import com.soartech.simjr.sim.ScenarioLoader;
@@ -136,6 +139,7 @@ public class SimulationApplication extends DefaultServiceManager
     {
         progress.subTask("Loading scenario ...");
         final ScriptRunner scriptRunner = findService(ScriptRunner.class);
+
         final ScenarioLoader loader = new ScenarioLoader(this);
         for(String arg : args)
         {

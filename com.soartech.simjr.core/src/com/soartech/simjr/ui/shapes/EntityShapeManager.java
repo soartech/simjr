@@ -94,6 +94,7 @@ public class EntityShapeManager
         factory.put(TankShape.NAME, TankShape.FACTORY);
         factory.put(TruckShape.NAME, TruckShape.FACTORY);
         factory.put(WaypointShape.NAME, WaypointShape.FACTORY);
+        factory.put(CircularRegionShape.NAME, CircularRegionShape.FACTORY);
         factory.put(RouteShape.NAME, RouteShape.FACTORY);
     }
     
@@ -165,11 +166,21 @@ public class EntityShapeManager
     
     public void update()
     {
+        String selectionRemoved = "";
         synchronized(removedEntities)
         {
             for(Entity e : removedEntities)
             {
                 entityRemoved(e);
+                for(String selectionId : selectionIds)
+                {
+                    //When we remove something that is selected we should remove the selection shape as well!
+                    if(selectionId.equals("selection." + e.getName()))
+                    {
+                        selectionRemoved = e.getName();
+                        shapeSystem.removeShape(selectionId);
+                    }
+                }
             }
             removedEntities.clear();
         }
@@ -178,6 +189,11 @@ public class EntityShapeManager
             for(Entity e : addedEntities)
             {
                 entityAdded(e);
+                //If we re-add something that has just been removed we should assume that the shape has changed, but it is still selected
+                if(e.getName().equals(selectionRemoved))
+                {
+                    createSelection(e);
+                }
             }
             addedEntities.clear();
         }
@@ -188,8 +204,7 @@ public class EntityShapeManager
             updateEntity(e);
         }
         
-        timedShapes.update(simulation.getTime());
-        
+        timedShapes.update(simulation.getTime());    
     }
     
     public void updateSelection(List<Entity> entities)
@@ -267,6 +282,7 @@ public class EntityShapeManager
         
         final Shape selection = factory.createSelection(highlightId, selected);
         ShapeStyle style = selection.getStyle();
+        
         style.setOpacity(selection.getStyle().getOpacity() / 2.0f);
         if (color != null)
         {

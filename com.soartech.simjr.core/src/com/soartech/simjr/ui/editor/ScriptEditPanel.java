@@ -42,10 +42,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.undo.UndoableEdit;
 
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.edits.ChangeScriptBlockEdit;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * @author ray

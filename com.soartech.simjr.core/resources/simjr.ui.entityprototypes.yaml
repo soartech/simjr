@@ -28,7 +28,6 @@
 
 # Prototype fragments which add shape and other UI info to prototypes.
 # 
-
 prototypes:
 - &any
     id: any
@@ -47,12 +46,53 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
         category: Routes
-    
+        
+- &cylinder
+    id: cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
+        
+- &Special_use_airspace-cylinder
+    id: Special_use_airspace-cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
+        
+- &ROZ-cylinder
+    id: ROZ-cylinder
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CircularRegionShape$Factory []
+        category: Cylinder
+        
+- &SAAFR
+    id: SAAFR
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
+        category: Routes
+- &AIRCOR
+    id: AIRCOR
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.RouteShape$Factory []
+        category: Routes
+- &ROZ
+    id: ROZ
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
+        category: Areas  
+                
+- &Special_use_airspace
+    id: Special_use_airspace
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
+        category: Areas   
 - &area
     id: area
     properties:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
         category: Areas
+        
+        
         
 - &complex-area
     id: complex-area

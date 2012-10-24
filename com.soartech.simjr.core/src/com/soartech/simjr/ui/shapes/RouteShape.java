@@ -47,6 +47,7 @@ import com.soartech.shapesystem.PrimitiveRenderer;
 import com.soartech.shapesystem.PrimitiveRendererFactory;
 import com.soartech.shapesystem.Rotation;
 import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.ScalarUnit;
 import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
@@ -113,7 +114,8 @@ public class RouteShape extends EntityShape implements EntityConstants
                                           LAYER_ROUTE).toString();
         
         ShapeStyle style = new ShapeStyle();
-        Color lineColor = (Color) EntityTools.getProperty(props, PROPERTY_SHAPE_LINE_COLOR, Color.YELLOW);
+        
+        Color lineColor = (Color) EntityTools.getLineColor(route.getEntity(), Color.YELLOW);
         style.setLineColor(lineColor);
         
         Number opacity = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_OPACITY, 1.0);
@@ -127,10 +129,11 @@ public class RouteShape extends EntityShape implements EntityConstants
         addHitableShape(new SystemShape(route, route.getName() + ".route", layer, style));
     }
 
-    private static void setLineWidth(Map<String, Object> props, ShapeStyle style, boolean selection)
+    public static void setLineWidth(Map<String, Object> props, ShapeStyle style, boolean selection)
     {
         // First check for width in meters
         Number lineWidth = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_WIDTH_METERS, null);
+        
         if(lineWidth != null)
         {
             style.setLineThickness(Scalar.createMeter(lineWidth.doubleValue() * (selection ? 1.5 : 1.0)));
@@ -145,8 +148,8 @@ public class RouteShape extends EntityShape implements EntityConstants
             }
             else
             {
-                // No setting. Assume one pixel wide
-                style.setLineThickness(Scalar.createPixel(selection ? 10.0 : 2.0));
+                // No setting
+                style.setLineThickness(Scalar.createPixel(selection ? 20.0 : 2.0));
             }
         }
     }
@@ -202,7 +205,21 @@ public class RouteShape extends EntityShape implements EntityConstants
             
             final ShapeStyle frontStyle = getStyle();
             final ShapeStyle backStyle = frontStyle.copy();
-            backStyle.setLineThickness(backStyle.getLineThickness().scale(1.75));
+            
+            //Calculate the size of the route outline rather than applying a default scale.
+                // Using the scale transform causes the line to appear much thicker than it really is
+            double size = backStyle.getLineThickness().getValue();
+            ScalarUnit unit = backStyle.getLineThickness().getUnit();
+            Scalar backGroundThickness;
+            if(unit.equals(ScalarUnit.Meters))
+            {
+                backGroundThickness = Scalar.createMeter(size +5);
+            }
+            else
+            {
+                backGroundThickness = Scalar.createPixel(size +5);
+            }
+            backStyle.setLineThickness(backGroundThickness);
             backStyle.setLineColor(backStyle.getLineColor().darker());
             
             boolean first = true;
@@ -213,7 +230,17 @@ public class RouteShape extends EntityShape implements EntityConstants
             for(ShapeStyle style : new ShapeStyle[] {backStyle, frontStyle} )
             {
                 final PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
-
+                // First check for width in meters
+                Map<String, Object> props = route.getEntity().getProperties();
+                Number lineWidth = (Number) EntityTools.getProperty(props, PROPERTY_SHAPE_WIDTH_METERS, null);
+                if(lineWidth != null && lineWidth.doubleValue() > 0.5)
+                {
+                    style.setLineThickness(Scalar.createMeter(lineWidth.doubleValue() * (1.0)));
+                }
+                else
+                {
+                    style.setLineThickness(Scalar.createPixel(5));
+                }
                 renderer.drawPolyline(cachedPoints);
                 
                 for(SimplePosition point : cachedPoints)

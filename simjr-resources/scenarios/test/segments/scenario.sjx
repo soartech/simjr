@@ -21,7 +21,7 @@ self.addCapability(follower);</simjr:initScript>
     </simjr:entity>
     <simjr:entity simjr:name="A" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
       <simjr:location>
-        <simjr:lla simjr:latitude="0.00816315721971157" simjr:longitude="-0.00577731338411788" simjr:altitude="0.09672529809176922" />
+        <simjr:lla simjr:latitude="0.008163157221501736" simjr:longitude="-0.005652182057580712" simjr:altitude="0.09672529716044664" />
       </simjr:location>
       <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
       <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
@@ -30,7 +30,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
     </simjr:entity>
     <simjr:entity simjr:name="B" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
       <simjr:location>
-        <simjr:lla simjr:latitude="0.0076529597373610776" simjr:longitude="0.016486807777527642" simjr:altitude="0.22342336364090443" />
+        <simjr:lla simjr:latitude="0.0076529597325009375" simjr:longitude="0.01661193909677591" simjr:altitude="0.22342336270958185" />
       </simjr:location>
       <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
       <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
@@ -49,6 +49,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
         <simjr:point simjr:name="B" />
         <simjr:point simjr:name="D" />
       </simjr:points>
+      <simjr:threeddata simjr:minAltitude="111.0" simjr:maxAltitude="220.0" simjr:routeWidth="50.0" />
     </simjr:entity>
     <simjr:entity simjr:name="C" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
       <simjr:location>
@@ -61,7 +62,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
     </simjr:entity>
     <simjr:entity simjr:name="D" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
       <simjr:location>
-        <simjr:lla simjr:latitude="-0.008381197906203074" simjr:longitude="0.013932336870659943" simjr:altitude="0.0" />
+        <simjr:lla simjr:latitude="-0.008381197901702027" simjr:longitude="0.01405746819600569" simjr:altitude="2.7939677238464355E-9" />
       </simjr:location>
       <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
       <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
@@ -81,8 +82,7 @@ requireScript("weapons");
 // configureVista();
 // var ss = configureSoarSpeak("simjr.helosoar.sagis.grammar.nuance", "Dragon34", "34");
 // if(ss != null) ss.tts("*", "66");</simjr:preLoadScript>
-  <simjr:postLoadScript simjr:type="text/javascript">
-createCheatSheet(); // load cheatsheet.html
+  <simjr:postLoadScript simjr:type="text/javascript">createCheatSheet(); // load cheatsheet.html
 getActivePlanViewDisplay().showAll();
 
 var segments = simjr.polygons.segments([{name:"A", speed:40}, {name:"B", speed:60}, {name:"C", speed:80}, {name:"D", speed:100}]);
