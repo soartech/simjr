@@ -246,7 +246,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         EntityElement ee = (e.source instanceof EntityElement) ? (EntityElement)e.source : null;
 
         // file loaded
-        if (e.property.equals(Model.LOADED) || e.property.equals(Model.FILE))
+        if (e.property.equals(Model.LOADED))// || e.property.equals(Model.FILE))
         {
             rebuildScene();
         }
@@ -265,6 +265,11 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
             {
                 constructs.removeChild(construct);
                 map.remove(ee);
+            }
+            else
+            {
+                //This is a bit of a kludge, but there is a race condition where entites are not being deleted.
+                    //Check that the entity is not the value set...
             }
         }
 
@@ -461,7 +466,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
 
         for (Entity entity : sim.getEntities())
         {
-            add3DConstruct((EntityElement)entity.getProperty(EDITOR_ENTITY_PROP), entity);
+            add3DConstruct(model.getEntities().getEntity(entity.getName()), entity);
         }
     }
 
