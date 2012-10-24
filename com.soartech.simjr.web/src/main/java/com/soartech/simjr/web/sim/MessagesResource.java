@@ -37,7 +37,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -51,8 +50,6 @@ import com.soartech.simjr.sim.Simulation;
  */
 public class MessagesResource
 {
-    private static final Logger logger = Logger.getLogger(MessagesResource.class);
-    
     private final RootResource root;
     
     public MessagesResource(RootResource simulationResource)

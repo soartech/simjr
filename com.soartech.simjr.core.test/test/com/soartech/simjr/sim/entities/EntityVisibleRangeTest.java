@@ -42,7 +42,7 @@ import com.soartech.simjr.sim.EntityPrototypes;
 
 public class EntityVisibleRangeTest extends TestCase
 {
-    public class Listener implements EntityPropertyListener
+    public static class Listener implements EntityPropertyListener
     {
         private String property;
         private boolean called = false;

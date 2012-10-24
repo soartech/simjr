@@ -21,12 +21,20 @@ public class StaticPolygon extends DefaultPolygon
         super(defaultName);
     }
     
+    @Override
     public Vector3 getPosition()
     {
-        if (center == null)
+        if (null != center)
+        {
+            return center;
+        }
+        
+        if (super.hasPosition())
         {
             center = super.getPosition();
+            return center;
         }
-        return center;
+        
+        return super.getPosition();
     }
 }

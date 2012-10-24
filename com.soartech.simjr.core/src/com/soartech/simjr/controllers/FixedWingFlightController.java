@@ -194,7 +194,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // Calculate desired Z velocity
         double currentAltitude = EntityTools.getAltitude(getEntity());
         double altitudeError = desiredAltitude - currentAltitude;
-        double desiredVelocityZ = altitudeError * dt;
+        double desiredVelocityZ = altitudeError/dt;
 
         // Decide how fast we're allowed to change altitude
         double desiredAltitudeRate = Math.abs(desiredVelocity.length() * Math.sin(desiredFpa));

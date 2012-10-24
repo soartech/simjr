@@ -131,7 +131,7 @@ public class CoordinatesPanel extends JXPanel
         String transform(Vector3 meters);
     }
     
-    private class Meters implements CoordSystem
+    private static class Meters implements CoordSystem
     {
         public String transform(Vector3 meters)
         {

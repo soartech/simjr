@@ -50,7 +50,7 @@ import com.soartech.shapesystem.SimplePosition;
  */
 public class MapImage
 {
-    private class SingleMapImage
+    private static class SingleMapImage
     {
         Vector3 centerMeters = Vector3.ZERO;
         double metersPerPixel = 1.0;
