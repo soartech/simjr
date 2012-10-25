@@ -301,15 +301,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         //add the list of views to show/hide to the view menu
         SingleCDockableListMenuPiece piece2 = new SingleCDockableListMenuPiece(control);
         view.add(piece2);
-        //FreeMenuPiece piece2 = new FreeMenuPiece();
-        //view.add(new JSeparator());
-        /*view.add(new AbstractAction("Refresh") {
-            private static final long serialVersionUID = -7408029630861071126L;
-
-            public void actionPerformed(ActionEvent e)
-            {
-                am.updateActions();
-            }});*/
         
         //add the layouts submenu to the view menu
         CLayoutChoiceMenuPiece piece4 = new CLayoutChoiceMenuPiece(control, false);

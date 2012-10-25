@@ -102,7 +102,7 @@ public class EntityElement implements ModelElement
     /**
      * @param model
      */
-    EntityElement(Model model, Element element)
+    private EntityElement(Model model, Element element)
     {
         this.model = model;
         this.element = element;

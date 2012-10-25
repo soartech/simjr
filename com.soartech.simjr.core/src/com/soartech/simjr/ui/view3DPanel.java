@@ -52,7 +52,7 @@ import com.soartech.simjr.ui.editor.View3DPanel;
 import com.soartech.simjr.util.SwingTools;
 
 /**
- * This is the wrapper to the View3DPanel that allows that panel to interropt with the tab framework
+ * This is the wrapper to the View3DPanel that allows that panel to interop with the tab framework
  * 
  * @author Joshua Haley
  */

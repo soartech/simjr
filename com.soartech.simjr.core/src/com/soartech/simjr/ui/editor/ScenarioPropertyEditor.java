@@ -12,6 +12,11 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
 import com.soartech.simjr.ui.editor.TerrainPanel;
 
+/**
+ * Dockable wrapper for the Terrain Panel
+ * @author joshua.haley
+ *
+ */
 public class ScenarioPropertyEditor extends DefaultSingleCDockable{
 	
     private final ScenarioEditorServiceManager app;

@@ -165,7 +165,7 @@ public class SourcePanel extends DefaultSingleCDockable implements ModelChangeLi
         }
         catch (BadLocationException e)
         {
-            // Sould not occure as we are starting at the textArea beginning and going to it's length....
+            // Should not occur as we are starting at the textArea beginning and going to it's length....
         }
         
         //Reload the model
@@ -202,6 +202,7 @@ public class SourcePanel extends DefaultSingleCDockable implements ModelChangeLi
         {
             handleSaveButtonPress();
         }
+        //Revert the text to the current model (Ignore changes)
         if(e.getSource().equals(revert))
         {
             textArea.setText(app.getModel().toString());

@@ -48,6 +48,7 @@ import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * @author ray
+ * Edited to interop with the Dockable Framework - JHaley
  */
 public class ScriptsPanel extends DefaultSingleCDockable implements ModelChangeListener
 {

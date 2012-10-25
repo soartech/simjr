@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 20, 2007
  */
 package com.soartech.simjr.ui.shapes;
 
@@ -57,7 +56,7 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.entities.Cylinder;
 
 /**
- * @author ray
+ * @author Haley
  */
 public class CircularRegionShape extends EntityShape
 {
@@ -228,10 +227,6 @@ public class CircularRegionShape extends EntityShape
      */
     public Shape createSelection(String id, Entity selected)
     {
-       /*
-        *  return new Circle(id, EntityConstants.LAYER_SELECTION,
-                new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
-                Scalar.createPixel(20));   */ 
         return null;
     }
 
