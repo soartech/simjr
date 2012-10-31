@@ -48,6 +48,8 @@ import de.jreality.shader.TextureUtility;
 import de.jreality.util.Input;
 
 /**
+ * 3D Grid Lines on the ground plane.
+ * 
  * @author Dan Silverglate
  */
 public class Grid extends SceneGraphComponent 
@@ -57,6 +59,13 @@ public class Grid extends SceneGraphComponent
     double spacing;
     String imageFile = null;
     
+    /**
+     * Main constructor.
+     * 
+     * @param xWidth
+     * @param zDepth
+     * @param spacing
+     */
     public Grid(int xWidth, int zDepth, double spacing)    {
         super("Grid");
         
@@ -67,6 +76,11 @@ public class Grid extends SceneGraphComponent
         rebuild();
     }
     
+    /**
+     * No longer used.  Use ImagePoly for terrain image instead.
+     * 
+     * @param imageFile
+     */
     public void setImageFile(String imageFile)
     {
         this.imageFile = imageFile;
