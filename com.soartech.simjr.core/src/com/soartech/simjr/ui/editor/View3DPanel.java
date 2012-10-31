@@ -124,6 +124,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         initialize3DScene();
     }
 
+    /**
+     * Creates and initializes the jReality viewer and scene graph
+     * 
+     */
     private void initialize3DScene()
     {
         SceneGraphComponent rootNode = new SceneGraphComponent("root");
@@ -188,6 +192,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     {
         /*The previous way of getting the entity given entityelement by looking for a property does not interop with
          *  the tigerboard editor.  We can assume that entity names SHOULD have unique names.
+         *  
+         *  This was changed back because other fixes seem to have resolved the interoperability problem and because
+         *  names can be changed by the user.
+         *  
          */
         for (Entity e : sim.getEntities())
         {
@@ -333,6 +341,14 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         }
     }
 
+    /**
+     * Attempt to create a corresponding 3D construct from the passed entity 
+     * or entity element and add it to the scene graph is successful.
+     * 
+     * @param ee
+     * @param entity
+     * @return
+     */
     private boolean add3DConstruct(EntityElement ee, Entity entity)
     {
         String category = null;
@@ -386,6 +402,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         return false;
     }
 
+    /**
+     * Call to completely clear and rebuild the 3D scene from the current 
+     * simulation entities.
+     */
     private void rebuildScene()
     {
         for (AbstractConstruct construct : map.values())
@@ -432,6 +452,13 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         return false;
     }
 
+    /**
+     * Updates the 3D construct associated with the passed entity element and 
+     * with the corresponding entity.
+     * 
+     * @param ee
+     * @return
+     */
     public boolean updateConstruct(EntityElement ee)
     {
         AbstractConstruct construct = map.get(ee);
