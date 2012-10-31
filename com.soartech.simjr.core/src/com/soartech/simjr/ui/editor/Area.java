@@ -48,6 +48,9 @@ import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.CommonAttributes;
 
 /**
+ * 3D Construct to represent an area.  Implemented as an extruded polygon.
+ * The polygon may be convex or concave.
+ * 
  * @author Dan Silverglate
  */
 public class Area extends ExtrudedPolygon implements EntityPropertyListener
@@ -59,6 +62,13 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         super(name);
     }
    
+    /**
+     * Test constructor.
+     * 
+     * @param path
+     * @param minHeight
+     * @param maxHeight
+     */
     public Area(double[][] path, double minHeight, double maxHeight)    {
         super("Area");
         
@@ -90,10 +100,7 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
         ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
-//        ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
-//        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
-//        ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
-                
+               
         endCapComp.setAppearance(ap);
         
         addChild(endCapComp);
@@ -106,6 +113,11 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         entity.addPropertyListener(this);
     }
     
+    /**
+     * Main constructor.
+     * 
+     * @param sim
+     */
     public Area(Simulation sim)
     {
         super("Area");
@@ -137,6 +149,9 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         endCapComp.setAppearance(ap);
     }
     
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.editor.AbstractConstruct#updateFromEntity(com.soartech.simjr.sim.Entity)
+     */
     public void updateFromEntity(Entity entity)
     {
         if (this.entity != entity)
@@ -156,8 +171,12 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         rebuild();
     }
 
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.editor.AbstractConstruct#testAndUpdateFromEntity(com.soartech.simjr.sim.Entity)
+     */
     public void testAndUpdateFromEntity(Entity entity)
     {
+        // test if the entity that has changed matches any of the points that make up this area
         if (points != null)
         {
             Iterator<?> i = points.iterator();
@@ -176,7 +195,10 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
             //System.out.println("NO MATCH!");
         }
     }
-        
+    
+    /**
+     * Called to rebuild the 3D construct whenever a field has changed. 
+     */
     private void rebuild()
     {
         if (points != null)
@@ -216,6 +238,9 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
         setupLabel(entity.getName(), pos.x, maxAltitude, -pos.y);
     }
 
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.sim.EntityPropertyListener#onPropertyChanged(com.soartech.simjr.sim.Entity, java.lang.String)
+     */
     public void onPropertyChanged(Entity entity, String propertyName)
     {
         //System.out.println("onPropertyChanged("+entity.getClass().getName()+", "+propertyName+")");

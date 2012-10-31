@@ -45,7 +45,6 @@ import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.LocationElement;
 import com.soartech.simjr.scenario.model.*;
 import com.soartech.simjr.scenario.PointElementList;
-import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.ThreeDDataElement;
 import com.soartech.simjr.services.ServiceManager;
@@ -64,26 +63,36 @@ import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.SceneGraphPath;
 import de.jreality.shader.CommonAttributes;
 import de.jreality.toolsystem.ToolSystem;
-import de.jreality.util.CameraUtility;
 import de.jreality.util.RenderTrigger;
 
 /**
+ * Panel that contains the jReality 3D view
+ * 
  * @author Dan Silverglate
  */
 public class View3DPanel extends JPanel implements ModelChangeListener, SimulationListener
 {
     private static final long serialVersionUID = -4534167209676146675L;
     private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
-    private final Model model;
-    private final Simulation sim;
-    private final SceneGraphComponent constructs;
-    private final HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
-    private final Grid grid;
-    private final ImagePoly imagePoly;
+    private Model model;
+    private Simulation sim;
+    private SceneGraphComponent constructs;
+    private HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
+    private Grid grid;
+    private ImagePoly imagePoly;
     private ServiceManager services;
-    Viewer viewer;
+    private SceneGraphPath camPath;
+    private Viewer viewer;
+    
+    // 3D box used for visualization debugging 
+    //public static SceneGraphComponent debugSGC = new SceneGraphComponent("debug");
     
     
+    /**
+     * Constructor used by the simulation
+     * 
+     * @param services
+     */
     public View3DPanel(ServiceManager services)
     {
         super(new BorderLayout());
@@ -94,70 +103,29 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         this.sim = services.findService(Simulation.class);
         sim.addListener(this);
 
-        SceneGraphComponent rootNode = new SceneGraphComponent("root");
-        SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
-        constructs = new SceneGraphComponent("constructs");
-        SceneGraphComponent lightNode = new SceneGraphComponent("light");
-
-        rootNode.addChild(constructs);
-        rootNode.addChild(cameraNode);
-
-        grid = new Grid(1000, 1000, 100);
-        constructs.addChild(grid);
-        imagePoly = new ImagePoly();
-        constructs.addChild(imagePoly);
-        cameraNode.addChild(lightNode);
-        
-        Light dl = new DirectionalLight();
-        lightNode.setLight(dl);
-   
-
-        MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
-
-        Appearance rootApp = new Appearance();
-        rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
-        rootApp.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(.5f, .5f, .5f));
-        rootNode.setAppearance(rootApp);
-            
-        Camera camera = new Camera();
-        camera.setNear(1);
-        camera.setFar(100000);
-        cameraNode.setCamera(camera);
-        SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
-        camPath.push(camera);
-        
-        Viewer viewer = new Viewer();
-        
-        viewer.setSceneRoot(rootNode);
-        viewer.setCameraPath(camPath);
-        ToolSystem toolSystem = ToolSystem.toolSystemForViewer(viewer);
-        toolSystem.initializeSceneTools();
-        
-        add((Component)viewer.getViewingComponent(), BorderLayout.CENTER);
-        
-        SimNavigationTool t = new SimNavigationTool();
-        t.setGain(400);
-        t.setGravitEnabled(false);
-        t.setMinHeight(10);
-        t.setRunFactor(4);
-        cameraNode.addTool(t);
-        
-        RenderTrigger rt = new RenderTrigger();
-        rt.addSceneGraphComponent(rootNode);
-        rt.addViewer(viewer);
+        initialize3DScene();
     }
     
-    
+    /**
+     * Constructor used by the editor
+     * 
+     * @param app
+     */
     public View3DPanel(ScenarioEditorServiceManager app)
     {
         super(new BorderLayout());
 
         this.model = app.getModel();
-        app.getModel().addModelChangeListener(this);
+        model.addModelChangeListener(this);
 
         this.sim = app.findService(Simulation.class);
         //sim.addListener(this);
+        
+        initialize3DScene();
+    }
 
+    private void initialize3DScene()
+    {
         SceneGraphComponent rootNode = new SceneGraphComponent("root");
         SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
         constructs = new SceneGraphComponent("constructs");
@@ -165,6 +133,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
 
         rootNode.addChild(constructs);
         rootNode.addChild(cameraNode);
+        
+        // 3D box used for visualization debugging
+        //rootNode.addChild(debugSGC);
+        //debugSGC.setGeometry(Primitives.boxFactory(10, 10, 10, true, Pn.EUCLIDEAN).getGeometry());
 
         grid = new Grid(50, 50, 100);
         constructs.addChild(grid);
@@ -187,7 +159,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         camera.setNear(1);
         camera.setFar(100000);
         cameraNode.setCamera(camera);
-        SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
+        camPath = new SceneGraphPath(rootNode, cameraNode);
         camPath.push(camera);
 
         viewer = new Viewer();
@@ -211,6 +183,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         rt.addViewer(viewer);
     }
 
+    
     private Entity getSimEntity(EntityElement ee)
     {
         /*The previous way of getting the entity given entityelement by looking for a property does not interop with
@@ -218,8 +191,8 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
          */
         for (Entity e : sim.getEntities())
         {
-            //if(ee == e.getProperty(EDITOR_ENTITY_PROP))
-            if (ee.getName().equals(e.getName()))
+            if(ee == e.getProperty(EDITOR_ENTITY_PROP))
+            //if (ee.getName().equals(e.getName()))
             {
                 return e;
             }
@@ -232,17 +205,18 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
      */
     public void onModelChanged(ModelChangeEvent e)
     {
-        //System.out.println("onModelChanged("+e.property+") source("+e.source.getClass().getName()+") sourceID("+e.source.hashCode()+")");
-        //System.out.println("onModelChanged["+EDITOR_ENTITY_PROP);
-        //System.out.println("  model("+e.model.getEntities().getEntities().size()+")");
-        //System.out.println("  source("+e.source.getClass().getName()+")");
-        //System.out.println("  property("+e.property+")");
-        //if (e.source instanceof ModelElement)
-        //{
-        //    ModelElement me = (ModelElement)e.source;
-        //    System.out.println("  modelElement("+me+")");
-        //}
-        //System.out.println("]");
+//        System.out.println("onModelChanged("+e.property+") source("+e.source.getClass().getName()+") sourceID("+e.source.hashCode()+")");
+//        System.out.println("onModelChanged["+EDITOR_ENTITY_PROP);
+//        System.out.println("  model("+e.model.getEntities().getEntities().size()+")");
+//        System.out.println("  source("+e.source.getClass().getName()+")");
+//        System.out.println("  property("+e.property+")");
+//        if (e.source instanceof ModelElement)
+//        {
+//            ModelElement me = (ModelElement)e.source;
+//            System.out.println("  modelElement("+me+")");
+//        }
+//        System.out.println("]");
+        
         EntityElement ee = (e.source instanceof EntityElement) ? (EntityElement)e.source : null;
 
         // file loaded
@@ -361,24 +335,38 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
 
     private boolean add3DConstruct(EntityElement ee, Entity entity)
     {
+        String category = null;
+        String domain = null;
+        
         try {
-            String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getCategory();
+            category = (entity == null)? ee.getPrototype(): entity.getPrototype().getCategory();
+            //System.out.println("category("+category+")");
+            
+            domain = sim.getEntityPrototypes().getPrototype(category).getDomain();
+            //System.out.println("domain("+domain+")");
+                    
             AbstractConstruct construct = null;
 
-            //System.out.println("add3DConstruct("+id+")");
-            if (id.equals("cylinder")) {
+            if (category.equals("cylinder"))
+            {
                 construct = new Cylinder(sim);
             }
-            else if (id.equals("area")) {
+            else if (category.equals("area"))
+            {
                 construct = new Area(sim);
             }
-            else if (id.equals("route")) {
+            else if (category.equals("route"))
+            {
                 construct = new Route(sim);
             }
-
+            else if (domain.equals("sea") || domain.equals("ground") || domain.equals("air"))
+            {
+                construct = new BillboardImage(camPath, viewer, category);
+            }
+            
             if (construct != null)
             {
-              //System.out.println("handled("+id+")");
+              //System.out.println("handled("+domain+"/"+category+")");
               constructs.addChild(construct);
               map.put(ee, construct);
               if (entity != null)
@@ -388,54 +376,15 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
               return true;
             }
 
-            //System.out.println("No 3D Construct for type("+id+")");
-        } catch (Exception ex) { ex.printStackTrace(); }
+            //System.out.println("No 3D Construct for type("+domain+"/"+category+")");
+        }
+        catch (Exception ex)
+        {
+            //System.out.println("Error("+domain+"/"+category+") EntityElement("+ee+") Entity"+entity+")");
+        }
 
         return false;
     }
-
-    /*private boolean _add3DConstruct(EntityElement ee, Entity entity)
-    {
-        try {
-            String id = (entity == null)? ee.getPrototype(): entity.getPrototype().getId();
-            AbstractConstruct construct = null;
-            boolean secondPassAllowed = false;
-
-            // allow a second pass trying the prototype parent if the entity is not null
-            do
-            {
-                //System.out.println("add3DConstruct("+id+")");
-                if (id.equals("cylinder")) {
-                    construct = new Cylinder(sim);
-                }
-                else if (id.equals("area")) {
-                    construct = new Area(sim);
-                }
-                else if (id.equals("route")) {
-                    construct = new Route(sim);
-                }
-
-                if (construct != null)
-                {
-                  //System.out.println("handled("+id+")");
-                  constructs.addChild(construct);
-                  map.put(ee, construct);
-                  if (entity != null) construct.updateFromEntity(entity);
-                  return true;
-                }
-
-                if (entity != null && entity.getPrototype().getParent() != null)
-                {
-                    id = entity.getPrototype().getParent().getId();
-                    secondPassAllowed = !secondPassAllowed;
-                }
-            } while (secondPassAllowed);
-
-            //System.out.println("No 3D Construct for type("+id+")");
-        } catch (Exception ex) { ex.printStackTrace(); }
-
-        return false;
-    }*/
 
     private void rebuildScene()
     {
@@ -498,6 +447,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
 
         return false;
     }
+    
     @Override
     public void onTimeSet(double oldTime)
     {
@@ -508,13 +458,15 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     @Override
     public void onEntityAdded(Entity e)
     {
+        //System.out.println("onEntityAdded(" + e + ")");
+        //add3DConstruct((EntityElement)e.getProperty(EDITOR_ENTITY_PROP), e);
         //this.rebuildScene();
     }
 
     @Override
     public void onEntityRemoved(Entity e)
     {
-        
+        //this.rebuildScene();
     }
 
     @Override
@@ -544,20 +496,5 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         // TODO Auto-generated method stub
         
     }
-/*    public void onTimeSet(double oldTime) { }
-    public void onPause() { }
-    public void onStart() { }
-    public void onTick(double dt) { }
-    public void onDetonation(Detonation detonation) { }
-
-    public void onEntityAdded(Entity e)
-    {
-        System.out.println("onEntityAdded("+e.getPrototype().getId()+", cat("+e.getPrototype().getCategory()+"), sub("+e.getPrototype().getSubcategory()+"), 3D("+e.getProperty(ThreeDDataElement.THREEDDATA)+"))");
-    }
-
-    public void onEntityRemoved(Entity e)
-    {
-        System.out.println("onEntityRemoved("+e.getClass().getName()+")");
-    }*/
 }
 

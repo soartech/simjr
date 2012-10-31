@@ -44,10 +44,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import de.jreality.math.FactoredMatrix;
 import de.jreality.math.Matrix;
 import de.jreality.math.MatrixBuilder;
 import de.jreality.math.Pn;
 import de.jreality.math.Rn;
+import de.jreality.scene.Camera;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.SceneGraphPath;
 import de.jreality.scene.pick.PickResult;
@@ -55,6 +57,7 @@ import de.jreality.scene.tool.AbstractTool;
 import de.jreality.scene.tool.AxisState;
 import de.jreality.scene.tool.InputSlot;
 import de.jreality.scene.tool.ToolContext;
+import de.jreality.util.CameraUtility;
 import de.jreality.util.LoggingSystem;
 
 /**
@@ -85,8 +88,10 @@ public class ShipNavigationTool extends AbstractTool {
    private double[] center={0,0,0,1};
    
    private transient boolean rotate=false;
+   protected double prevHorizRotAngle = 0;
    protected double currHorizRotAngle = 0;
-   protected double[] translation ={0,500,500,1};
+   protected double[] prevTranslation ={0,500,500,1};
+   protected double[] currTranslation ={0,500,500,1};
    protected boolean matrixLocked = false;
    
    // if the "fall activation" (F-Key as default) is pressed, this is true...
@@ -133,8 +138,11 @@ public class ShipNavigationTool extends AbstractTool {
            double deltaRot = tc.getAxisState(horizontalRotation).doubleValue();
            currHorizRotAngle -= deltaRot*5;
 
-           myMatrix = MatrixBuilder.euclidean().translate(translation).rotateY(currHorizRotAngle).getMatrix();
-           if (!matrixLocked) myMatrix.assignTo(myComponent);
+           myMatrix = MatrixBuilder.euclidean().translate(currTranslation).rotateY(currHorizRotAngle).getMatrix();
+           if (!matrixLocked) {
+               myMatrix.assignTo(myComponent);
+               fireCameraChanged(tc);
+           }
            
            return;
        }
@@ -235,9 +243,12 @@ public class ShipNavigationTool extends AbstractTool {
                else System.out.println("rotation NAN: from="+Arrays.toString(myMatrix.getColumn(3))+" to="+Arrays.toString(dest));
            }
            myMatrix.setColumn(3, dest);
-           System.arraycopy(dest, 0, translation, 0, 4);
+           System.arraycopy(dest, 0, currTranslation, 0, 4);
 
-           if (!matrixLocked) myMatrix.assignTo(myComponent);
+           if (!matrixLocked) {
+               myMatrix.assignTo(myComponent);
+               fireCameraChanged(tc);
+           }
        }
    }
    
@@ -369,5 +380,22 @@ public class ShipNavigationTool extends AbstractTool {
 
    public void setPickDelegate(PickDelegate pickDelegate) {
        this.pickDelegate = pickDelegate;
+   }
+   
+   protected void fireCameraChanged(ToolContext tc) {
+       if(prevHorizRotAngle != currHorizRotAngle
+               || currTranslation[0] != prevTranslation[0]
+               || currTranslation[1] != prevTranslation[1]
+               || currTranslation[2] != prevTranslation[2]
+               || currTranslation[3] != prevTranslation[3]
+               ) {
+       
+           // Quick way to call Camera's fireCameraChanged
+           Camera camera = CameraUtility.getCamera(tc.getViewer());
+           camera.setNear(camera.getNear());
+           
+           prevHorizRotAngle = currHorizRotAngle;
+           System.arraycopy(currTranslation, 0, prevTranslation, 0, 4);
+       }
    }
 }

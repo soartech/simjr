@@ -48,6 +48,9 @@ import de.jreality.shader.DefaultTextShader;
 import de.jreality.shader.ShaderUtility;
 
 /**
+ * Abstract class to represent the 3D SceneGraphComponent that will 
+ * correspond to 2D entities. 
+ * 
  * @author Dan Silverglate
  */
 public abstract class AbstractConstruct extends SceneGraphComponent
@@ -66,8 +69,19 @@ public abstract class AbstractConstruct extends SceneGraphComponent
         
     }
     
+    /**
+     * Method to display the text label for this construct.  Takes the display 
+     * text and relative coordinates as parameters.  Uses jRealitity's labeled 
+     * vertex.
+     * 
+     * @param text
+     * @param x
+     * @param y
+     * @param z
+     */
     public void setupLabel(String text, double x, double y, double z)
     {
+        // if the label SceneGraphComponent has not yet been created, create one.
         if (label == null)
         {
             label = new SceneGraphComponent(this.getName()+"_"+label);
@@ -95,7 +109,21 @@ public abstract class AbstractConstruct extends SceneGraphComponent
         //MatrixBuilder.euclidean().translate(x, y, z).assignTo(label);
     }
 
+    /**
+     * Called when some property of the 2D entity has changed to give the 3D 
+     * construct a chance to update.
+     * 
+     * @param entity
+     */
     abstract public void updateFromEntity(Entity entity);
     
+    /**
+     * Called when a 2D entity changes that does not have a direct 3D construct 
+     * counterpart.  The 3D construct needs to test if it is affected by this 
+     * change.  For example the moving of a waypoint affect any routes and/or 
+     * areas that reference that waypoint.
+     * 
+     * @param entity
+     */
     abstract public void testAndUpdateFromEntity(Entity entity);
 }
