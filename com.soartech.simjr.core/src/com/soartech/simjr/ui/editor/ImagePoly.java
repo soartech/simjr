@@ -47,6 +47,9 @@ import de.jreality.shader.TextureUtility;
 import de.jreality.util.Input;
 
 /**
+ * 3D Construct to represent a Terrain Image.  Implemented as a textured 
+ * rectangular polygon.  
+ * 
  * @author Dan Silverglate
  */
 public class ImagePoly extends SceneGraphComponent 
@@ -58,8 +61,12 @@ public class ImagePoly extends SceneGraphComponent
     double metersPerPixel = 1.0;
     ImageData imageData = null;
     
+    /**
+     * Main constuctor.
+     * 
+     */
     public ImagePoly()    {
-        super("Grid");
+        super("Terrain Image");
         
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
         
@@ -97,6 +104,11 @@ public class ImagePoly extends SceneGraphComponent
         //rebuild();
     }
     
+    /**
+     * Scales the polygon when the 2D's metersPerPixel parameter changes
+     * 
+     * @param metersPerPixel
+     */
     public void setMetersPerPixel(double metersPerPixel)
     {
         this.metersPerPixel = metersPerPixel;
@@ -108,6 +120,11 @@ public class ImagePoly extends SceneGraphComponent
         }
     }
     
+    /**
+     * Sets the position based on the 2D position.
+     * 
+     * @param pos
+     */
     public void setPosition(Vector3 pos)
     {
         //System.out.println("setPosition("+pos+")");
@@ -117,6 +134,12 @@ public class ImagePoly extends SceneGraphComponent
         rebuild();
     }
     
+    /**
+     * Attempts to load the image file and apply it to the polygon. Then 
+     * adjusts scale of polygon based on image dimensions.
+     * 
+     * @param imageFile
+     */
     public void setImageFile(String imageFile)
     {
         Appearance ap = new Appearance();
@@ -133,6 +156,7 @@ public class ImagePoly extends SceneGraphComponent
         ap.setAttribute(CommonAttributes.AMBIENT_COLOR, new Color(1f, 1f, 1f));
         ap.setAttribute(CommonAttributes.AMBIENT_COEFFICIENT, 1.0);
         
+        // 
         if (imageFile != null)
         {
             try
@@ -141,7 +165,7 @@ public class ImagePoly extends SceneGraphComponent
                 TextureUtility.createTexture(ap, de.jreality.shader.CommonAttributes.POLYGON_SHADER, imageData);
                 width = imageData.getWidth() * metersPerPixel;
                 height = imageData.getHeight() * metersPerPixel;
-                System.out.println(imageFile+"("+width+", "+height+") X "+metersPerPixel);
+                //System.out.println(imageFile+"("+width+", "+height+") X "+metersPerPixel);
             }
             catch (IOException ioe)
             {
@@ -165,6 +189,9 @@ public class ImagePoly extends SceneGraphComponent
         rebuild();
     }
     
+    /**
+     * Called to rebuild the 3D construct whenever a field has changed. 
+     */
     private void rebuild()
     {
         if (imageData != null)

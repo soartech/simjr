@@ -47,12 +47,20 @@ import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.CommonAttributes;
 
 /**
+ * 3D Construct to represent a Terrain Image.  Implemented as an extruded 
+ * circle.
+ * 
  * @author Dan Silverglate
  */
 public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
 {
     double diameter = 100.0;
     
+    /**
+     * Main constuctor
+     * 
+     * @param sim
+     */
     public Cylinder(Simulation sim)
     {
         super("Cylinder");
@@ -69,7 +77,7 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY, .25);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, false);
         setAppearance(ap);
         
@@ -77,7 +85,7 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         ap.setAttribute(CommonAttributes.VERTEX_DRAW, true);
         ap.setAttribute(CommonAttributes.DIFFUSE_COLOR, color);
         ap.setAttribute(CommonAttributes.TRANSPARENCY_ENABLED, true);
-        ap.setAttribute(CommonAttributes.TRANSPARENCY, .25);
+        ap.setAttribute(CommonAttributes.TRANSPARENCY, .5);
         ap.setAttribute(CommonAttributes.EDGE_DRAW, true);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.TUBES_DRAW, false);
         ap.setAttribute(CommonAttributes.LINE_SHADER+"."+CommonAttributes.DIFFUSE_COLOR, Color.black);
@@ -85,6 +93,9 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         endCapComp.setAppearance(ap);
     }
    
+    /**
+     * Called to rebuild the 3D construct whenever a field has changed. 
+     */
     private void rebuild()
     {
         double[][] path = buildCircle();
@@ -96,6 +107,11 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         setupLabel(entity.getName(), 0.0, maxAltitude, 0.0);
     }
     
+    /**
+     * Returns a 2D coordinates of a circle with the diameter.
+     * 
+     * @return
+     */
     public double[][] buildCircle()
     {
         int n = 32;
@@ -111,6 +127,10 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
         
         return path;
     }
+    
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.editor.AbstractConstruct#updateFromEntity(com.soartech.simjr.sim.Entity)
+     */
     public void updateFromEntity(Entity entity)
     {
         if (this.entity != entity)
@@ -134,6 +154,9 @@ public class Cylinder extends ExtrudedPolygon implements EntityPropertyListener
        
     public void testAndUpdateFromEntity(Entity entity) { }
     
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.sim.EntityPropertyListener#onPropertyChanged(com.soartech.simjr.sim.Entity, java.lang.String)
+     */
     public void onPropertyChanged(Entity entity, String propertyName)
     {
         //System.out.println("onPropertyChanged("+entity.getClass().getName()+", "+propertyName+")");

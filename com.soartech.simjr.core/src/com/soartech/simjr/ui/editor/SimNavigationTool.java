@@ -2,9 +2,11 @@ package com.soartech.simjr.ui.editor;
 
 import de.jreality.math.Matrix;
 import de.jreality.math.MatrixBuilder;
+import de.jreality.scene.Camera;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.tool.InputSlot;
 import de.jreality.scene.tool.ToolContext;
+import de.jreality.util.CameraUtility;
 
 /**
 * @author Tu Lam
@@ -22,6 +24,7 @@ public class SimNavigationTool extends ShipNavigationTool
     private boolean invert;
 
     private double lastPointerY = 0;
+    private double prevVertRotAngle = -Math.PI*0.25;
     private double currVertRotAngle = -Math.PI*0.25;
     private transient boolean rotate;
 
@@ -50,8 +53,10 @@ public class SimNavigationTool extends ShipNavigationTool
             }
 
             if (tc.getSource() == rotateActivation || !rotate) {
-                Matrix myMatrix = MatrixBuilder.euclidean().translate(translation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
+                Matrix myMatrix = MatrixBuilder.euclidean().translate(currTranslation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
                 myMatrix.assignTo(myComponent);
+                fireCameraChanged(tc);
+                
                 return;
             }
         }
@@ -60,9 +65,21 @@ public class SimNavigationTool extends ShipNavigationTool
             double currPointerY = tc.getAxisState(verticalRotation).doubleValue();
             double deltaAngle = (currPointerY - lastPointerY) * 2.5;
 
-            if (currVertRotAngle + deltaAngle > maxAngle || currVertRotAngle + deltaAngle < minAngle) {
-                Matrix myMatrix = MatrixBuilder.euclidean().translate(translation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
+            if (currVertRotAngle + deltaAngle > maxAngle) {
+                currVertRotAngle = maxAngle;
+                Matrix myMatrix = MatrixBuilder.euclidean().translate(currTranslation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
                 myMatrix.assignTo(myComponent);
+                fireCameraChanged(tc);
+                
+                return;
+            }
+            
+            if (currVertRotAngle + deltaAngle < minAngle) {
+                currVertRotAngle = minAngle;
+                Matrix myMatrix = MatrixBuilder.euclidean().translate(currTranslation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
+                myMatrix.assignTo(myComponent);
+                fireCameraChanged(tc);
+                
                 return;
             }
             
@@ -71,8 +88,9 @@ public class SimNavigationTool extends ShipNavigationTool
             lastPointerY = currPointerY;
         }
     
-        Matrix myMatrix = MatrixBuilder.euclidean().translate(translation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
+        Matrix myMatrix = MatrixBuilder.euclidean().translate(currTranslation).rotateY(currHorizRotAngle).rotateX(currVertRotAngle).getMatrix();
         myMatrix.assignTo(myComponent);
+        fireCameraChanged(tc);
     }
 
     public double getMaxAngle() {
@@ -97,5 +115,24 @@ public class SimNavigationTool extends ShipNavigationTool
 
     public void setInvert(boolean invert) {
         this.invert = invert;
+    }
+    
+    protected void fireCameraChanged(ToolContext tc) {
+        if(prevHorizRotAngle != currHorizRotAngle
+                || prevVertRotAngle != currVertRotAngle
+                || currTranslation[0] != prevTranslation[0]
+                || currTranslation[1] != prevTranslation[1]
+                || currTranslation[2] != prevTranslation[2]
+                || currTranslation[3] != prevTranslation[3]
+                ) {
+        
+            // Quick way to call Camera's fireCameraChanged
+            Camera camera = CameraUtility.getCamera(tc.getViewer());
+            camera.setNear(camera.getNear());
+            
+            prevHorizRotAngle = currHorizRotAngle;
+            prevVertRotAngle = currVertRotAngle;
+            System.arraycopy(currTranslation, 0, prevTranslation, 0, 4);
+        }
     }
 }
