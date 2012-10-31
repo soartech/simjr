@@ -38,6 +38,8 @@ import de.jreality.math.Rn;
 import de.jreality.scene.SceneGraphComponent;
 
 /**
+ * Abstract 3D Construct for entities implemented with extruded polygons.
+ * 
  * @author Dan Silverglate
  */
 public abstract class ExtrudedPolygon extends AbstractConstruct
@@ -46,11 +48,23 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
     double minAltitude = 0.0;
     double maxAltitude = 100.0;
     
+    /**
+     * Main constructor.
+     * 
+     * @param name
+     */
     public ExtrudedPolygon(String name)
     {
         super(name);
     }
 
+    /**
+     * Returns a 2D path from a closed 3D path.  Removes the last point if it 
+     * is identical to the first.
+     * 
+     * @param path
+     * @return
+     */
     public double[][] cleanPath(double[][] path)
     {
        //This check fixes a race condition where sometimes the area is constructed before points are actually added.  ~ Josh Haley
@@ -77,11 +91,28 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return newPath;
     }
     
+    /**
+     * Creates an IndexedFaceSetFactory with the sides of the extrusion.
+     * 
+     * @param path
+     * @param minHeight
+     * @param maxHeight
+     * @return
+     */
     public IndexedFaceSetFactory buildSides(double[][] path, double minHeight, double maxHeight)
     {
         return buildSides(path, minHeight, maxHeight, false);
     }
 
+    /**
+     * Creates an IndexedFaceSetFactory with the sides of the extrusion.
+     * 
+     * @param path
+     * @param minHeight
+     * @param maxHeight
+     * @param smooth smooths across the sides if true, draws the edges if false
+     * @return
+     */
     public IndexedFaceSetFactory buildSides(double[][] path, double minHeight, double maxHeight, boolean smooth)
     {   
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
@@ -130,11 +161,30 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return ifsf;
     }
     
+    /**
+     * Creates an IndexedFaceSetFactory with the top and bottom faces of the 
+     * extrusion.
+     * 
+     * @param path
+     * @param minHeight
+     * @param maxHeight
+     * @return
+     */
     public IndexedFaceSetFactory buildEndCapFaces(double[][] path, double minHeight, double maxHeight)
     {
         return buildEndCapFaces(path, minHeight, maxHeight, true);
     }
 
+    /**
+     * Creates an IndexedFaceSetFactory with the top and bottom faces of the 
+     * extrusion.
+     * 
+     * @param path
+     * @param minHeight
+     * @param maxHeight
+     * @param triangulate triangulates the faces if true (needed for non-convex polygons)
+     * @return
+     */
     public IndexedFaceSetFactory buildEndCapFaces(double[][] path, double minHeight, double maxHeight, boolean triangulate)
     {   
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
@@ -195,6 +245,14 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return ifsf;
     }
     
+    /**
+     * Creates an IndexedFaceSetFactory with the top face of the 
+     * extrusion.  Currently not used.
+     * 
+     * @param path
+     * @param height
+     * @return
+     */
     public IndexedFaceSetFactory buildTop(double[][] path, double height)
     {   
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
@@ -226,6 +284,15 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return ifsf;
     }
     
+    /**
+     * Triangulation support method which returns a list of non-concave points.  
+     * These are points that cut inside the convex hull of an shape with 
+     * respect to their neighboring points
+     * 
+     * @param points
+     * @param ccw
+     * @return
+     */
     private Vector<double[]> findNonConvexPoints(double[][] points, boolean ccw)
     {
         Vector<double[]> nonConvexPoints = new Vector<double[]>();
@@ -258,6 +325,13 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return nonConvexPoints;
     }
     
+    /**
+     * Triangulation support method which returns true if the passed points 
+     * are in counter-clockwise order. 
+     * 
+     * @param points
+     * @return
+     */
     public boolean isCCW(double[][] points)
     {
         if (points.length < 3) return true;
@@ -301,6 +375,16 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return (result > 0);
     }
    
+    /**
+     * Triangulation support method which returns true if point p is inside 
+     * the triangle defined by points a, b, and c.
+     * 
+     * @param a
+     * @param b
+     * @param c
+     * @param p
+     * @return
+     */
     public boolean isInside(double[] a, double[] b, double[] c, double[] p)
     {
         double[] vec1 = new double[2];
@@ -319,6 +403,18 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return (lambda > 0 && mue > 0 && (lambda+mue) < 1);
     }
 
+    /**
+     * Triangulation support method which returns true if the triangle defined 
+     * by points a, b, and c is valid i.e. contains no non-convex points and 
+     * can therefore be clipped.
+     * 
+     * @param nonConvexPoints
+     * @param a
+     * @param b
+     * @param c
+     * @param ccw
+     * @return
+     */
     public boolean isEar(Vector<double[]>nonConvexPoints, double[] a, double[] b, double[] c, boolean ccw)
     {
         //System.out.println("isConvex[("+a[0]+", "+a[1]+"), ("+b[0]+", "+b[1]+"), ("+c[0]+", "+c[1]+")]("+isConvex(a, b, c, ccw)+")");
@@ -336,6 +432,16 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return true;
     }
     
+    /**
+     * Triangulation support method which returns true the points a, b, and c 
+     * create a convex turn with respect to the counter-clockwise parameter.
+     * 
+     * @param a
+     * @param b
+     * @param c
+     * @param ccw
+     * @return
+     */
     private boolean isConvex(double[] a, double[] b, double[] c, boolean ccw)
     {
         double[] vec = new double[2];
@@ -344,6 +450,15 @@ public abstract class ExtrudedPolygon extends AbstractConstruct
         return !((result > 0 && !ccw) || result <=0 && ccw);
     }
     
+    /**
+     * Returns the triangulation of a polygon.  The points may form a convex 
+     * or non-convex polygon in counter-clockwise or clockwise order.  Each 
+     * element of the returned vector contains 3 indices from the passed 
+     * points which form a triangle of the triangulation. 
+     * 
+     * @param points
+     * @return
+     */
     public Vector<int[]> triangulate(double[][] points)
     {
         /*for (int i=0; i<points.length; i++) {

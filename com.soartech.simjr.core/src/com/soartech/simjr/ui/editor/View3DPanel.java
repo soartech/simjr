@@ -102,60 +102,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         this.sim = services.findService(Simulation.class);
         sim.addListener(this);
 
-       /* SceneGraphComponent rootNode = new SceneGraphComponent("root");
-        SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
-        constructs = new SceneGraphComponent("constructs");
-        SceneGraphComponent lightNode = new SceneGraphComponent("light");
-
-        rootNode.addChild(constructs);
-        rootNode.addChild(cameraNode);
-
-        grid = new Grid(1000, 1000, 1000);
-        constructs.addChild(grid);
-        imagePoly = new ImagePoly();
-        constructs.addChild(imagePoly);
-        cameraNode.addChild(lightNode);
-        
-        Light dl = new DirectionalLight();
-        lightNode.setLight(dl);
-   
-
-        MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
-
-        Appearance rootApp = new Appearance();
-        rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
-        rootApp.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(.5f, .5f, .5f));
-        rootNode.setAppearance(rootApp);
-            
-        Camera camera = new Camera();
-        camera.setNear(1);
-        camera.setFar(100000);
-        cameraNode.setCamera(camera);
-        SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
-        camPath.push(camera);
-        
-        Viewer viewer = new Viewer();
-        
-        viewer.setSceneRoot(rootNode);
-        viewer.setCameraPath(camPath);
-        ToolSystem toolSystem = ToolSystem.toolSystemForViewer(viewer);
-        toolSystem.initializeSceneTools();
-        
-        add((Component)viewer.getViewingComponent(), BorderLayout.CENTER);
-        
-        SimNavigationTool t = new SimNavigationTool();
-        t.setGain(400);
-        t.setGravitEnabled(false);
-        t.setMinHeight(10);
-        t.setRunFactor(4);
-        cameraNode.addTool(t);
-        
-        RenderTrigger rt = new RenderTrigger();
-        rt.addSceneGraphComponent(rootNode);
-        rt.addViewer(viewer);*/
-
         initialize3DScene();
-
     }
     
     /**
@@ -244,6 +191,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
     {
         /*The previous way of getting the entity given entityelement by looking for a property does not interop with
          *  the tigerboard editor.  We can assume that entity names SHOULD have unique names.
+         *  
+         *  This was changed back because other fixes seem to have resolved the interoperability problem and because
+         *  names can be changed by the user.
+         *  
          */
         for (Entity e : sim.getEntities())
         {
@@ -389,6 +340,14 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         }
     }
 
+    /**
+     * Attempt to create a corresponding 3D construct from the passed entity 
+     * or entity element and add it to the scene graph is successful.
+     * 
+     * @param ee
+     * @param entity
+     * @return
+     */
     private boolean add3DConstruct(EntityElement ee, Entity entity)
     {
         String category = null;
@@ -442,6 +401,10 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         return false;
     }
 
+    /**
+     * Call to completely clear and rebuild the 3D scene from the current 
+     * simulation entities.
+     */
     private void rebuildScene()
     {
         for (AbstractConstruct construct : map.values())
@@ -488,6 +451,13 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         return false;
     }
 
+    /**
+     * Updates the 3D construct associated with the passed entity element and 
+     * with the corresponding entity.
+     * 
+     * @param ee
+     * @return
+     */
     public boolean updateConstruct(EntityElement ee)
     {
         AbstractConstruct construct = map.get(ee);
