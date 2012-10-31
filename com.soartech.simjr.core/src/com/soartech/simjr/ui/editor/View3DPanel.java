@@ -102,7 +102,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         this.sim = services.findService(Simulation.class);
         sim.addListener(this);
 
-        SceneGraphComponent rootNode = new SceneGraphComponent("root");
+       /* SceneGraphComponent rootNode = new SceneGraphComponent("root");
         SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
         constructs = new SceneGraphComponent("constructs");
         SceneGraphComponent lightNode = new SceneGraphComponent("light");
@@ -152,7 +152,7 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         
         RenderTrigger rt = new RenderTrigger();
         rt.addSceneGraphComponent(rootNode);
-        rt.addViewer(viewer);
+        rt.addViewer(viewer);*/
 
         initialize3DScene();
 
@@ -176,60 +176,68 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         initialize3DScene();
     }
 
-    private void initialize3DScene()
-    {
-        SceneGraphComponent rootNode = new SceneGraphComponent("root");
-        SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
-        constructs = new SceneGraphComponent("constructs");
-        SceneGraphComponent lightNode = new SceneGraphComponent("light");
+    /**
+    * Creates and initializes the jReality viewer and scene graph
+    *
+    */
+        private void initialize3DScene()
+        {
+            SceneGraphComponent rootNode = new SceneGraphComponent("root");
+            SceneGraphComponent cameraNode = new SceneGraphComponent("camera");
+            constructs = new SceneGraphComponent("constructs");
+            SceneGraphComponent lightNode = new SceneGraphComponent("light");
 
-        rootNode.addChild(constructs);
-        rootNode.addChild(cameraNode);
-
-        grid = new Grid(1000, 1000, 1000);
-        constructs.addChild(grid);
-        imagePoly = new ImagePoly();
-        constructs.addChild(imagePoly);
-        cameraNode.addChild(lightNode);
-        
-        Light dl = new DirectionalLight();
-        lightNode.setLight(dl);
-   
-
-        MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
-
-        Appearance rootApp = new Appearance();
-        rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
-        rootApp.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(.5f, .5f, .5f));
-        rootNode.setAppearance(rootApp);
+            rootNode.addChild(constructs);
+            rootNode.addChild(cameraNode);
             
-        Camera camera = new Camera();
-        camera.setNear(1);
-        camera.setFar(100000);
-        cameraNode.setCamera(camera);
-        SceneGraphPath camPath = new SceneGraphPath(rootNode, cameraNode);
-        camPath.push(camera);
-        
-        Viewer viewer = new Viewer();
-        
-        viewer.setSceneRoot(rootNode);
-        viewer.setCameraPath(camPath);
-        ToolSystem toolSystem = ToolSystem.toolSystemForViewer(viewer);
-        toolSystem.initializeSceneTools();
-        
-        add((Component)viewer.getViewingComponent(), BorderLayout.CENTER);
-        
-        SimNavigationTool t = new SimNavigationTool();
-        t.setGain(400);
-        t.setGravitEnabled(false);
-        t.setMinHeight(10);
-        t.setRunFactor(4);
-        cameraNode.addTool(t);
-        
-        RenderTrigger rt = new RenderTrigger();
-        rt.addSceneGraphComponent(rootNode);
-        rt.addViewer(viewer);
-    }
+            // 3D box used for visualization debugging
+            //rootNode.addChild(debugSGC);
+            //debugSGC.setGeometry(Primitives.boxFactory(10, 10, 10, true, Pn.EUCLIDEAN).getGeometry());
+
+            grid = new Grid(50, 50, 100);
+            constructs.addChild(grid);
+            imagePoly = new ImagePoly();
+            constructs.addChild(imagePoly);
+            cameraNode.addChild(lightNode);
+
+            Light dl = new DirectionalLight();
+            lightNode.setLight(dl);
+
+
+            MatrixBuilder.euclidean().translate(0,500,500).rotateY(0).rotateX(-Math.PI*0.25).assignTo(cameraNode);
+
+            Appearance rootApp = new Appearance();
+            rootApp.setAttribute(CommonAttributes.BACKGROUND_COLOR, new Color(.9f, .9f, .9f));
+            rootApp.setAttribute(CommonAttributes.DIFFUSE_COLOR, new Color(.5f, .5f, .5f));
+            rootNode.setAppearance(rootApp);
+
+            Camera camera = new Camera();
+            camera.setNear(1);
+            camera.setFar(100000);
+            cameraNode.setCamera(camera);
+            camPath = new SceneGraphPath(rootNode, cameraNode);
+            camPath.push(camera);
+
+            viewer = new Viewer();
+
+            viewer.setSceneRoot(rootNode);
+            viewer.setCameraPath(camPath);
+            ToolSystem toolSystem = ToolSystem.toolSystemForViewer(viewer);
+            toolSystem.initializeSceneTools();
+
+            add((Component)viewer.getViewingComponent(), BorderLayout.CENTER);
+
+            SimNavigationTool t = new SimNavigationTool();
+            t.setGain(400);
+            t.setGravitEnabled(false);
+            t.setMinHeight(10);
+            t.setRunFactor(4);
+            cameraNode.addTool(t);
+
+            RenderTrigger rt = new RenderTrigger();
+            rt.addSceneGraphComponent(rootNode);
+            rt.addViewer(viewer);
+        }
 
     
     private Entity getSimEntity(EntityElement ee)
