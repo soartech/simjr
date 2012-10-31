@@ -1,4 +1,4 @@
-package com.soartech.simjr.ui.editor;
+package com.soartech.simjr.view3D;
 
 import java.util.List;
 

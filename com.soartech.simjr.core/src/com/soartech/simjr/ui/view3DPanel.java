@@ -48,8 +48,8 @@ import com.soartech.simjr.console.ConsoleParticipant;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
-import com.soartech.simjr.ui.editor.View3DPanel;
 import com.soartech.simjr.util.SwingTools;
+import com.soartech.simjr.view3D.View3DPanel;
 
 /**
  * This is the wrapper to the View3DPanel that allows that panel to interop with the tab framework

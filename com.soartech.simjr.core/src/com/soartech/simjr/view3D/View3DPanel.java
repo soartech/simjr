@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
@@ -29,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package com.soartech.simjr.ui.editor;
+package com.soartech.simjr.view3D;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -51,6 +50,9 @@ import com.soartech.simjr.sim.Detonation;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.SimulationListener;
+import com.soartech.simjr.ui.editor.MapPanel;
+import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
+import com.soartech.simjr.ui.editor.TerrainImageEntity;
 
 import de.jreality.jogl.Viewer;
 import de.jreality.math.MatrixBuilder;
@@ -198,8 +200,8 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
          */
         for (Entity e : sim.getEntities())
         {
-            if(ee == e.getProperty(EDITOR_ENTITY_PROP))
-            //if (ee.getName().equals(e.getName()))
+            //if(ee == e.getProperty(EDITOR_ENTITY_PROP))
+            if (ee.getName().equals(e.getName()))
             {
                 return e;
             }

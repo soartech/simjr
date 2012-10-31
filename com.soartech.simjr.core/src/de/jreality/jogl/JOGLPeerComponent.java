@@ -43,7 +43,8 @@ import de.jreality.shader.EffectiveAppearance;
 import de.jreality.shader.RenderingHintsShader;
 import de.jreality.util.LoggingSystem;
 import de.jreality.util.Rectangle3D;
-import com.soartech.simjr.ui.editor.Separable;
+
+import com.soartech.simjr.view3D.Separable;
 
 public class JOGLPeerComponent extends JOGLPeerNode implements TransformationListener, AppearanceListener,SceneGraphComponentListener {
 

@@ -1,4 +1,4 @@
-package com.soartech.simjr.ui.editor;
+package com.soartech.simjr.view3D;
 
 import de.jreality.math.Matrix;
 import de.jreality.math.MatrixBuilder;
