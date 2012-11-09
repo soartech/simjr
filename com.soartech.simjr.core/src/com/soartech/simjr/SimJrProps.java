@@ -261,4 +261,31 @@ public class SimJrProps
         }
         
     }
+    
+    /**
+     * Load properties from a url.
+     */
+    public static void loadPluginProperties(URL url)
+    {
+        InputStream is = null;
+        try {
+            try
+            {
+                is = url.openStream();
+                getDefaults().load(is);
+            }
+            catch (IOException e)
+            {
+                logger.error("Could not load resource '" + url.toString() + "'");
+            }
+            finally
+            {
+                is.close();
+            }
+        }
+        catch (IOException e)
+        {
+            logger.error("Could not load resource '" + url.toString() + "'");
+        }
+    }
 }
