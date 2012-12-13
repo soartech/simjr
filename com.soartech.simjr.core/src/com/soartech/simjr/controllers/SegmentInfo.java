@@ -47,7 +47,7 @@ public class SegmentInfo
     private final String waypoint;
     private final SpeedProvider speed;
     private final DelayProvider delay;
-    private final SegmentInfo next;
+    private SegmentInfo next;
     
     /**
      * An interface that provides the current speed for a segment
@@ -233,6 +233,11 @@ public class SegmentInfo
     public SegmentInfo getNext()
     {
         return next;
+    }
+    
+    protected void setNext(SegmentInfo next)
+    {
+        this.next = next;
     }
     
     /* (non-Javadoc)
