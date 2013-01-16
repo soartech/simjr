@@ -245,13 +245,6 @@ public class RouteFollower extends AbstractEntityCapability implements EntityCon
     }
 
     /* (non-Javadoc)
-     * @see com.soartech.simjr.EntityController#openDebugger()
-     */
-    public void openDebugger()
-    {
-    }
-
-    /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Tickable#tick(double)
      */
     @Override

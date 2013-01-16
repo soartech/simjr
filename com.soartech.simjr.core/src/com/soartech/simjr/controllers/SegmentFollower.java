@@ -259,13 +259,6 @@ public class SegmentFollower extends AbstractEntityCapability implements
     }
 
     /* (non-Javadoc)
-     * @see com.soartech.simjr.sim.EntityController#openDebugger()
-     */
-    public void openDebugger()
-    {
-    }
-
-    /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Tickable#tick(double)
      */
     @Override

@@ -43,7 +43,7 @@ import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityTools;
 
 /**
- * An object implementing the ability of an enity to contain other
+ * An object implementing the ability of an entity to contain other
  * entities, such as a troop transport.  This object is accessible
  * with entity.getAdapter(EntityContainerCapability.class).
  * 

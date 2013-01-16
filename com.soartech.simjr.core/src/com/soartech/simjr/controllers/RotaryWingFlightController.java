@@ -209,15 +209,6 @@ public class RotaryWingFlightController extends AbstractEntityCapability impleme
         super.detach();
     }
 
-
-
-    /* (non-Javadoc)
-     * @see com.soartech.simjr.EntityController#openDebugger()
-     */
-    public void openDebugger()
-    {
-    }
-
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Tickable#tick(double)
      */

@@ -43,8 +43,5 @@ package com.soartech.simjr.sim;
  */
 public interface EntityController extends EntityCapability, Tickable
 {
-    /**
-     * If the controller supports a debugger, this method should display it.
-     */
-    void openDebugger();
+
 }
