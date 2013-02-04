@@ -63,6 +63,16 @@ public class Geodetic
         }
         
         /**
+         * Instantiates a new point at the given lat, long, alt.
+         */
+        public Point(double latitude, double longitude, double altitude)
+        {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.altitude = altitude;
+        }
+        
+        /**
          * Creates a copy of an existing point.
          *
          * @param other the other
