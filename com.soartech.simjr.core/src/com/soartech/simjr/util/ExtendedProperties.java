@@ -121,6 +121,21 @@ public class ExtendedProperties
         map.put(key, value);
     }
     
+    public void setProperty(String key, double value)
+    {
+        map.put(key, Double.toString(value));
+    }
+    
+    public void setProperty(String key, boolean value)
+    {
+        map.put(key, Boolean.toString(value));
+    }
+    
+    public void setProperty(String key, int value)
+    {
+        map.put(key, Integer.toString(value));
+    }
+    
     public int getInteger(String key, int def)
     {
         try
