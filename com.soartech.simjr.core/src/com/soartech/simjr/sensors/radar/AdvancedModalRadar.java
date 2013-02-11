@@ -25,10 +25,14 @@ public class AdvancedModalRadar extends AbstractSensor implements RadarSensor
     private RadarController controller = new RadarController(new RangeWhileSearch());
     private ContactManager contactManager;
     private List<Detection> detections = new ArrayList<Detection>();
+    private final ExtendedProperties props;
+    private final String name;
 
     public AdvancedModalRadar(String name, ExtendedProperties props)
     {
         super(name);
+        this.props = props;
+        this.name = name;
     }
     
     public RadarController getRadarController()
@@ -103,8 +107,18 @@ public class AdvancedModalRadar extends AbstractSensor implements RadarSensor
         
     private boolean canDetect(Entity target)
     {
+        if (props.getBoolean(name + ".alwaysDetect", false))
+        {
+            return true;
+        }
+        
         boolean inRadar = controller.isInRange(getEntity(), target.getPosition());
         if ( !inRadar ) return false;
+        
+        if (props.getBoolean(name + ".ignoreNotch", false))
+        {
+            return true;
+        }
         
         boolean inNotch = notchFilter.inNotch(target.getPosition(), target.getVelocity());
         return !inNotch;
