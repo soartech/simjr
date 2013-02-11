@@ -93,9 +93,6 @@ requireScript("ui");
             e.orientation = java.lang.Math.atan2(dir.y, dir.x);
         },
         
-        openDebugger: function() { 
-            logger.info("JavaScript debugging not supported");
-        },
         getAdapter: function(klass) { return null; }
     }));
     
