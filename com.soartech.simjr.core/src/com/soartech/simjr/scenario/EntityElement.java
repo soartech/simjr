@@ -48,7 +48,7 @@ import com.soartech.simjr.SimJrProps;
 /**
  * @author ray
  */
-public class EntityElement implements ModelElement, ModelChangeListener
+public class EntityElement implements ModelElement
 {
     private static final String NAME_XPATH = "@simjr:name";
     public static final String NAME = EntityElement.class.getCanonicalName() + ".name";
@@ -111,8 +111,6 @@ public class EntityElement implements ModelElement, ModelChangeListener
         this.orientation = new OrientationElement(this);
         this.initScript = ScriptBlockElement.attach(model, this.element, "initScript");
         this.points = PointElementList.attach(model, this);
-        
-        this.model.addModelChangeListener(this);
     }
     
 
@@ -359,18 +357,6 @@ public class EntityElement implements ModelElement, ModelChangeListener
     public String toString()
     {
         return getName() + " (" + getPrototype() + ")";
-    }
-
-    @Override
-    public void onModelChanged(ModelChangeEvent e)
-    {
-        // TODO Auto-generated method stub
-        System.out.println("Got ModelChangeEvent: " + e);
-        
-        if (e.property.equals(TerrainElement.ORIGIN))
-        {
-            System.out.println("Origin changed");            
-        }
     }
     
     
