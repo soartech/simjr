@@ -36,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
 import net.miginfocom.swing.MigLayout;
@@ -114,6 +115,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
     private void updateLatitude()
     {
         final TerrainElement t = app.getModel().getTerrain();
+        final CompoundEdit compoundEdit = new CompoundEdit();  // Holds origin change and all the entity edits
+
         try
         {
             final double newLat = Double.valueOf(latField.getText());
@@ -122,13 +125,22 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
                 throw new NumberFormatException("Latitude out of bounds");
             }
             
-            UndoableEdit edit = t.setOrigin(newLat, t.getOriginLongitude());
+            final UndoableEdit edit = t.setOrigin(newLat, t.getOriginLongitude());
+            /*
             if(edit != null)
             {
                 app.findService(UndoService.class).addEdit(edit);
             }
+            */
+            if(edit != null)
+            {
+                compoundEdit.addEdit(edit);
+            }
             
-            updateEntityLocations();
+            updateEntityLocations(compoundEdit);
+            
+            compoundEdit.end();
+            app.findService(UndoService.class).addEdit(compoundEdit);
         }
         catch(NumberFormatException e)
         {
@@ -139,6 +151,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
     private void updateLongitude()
     {
         final TerrainElement t = app.getModel().getTerrain();
+        final CompoundEdit compoundEdit = new CompoundEdit();  // Holds origin change and all the entity edits
+        
         try
         {
             final double newLon = Double.valueOf(lonField.getText());
@@ -148,9 +162,16 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
             }
             
             final UndoableEdit edit = t.setOrigin(t.getOriginLatitude(), newLon);
-            app.findService(UndoService.class).addEdit(edit);
+            //app.findService(UndoService.class).addEdit(edit);
+            if(edit != null)
+            {
+                compoundEdit.addEdit(edit);
+            }
 
-            updateEntityLocations();
+            updateEntityLocations(compoundEdit);
+            
+            compoundEdit.end();
+            app.findService(UndoService.class).addEdit(compoundEdit);
         }
         catch(NumberFormatException e)
         {
@@ -158,17 +179,17 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
         }
     }
         
-    private void updateEntityLocations()
+    private void updateEntityLocations(CompoundEdit compoundEdit)
     {
         // Update element locations
         EntityElementList eEList = app.getModel().getEntities();
         for(EntityElement ee: eEList.getEntities())
         {
             Entity entity = sim.getEntity(ee.getName());
-            UndoableEdit entityEdit = ee.getLocation().setLocation(sim.getTerrain().toGeodetic(entity.getPosition()));
+            final UndoableEdit entityEdit = ee.getLocation().setLocation(sim.getTerrain().toGeodetic(entity.getPosition()));
             if(entityEdit != null)
             {
-                app.findService(UndoService.class).addEdit(entityEdit);
+                compoundEdit.addEdit(entityEdit);
             }
         }
     }
