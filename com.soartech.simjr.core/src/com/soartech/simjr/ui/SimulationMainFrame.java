@@ -270,13 +270,16 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public void addFrame(String id, String title, Component c, Component nextTo)
     {
-        //create a dockable to hold the component
-        DefaultSingleCDockable dockable = new DefaultSingleCDockable(title, c);
-        
-        //add the dockable to the main frame
+        // create a dockable to hold the component
+        DefaultSingleCDockable dockable = new DefaultSingleCDockable(id, title,
+                c);
+        dockable.setMinimizable(false);
+        dockable.setCloseable(true);
+
+        // add the dockable to the main frame
         addDockable(dockable, defaultSingleDockableLocation, id);
-        
-        //TODO: implement setting the location next to the given component
+
+        // TODO: implement setting the location next to the given component
     }
     
     /**
