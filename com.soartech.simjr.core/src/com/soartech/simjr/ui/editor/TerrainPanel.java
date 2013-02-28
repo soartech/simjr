@@ -40,11 +40,15 @@ import javax.swing.undo.UndoableEdit;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.soartech.simjr.scenario.EntityElement;
+import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
+import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.Simulation;
 
 /**
  * @author ray
@@ -53,7 +57,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
 {
     private static final long serialVersionUID = -973913392305900522L;
     
-    private final ScenarioEditorServiceManager app;
+    private final ScenarioEditorServiceManager app;    private final Simulation sim;
+    
     private final JTextField latField = new JTextField(15);
     private final JTextField lonField = new JTextField(15);
     private final JTextField metersPerPixelField = new JTextField(15);
@@ -63,6 +68,7 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
         super(new MigLayout());
         
         this.app = app;
+        this.sim = app.findService(Simulation.class);
         
         add(new JLabel("Origin latitude"));
         latField.setHorizontalAlignment(JTextField.RIGHT);
@@ -121,6 +127,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
             {
                 app.findService(UndoService.class).addEdit(edit);
             }
+            
+            updateEntityLocations();
         }
         catch(NumberFormatException e)
         {
@@ -141,6 +149,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
             
             final UndoableEdit edit = t.setOrigin(t.getOriginLatitude(), newLon);
             app.findService(UndoService.class).addEdit(edit);
+
+            updateEntityLocations();
         }
         catch(NumberFormatException e)
         {
@@ -148,6 +158,21 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
         }
     }
         
+    private void updateEntityLocations()
+    {
+        // Update element locations
+        EntityElementList eEList = app.getModel().getEntities();
+        for(EntityElement ee: eEList.getEntities())
+        {
+            Entity entity = sim.getEntity(ee.getName());
+            UndoableEdit entityEdit = ee.getLocation().setLocation(sim.getTerrain().toGeodetic(entity.getPosition()));
+            if(entityEdit != null)
+            {
+                app.findService(UndoService.class).addEdit(entityEdit);
+            }
+        }
+    }
+    
     private void updateMetersPerPixel()
     {
         final TerrainImageElement t = app.getModel().getTerrain().getImage();
