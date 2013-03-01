@@ -308,4 +308,29 @@ prototypes:
     category: carrier
     properties:
         ms2525.template: "S%cSPCLCV--"
- 
+
+### Structures ##################################################################
+- &structure
+    id: structure
+    parent: *ground
+    properties:
+        category: Structures
+
+- &water-tower
+    id: water-tower
+    parent: *structure
+    properties:
+        ms2525.template: "E%cFPMG----"
+
+- &telecom-tower
+    id: telecom-tower
+    parent: *structure
+    properties:
+        ms2525.template: "E%cFPKB----"
+
+### Drones ##################################################################
+- &drone-attack
+    id: drone-attack
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
