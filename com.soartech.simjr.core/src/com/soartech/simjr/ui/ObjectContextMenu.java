@@ -34,9 +34,12 @@ package com.soartech.simjr.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Action;
+import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -131,13 +134,43 @@ public class ObjectContextMenu extends JPopupMenu
                     return o1.getValue(Action.NAME).toString().compareToIgnoreCase(o2.getValue(Action.NAME).toString());
                 }});
             
+            
+            Map<String, JMenu> submenus = new HashMap<String, JMenu>();
+            
             for(AbstractSimulationAction action : actions)
             {
                 if(action.isEnabled())
                 {
-                    add(action);
+                    //add this action to a submenu in the popup if necessary
+                    if(!action.getSubmenuId().isEmpty())
+                    {                        
+                        //try to get the submenu based on its id
+                        JMenu submenu = submenus.get(action.getSubmenuId());
+                        
+                        //create a new JMenu object if the submenu doesn't exist in the map
+                        if(submenu == null)
+                        {
+                            submenu = new JMenu();
+                            submenu.setText(action.getSubmenuId());
+                            
+                            //add the new submenu to this JPopupMenu
+                            add(submenu);
+                            
+                            //add the new submenu to the map
+                            submenus.put(action.getSubmenuId(), submenu);
+                        }
+                        
+                        //add the action to the submenu now that we know it exists
+                        submenu.add(action);
+                        
+                    }
+                    else //or just add as a regular menu item
+                    {
+                        add(action);
+                    }
                 }
             }
+            
         }
     }
 
