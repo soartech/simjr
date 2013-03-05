@@ -236,19 +236,19 @@ public class EntityShape implements EntityPropertyListener
     
     public Text createLabel(int xOffset, int yOffset, String text)
     {
-        LabelFrame lf = createLabel(xOffset, yOffset, text, "_mainLabel"); 
+        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), "_mainLabel"); 
         
         return lf.label;
     }
     
-    public LabelFrame createLabel(int xOffset, int yOffset, String text, String labelType)
+    public LabelFrame createLabel(int xOffset, int yOffset, String text, Color color, String labelType)
     {
-        LabelFrame lf = createLabel(xOffset, yOffset, text, getPrimaryDisplayShape(), labelType); 
+        LabelFrame lf = createLabel(xOffset, yOffset, text, getPrimaryDisplayShape(), color, labelType); 
         
         return lf;
     }
     
-    public LabelFrame createLabel(int xOffset, int yOffset, String text, String relative, String labelType)
+    public LabelFrame createLabel(int xOffset, int yOffset, String text, String relative, Color color, String labelType)
     {
         String name = getRootFrame().getName();
         Frame labelFrame = new Frame(name + labelType + ".labelFrame", EntityConstants.LAYER_LABELS, 
@@ -256,7 +256,7 @@ public class EntityShape implements EntityPropertyListener
                 Rotation.IDENTITY);
         TextStyle labelStyle = new TextStyle();
         labelStyle.setFillStyle(FillStyle.FILLED);
-        labelStyle.setFillColor(new Color(0xF0, 0xF0, 0xE0));
+        labelStyle.setFillColor(color);
         labelStyle.setOpacity(0.75f);
         Text label = new Text(name + labelType + ".label", EntityConstants.LAYER_LABELS,
                  Position.createRelativePixel(xOffset, yOffset, name + labelType + ".labelFrame"),
