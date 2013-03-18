@@ -264,6 +264,22 @@ public class EntityShape implements EntityPropertyListener
                  labelStyle,
                  text);
         
+        //remove the previous label of the same type
+        removeLabel(labelType);
+        
+        //add the new label frame shapes to this entity
+        addShape(labelFrame);
+        addShape(label);
+        
+        //save the LabelFrame object
+        LabelFrame lf = new LabelFrame(labelFrame, label, labelType);
+        labels.add(lf);
+        
+        return lf;
+    }
+    
+    public void removeLabel(String labelType)
+    {
         //remove any previous label frame shapes of the same type
         LabelFrame toRemove = null;
         for(LabelFrame lf : labels)
@@ -276,22 +292,12 @@ public class EntityShape implements EntityPropertyListener
                 break;
             }
         }
-
+        
         //keep the LabelFrame list synchronized with the shape list
         if(toRemove != null)
         {
             labels.remove(toRemove);
         }
-        
-        //add the new label frame shapes to this entity
-        addShape(labelFrame);
-        addShape(label);
-        
-        //save the LabelFrame object
-        LabelFrame lf = new LabelFrame(labelFrame, label, labelType);
-        labels.add(lf);
-        
-        return lf;
     }
 
     public void update()
