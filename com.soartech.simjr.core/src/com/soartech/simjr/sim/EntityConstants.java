@@ -139,12 +139,14 @@ public interface EntityConstants
     public static final String CATEGORY_HUMANS = "Humans";
     public static final String CATEGORY_AREAS = "Areas";
     public static final String CATEGORY_FLYOUTS = "Flyouts";
+    public static final String CATEGORY_STRUCTURES = "Structures";
     
     public static String[] ALL_CATEGORIES = new String[] {
         CATEGORY_HUMANS,
         CATEGORY_VEHICLES,
         CATEGORY_ROUTES,
         CATEGORY_WAYPOINTS,
-        CATEGORY_FLYOUTS
+        CATEGORY_FLYOUTS,
+        CATEGORY_STRUCTURES
     };
 }

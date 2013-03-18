@@ -31,6 +31,8 @@
  */
 package com.soartech.simjr.scenario;
 
+import java.text.DecimalFormat;
+
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -141,7 +143,7 @@ public class LocationElement implements ModelElement
         final double oldLat = getLatitude();
         final double oldLon = getLongitude();
         final double oldAlt = getAltitude();
-        
+                
         boolean changed = model.setText(latPath, context, Double.toString(latDegrees), null);
         changed = model.setText(lonPath, context, Double.toString(lonDegrees), null) | changed;        
         changed = model.setText(altPath, context, Double.toString(altitude), null) | changed;
@@ -168,6 +170,14 @@ public class LocationElement implements ModelElement
         p.altitude = getAltitude();
         return p;
     }
+    
+    public String toString()
+    {
+        DecimalFormat df = new DecimalFormat("#.####");
+        
+        return '(' + df.format(getLatitude()) + ", " + df.format(getLongitude()) + ')';
+    }
+    
     private ModelChangeEvent newEvent(String prop)
     {
         return new ModelChangeEvent(this.parent.getModel(), this, prop);

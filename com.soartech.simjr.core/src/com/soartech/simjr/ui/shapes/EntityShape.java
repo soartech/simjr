@@ -73,11 +73,24 @@ public class EntityShape implements EntityPropertyListener
     private boolean updateDamage = false;
     private boolean updateForce = false;
     private boolean updateColor = false;
-    private Frame labelFrame;
-    private Text label;
     private EntityVisibleRangeShape visibleRange = new EntityVisibleRangeShape(this, EntityConstants.PROPERTY_VISIBLE_RANGE, Color.BLUE);
     private EntityVisibleRangeShape radarRange = new EntityVisibleRangeShape(this, EntityConstants.PROPERTY_RADAR, Color.RED);
     private CalculatedImpactPointShape ccip = new CalculatedImpactPointShape(this);
+    
+    private List<LabelFrame> labels = new ArrayList<LabelFrame>();
+    public class LabelFrame 
+    {
+        public Frame frame;
+        public Text label;
+        public String labelType;
+        
+        public LabelFrame(Frame frame, Text label, String labelType)
+        {
+            this.frame = frame;
+            this.label = label;
+            this.labelType = labelType;
+        }
+    }
     
     /**
      * Get the name of the body frame for a given entity
@@ -223,29 +236,62 @@ public class EntityShape implements EntityPropertyListener
     
     public Text createLabel(int xOffset, int yOffset, String text)
     {
-        return createLabel(xOffset, yOffset, text, getPrimaryDisplayShape());
+        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), "_mainLabel"); 
+        
+        return lf.label;
     }
     
-    public Text createLabel(int xOffset, int yOffset, String text, String relative)
+    public LabelFrame createLabel(int xOffset, int yOffset, String text, Color color, String labelType)
+    {
+        LabelFrame lf = createLabel(xOffset, yOffset, text, getPrimaryDisplayShape(), color, labelType); 
+        
+        return lf;
+    }
+    
+    public LabelFrame createLabel(int xOffset, int yOffset, String text, String relative, Color color, String labelType)
     {
         String name = getRootFrame().getName();
-        labelFrame = new Frame(name + ".labelFrame", EntityConstants.LAYER_LABELS, 
+        Frame labelFrame = new Frame(name + labelType + ".labelFrame", EntityConstants.LAYER_LABELS, 
                 Position.createRelativePixel(0, 0, relative),
                 Rotation.IDENTITY);
         TextStyle labelStyle = new TextStyle();
         labelStyle.setFillStyle(FillStyle.FILLED);
-        labelStyle.setFillColor(new Color(0xF0, 0xF0, 0xE0));
+        labelStyle.setFillColor(color);
         labelStyle.setOpacity(0.75f);
-        label = new Text(name + ".label", EntityConstants.LAYER_LABELS,
-                 Position.createRelativePixel(xOffset, yOffset, name + ".labelFrame"),
+        Text label = new Text(name + labelType + ".label", EntityConstants.LAYER_LABELS,
+                 Position.createRelativePixel(xOffset, yOffset, name + labelType + ".labelFrame"),
                  Rotation.IDENTITY,
                  labelStyle,
                  text);
         
+        //remove any previous label frame shapes of the same type
+        LabelFrame toRemove = null;
+        for(LabelFrame lf : labels)
+        {
+            if(lf.labelType.equals(labelType))
+            {
+                removeShape(lf.frame);
+                removeShape(lf.label);
+                toRemove = lf;
+                break;
+            }
+        }
+
+        //keep the LabelFrame list synchronized with the shape list
+        if(toRemove != null)
+        {
+            labels.remove(toRemove);
+        }
+        
+        //add the new label frame shapes to this entity
         addShape(labelFrame);
         addShape(label);
         
-        return label;
+        //save the LabelFrame object
+        LabelFrame lf = new LabelFrame(labelFrame, label, labelType);
+        labels.add(lf);
+        
+        return lf;
     }
 
     public void update()
@@ -266,7 +312,18 @@ public class EntityShape implements EntityPropertyListener
             Color lineColor = (Color) entity.getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
             
             for ( Shape s : shapes ) {
-                if ( s != label && s != labelFrame ) {
+                
+                boolean updateColorForThisShape = true;
+                for(LabelFrame lf : labels)
+                {
+                    if(s == lf.frame || s == lf.label)
+                    {
+                        updateColorForThisShape = false;
+                        break;
+                    }
+                }
+                
+                if (updateColorForThisShape) {
                     s.getStyle().setFillColor(fillColor);
                     s.getStyle().setLineColor(lineColor);
                 }
@@ -283,15 +340,16 @@ public class EntityShape implements EntityPropertyListener
                 shape.setVisible(visible);
             }
             
-            if(label != null)
+            //update labels
+            for(LabelFrame lf : labels)
             {
                 boolean labelVisible = 
-                    (Boolean) EntityTools.getProperty(entity.getProperties(), 
-                        EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, true);
+                        (Boolean) EntityTools.getProperty(entity.getProperties(), 
+                                EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, true);
                 
                 if(visible && !labelVisible)
                 {
-                    label.setVisible(false);
+                    lf.label.setVisible(false);
                 }
             }
         }

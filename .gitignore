@@ -1,8 +1,1 @@
-com.soartech.math/bin
-com.soartech.simjr.core.test/bin
-com.soartech.simjr.core/bin
-com.soartech.simjr.web/bin
-com.soartech.simjr.startup/bin
-/simjr-resources/simjr.log
-com.soartech.math.test/bin
-com.soartech.shapesystem/bin
+bin/
