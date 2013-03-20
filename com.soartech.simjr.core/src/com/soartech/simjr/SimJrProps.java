@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -101,6 +102,15 @@ public class SimJrProps
     public static ExtendedProperties getProperties()
     {
         return user;
+    }
+    
+    /**
+     * @return The final property values, as a less-powerful Java Properties
+     *         object.
+     */
+    public static Properties getJavaProperties()
+    {
+        return user.getJavaProperties();
     }
     
     /**
