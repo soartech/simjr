@@ -121,6 +121,21 @@ public class ExtendedProperties
         map.put(key, value);
     }
     
+    public void setProperty(String key, double value)
+    {
+        map.put(key, Double.toString(value));
+    }
+    
+    public void setProperty(String key, boolean value)
+    {
+        map.put(key, Boolean.toString(value));
+    }
+    
+    public void setProperty(String key, int value)
+    {
+        map.put(key, Integer.toString(value));
+    }
+    
     public int getInteger(String key, int def)
     {
         try
@@ -324,32 +339,4 @@ public class ExtendedProperties
         }
         return null;
     }
-    
-    /**
-     * Creates a new JDK properties object and recursively stores its parents
-     * and its own properties in it before returning it.
-     * 
-     * @return a properties object with
-     */
-    public Properties getJavaProperties()
-    {
-        Properties properties = new Properties();
-        if (parent != null)
-        {
-            parent.dumpTo(properties);
-        }
-        
-        dumpTo(properties);
-        
-        return properties;
-    }
-    
-    private void dumpTo(Properties destination)
-    {
-        for (Map.Entry<String, String> e : map.entrySet())
-        {
-            destination.setProperty(e.getKey(), e.getValue());
-        }
-    }
 }
-
