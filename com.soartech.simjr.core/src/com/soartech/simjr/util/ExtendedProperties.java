@@ -339,4 +339,31 @@ public class ExtendedProperties
         }
         return null;
     }
+    
+    /**
+     * Creates a new JDK properties object and recursively stores its parents
+     * and its own properties in it before returning it.
+     * 
+     * @return a properties object with
+     */
+    public Properties getJavaProperties()
+    {
+        Properties properties = new Properties();
+        if (parent != null)
+        {
+            parent.dumpTo(properties);
+        }
+        
+        dumpTo(properties);
+        
+        return properties;
+    }
+    
+    private void dumpTo(Properties destination)
+    {
+        for (Map.Entry<String, String> e : map.entrySet())
+        {
+            destination.setProperty(e.getKey(), e.getValue());
+        }
+    }
 }
