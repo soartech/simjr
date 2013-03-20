@@ -49,10 +49,10 @@ public class Detonation
 {
     private static final Logger logger = Logger.getLogger(Detonation.class);
     
-    private Simulation sim;
-    private Weapon weapon;
-    private Entity target;
-    private Vector3 location;
+    private final Simulation sim;
+    private final Weapon weapon;
+    private final Entity target;
+    private final Vector3 location;
     private List<Entity> damagedEntities = new ArrayList<Entity>();
     
     /**
