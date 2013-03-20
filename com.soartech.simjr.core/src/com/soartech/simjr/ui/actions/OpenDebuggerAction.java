@@ -34,6 +34,7 @@ package com.soartech.simjr.ui.actions;
 import java.awt.event.ActionEvent;
 
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sim.DebugProvider;
 import com.soartech.simjr.sim.EntityController;
 import com.soartech.simjr.ui.SimulationImages;
 
@@ -61,7 +62,7 @@ public class OpenDebuggerAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        setEnabled(getController() != null);
+        setEnabled(getDebugger() != null);
     }
 
     /* (non-Javadoc)
@@ -69,15 +70,15 @@ public class OpenDebuggerAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        EntityController controller = getController();
-        if(controller != null)
+        DebugProvider debugger = getDebugger();
+        if(debugger != null)
         {
-            controller.openDebugger();
+            debugger.openDebugger();
         }
     }
 
-    private EntityController getController()
+    private DebugProvider getDebugger()
     {
-        return Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityController.class);
+        return Adaptables.adapt(getSelectionManager().getSelectedObject(), DebugProvider.class);
     }
 }
