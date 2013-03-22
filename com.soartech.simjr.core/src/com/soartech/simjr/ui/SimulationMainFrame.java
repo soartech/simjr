@@ -158,8 +158,9 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private EntityPropertiesView propertiesView;
     private CheatSheetView cheatSheetView;
-    
+
     private Map<String,SingleCDockable> singleDockables = new HashMap<String,SingleCDockable>();
+    private Map<String,SingleCDockable> singleAuxillaryDockables = new HashMap<String,SingleCDockable>();
     
     /**
      * The factory for PVD frames for DF
@@ -258,6 +259,13 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         singleDockables.put(key, dockable);
         control.addDockable(dockable);
         dockable.setVisible(true);        
+    }
+    
+    public void addAuxillaryDockable(SingleCDockable dockable, CLocation location, String key)
+    {
+        dockable.setLocation(location);
+        singleAuxillaryDockables.put(key, dockable);
+        control.addDockable(dockable);        
     }
     
     /**
@@ -368,6 +376,13 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public void resetDockingLayout()
     {
+        //close all non-default dockables
+        for(SingleCDockable dockable : singleAuxillaryDockables.values())
+        {
+            dockable.setVisible(false);
+            control.removeDockable(dockable);
+        }        
+        
         //close each single dockable
         for(SingleCDockable dockable : singleDockables.values())
         {
@@ -644,6 +659,14 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
 
         //add the view menu to the bar
         bar.add(viewMenuRoot.getMenu());
+    }
+    
+    public void addViewMenuAction(Class<?> klass)
+    {
+        FreeMenuPiece piece3 = new FreeMenuPiece();
+        viewMenuRoot.add(piece3);
+        piece3.add(new JSeparator());
+        piece3.add(createMenuItemFromAction(piece3, klass));
     }
     
     private void addAction(JToolBar bar, Class<?> klass)
