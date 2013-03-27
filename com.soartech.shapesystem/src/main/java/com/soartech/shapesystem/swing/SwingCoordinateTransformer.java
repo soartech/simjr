@@ -138,10 +138,9 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         double mx = (x - panOffsetRight) / scale;
         double my = ((y-panOffsetUp) - d.getHeight()) / -scale;
         
-        
         // TODO: JCC
         double[] pt = {mx, my};
-        AffineTransform.getRotateInstance(-rotation)
+        AffineTransform.getRotateInstance(-rotation, 0.0, 0.0)
           .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
         mx = pt[0];
         my = pt[1];
