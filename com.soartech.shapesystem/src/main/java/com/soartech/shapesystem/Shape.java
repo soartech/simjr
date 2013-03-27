@@ -34,6 +34,8 @@ package com.soartech.shapesystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
+
 
 /**
  * @author ray
@@ -172,7 +174,7 @@ public abstract class Shape
         {
         	angles.add(SimpleRotation.fromDegrees(0.0));
         }
-        
+
         rotate(SimpleRotation.fromDegrees(rotation.getDegrees()));
         
         switch(rotation.getType())
@@ -189,6 +191,9 @@ public abstract class Shape
             {
                 Shape parent = system.getShape(rotation.getParent());
                 rotate(SimpleRotation.fromDegrees(parent.rotation.getDegrees()));
+                
+                // TODO: JCC - Why on earth does this work? Surely this breaks something
+                rotate(SimpleRotation.fromRadians(((SwingCoordinateTransformer)transformer).getRotation()));
             }
             break;
         case POINT_AT:
