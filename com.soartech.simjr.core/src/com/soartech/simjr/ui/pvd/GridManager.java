@@ -38,6 +38,9 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 
 import com.soartech.math.Vector3;
+import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.ScalarUnit;
+import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
 /**
@@ -122,6 +125,22 @@ public class GridManager
         }
         
         double gridPixels = transformer.metersXToScreen(gridIncrement) - transformer.metersXToScreen(0);
+        // TODO: JCC
+        gridPixels = transformer.scalarToPixels(new Scalar(gridIncrement, ScalarUnit.Meters));
+        SimplePosition gridPixelsXY = transformer.metersToScreen(gridIncrement, 0.0);
+        SimplePosition origin = transformer.metersToScreen(0.0, 0.0);
+        gridPixelsXY.x -= origin.x;
+        gridPixelsXY.y -= origin.y;
+        if (gridPixelsXY.x == 0.0)
+        {
+            gridPixels = Math.abs(gridPixelsXY.y);
+        }
+        else if (gridPixelsXY.x < 0)
+        {
+            gridPixels = Math.abs(gridPixelsXY.x);
+        }
+        //
+        
         double gridStartMeters = getNextGridMultiple(topLeft.x, gridIncrement);
         double gridStartScreen = transformer.metersXToScreen(gridStartMeters);
         
