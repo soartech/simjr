@@ -96,7 +96,7 @@ function toGeocentric(props)
     var sim = getSimulation();
     if(sim == null)
     {
-        logger.error("simjr.terrain.js:setOrigin() could not find simulation");
+        logger.error("simjr.terrain.js:toGeocentric() could not find simulation");
         return null;
     }
     if(typeof(props) == "string")
@@ -123,10 +123,70 @@ function toGeocentric(props)
     }
     else
     {
-        logger.error("simjr.terrain.js:setOrigin() expected either an MGRS string or a lat/lon struct.");
+        logger.error("simjr.terrain.js:toGeocentric() expected either an MGRS string or a lat/lon struct.");
         return null;
     }
+}
 
+function fromMgrs(mgrs)
+{
+    var sim = getSimulation();
+    if(sim == null)
+    {
+        logger.error("simjr.terrain.js:fromMgrs() could not find simulation");
+        return null;
+    }
+    if(typeof(mgrs) == "string")
+    {
+        return sim.getTerrain().fromMgrs(mgrs);
+    }
+    else
+    {
+        logger.error("simjr.terrain.js:fromMgrs() expected an MGRS string");
+        return null;
+    }
+}
+
+function toMgrs(props)
+{
+    var sim = getSimulation();
+    if(sim == null)
+    {
+        logger.error("simjr.terrain.js:toMgrs() could not find simulation");
+        return null;
+    }
+    if(typeof(props) == "string")
+    {
+        return props;
+    }
+    else if(props.latitude !== undefined || props.longitude !== undefined)
+    {
+        var origin = new Geodetic.Point();
+        if(props.latitude !== undefined)
+        {
+            origin.latitude = java.lang.Math.toRadians(props.latitude);
+        }
+        if(props.longitude !== undefined)
+        {
+            origin.longitude = java.lang.Math.toRadians(props.longitude);
+        }
+        if(props.altitude !== undefined)
+        {
+            origin.altitude = props.altitude;
+        }
+        origin.altitude = origin.altitude + sim.getTerrain().getElevationAtPoint(origin);
+        return String(sim.getTerrain().toMgrs(sim.getTerrain().fromGeodetic(origin)));
+    }
+    else if (props.x !== undefined || props.y !== undefined)
+    {
+        var point = new Vector3(props.x, props.y, 0.0);
+        return String(sim.getTerrain().toMgrs(point));
+    }
+    else
+    {
+        logger.error("simjr.terrain.js:toMgrs() expected either an MGRS string or a lat/lon struct.");
+        return null;
+    }
 }
 
 logger.info("finished loading terrain.js");
