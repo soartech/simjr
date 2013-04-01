@@ -17,26 +17,31 @@ import com.soartech.simjr.ui.editor.TerrainPanel;
  * @author joshua.haley
  *
  */
-public class ScenarioPropertyEditor extends DefaultSingleCDockable{
-	
+public class ScenarioPropertyEditor extends DefaultSingleCDockable
+{
+
     private final ScenarioEditorServiceManager app;
-	
-	public ScenarioPropertyEditor(ScenarioEditorServiceManager app)
-	{
-		super("ScenarioProperties");
-		this.app = app;
-		setLayout(new MigLayout());
-		
+
+    public ScenarioPropertyEditor(ScenarioEditorServiceManager app)
+    {
+        super("ScenarioProperties");
+        this.app = app;
+        setLayout(new MigLayout());
+
         setCloseable(true);
         setMinimizable(true);
         setExternalizable(true);
         setMaximizable(true);
         setTitleText("ScenarioProperties");
         setResizeLocked(true);
-		
-		
-		final TerrainPanel terrain = new TerrainPanel(app);
+
+        final TerrainPanel terrain = new TerrainPanel(app);
         terrain.setBorder(BorderFactory.createTitledBorder("Terrain"));
-        add(terrain, BorderLayout.EAST);
-	}
+        add(terrain, BorderLayout.WEST);
+
+        final ScenarioMetaDataPanel metadata = new ScenarioMetaDataPanel(app);
+        metadata.setBorder(BorderFactory
+                .createTitledBorder("Scenario Metadata"));
+        add(metadata, BorderLayout.EAST);
+    }
 }
