@@ -46,6 +46,7 @@ import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.TextStyle;
 import com.soartech.shapesystem.shapes.Frame;
 import com.soartech.shapesystem.shapes.Text;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
@@ -403,8 +404,10 @@ public class EntityShape implements EntityPropertyListener
     
     public static Vector3 adjustPositionForShadow(Vector3 position, double agl)
     {
+        final Double shadowAglScale = SimJrProps.get("simjr.simulation.shadow-agl-scale", 2.0);
+        
         agl = Math.max(0.0, agl);
-        agl /= 2.0;
+        agl /= shadowAglScale;
         
         return new Vector3(position.x - agl, position.y + agl, agl);
     }
