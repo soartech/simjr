@@ -379,7 +379,10 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //close all non-default dockables
         for(SingleCDockable dockable : singleAuxillaryDockables.values())
         {
-            dockable.setVisible(false);
+            if (dockable.isVisible())
+            {
+                dockable.setVisible(false);
+            }
             control.removeDockable(dockable);
         }        
         
