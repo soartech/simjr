@@ -115,7 +115,7 @@ public class MapImage
         i.imageFile = imageFile;
         i.image = null;
 
-        if (i.imageFile != null)
+        if (i.imageFile != null && !i.imageFile.getPath().equals(""))
         {
             try {
                 i.image = ImageIO.read(imageFile);
