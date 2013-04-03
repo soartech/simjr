@@ -63,7 +63,7 @@ public class EntityShape implements EntityPropertyListener
 {
     private Entity entity;
     private ShapeSystem system;
-    private Frame frame;
+    protected Frame frame;
     private Frame bodyFrame;
     private Frame shadowFrame;
     private List<Shape> shapes = new ArrayList<Shape>();
