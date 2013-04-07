@@ -256,6 +256,9 @@ public class Vector3
         return subtract(normal.multiply(dot(normal)));
     }
     
+    /**
+     * @return the angle between this vector and otherVector, given in radians in the interval [0.0, Pi].
+     */
     public double cosAngle(Vector3 otherVector)
     {
         Double angle = Math.acos((this.dot(otherVector)/(this.length() * otherVector.length())));

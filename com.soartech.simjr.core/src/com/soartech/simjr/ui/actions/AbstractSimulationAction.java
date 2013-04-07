@@ -136,4 +136,9 @@ public abstract class AbstractSimulationAction extends AbstractAction
         this.manager = manager;
     }
     
+    public String getSubmenuId()
+    {
+        return "";
+    }
+    
 }
