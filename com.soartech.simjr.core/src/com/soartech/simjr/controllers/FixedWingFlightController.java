@@ -59,7 +59,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     public static final String PROPERTY_USE_DESIRED_FPA = "use-desired-fpa";
     public static final String PROPERTY_DESIRED_HEADING = "desired-heading";
     public static final String PROPERTY_DESIRED_SPEED = "desired-speed";
-    public static final String PROPERTY_DESIRED_TURN_DIR = "desird-turn-dir";
+    public static final String PROPERTY_DESIRED_TURN_DIR = "desired-turn-dir";
     
     /**
      * Desired ground speed in m/s
