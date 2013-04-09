@@ -59,6 +59,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     public static final String PROPERTY_USE_DESIRED_FPA = "use-desired-fpa";
     public static final String PROPERTY_DESIRED_HEADING = "desired-heading";
     public static final String PROPERTY_DESIRED_SPEED = "desired-speed";
+    public static final String PROPERTY_DESIRED_TURN_DIR = "desird-turn-dir";
     
     /**
      * Desired ground speed in m/s
@@ -96,6 +97,12 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      * Maximum turning rate in radians per second
      */
     private double desiredTurnRate = Math.toRadians(15.0);
+
+    /**
+     * Desired turn direction to achieve the current desired heading.  Must be "left" or "right".
+     * If any other value, the flight controller will choose the shortest direction to achieve the turn.
+     */
+    private String desiredTurnDir = null;
 
     /**
      * Basic constructor, does nothing but initialize member variables to default values.
@@ -201,6 +208,22 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     }
 
     /**
+     * Sets the desired turn direction to reach the desired target heading.  If not "left" or "right",
+     * the flight controller will pick the shortest turn.
+     * 
+     * @param turnDir the String "left", "right", or anything else for no specified turn direction
+     */
+    public void setDesiredTurnDir(String turnDir)
+    {
+        this.desiredTurnDir = turnDir;
+        if(getEntity() != null)
+        {
+            getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, desiredTurnDir);
+        }
+        
+    }
+
+    /**
      * Simple accessor for the desired heading setting.
      * 
      * @return the desired target heading in radians CW from due north
@@ -236,6 +259,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, desiredAltitudeRate);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, desiredAltitude);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
+        getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, desiredTurnDir);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, true);
     }
 
@@ -252,6 +276,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, null);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, null);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, null);
+        getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, null);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, null);
         super.detach();
     }
@@ -324,9 +349,13 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // Store in properties so it's displayed in UI.
         getEntity().setProperty(PROPERTY_DESIRED_VELOCITY, desiredVelocity);
 
-        double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation);
+        double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation, desiredTurnDir);
         double maxDeltaAngle = desiredTurnRate * dt;
-        double desiredDeltaAngle = Math.min(Math.abs(angleDiff), maxDeltaAngle) * Math.signum(angleDiff);
+        if (Math.abs(angleDiff) < maxDeltaAngle) {
+            maxDeltaAngle = Math.abs(angleDiff);
+            setDesiredTurnDir(null);
+        }
+        double desiredDeltaAngle = maxDeltaAngle * Math.signum(angleDiff);
         double newOrientation = currentOrientation + desiredDeltaAngle;
         getEntity().setHeading(newOrientation);
         
