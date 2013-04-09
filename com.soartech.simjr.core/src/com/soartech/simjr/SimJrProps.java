@@ -272,6 +272,28 @@ public class SimJrProps
         
     }
     
+    public static void loadPluginUserProperties(ClassLoader loader, String resourcePath) throws IOException
+    {
+        final InputStream is = loader.getResourceAsStream(resourcePath);
+        if(is != null)
+        {
+            try
+            {
+                logger.info("Loading plugin user properties from '" + resourcePath + "'");
+                getProperties().load(is);
+            }
+            finally
+            {
+                is.close();
+            }
+        }
+        else
+        {
+            logger.error("Could not find resource '" + resourcePath + "'");
+        }
+        
+    }
+    
     /**
      * Load properties from a url.
      */
