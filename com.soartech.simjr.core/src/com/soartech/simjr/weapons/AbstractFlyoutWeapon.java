@@ -31,6 +31,9 @@
  */
 package com.soartech.simjr.weapons;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototype;
@@ -44,7 +47,8 @@ import com.soartech.simjr.sim.entities.AbstractFlyout;
  */
 public abstract class AbstractFlyoutWeapon extends Weapon
 {
-
+    private final List<AbstractFlyout> flyouts = new ArrayList<AbstractFlyout>();
+    
     public AbstractFlyoutWeapon(String name, int count, int maxCount)
     {
         super(name, count, maxCount);
@@ -60,9 +64,7 @@ public abstract class AbstractFlyoutWeapon extends Weapon
             return;
         }
         
-        final AbstractFlyout flyout = createFlyoutEntity(target);
-        flyout.setPosition(getEntity().getPosition());
-        getEntity().getSimulation().addEntity(flyout);
+        this.launchFlyout(createFlyoutEntity(target));
     }
     
     /* (non-Javadoc)
@@ -75,14 +77,39 @@ public abstract class AbstractFlyoutWeapon extends Weapon
             return;
         }
 
-        final AbstractFlyout flyout = createFlyoutEntity(target);
+        this.launchFlyout(createFlyoutEntity(target));
+    }
+    
+    private void launchFlyout(AbstractFlyout flyout)
+    {
         flyout.setPosition(getEntity().getPosition());
-        getEntity().getSimulation().addEntity(flyout);
+        flyout.setShooter(getEntity());
+        this.addFlyout(flyout);
+        
+        getEntity().getSimulation().addEntity(flyout);        
     }
 
     protected abstract AbstractFlyout createFlyoutEntity(Entity target);
     protected abstract AbstractFlyout createFlyoutEntity(Vector3 staticTarget);
     
+    public List<AbstractFlyout> getFlyouts()
+    {
+        return flyouts;
+    }
+    
+    public void addFlyout(AbstractFlyout f)
+    {
+        if(!flyouts.contains(f))
+        {
+            flyouts.add(f);
+        }
+    }
+
+    public void removeFlyout(AbstractFlyout f)
+    {
+        flyouts.remove(f);
+    }
+
     protected EntityPrototype getFlyoutPrototype()
     {
         final EntityPrototypeDatabase db = getEntity().getSimulation().getEntityPrototypes();
