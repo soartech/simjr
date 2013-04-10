@@ -79,7 +79,7 @@ function createEntity(options, doNotAdd)
     // Convert to prototype object
 	var prototypeObj = simjr.entities.prototypes(options.prototype);
 	var name = options.name;
-	logger.info("creating " + name + " from prototype " + prototypeObj.getId());
+	logger.debug("creating " + name + " from prototype " + prototypeObj.getId());
 	var e = prototypeObj.createEntity(name);
 	
 	if(options.hasOwnProperty("position")) {
@@ -249,7 +249,7 @@ simjr.entities.capabilities = new (function() {
 			
 			if(typeof(options) != "function") {
 				for(var key in options) {
-					logger.info("key=" + key );
+					logger.debug("key=" + key );
 					cap[key] = options[key];
 				}
 			}
