@@ -192,7 +192,10 @@ public abstract class Shape
                 Shape parent = system.getShape(rotation.getParent());
                 rotate(SimpleRotation.fromDegrees(parent.rotation.getDegrees()));
                 
-                // TODO: JCC - Why on earth does this work? Surely this breaks something
+                // TODO: JCC - I believe this works because there are no shapes whose parents have a parent.
+                //             If there were, I think an over-rotation would occur for shapes in the middle
+                //             of the ancestry.
+                //             Doesn't seem to rotate entity selection boxes.
                 rotate(SimpleRotation.fromRadians(((SwingCoordinateTransformer)transformer).getRotation()));
             }
             break;
