@@ -726,9 +726,11 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                     activePvdFrame.setTitleText(activePvdFrame.title);
                 }
                 activePvdFrame = (PvdFrame) dockable;
-                // TODO: JCC - Not sure if this is acceptable. The frames library relies on titles though,
-                //             and modifying the title like this causes problems.
-                activePvdFrame.setTitleText(activePvdFrame.title + " (active)");
+
+                // The frames library relies on titles and modifying the title like this causes problems
+                // when loading layouts from files.
+                //activePvdFrame.setTitleText(activePvdFrame.title + " (active)");
+                
                 services.findService(ActionManager.class).updateActions();
             }
         }
