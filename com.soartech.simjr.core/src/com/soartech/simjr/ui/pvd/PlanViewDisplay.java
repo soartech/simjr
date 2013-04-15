@@ -435,6 +435,11 @@ public class PlanViewDisplay extends JPanel
     {
         controlMouseWheel(new Point(getWidth() / 2, getHeight() / 2), amount);
     }
+
+    public void zoom(int amount, Point pointToZoomOn)
+    {
+        controlMouseWheel(pointToZoomOn, amount);
+    }
     
     private void showCoordinates()
     {
