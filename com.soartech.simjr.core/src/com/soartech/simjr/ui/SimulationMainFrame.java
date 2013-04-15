@@ -271,6 +271,14 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     /**
      * Wrap the given component in a dockable frame and add it to the main frame.
      * 
+     * <p>
+     * Note: Adding a frame in this manner will cause the "Restore Default Layout"
+     * action to fail to work as intended. There is currently no workaround for
+     * this, the fix will likely require some kind of refactoring of this class.
+     * 
+     * <p>
+     * FIXME see comment above
+     * 
      * @param id
      * @param title
      * @param c
