@@ -138,10 +138,9 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         double mx = (x - panOffsetRight) / scale;
         double my = ((y-panOffsetUp) - d.getHeight()) / -scale;
         
-        // TODO: JCC
+        // Undo the rotation when converting to meters
         double[] pt = {mx, my};
-        AffineTransform.getRotateInstance(-rotation, 0.0, 0.0)
-          .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+        AffineTransform.getRotateInstance(-rotation, 0.0, 0.0).transform(pt, 0, pt, 0, 1);
         mx = pt[0];
         my = pt[1];
         
@@ -154,10 +153,9 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
      */
     public SimplePosition metersToScreen(double x, double y)
     {
-        // TODO: JCC
+        // Rotate the meters before converting it to screen coordinates
         double[] pt = {x, y};
-        AffineTransform.getRotateInstance(rotation, 0.0, 0.0)
-          .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+        AffineTransform.getRotateInstance(rotation, 0.0, 0.0).transform(pt, 0, pt, 0, 1);
         x = pt[0];
         y = pt[1];
         

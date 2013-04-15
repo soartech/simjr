@@ -287,14 +287,10 @@ public class MapImage
                 // Convert width and height from meters to pixels
                 double widthInPixels = transformer.scalarToPixels(new Scalar(widthInMeters, ScalarUnit.Meters));
                 double heightInPixels = transformer.scalarToPixels(new Scalar(heightInMeters, ScalarUnit.Meters));
-                
-                // TODO: JCC
-                widthInPixels = Math.abs(widthInPixels);
-                heightInPixels = Math.abs(heightInPixels);
 
-                // TODO: JCC - rotate the map
+                // Rotate the map according to the SwingCoordinateTransformer
                 double rotation = ((SwingCoordinateTransformer)transformer).getRotation();
-                g2d.rotate(-rotation, (centerPixels.x), (centerPixels.y));
+                g2d.rotate(-rotation, centerPixels.x, centerPixels.y);
                 
                 g2d.drawImage(i.image, 
                         (int) (centerPixels.x - widthInPixels / 2), 

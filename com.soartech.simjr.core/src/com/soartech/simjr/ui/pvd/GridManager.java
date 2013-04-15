@@ -127,19 +127,7 @@ public class GridManager
         double gridPixels = transformer.metersXToScreen(gridIncrement) - transformer.metersXToScreen(0);
         // TODO: JCC
         gridPixels = Math.abs(transformer.scalarToPixels(new Scalar(gridIncrement, ScalarUnit.Meters)));
-//        SimplePosition gridPixelsXY = transformer.metersToScreen(gridIncrement, 0.0);
-//        SimplePosition origin = transformer.metersToScreen(0.0, 0.0);
-//        gridPixelsXY.x -= origin.x;
-//        gridPixelsXY.y -= origin.y;
-//        if (gridPixelsXY.x == 0.0)
-//        {
-//            gridPixels = Math.abs(gridPixelsXY.y);
-//        }
-//        else if (gridPixelsXY.x < 0)
-//        {
-//            gridPixels = Math.abs(gridPixelsXY.x);
-//        }
-        //
+
         
         double gridStartMeters = getNextGridMultiple(topLeft.x, gridIncrement);
         double gridStartScreen = transformer.metersXToScreen(gridStartMeters);
@@ -159,7 +147,6 @@ public class GridManager
         
         gridStartMeters = getNextGridMultiple(bottomRight.y, gridIncrement);
         gridStartScreen = transformer.metersYToScreen(gridStartMeters);
-        gridStartScreen = dim.width;
         
         double yMeters = gridStartMeters;
         double y = gridStartScreen;
