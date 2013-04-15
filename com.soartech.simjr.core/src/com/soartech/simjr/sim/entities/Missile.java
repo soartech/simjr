@@ -35,7 +35,6 @@ import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.weapons.AbstractFlyoutWeapon;
-import com.soartech.simjr.weapons.Weapon;
 
 /**
  * Basic implementation of a missile that flies at a target and destroys it.
@@ -65,7 +64,7 @@ public class Missile extends AbstractFlyout
      * @param weapon The associated weapon
      * @param staticTarget The target position
      */
-    public Missile(Weapon weapon, Vector3 staticTarget, EntityPrototype prototype)
+    public Missile(AbstractFlyoutWeapon weapon, Vector3 staticTarget, EntityPrototype prototype)
     {
         super(weapon, staticTarget, prototype);
     }
