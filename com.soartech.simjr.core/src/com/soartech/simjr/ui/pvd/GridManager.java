@@ -124,10 +124,7 @@ public class GridManager
             gridIncrement = 10000.0;
         }
         
-        double gridPixels = transformer.metersXToScreen(gridIncrement) - transformer.metersXToScreen(0);
-        // TODO: JCC
-        gridPixels = Math.abs(transformer.scalarToPixels(new Scalar(gridIncrement, ScalarUnit.Meters)));
-
+        double gridPixels = Math.abs(transformer.scalarToPixels(new Scalar(gridIncrement, ScalarUnit.Meters)));
         
         double gridStartMeters = getNextGridMultiple(topLeft.x, gridIncrement);
         double gridStartScreen = transformer.metersXToScreen(gridStartMeters);
