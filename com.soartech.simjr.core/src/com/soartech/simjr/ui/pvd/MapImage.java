@@ -285,12 +285,8 @@ public class MapImage
                 final double heightInMeters = i.image.getHeight(null) * i.metersPerPixel;
 
                 // Convert width and height from meters to pixels
-                double widthInPixels = transformer.metersXToScreen(widthInMeters) -
-                        transformer.metersXToScreen(0.0);
-                widthInPixels = transformer.scalarToPixels(new Scalar(widthInMeters, ScalarUnit.Meters));
-                double heightInPixels = -(transformer.metersYToScreen(heightInMeters) -
-                        transformer.metersYToScreen(0.0));
-                heightInPixels = transformer.scalarToPixels(new Scalar(heightInMeters, ScalarUnit.Meters));
+                double widthInPixels = transformer.scalarToPixels(new Scalar(widthInMeters, ScalarUnit.Meters));
+                double heightInPixels = transformer.scalarToPixels(new Scalar(heightInMeters, ScalarUnit.Meters));
                 
                 // TODO: JCC
                 widthInPixels = Math.abs(widthInPixels);
