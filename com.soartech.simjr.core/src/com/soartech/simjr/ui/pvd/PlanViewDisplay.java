@@ -79,6 +79,7 @@ import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
+import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
 import com.soartech.simjr.ui.shapes.SpeechBubbleManager;
 import com.soartech.simjr.ui.shapes.TimedShapeManager;
