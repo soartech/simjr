@@ -32,6 +32,7 @@
 package com.soartech.shapesystem.swing;
 
 import java.awt.Dimension;
+import java.awt.geom.AffineTransform;
 
 import javax.swing.JComponent;
 
@@ -47,6 +48,16 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     private double panOffsetRight = 0;
     private double panOffsetUp = 0;
     private double scale = 1;
+    
+    private double rotation = 0.0;
+    public double getRotation()
+    {
+        return rotation;
+    }
+    public void setRotation(double newRotation)
+    {
+        this.rotation = newRotation;
+    }
     
     /**
      * @param component
@@ -126,6 +137,16 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         Dimension d = component.getSize();
         double mx = (x - panOffsetRight) / scale;
         double my = ((y-panOffsetUp) - d.getHeight()) / -scale;
+        
+        
+        // TODO: JCC
+        double[] pt = {mx, my};
+        AffineTransform.getRotateInstance(-rotation)
+          .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+        mx = pt[0];
+        my = pt[1];
+        
+        
         return new Vector3(mx, my, 0.0);
     }
     
@@ -134,6 +155,13 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
      */
     public SimplePosition metersToScreen(double x, double y)
     {
+        // TODO: JCC
+        double[] pt = {x, y};
+        AffineTransform.getRotateInstance(rotation, 0.0, 0.0)
+          .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+        x = pt[0];
+        y = pt[1];
+        
         Dimension d = component.getSize();
         return new SimplePosition((x) * scale + panOffsetRight, 
                                   d.getHeight() - ((y) * scale)+ panOffsetUp);
