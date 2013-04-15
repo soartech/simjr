@@ -250,65 +250,93 @@ public class SimJrProps
         return props;
     }
     
+    /**
+     * Loads default properties from a resource using the classpath.
+     * 
+     * <p>
+     * Properties loaded with this function will not override any properties
+     * loaded with loadPluginUserProperties, but will be used as defaults in
+     * case a property isn't defined in the user properties.
+     * 
+     * @param loader
+     *            Class loader to use to find resource
+     * @param resourcePath
+     *            Path to the resource to load properties from
+     * @throws IOException
+     *             Thrown if there was a problem reading the resource
+     */
     public static void loadPluginProperties(ClassLoader loader, String resourcePath) throws IOException
     {
-        final InputStream is = loader.getResourceAsStream(resourcePath);
-        if(is != null)
-        {
-            try
-            {
-                logger.info("Loading plugin properties from '" + resourcePath + "'");
-                getDefaults().load(is);
-            }
-            finally
-            {
-                is.close();
-            }
-        }
-        else
-        {
-            logger.error("Could not find resource '" + resourcePath + "'");
-        }
-        
-    }
-    
-    public static void loadPluginUserProperties(ClassLoader loader, String resourcePath) throws IOException
-    {
-        final InputStream is = loader.getResourceAsStream(resourcePath);
-        if(is != null)
-        {
-            try
-            {
-                logger.info("Loading plugin user properties from '" + resourcePath + "'");
-                getProperties().load(is);
-            }
-            finally
-            {
-                is.close();
-            }
-        }
-        else
-        {
-            logger.error("Could not find resource '" + resourcePath + "'");
-        }
-        
+        logger.info("Loading plugin properties from '" + resourcePath + "'");
+        loadPluginPropertiesInternal(getDefaults(), loader, resourcePath);
     }
     
     /**
-     * Load properties from a url.
+     * Loads user properties from a resource using the classpath.
+     * 
+     * <p>
+     * Properties loaded with this function override default properties.
+     * 
+     * @param loader
+     *            Class loader to use to find resource
+     * @param resourcePath
+     *            Path to the resource to load properties from
+     * @throws IOException
+     *             Thrown if there was a problem reading the resource
+     */    
+    public static void loadPluginUserProperties(ClassLoader loader, String resourcePath) throws IOException
+    {
+        logger.info("Loading plugin user properties from '" + resourcePath + "'");
+        loadPluginPropertiesInternal(getProperties(), loader, resourcePath);
+    }
+    
+    private static void loadPluginPropertiesInternal(ExtendedProperties scope, ClassLoader loader, String resourcePath) throws IOException
+    {
+        final InputStream is = loader.getResourceAsStream(resourcePath);
+        if(is != null)
+        {
+            try
+            {
+                scope.load(is);
+            }
+            finally
+            {
+                is.close();
+            }
+        }
+        else
+        {
+            logger.error("Could not find resource '" + resourcePath + "'");
+        }
+    }
+    
+    /**
+     * Load properties (defaults) from a url.
      */
     public static void loadPluginProperties(URL url)
     {
+        logger.info("Loading plugin properties from '" + url + "'");
+        loadPluginPropertiesInternal(getDefaults(), url);
+    }
+    
+    /**
+     * Load user properties from a url.
+     */
+    public static void loadPluginUserProperties(URL url)
+    {
+        logger.info("Loading plugin user properties from '" + url + "'");
+        loadPluginPropertiesInternal(getProperties(), url);
+    }
+    
+    private static void loadPluginPropertiesInternal(ExtendedProperties scope, URL url)
+    {
         InputStream is = null;
-        try {
+        try 
+        {
             try
             {
                 is = url.openStream();
-                getDefaults().load(is);
-            }
-            catch (IOException e)
-            {
-                logger.error("Could not load resource '" + url.toString() + "'");
+                scope.load(is);
             }
             finally
             {
