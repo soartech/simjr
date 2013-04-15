@@ -32,17 +32,9 @@
 package com.soartech.simjr.ui.editor;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +44,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 
-import bibliothek.gui.dock.StackDockStation;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.SingleCDockable;
@@ -71,8 +59,6 @@ import bibliothek.gui.dock.facile.menu.FreeMenuPiece;
 import bibliothek.gui.dock.facile.menu.RootMenuPiece;
 import bibliothek.gui.dock.facile.menu.SubmenuPiece;
 import bibliothek.gui.dock.support.lookandfeel.LookAndFeelList;
-import bibliothek.util.xml.XElement;
-import bibliothek.util.xml.XIO;
 
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;

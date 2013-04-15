@@ -33,7 +33,6 @@ package com.soartech.simjr.view3D;
 import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;

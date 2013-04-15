@@ -44,7 +44,6 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
-import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * @author ray

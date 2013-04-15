@@ -34,7 +34,6 @@ package com.soartech.simjr.ui.editor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.Timer;

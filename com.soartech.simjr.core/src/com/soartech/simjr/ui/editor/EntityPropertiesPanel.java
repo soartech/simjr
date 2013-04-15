@@ -31,7 +31,6 @@
  */
 package com.soartech.simjr.ui.editor;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,12 +51,10 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.undo.UndoableEdit;
 
 import net.miginfocom.swing.MigLayout;
-
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
 import com.soartech.simjr.scenario.EntityElement;
@@ -68,9 +65,6 @@ import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityPrototypeDatabase;
-import com.soartech.simjr.sim.EntityTools;
-import com.soartech.simjr.sim.entities.DefaultPolygon;
-import com.soartech.simjr.ui.SimulationImages;
 
 /**
  * @author ray

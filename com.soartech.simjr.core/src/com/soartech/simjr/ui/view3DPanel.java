@@ -32,23 +32,13 @@
 package com.soartech.simjr.ui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
-import com.soartech.simjr.console.ConsoleManager;
-import com.soartech.simjr.console.ConsoleManagerListener;
-import com.soartech.simjr.console.ConsoleParticipant;
 import com.soartech.simjr.services.ServiceManager;
-import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
-import com.soartech.simjr.util.SwingTools;
 import com.soartech.simjr.view3D.View3DPanel;
 
 /**

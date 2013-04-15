@@ -9,7 +9,6 @@ import javax.swing.undo.UndoableEdit;
 import net.miginfocom.swing.MigLayout;
 
 import com.soartech.simjr.scenario.MetadataElement;
-import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
 

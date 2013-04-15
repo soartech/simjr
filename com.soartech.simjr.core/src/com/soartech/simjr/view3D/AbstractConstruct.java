@@ -38,7 +38,6 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 
 import de.jreality.geometry.PointSetFactory;
-import de.jreality.math.MatrixBuilder;
 import de.jreality.scene.Appearance;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.DefaultGeometryShader;

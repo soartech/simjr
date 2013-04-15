@@ -35,27 +35,29 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import net.miginfocom.swing.MigLayout;
-
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
 import com.soartech.simjr.scenario.model.ModelException;
-import com.soartech.simjr.ui.SimulationImages;
-import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.editor.actions.SaveAction;
 import com.soartech.simjr.util.SwingTools;
 
 /**

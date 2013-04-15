@@ -59,13 +59,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -124,7 +121,6 @@ import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
 import com.soartech.simjr.ui.properties.EntityPropertiesView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.view3D.View3DPanel;
 
 /**
  * @author ray

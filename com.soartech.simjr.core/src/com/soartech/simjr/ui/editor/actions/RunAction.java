@@ -37,7 +37,6 @@ import javax.swing.KeyStroke;
 
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.editor.RunPanel;
 import com.soartech.simjr.ui.editor.ScenarioRunner;
 
 /**

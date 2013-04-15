@@ -45,7 +45,6 @@ import com.soartech.shapesystem.shapes.Text;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityTools;
-import com.soartech.simjr.ui.shapes.EntityShape.LabelFrame;
 
 /**
  * @author ray

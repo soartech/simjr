@@ -3,14 +3,9 @@ package com.soartech.simjr.ui.editor;
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
-
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
-
-import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
-import com.soartech.simjr.ui.editor.TerrainPanel;
 
 /**
  * Dockable wrapper for the Terrain Panel

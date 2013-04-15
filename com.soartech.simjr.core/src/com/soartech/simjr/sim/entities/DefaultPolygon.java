@@ -31,7 +31,6 @@
  */
 package com.soartech.simjr.sim.entities;
 
-import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 
 /**

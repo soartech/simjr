@@ -39,10 +39,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 

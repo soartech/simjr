@@ -31,29 +31,19 @@
 package com.soartech.simjr.ui.shapes;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import com.soartech.math.LineSegmentDistance;
-import com.soartech.math.Vector3;
-import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.FillStyle;
 import com.soartech.shapesystem.Position;
-import com.soartech.shapesystem.PrimitiveRenderer;
-import com.soartech.shapesystem.PrimitiveRendererFactory;
 import com.soartech.shapesystem.Rotation;
 import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
-import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.shapes.Circle;
-import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityTools;
-import com.soartech.simjr.sim.entities.Cylinder;
 
 /**
  * @author Haley
