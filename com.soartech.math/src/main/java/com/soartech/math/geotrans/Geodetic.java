@@ -73,6 +73,13 @@ public class Geodetic
             this.longitude = other.longitude;
             this.altitude = other.altitude;
         }
+        
+        public Point(double latitude, double longitude, double altitude)
+        {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.altitude = altitude;
+        }
     }
     
     /**

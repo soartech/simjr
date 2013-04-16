@@ -46,6 +46,7 @@ import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.TextStyle;
 import com.soartech.shapesystem.shapes.Frame;
 import com.soartech.shapesystem.shapes.Text;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPropertyListener;
@@ -264,6 +265,22 @@ public class EntityShape implements EntityPropertyListener
                  labelStyle,
                  text);
         
+        //remove the previous label of the same type
+        removeLabel(labelType);
+        
+        //add the new label frame shapes to this entity
+        addShape(labelFrame);
+        addShape(label);
+        
+        //save the LabelFrame object
+        LabelFrame lf = new LabelFrame(labelFrame, label, labelType);
+        labels.add(lf);
+        
+        return lf;
+    }
+    
+    public void removeLabel(String labelType)
+    {
         //remove any previous label frame shapes of the same type
         LabelFrame toRemove = null;
         for(LabelFrame lf : labels)
@@ -276,22 +293,12 @@ public class EntityShape implements EntityPropertyListener
                 break;
             }
         }
-
+        
         //keep the LabelFrame list synchronized with the shape list
         if(toRemove != null)
         {
             labels.remove(toRemove);
         }
-        
-        //add the new label frame shapes to this entity
-        addShape(labelFrame);
-        addShape(label);
-        
-        //save the LabelFrame object
-        LabelFrame lf = new LabelFrame(labelFrame, label, labelType);
-        labels.add(lf);
-        
-        return lf;
     }
 
     public void update()
@@ -397,8 +404,10 @@ public class EntityShape implements EntityPropertyListener
     
     public static Vector3 adjustPositionForShadow(Vector3 position, double agl)
     {
+        final Double shadowAglScale = SimJrProps.get("simjr.simulation.shadow-agl-scale", 2.0);
+        
         agl = Math.max(0.0, agl);
-        agl /= 2.0;
+        agl /= shadowAglScale;
         
         return new Vector3(position.x - agl, position.y + agl, agl);
     }

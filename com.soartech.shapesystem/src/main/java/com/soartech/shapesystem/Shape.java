@@ -34,6 +34,8 @@ package com.soartech.shapesystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
+
 
 /**
  * @author ray
@@ -172,7 +174,7 @@ public abstract class Shape
         {
         	angles.add(SimpleRotation.fromDegrees(0.0));
         }
-        
+
         rotate(SimpleRotation.fromDegrees(rotation.getDegrees()));
         
         switch(rotation.getType())
@@ -189,6 +191,12 @@ public abstract class Shape
             {
                 Shape parent = system.getShape(rotation.getParent());
                 rotate(SimpleRotation.fromDegrees(parent.rotation.getDegrees()));
+                
+                // TODO: JCC - I believe this works because there are no shapes whose parents have a parent.
+                //             If there were, I think an over-rotation would occur for shapes in the middle
+                //             of the ancestry.
+                //             Doesn't seem to rotate entity selection boxes.
+                rotate(SimpleRotation.fromRadians(((SwingCoordinateTransformer)transformer).getRotation()));
             }
             break;
         case POINT_AT:

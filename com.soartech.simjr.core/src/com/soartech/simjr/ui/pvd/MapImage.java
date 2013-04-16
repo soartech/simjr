@@ -33,6 +33,7 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,11 @@ import javax.imageio.ImageIO;
 
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
+import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.ScalarUnit;
 import com.soartech.shapesystem.SimplePosition;
+import com.soartech.shapesystem.SimpleRotation;
+import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
 /**
  * @author ray
@@ -280,11 +285,13 @@ public class MapImage
                 final double heightInMeters = i.image.getHeight(null) * i.metersPerPixel;
 
                 // Convert width and height from meters to pixels
-                double widthInPixels = transformer.metersXToScreen(widthInMeters) -
-                        transformer.metersXToScreen(0.0);
-                double heightInPixels = -(transformer.metersYToScreen(heightInMeters) -
-                        transformer.metersYToScreen(0.0));
+                double widthInPixels = transformer.scalarToPixels(new Scalar(widthInMeters, ScalarUnit.Meters));
+                double heightInPixels = transformer.scalarToPixels(new Scalar(heightInMeters, ScalarUnit.Meters));
 
+                // Rotate the map according to the SwingCoordinateTransformer
+                double rotation = ((SwingCoordinateTransformer)transformer).getRotation();
+                g2d.rotate(-rotation, centerPixels.x, centerPixels.y);
+                
                 g2d.drawImage(i.image, 
                         (int) (centerPixels.x - widthInPixels / 2), 
                         (int) (centerPixels.y - heightInPixels / 2), 

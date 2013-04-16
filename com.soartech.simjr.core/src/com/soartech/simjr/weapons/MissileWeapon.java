@@ -71,7 +71,7 @@ public class MissileWeapon extends AbstractFlyoutWeapon
     {
         this.speed = speed;
     }
-
+    
     /* (non-Javadoc)
      * @see com.soartech.simjr.weapons.FlyoutWeapon#createFlyoutEntity(com.soartech.simjr.sim.Entity)
      */

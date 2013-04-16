@@ -159,8 +159,9 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private EntityPropertiesView propertiesView;
     private CheatSheetView cheatSheetView;
-    
+
     private Map<String,SingleCDockable> singleDockables = new HashMap<String,SingleCDockable>();
+    private Map<String,SingleCDockable> singleAuxillaryDockables = new HashMap<String,SingleCDockable>();
     
     /**
      * The factory for PVD frames for DF
@@ -276,8 +277,23 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         dockable.setVisible(true);        
     }
     
+    public void addAuxillaryDockable(SingleCDockable dockable, CLocation location, String key)
+    {
+        dockable.setLocation(location);
+        singleAuxillaryDockables.put(key, dockable);
+        control.addDockable(dockable);        
+    }
+    
     /**
      * Wrap the given component in a dockable frame and add it to the main frame.
+     * 
+     * <p>
+     * Note: Adding a frame in this manner will cause the "Restore Default Layout"
+     * action to fail to work as intended. There is currently no workaround for
+     * this, the fix will likely require some kind of refactoring of this class.
+     * 
+     * <p>
+     * FIXME see comment above
      * 
      * @param id
      * @param title
@@ -286,16 +302,16 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public void addFrame(String id, String title, Component c, Component nextTo)
     {
-        // create a dockable to hold the component
+        //create a dockable to hold the component
         DefaultSingleCDockable dockable = new DefaultSingleCDockable(id, title,
                 c);
         dockable.setMinimizable(false);
         dockable.setCloseable(true);
-
-        // add the dockable to the main frame
+        
+        //add the dockable to the main frame
         addDockable(dockable, defaultSingleDockableLocation, id);
-
-        // TODO: implement setting the location next to the given component
+        
+        //TODO: implement setting the location next to the given component
     }
     
     /**
@@ -384,6 +400,16 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public void resetDockingLayout()
     {
+        //close all non-default dockables
+        for(SingleCDockable dockable : singleAuxillaryDockables.values())
+        {
+            if (dockable.isVisible())
+            {
+                dockable.setVisible(false);
+            }
+            control.removeDockable(dockable);
+        }        
+        
         //close each single dockable
         for(SingleCDockable dockable : singleDockables.values())
         {
@@ -665,6 +691,14 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         bar.add(viewMenuRoot.getMenu());
     }
     
+    public void addViewMenuAction(Class<?> klass)
+    {
+        FreeMenuPiece piece3 = new FreeMenuPiece();
+        viewMenuRoot.add(piece3);
+        piece3.add(new JSeparator());
+        piece3.add(createMenuItemFromAction(piece3, klass));
+    }
+    
     private void addAction(JToolBar bar, Class<?> klass)
     {
         ActionManager am = services.findService(ActionManager.class);
@@ -719,7 +753,11 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                     activePvdFrame.setTitleText(activePvdFrame.title);
                 }
                 activePvdFrame = (PvdFrame) dockable;
-                activePvdFrame.setTitleText(activePvdFrame.title + " (active)");
+
+                // The frames library relies on titles and modifying the title like this causes problems
+                // when loading layouts from files.
+                //activePvdFrame.setTitleText(activePvdFrame.title + " (active)");
+                
                 services.findService(ActionManager.class).updateActions();
             }
         }

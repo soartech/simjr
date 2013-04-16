@@ -1,1 +1,5 @@
-bin/
+com.soartech.math/bin
+com.soartech.simjr.core.test/bin
+com.soartech.simjr.web/bin
+com.soartech.shapesystem/bin
+com.soartech.simjr.apps/bin

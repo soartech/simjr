@@ -34,10 +34,10 @@ package com.soartech.math;
 public class Angles
 {
     /**
-     * Bound an angle in degrees to the range [-180, 180).
+     * Bound an angle in degrees to the range (-180, 180].
      * 
      * @param v An angle in degrees
-     * @return angle in the range [-180, 180).
+     * @return angle in the range (-180, 180].
      */
     public static double boundedAngleDegrees(double v)
     {
@@ -47,15 +47,41 @@ public class Angles
     }
     
     /**
-     * Bound an angle in radians to the range [-pi, pi).
+     * Bound an angle in degrees to the range (0, 360].
+     * 
+     * @param v An angle in degrees
+     * @return angle in the range (0, 360].
+     */
+    public static double boundedPositiveAngleDegrees(double v)
+    {
+        while(v <= 0) v += 360;
+        while(v > 360) v -= 360;
+        return v;
+    }
+    
+    /**
+     * Bound an angle in radians to the range (-pi, pi].
      * 
      * @param v An angle in radians
-     * @return angle in the range [-pi, pi).
+     * @return angle in the range (-pi, pi].
      */
     public static double boundedAngleRadians(double v)
     {
         while(v <= -Math.PI) v += 2 * Math.PI;
         while(v > Math.PI) v -= 2 * Math.PI;
+        return v;
+    }
+    
+    /**
+     * Bound an angle in radians to the range (0, 2*pi].
+     * 
+     * @param v An angle in radians
+     * @return angle in the range (0, 2*pi].
+     */
+    public static double boundedPositiveAngleRadians(double v)
+    {
+        while(v <= 0.0) v += 2 * Math.PI;
+        while(v > 2*Math.PI) v -= 2 * Math.PI;
         return v;
     }
     
@@ -94,6 +120,31 @@ public class Angles
     public static double angleDifference(double angle, double otherAngle)
     {
         return boundedAngleRadians(angle - otherAngle);
+    }
+    
+    /**
+     * Safely calculate the difference between two radian angles, with an optional specification
+     * of whether to go left or right from the second angle to the first angle.  Careful here.
+     * This method is using "math" angles, so left/right signs are switched from "navigation" angles.
+     * 
+     * @param angle First angle in radians
+     * @param otherAngle Second angle in radians
+     * @param turnDir the string "left" or "right".  If this has some other value, just use the shortest direction.
+     * @return Difference in radians in range (-pi, pi)
+     */
+    public static double angleDifference(double angle, double otherAngle, String turnDir)
+    {
+        if (turnDir != null)
+        {
+            if (turnDir.equals("right"))
+            {
+                return -boundedPositiveAngleRadians(otherAngle - angle);
+            } else if (turnDir.equals("left"))
+            {
+                return boundedPositiveAngleRadians(angle - otherAngle);
+            } 
+        }
+        return angleDifference(angle, otherAngle);
     }
     
 
