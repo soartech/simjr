@@ -49,7 +49,11 @@ prototypes:
     properties:
         visible: true
         locked: false
-        
+- &role
+    id: role
+    parent: *any
+    domain: role
+    category: role
 - &control
     id: control
     parent: *any
