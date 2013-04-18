@@ -350,17 +350,34 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_VELOCITY, desiredVelocity);
 
         double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation, desiredTurnDir);
+        
+        // this block of code causes DIS entities to stop working.
+        // the X-Plane plugin pops them in to existance once and then never shows them again.
+        // What does this code do exactly? 
+        
         double maxDeltaAngle = desiredTurnRate * dt;
-        if (Math.abs(angleDiff) < maxDeltaAngle) {
-            maxDeltaAngle = Math.abs(angleDiff);
-            setDesiredTurnDir(null);
-        }
-        double desiredDeltaAngle = maxDeltaAngle * Math.signum(angleDiff);
+//        double maxDeltaAngleBad = desiredTurnRate * dt;
+//        if (Math.abs(angleDiff) < maxDeltaAngle) {
+//            maxDeltaAngleBad = Math.abs(angleDiff);
+//            setDesiredTurnDir(null);
+//        }
+        // maxDeltaAngleBad is often a very small value here
+//        double desiredDeltaAngleBad = maxDeltaAngleBad * Math.signum(angleDiff);        
+
+        // The above block replaces this line:
+        double desiredDeltaAngle = Math.min(Math.abs(angleDiff), maxDeltaAngle) * Math.signum(angleDiff);
+        
+//        String out = String.format("%.3f %.3f %.3f %.3f %.3f", desiredDeltaAngle, desiredDeltaAngleBad, maxDeltaAngle, maxDeltaAngleBad, angleDiff);
+//        System.err.println(out);
+        
         double newOrientation = currentOrientation + desiredDeltaAngle;
         getEntity().setHeading(newOrientation);
         
         if ( useFullOrientation ) {
             getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngle);
+            // This seems to be the line that deals the blow to DIS, not sure why...
+            // the small maxDeltaAngleBad makes that term very large
+//            getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngleBad);
         }
 
         Vector3 newVelocity = new Vector3(Math.cos(newOrientation), Math.sin(newOrientation), 0.0);
