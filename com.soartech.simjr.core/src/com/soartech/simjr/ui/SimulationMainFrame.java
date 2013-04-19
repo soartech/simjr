@@ -261,11 +261,21 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         dockable.setVisible(true);        
     }
     
+    /**
+     * Add a panel that will be hidden when resetDockingLayout() is called.
+     * 
+     * Useful for adding a dockable panel that is not intended to be shown in the default layout,
+     * but still needs to be part of the CControl because it is used in another layout.
+     * 
+     * @param dockable 
+     * @param location
+     * @param key
+     */
     public void addAuxillaryDockable(SingleCDockable dockable, CLocation location, String key)
     {
         dockable.setLocation(location);
         singleAuxillaryDockables.put(key, dockable);
-        control.addDockable(dockable);        
+        control.addDockable(dockable);
     }
     
     /**
