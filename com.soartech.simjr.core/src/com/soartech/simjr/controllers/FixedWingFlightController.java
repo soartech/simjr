@@ -355,29 +355,34 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // the X-Plane plugin pops them in to existance once and then never shows them again.
         // What does this code do exactly? 
         
-        double maxDeltaAngle = desiredTurnRate * dt;
-//        double maxDeltaAngleBad = desiredTurnRate * dt;
-//        if (Math.abs(angleDiff) < maxDeltaAngle) {
-//            maxDeltaAngleBad = Math.abs(angleDiff);
-//            setDesiredTurnDir(null);
-//        }
-        // maxDeltaAngleBad is often a very small value here
-//        double desiredDeltaAngleBad = maxDeltaAngleBad * Math.signum(angleDiff);        
-
-        // The above block replaces this line:
-        double desiredDeltaAngle = Math.min(Math.abs(angleDiff), maxDeltaAngle) * Math.signum(angleDiff);
+        // This code computes how much to turn the aircraft during the current update, to achieve the
+        // current desired heading goal.  Essentially, there is a max allowable amount of turn per update,
+        // defined by the turn rate.  But if the desired heading can be achieved with less than that amount
+        // of turn, we just come to the desired heading.
+        // There can also be a specified desiredTurnDir, which tells us if we are currently forced to turn
+        // left or right to achieve the desired heading.  Once we achieve the desired heading, though, the
+        // turn is complete, so we reset the desiredTurnDir back to null (this is to ensure that the
+        // controller doesn't accidentally "overshoot" the desired heading due to rounding errors, which
+        // would then cause the aircraft to attempt another full circle to achieve the desired heading).
         
-//        String out = String.format("%.3f %.3f %.3f %.3f %.3f", desiredDeltaAngle, desiredDeltaAngleBad, maxDeltaAngle, maxDeltaAngleBad, angleDiff);
-//        System.err.println(out);
+        double maxDeltaAngle = desiredTurnRate * dt;
+        double desiredDeltaAngle;
+        if (Math.abs(angleDiff) < maxDeltaAngle) {
+            desiredDeltaAngle = Math.abs(angleDiff);
+            setDesiredTurnDir(null);
+        } else {
+            desiredDeltaAngle = maxDeltaAngle;
+        }
+        desiredDeltaAngle = desiredDeltaAngle * Math.signum(angleDiff);        
+
+        //String out = String.format("%.3f %.3f %.3f", desiredDeltaAngle, maxDeltaAngle, angleDiff);
+        //System.err.println(out);
         
         double newOrientation = currentOrientation + desiredDeltaAngle;
         getEntity().setHeading(newOrientation);
         
         if ( useFullOrientation ) {
             getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngle);
-            // This seems to be the line that deals the blow to DIS, not sure why...
-            // the small maxDeltaAngleBad makes that term very large
-//            getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngleBad);
         }
 
         Vector3 newVelocity = new Vector3(Math.cos(newOrientation), Math.sin(newOrientation), 0.0);
