@@ -682,17 +682,12 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         bar.add(viewMenuRoot.getMenu());
     }
     
-    /**
-     * Adds an action to the application's "View" menu.
-     * 
-     * @param klass Must have had an instance of klass added to ActionManager before calling this method.
-     */
     public void addViewMenuAction(Class<?> klass)
     {
-        FreeMenuPiece newMenuPiece = new FreeMenuPiece();
-        viewMenuRoot.add(newMenuPiece);
-        newMenuPiece.add(new JSeparator());
-        newMenuPiece.add(createMenuItemFromAction(newMenuPiece, klass));
+        FreeMenuPiece piece3 = new FreeMenuPiece();
+        viewMenuRoot.add(piece3);
+        piece3.add(new JSeparator());
+        piece3.add(createMenuItemFromAction(piece3, klass));
     }
     
     private void addAction(JToolBar bar, Class<?> klass)
