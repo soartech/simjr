@@ -33,7 +33,6 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +46,6 @@ import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.ScalarUnit;
 import com.soartech.shapesystem.SimplePosition;
-import com.soartech.shapesystem.SimpleRotation;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
 /**
