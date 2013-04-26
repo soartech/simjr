@@ -73,6 +73,7 @@ public interface EntityConstants
     public static final String PROPERTY_LONGITUDE = "longitude";
     public static final String PROPERTY_ALTITUDE = "altitude";
     public static final String PROPERTY_POINTS = "points";
+    public static final String PROPERTY_POLYGONS = "polygons";
     
     public static final String PROPERTY_MAXSPEED = "limits.maxSpeed";
     
@@ -133,6 +134,7 @@ public interface EntityConstants
     public static final String CATEGORY_VEHICLES = "Vehicles";
     public static final String CATEGORY_HUMANS = "Humans";
     public static final String CATEGORY_AREAS = "Areas";
+    public static final String CATEGORY_COMPOUND_AREAS = "CompoundAreas";
     public static final String CATEGORY_FLYOUTS = "Flyouts";
     public static final String CATEGORY_STRUCTURES = "Structures";
     
