@@ -44,7 +44,7 @@ if(typeof(simjr) == "undefined") {
  * simjr.polygons "namespace".
  */
 simjr.polygons = new (function() {
-	function factoryForPrototype(prototype) {
+	function factoryForPrototypePolygon(prototypeName) {
 		return function(props, points) {
 			if(typeof(props) == "string") {
 				props = {
@@ -52,9 +52,22 @@ simjr.polygons = new (function() {
 				};
 			}
 			if(!props.prototype) {
-				props.prototype = prototype;
+				props.prototype = prototypeName;
 			}
 			return simjr.polygons.polygon(props, points);
+		};
+	}
+	function factoryForPrototypeCompoundArea(prototypeName) {
+		return function(props, areas) {
+			if(typeof(props) == "string") {
+				props = {
+					name: props
+				};
+			}
+			if(!props.prototype) {
+				props.prototype = prototypeName;
+			}
+			return simjr.polygons.compoundAreaConstructor(props, areas);
 		};
 	}
 	return {
@@ -74,6 +87,29 @@ simjr.polygons = new (function() {
 		polygon: function(props, points) {
 		    var poly = simjr.entities.create(props);
 		    simjr.polygons.addPoints(poly, simjr.polygons.waypoints(points));
+		    return poly;
+		},
+
+		/**
+		 * Adapt the given object, e.g. an entity, into an DefaultCompoundPolygon object.
+		 */
+		asCompoundArea: function(o) { return DefaultCompoundPolygon.adapt(o) },
+		
+		/**
+		 * Construct a new compound area.
+		 * 
+		 * @param props A property struct. See simjr.entities.create. Assumes
+		 * 		that an entity convertible to DefaultCompoundPolygon is created.
+		 * @param areas array of entities representing areas. See simjr.polygons.waypoints.
+		 * @return the resulting compound area entity.
+		 */
+		compoundAreaConstructor: function(props, areas) {
+		    var poly = simjr.entities.create(props);
+		    var compoundArea = simjr.polygons.asCompoundArea(poly);
+		    var areas = simjr.polygons.waypoints(areas);
+			for each(var area in areas){
+				compoundArea.addPolygon(area);
+			}
 		    return poly;
 		},
 		
@@ -121,13 +157,15 @@ simjr.polygons = new (function() {
 			return result;
 		},
 		
-		route: factoryForPrototype("route"),
+		route: factoryForPrototypePolygon("route"),
 		
-		area: factoryForPrototype("area"),
+		area: factoryForPrototypePolygon("area"),
 		
-		complexArea: factoryForPrototype("complex-area"),
-		
-		complexAreaStatic: factoryForPrototype("complex-area-static"),
+		complexArea: factoryForPrototypePolygon("complex-area"),
+
+		complexAreaStatic: factoryForPrototypePolygon("complex-area-static"),
+
+		compoundArea: factoryForPrototypeCompoundArea("compound-area"),
 		
 		segments: function createSegments(points) {
 		    var lastSegment = null;
