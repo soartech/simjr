@@ -83,15 +83,23 @@ public class Model
     private Document doc = buildDefaultDocument();
     private boolean dirty = false;
     
+    private boolean respondToModelChanges = true;
+    
     private final MetadataElement meta = new MetadataElement(this);
     private EntityElementList entities;
     private final TerrainElement terrain = TerrainElement.attach(this);
     
+    /**
+     * This propagates a ModelChangeEvent.
+     * @param e The event to propagate.
+     */
     public void fireChange(ModelChangeEvent e)
     {
-        for(ModelChangeListener listener : listeners)
-        {
-            listener.onModelChanged(e);
+        if(respondToModelChanges){
+            for(ModelChangeListener listener : listeners)
+            {
+                listener.onModelChanged(e);
+            }
         }
     }
     
@@ -112,7 +120,12 @@ public class Model
         fireChange(new ModelChangeEvent(this, this, FILE));
     }
     
-
+    /**
+     * This loads a new file into the model, and sets
+     * it as the new backing file.
+     * @param file The new file to back the model.
+     * @throws ModelException
+     */
     public void load(File file) throws ModelException
     {
         try
@@ -237,6 +250,10 @@ public class Model
         return file;
     }
     
+    /**
+     * This changes the file that is backing the model.
+     * @param file The file to back the model.
+     */
     private void setFile(File file)
     {
         final boolean changed = file != this.file || (file != null && !file.equals(this.file));
@@ -247,11 +264,21 @@ public class Model
         }
     }
     
+    /**
+     * Whether or not the model has
+     * outstanding changes.
+     */
     public boolean isDirty()
     {
         return dirty;
     }
     
+    /**
+     * This sets whether or not the model has
+     * outstanding changes.
+     * @param newValue Whether or not the model
+     * has outstanding changes.
+     */
     private void setDirty(boolean newValue)
     {
         final boolean oldValue = this.dirty;
@@ -392,6 +419,28 @@ public class Model
         root.addContent(ScriptBlockElement.buildDefault(this, "preLoadScript", SimJrProps.get("simjr.editor.preLoadScript.default", "")));
         root.addContent(ScriptBlockElement.buildDefault(this, "postLoadScript", SimJrProps.get("simjr.editor.postLoadScript.default", "")));
         return doc;
+    }
+    
+    /**
+     * This sets whether or not ModelChangeEvent
+     * events are propagated. 
+     * @param Whether or not the model should respond
+     * to OnModelChangeEvents.
+     */
+    public void setRespondToModelChanges(boolean respondToModelChanges)
+    {
+        this.respondToModelChanges = respondToModelChanges;
+    }
+    
+    /**
+     * This returns whether or not the model 
+     * is propagating ModelChangeEvent.
+     * @return Whether or not the model 
+     * is propagating ModelChangeEvent.
+     */
+    public boolean isResondingToModelChanges()
+    {
+        return this.respondToModelChanges;
     }
     
     /* (non-Javadoc)
