@@ -40,7 +40,6 @@ import java.awt.Stroke;
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.ScalarUnit;
-import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
 /**

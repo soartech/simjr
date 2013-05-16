@@ -33,6 +33,7 @@ import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.weapons.AbstractFlyoutWeapon;
+import com.soartech.simjr.sim.entities.AbstractFlyout;
 
 /**
  * Basic implementation of a bomb that falls to a target and destroys it.
@@ -53,12 +54,14 @@ public class Bomb extends AbstractFlyout
         super(weapon, target, prototype);
     }
     
+    
     /**
      * Construct a bomb that hits a target position
      * 
      * @param weapon The associated weapon
      * @param staticTarget The target position
      */
+    
     public Bomb(AbstractFlyoutWeapon weapon, Vector3 staticTarget, EntityPrototype prototype)
     {
         super(weapon, staticTarget, prototype);

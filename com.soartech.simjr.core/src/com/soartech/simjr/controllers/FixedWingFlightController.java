@@ -350,12 +350,34 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_VELOCITY, desiredVelocity);
 
         double angleDiff = Angles.angleDifference(desiredOrientation, currentOrientation, desiredTurnDir);
+        
+        // this block of code causes DIS entities to stop working.
+        // the X-Plane plugin pops them in to existance once and then never shows them again.
+        // What does this code do exactly? 
+        
+        // This code computes how much to turn the aircraft during the current update, to achieve the
+        // current desired heading goal.  Essentially, there is a max allowable amount of turn per update,
+        // defined by the turn rate.  But if the desired heading can be achieved with less than that amount
+        // of turn, we just come to the desired heading.
+        // There can also be a specified desiredTurnDir, which tells us if we are currently forced to turn
+        // left or right to achieve the desired heading.  Once we achieve the desired heading, though, the
+        // turn is complete, so we reset the desiredTurnDir back to null (this is to ensure that the
+        // controller doesn't accidentally "overshoot" the desired heading due to rounding errors, which
+        // would then cause the aircraft to attempt another full circle to achieve the desired heading).
+        
         double maxDeltaAngle = desiredTurnRate * dt;
+        double desiredDeltaAngle;
         if (Math.abs(angleDiff) < maxDeltaAngle) {
-            maxDeltaAngle = Math.abs(angleDiff);
+            desiredDeltaAngle = Math.abs(angleDiff);
             setDesiredTurnDir(null);
+        } else {
+            desiredDeltaAngle = maxDeltaAngle;
         }
-        double desiredDeltaAngle = maxDeltaAngle * Math.signum(angleDiff);
+        desiredDeltaAngle = desiredDeltaAngle * Math.signum(angleDiff);        
+
+        //String out = String.format("%.3f %.3f %.3f", desiredDeltaAngle, maxDeltaAngle, angleDiff);
+        //System.err.println(out);
+        
         double newOrientation = currentOrientation + desiredDeltaAngle;
         getEntity().setHeading(newOrientation);
         

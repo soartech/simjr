@@ -277,11 +277,21 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         dockable.setVisible(true);        
     }
     
+    /**
+     * Add a panel that will be hidden when resetDockingLayout() is called.
+     * 
+     * Useful for adding a dockable panel that is not intended to be shown in the default layout,
+     * but still needs to be part of the CControl because it is used in another layout.
+     * 
+     * @param dockable 
+     * @param location
+     * @param key
+     */
     public void addAuxillaryDockable(SingleCDockable dockable, CLocation location, String key)
     {
         dockable.setLocation(location);
         singleAuxillaryDockables.put(key, dockable);
-        control.addDockable(dockable);        
+        control.addDockable(dockable);
     }
     
     /**
@@ -691,12 +701,17 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         bar.add(viewMenuRoot.getMenu());
     }
     
+    /**
+     * Adds an action to the application's "View" menu.
+     * 
+     * @param klass Must have had an instance of klass added to ActionManager before calling this method.
+     */
     public void addViewMenuAction(Class<?> klass)
     {
-        FreeMenuPiece piece3 = new FreeMenuPiece();
-        viewMenuRoot.add(piece3);
-        piece3.add(new JSeparator());
-        piece3.add(createMenuItemFromAction(piece3, klass));
+        FreeMenuPiece newMenuPiece = new FreeMenuPiece();
+        viewMenuRoot.add(newMenuPiece);
+        newMenuPiece.add(new JSeparator());
+        newMenuPiece.add(createMenuItemFromAction(newMenuPiece, klass));
     }
     
     private void addAction(JToolBar bar, Class<?> klass)

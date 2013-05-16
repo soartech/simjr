@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2010, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on Mar 27, 2009
@@ -67,28 +67,28 @@ import com.soartech.simjr.util.JDomTools;
 public class Model
 {
     private static final Logger logger = Logger.getLogger(Model.class);
-    
+
     public static final String DEFAULT_EXTENSION = "sjx";
-    
+
     public static final Namespace NAMESPACE = Namespace.getNamespace("simjr", "http://simjr.soartech.com/schema/scenario/1.0");
     public static final String VERSION = "1.0";
     public static final String LOADED = "loaded";
     public static final String DIRTY = "dirty";
     public static final String FILE = "file";
     public static final String METADATA = "metadata";
-    
+
     private final List<ModelChangeListener> listeners = new CopyOnWriteArrayList<ModelChangeListener>();
-    
+
     private File file;
     private Document doc = buildDefaultDocument();
     private boolean dirty = false;
-    
+
     private boolean respondToModelChanges = true;
-    
+
     private final MetadataElement meta = new MetadataElement(this);
     private EntityElementList entities;
     private final TerrainElement terrain = TerrainElement.attach(this);
-    
+
     /**
      * This propagates a ModelChangeEvent.
      * @param e The event to propagate.
@@ -102,24 +102,24 @@ public class Model
             }
         }
     }
-    
+
     public Model()
     {
         newModel();
     }
-    
+
     public void newModel()
     {
         this.doc = buildDefaultDocument();
         this.entities = EntityElementList.attach(this);
-        
+
         setDirty(false);
         setFile(null);
-        
+
         fireChange(new ModelChangeEvent(this, this, LOADED));
         fireChange(new ModelChangeEvent(this, this, FILE));
     }
-    
+
     /**
      * This loads a new file into the model, and sets
      * it as the new backing file.
@@ -136,17 +136,17 @@ public class Model
             setDirty(false);
             fireChange(new ModelChangeEvent(this, this, LOADED));
             fireChange(new ModelChangeEvent(this, this, FILE));
-        } 
+        }
         catch (JDOMException e)
         {
             throw new ModelException(e);
-        } 
+        }
         catch (IOException e)
         {
             throw new ModelException(e);
         }
     }
-    
+
     public void update(String contents) throws ModelException
     {
         try
@@ -154,17 +154,17 @@ public class Model
             this.doc = newBuilder().build(new StringReader(contents));
             this.entities = EntityElementList.attach(this);
             setDirty(true);
-        } 
+        }
         catch (JDOMException e)
         {
             throw new ModelException(e);
-        } 
+        }
         catch (IOException e)
         {
             throw new ModelException(e);
         }
     }
-    
+
     private SAXBuilder newBuilder()
     {
         SAXBuilder builder = new SAXBuilder();
@@ -172,17 +172,17 @@ public class Model
         builder.setIgnoringElementContentWhitespace(true);
         return builder;
     }
-    
+
     public void addModelChangeListener(ModelChangeListener listener)
     {
         listeners.add(listener);
     }
-    
+
     public void removeModelChangeListener(ModelChangeListener listener)
     {
         listeners.remove(listener);
     }
-    
+
     /**
      * @return the meta
      */
@@ -190,27 +190,27 @@ public class Model
     {
         return meta;
     }
-    
+
     public TerrainElement getTerrain()
     {
         return terrain;
     }
-    
+
     public ScriptBlockElement getPreLoadScript()
     {
         return ScriptBlockElement.attach(this, doc.getRootElement(), "preLoadScript");
     }
-    
+
     public ScriptBlockElement getPostLoadScript()
     {
         return ScriptBlockElement.attach(this, doc.getRootElement(), "postLoadScript");
     }
-    
+
     public EntityElementList getEntities()
     {
         return entities;
     }
-    
+
     public void save(File file) throws ModelException
     {
         final XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -241,7 +241,7 @@ public class Model
             }
         }
     }
-    
+
     /**
      * @return the file the model is saved to, or <code>null</code> if it hasn't been saved yet
      */
@@ -249,7 +249,7 @@ public class Model
     {
         return file;
     }
-    
+
     /**
      * This changes the file that is backing the model.
      * @param file The file to back the model.
@@ -263,7 +263,7 @@ public class Model
             fireChange(new ModelChangeEvent(this, this, FILE));
         }
     }
-    
+
     /**
      * Whether or not the model has
      * outstanding changes.
@@ -272,7 +272,7 @@ public class Model
     {
         return dirty;
     }
-    
+
     /**
      * This sets whether or not the model has
      * outstanding changes.
@@ -288,12 +288,12 @@ public class Model
             fireChange(new ModelChangeEvent(this, this, DIRTY));
         }
     }
-    
+
     public Document getDocument()
     {
         return doc;
     }
-    
+
     public XPath newXPath(String expression)
     {
         try
@@ -307,7 +307,7 @@ public class Model
             throw new RuntimeException(e);
         }
     }
-    
+
     public Object getNode(XPath xpath, Object context)
     {
         try
@@ -320,7 +320,7 @@ public class Model
             throw new RuntimeException(e);
         }
     }
-    
+
     public String getText(XPath xpath, Object context)
     {
         try
@@ -333,7 +333,7 @@ public class Model
             throw new RuntimeException(e);
         }
     }
-    
+
     public double getDouble(XPath xpath, Object context)
     {
         try
@@ -346,7 +346,7 @@ public class Model
             throw new RuntimeException(e);
         }
     }
-    
+
     public boolean getBoolean(XPath xpath, Object context)
     {
         try
@@ -359,7 +359,7 @@ public class Model
             throw new RuntimeException(e);
         }
     }
-    
+
     public boolean setText(XPath xpath, Object context, String text, ModelChangeEvent event)
     {
         final String oldValue = getText(xpath, context);
@@ -401,12 +401,12 @@ public class Model
         }
         return true;
     }
-    
+
     public Element newElement(String name)
     {
         return new Element(name, NAMESPACE);
     }
-    
+
     private Document buildDefaultDocument()
     {
         final Document doc = new Document();
@@ -420,10 +420,10 @@ public class Model
         root.addContent(ScriptBlockElement.buildDefault(this, "postLoadScript", SimJrProps.get("simjr.editor.postLoadScript.default", "")));
         return doc;
     }
-    
+
     /**
      * This sets whether or not ModelChangeEvent
-     * events are propagated. 
+     * events are propagated.
      * @param Whether or not the model should respond
      * to OnModelChangeEvents.
      */
@@ -431,18 +431,18 @@ public class Model
     {
         this.respondToModelChanges = respondToModelChanges;
     }
-    
+
     /**
-     * This returns whether or not the model 
+     * This returns whether or not the model
      * is propagating ModelChangeEvent.
-     * @return Whether or not the model 
+     * @return Whether or not the model
      * is propagating ModelChangeEvent.
      */
     public boolean isResondingToModelChanges()
     {
         return this.respondToModelChanges;
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
