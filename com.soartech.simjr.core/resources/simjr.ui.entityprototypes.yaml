@@ -105,6 +105,12 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$ComplexHullFactory []
         category: Areas 
+        
+- &compound-area
+    id: compound-area
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.CompoundAreaShape$CompoundAreaShapeFactory []
+        category: CompoundAreas 
 
 ###############################################################################
 

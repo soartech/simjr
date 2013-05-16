@@ -179,7 +179,17 @@ prototypes:
     category: area
     subcategory: area
     properties:
-        polygon.closed: true        
+        polygon.closed: true
+        
+- &compound-area
+    id: compound-area
+    parent: *control
+    domain: compoundarea
+    category: compoundarea
+    subcategory: compoundarea
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.DefaultCompoundPolygon
 
 ###############################################################################
 
