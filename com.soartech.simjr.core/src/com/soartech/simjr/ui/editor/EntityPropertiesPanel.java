@@ -71,8 +71,6 @@ import com.soartech.simjr.sim.EntityPrototypeDatabase;
  */
 public class EntityPropertiesPanel extends DefaultSingleCDockable implements ModelChangeListener, ActionListener, KeyListener
 {
-    private static final long serialVersionUID = -6065915301912538128L;
-
     private final ServiceManager services;
     private final Model model;
     private EntityElement entity;
