@@ -244,12 +244,10 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         
         if(entity != null)
         {
-            isArea = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
-                    .getCategory().equals("area");
-            isRoute = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
-                    .getCategory().equals("route");
-            isCylinder = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype())
-                    .getCategory().equals("cylinder");
+            EntityPrototype ep = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype());
+            isArea = ep.getCategory().equals("area");
+            isRoute = ep.getCategory().equals("route");
+            isCylinder = ep.getCategory().equals("cylinder");
         }
 
 
