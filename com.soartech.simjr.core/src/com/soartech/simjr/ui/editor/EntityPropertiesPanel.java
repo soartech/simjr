@@ -325,6 +325,16 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         {
             setEntity(entity); // force an update
         }
+        
+        //On type change, set visibility to type default, if it exists. 
+        if(e.property.equals(EntityElement.PROTOTYPE))
+        {
+            EntityPrototype entityPrototype = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype());
+            Object prototypeVisibility = entityPrototype.getProperty(EntityConstants.PROPERTY_VISIBLE);
+            if(prototypeVisibility != null && prototypeVisibility instanceof Boolean) {
+                entity.setVisible((Boolean)prototypeVisibility);
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e)

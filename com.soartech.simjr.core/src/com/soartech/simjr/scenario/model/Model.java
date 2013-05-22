@@ -59,6 +59,9 @@ import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.MetadataElement;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainElement;
+import com.soartech.simjr.services.ServiceManager;
+import com.soartech.simjr.sim.EntityPrototype;
+import com.soartech.simjr.sim.EntityPrototypeDatabase;
 import com.soartech.simjr.util.JDomTools;
 
 /**
@@ -76,6 +79,8 @@ public class Model
     public static final String DIRTY = "dirty";
     public static final String FILE = "file";
     public static final String METADATA = "metadata";
+    
+    private final ServiceManager services;
 
     private final List<ModelChangeListener> listeners = new CopyOnWriteArrayList<ModelChangeListener>();
 
@@ -103,8 +108,9 @@ public class Model
         }
     }
 
-    public Model()
+    public Model(ServiceManager serviceManager)
     {
+        this.services = serviceManager;
         newModel();
     }
 
@@ -209,6 +215,12 @@ public class Model
     public EntityElementList getEntities()
     {
         return entities;
+    }
+    
+    public EntityPrototype getEntityPrototype(String prototype)
+    {
+        final EntityPrototypeDatabase db = services.findService(EntityPrototypeDatabase.class);
+        return db.getPrototype(prototype);
     }
 
     public void save(File file) throws ModelException

@@ -47,6 +47,9 @@ import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelElement;
+import com.soartech.simjr.sim.EntityConstants;
+import com.soartech.simjr.sim.EntityPrototype;
+import com.soartech.simjr.sim.EntityPrototypeDatabase;
 
 /**
  * @author ray
@@ -84,7 +87,14 @@ public class EntityElement implements ModelElement
         root.setAttribute("name", name, Model.NAMESPACE);
         root.setAttribute("prototype", prototype, Model.NAMESPACE);
         root.setAttribute("force", "friendly", Model.NAMESPACE);
-        root.setAttribute("visible", "true", Model.NAMESPACE);
+        
+        Boolean defaultVisibility = true;
+        EntityPrototype ep = model.getEntityPrototype(prototype);
+        Object prototypeVisibility = ep.getProperty(EntityConstants.PROPERTY_VISIBLE);
+        if(prototypeVisibility != null && prototypeVisibility instanceof Boolean)  {
+            defaultVisibility = (Boolean)prototypeVisibility;
+        }
+        root.setAttribute("visible", defaultVisibility.toString(), Model.NAMESPACE);
         
         root.addContent(LocationElement.buildDefault(model));
         root.addContent(OrientationElement.buildDefault(model));

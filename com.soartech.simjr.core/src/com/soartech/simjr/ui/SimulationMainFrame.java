@@ -215,7 +215,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         ModelService model = services.findService(ModelService.class);
         if(model == null)
-            services.addService(new ModelService());
+            services.addService(new ModelService(services));
         
         setTitle(SimJrProps.get("simjr.window.title","Sim Jr"));
         frameDimension = new Dimension(SimJrProps.get("simjr.window.width", 1000), SimJrProps.get("simjr.window.height", 800));

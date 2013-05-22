@@ -85,7 +85,7 @@ public class ScenarioLoader
         this.model = services.findService(ModelService.class);
         if(this.model == null)
         {
-            this.model = new ModelService();
+            this.model = new ModelService(services);
             services.addService(this.model);
         }
         try

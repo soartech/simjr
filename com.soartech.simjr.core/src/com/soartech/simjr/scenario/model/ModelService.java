@@ -34,6 +34,7 @@ package com.soartech.simjr.scenario.model;
 import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 
 /**
@@ -46,9 +47,9 @@ public class ModelService implements SimulationService
 {
     private Model model;
     
-    public ModelService()
+    public ModelService(ServiceManager services)
     {
-        this.model = new Model();
+        this.model = new Model(services);
     }
     
     public Model getModel()
@@ -58,7 +59,7 @@ public class ModelService implements SimulationService
     
     public Model newModel()
     {
-        this.model = new Model();
+        this.model.newModel();
         return this.model;
     }
     /*
