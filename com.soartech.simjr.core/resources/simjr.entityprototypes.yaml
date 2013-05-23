@@ -49,11 +49,7 @@ prototypes:
     properties:
         visible: true
         locked: false
-- &role
-    id: role
-    parent: *any
-    domain: role
-    category: role
+    
 - &control
     id: control
     parent: *any
@@ -121,7 +117,6 @@ prototypes:
     properties:
         polygon.closed: false
 
-   
 - &SAAFR
     id: SAAFR
     parent: *route
@@ -409,3 +404,21 @@ prototypes:
     parent: *generic-fighter
     properties:
         ms2525.template: "S%cAPMFQA"
+        
+### Roles ######################################################################
+
+- &role
+    id: role
+    parent: *any
+    domain: role
+    category: role
+    properties: 
+        visible: false
+        
+- &atc-support
+    id: atc-support
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false

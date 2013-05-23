@@ -92,8 +92,6 @@ prototypes:
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
         category: Areas
         
-        
-        
 - &complex-area
     id: complex-area
     properties:
@@ -123,7 +121,6 @@ prototypes:
     id: missile
     properties:
         shape: !!com.soartech.simjr.ui.shapes.MissileShape$Factory []
-
 
 - &bomb
     id: bomb
@@ -164,3 +161,8 @@ prototypes:
     id: telecom-tower
     properties:
         shape: !!com.soartech.simjr.ui.shapes.ImageEntityShape$Factory [simjr/images/shapes/entities/structure/telecom-tower-neutral.png, "", "" ]
+        
+- &role
+    id: role
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.RoleShape$Factory []
