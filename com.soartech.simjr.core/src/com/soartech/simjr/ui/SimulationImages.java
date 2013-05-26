@@ -64,6 +64,7 @@ public final class SimulationImages
     public static final ImageIcon SHOWALL = loadImageFromJar("simjr/images/showall.gif");
     public static final ImageIcon COPY = loadImageFromJar("simjr/images/copy.gif");
     public static final ImageIcon SPEECH_BUBBLE = loadImageFromJar("simjr/images/speechbubble.gif");
+    public static final ImageIcon AUDIO_INPUT = loadImageFromJar("simjr/images/audioinput.gif");
     public static final ImageIcon LOCK = loadImageFromJar("simjr/images/lock.gif");
     public static final ImageIcon DEBUG = loadImageFromJar("simjr/images/debug.gif");
     public static final ImageIcon PVD = loadImageFromJar("simjr/images/pvd.gif");
