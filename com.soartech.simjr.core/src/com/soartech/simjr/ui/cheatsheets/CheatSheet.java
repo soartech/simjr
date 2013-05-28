@@ -102,7 +102,7 @@ public class CheatSheet
                 {
                     javaScript = "";
                 }
-                logger.info("javScript=" + javaScript);
+                logger.debug("javScript=" + javaScript);
             }
         }
         else

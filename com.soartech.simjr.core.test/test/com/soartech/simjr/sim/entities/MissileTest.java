@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.EntityPrototypes;
-import com.soartech.simjr.weapons.Weapon;
+import com.soartech.simjr.weapons.AbstractFlyoutWeapon;
 import com.soartech.simjr.weapons.WeaponPlatform;
 
 public class MissileTest extends TestCase
@@ -50,7 +50,7 @@ public class MissileTest extends TestCase
         
         WeaponPlatform weapons = Adaptables.adapt(h, WeaponPlatform.class);
         assertNotNull(weapons);
-        Weapon weapon = weapons.getWeapon("hellfire");
+        AbstractFlyoutWeapon weapon = (AbstractFlyoutWeapon)weapons.getWeapon("hellfire");
         Vehicle target = new Vehicle("target", EntityPrototypes.NULL);
         
         Set<String> names = new HashSet<String>();

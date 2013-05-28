@@ -48,6 +48,8 @@ public interface EntityShapeFactory
      */
     void initialize(SwingPrimitiveRendererFactory rendererFactory);
     
+    SwingPrimitiveRendererFactory getRendererFactory();
+    
     EntityShape create(Entity entity, ShapeSystem system);
     
     Shape createSelection(String id, Entity selected);

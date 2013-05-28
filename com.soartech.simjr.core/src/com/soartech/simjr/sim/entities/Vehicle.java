@@ -64,6 +64,18 @@ public class Vehicle extends AbstractEntity
         addCapability(new DisableRadarWhenDestroyed());
     }
         
+    /**
+     * Removes the existing fuelModel capability and adds newFuelModel
+     * 
+     * @param newFuelModel The new FuelModel.
+     */
+    protected void replaceFuelModel(FuelModel newFuelModel)
+    {
+        removeCapability(fuelModel);
+        addCapability(newFuelModel);
+    }
+    
+    
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.entities.AbstractEntity#canUpdatePosition()
      */

@@ -57,5 +57,8 @@ public class Helicopter extends Vehicle
         weapons.addWeapon(Weapon.load("20mm-cannon", 1000));
         weapons.addWeapon(Weapon.load("hellfire", 4));
         //addWeapon(new Weapon("Hydra70-HE", "rockets", 4, 4));
+        
+        // Civilian Huey has 400 gal tank & 2.2hr flight time
+        replaceFuelModel(new FuelModel("gallons", 400.0, 0.05));
     }
 }

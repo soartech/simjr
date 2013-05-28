@@ -45,6 +45,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -82,11 +84,11 @@ public class EntityVelocityController extends JPanel implements EntityController
     
     private Entity entity;
     private double maxSpeed = 100.0;
-    private EntityController oldController;
+    private List<EntityController> oldControllers = new ArrayList<EntityController>();
     
     private ZController zController = new ZController();
     private XYController xyController = new XYController();
-
+    
     /**
      * Create a manual controller window for the given entity at the given screen
      * location. If an entity controller is already installed on the vehicle it
@@ -146,6 +148,9 @@ public class EntityVelocityController extends JPanel implements EntityController
         this.maxSpeed = maxSpeed;
     }
     
+    /**
+     * Call dispose() to remove the controller from its entity.
+     */
     public void dispose()
     {
         synchronized (entity.getSimulation().getLock())
@@ -196,12 +201,15 @@ public class EntityVelocityController extends JPanel implements EntityController
         
         this.entity = entity;
         
-        oldController = Adaptables.adapt(entity, EntityController.class);
-        if(oldController != null)
+        //remove any existing entity controller capabilities form the entity
+        oldControllers.clear();
+        EntityController ec = Adaptables.adapt(entity, EntityController.class);
+        while(ec != null)
         {
-            entity.removeCapability(oldController);
+            oldControllers.add(ec);
+            entity.removeCapability(ec);
+            ec = Adaptables.adapt(entity, EntityController.class);
         }
-        
     }
 
     /* (non-Javadoc)
@@ -209,10 +217,15 @@ public class EntityVelocityController extends JPanel implements EntityController
      */
     public void detach()
     {
-        if(oldController != null)
+        //re-attach the old entity controllers
+        for(EntityController ec : oldControllers)
         {
-            entity.addCapability(oldController);
+            if(ec != null)
+            {
+                entity.addCapability(ec);
+            }
         }
+        
         entity = null;
     }
 
