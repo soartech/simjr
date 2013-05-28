@@ -83,5 +83,11 @@ public class NullShapeFactory implements EntityShapeFactory
         return "none";
     }
 
+    @Override
+    public SwingPrimitiveRendererFactory getRendererFactory()
+    {
+        return this.internal.getRendererFactory();
+    }
+
     
 }

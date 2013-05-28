@@ -167,7 +167,7 @@ public class EntityPrototypeDatabase extends AbstractAdaptable implements Simula
             throw new IllegalArgumentException("Target of fragment '" + fragment.getId() + 
                     "' is not DefaultEntityPrototype, it's " + target.getClass());
         }
-        logger.info("Applying prototype fragment to '" + target.getId() + "'");
+        logger.debug("Applying prototype fragment to '" + target.getId() + "'");
         final DefaultEntityPrototype extendableTarget = (DefaultEntityPrototype) target;
         extendableTarget.getBaseProperties().putAll(fragment.getBaseProperties());
     }

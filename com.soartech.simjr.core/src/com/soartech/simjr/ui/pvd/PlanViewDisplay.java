@@ -79,6 +79,7 @@ import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
+import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
 import com.soartech.simjr.ui.shapes.SpeechBubbleManager;
 import com.soartech.simjr.ui.shapes.TimedShapeManager;
@@ -434,6 +435,11 @@ public class PlanViewDisplay extends JPanel
     {
         controlMouseWheel(new Point(getWidth() / 2, getHeight() / 2), amount);
     }
+
+    public void zoom(int amount, Point pointToZoomOn)
+    {
+        controlMouseWheel(pointToZoomOn, amount);
+    }
     
     private void showCoordinates()
     {
@@ -470,7 +476,14 @@ public class PlanViewDisplay extends JPanel
         {
             if(lockEntity != null)
             {
-                showPosition(lockEntity.getPosition(), false);
+                // TODO: JCC - Remove before finalizing.
+                lockEntity.setHeading(lockEntity.getHeading() + Math.PI/6400);
+                
+                // TODO: JCC - Clean up. Now centers on the actual entity rather than the shadow.
+                EntityShape entityShape = shapeAdapter.getEntityShape(lockEntity);
+                Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
+                showPosition(entityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
+                transformer.setRotation(-lockEntity.getHeading() + Math.PI/2);
             }
             time = sim.getTime();
             shapeAdapter.update();

@@ -530,7 +530,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
             tickableCaps.add((Tickable) capability);
         }
 
-        logger.info("Added capability " + (tickable? "tickable " : " ") + "'" + capability + "' to entity '" + name + "'");
+        logger.debug("Added capability " + (tickable? "tickable " : " ") + "'" + capability + "' to entity '" + name + "'");
 
         final EntityPositionProvider posProvider = Adaptables.adapt(capability, EntityPositionProvider.class);
         if(posProvider != null)

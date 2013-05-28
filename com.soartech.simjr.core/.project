@@ -3,8 +3,6 @@
 	<name>com.soartech.simjr.core</name>
 	<comment></comment>
 	<projects>
-		<project>dockingFramesCommon</project>
-		<project>dockingFramesCore</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

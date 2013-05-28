@@ -50,6 +50,7 @@ import com.soartech.simjr.sim.EntityConstants;
 public abstract class AbstractEntityShapeFactory implements EntityShapeFactory
 {
     private final ShapeStyle style = new ShapeStyle();
+    private SwingPrimitiveRendererFactory rendererFactory;
     
     public AbstractEntityShapeFactory()
     {
@@ -70,6 +71,12 @@ public abstract class AbstractEntityShapeFactory implements EntityShapeFactory
      */
     public void initialize(SwingPrimitiveRendererFactory rendererFactory)
     {
+        this.rendererFactory = rendererFactory;
+    }
+    
+    public SwingPrimitiveRendererFactory getRendererFactory()
+    {
+        return this.rendererFactory;
     }
 
     /* (non-Javadoc)

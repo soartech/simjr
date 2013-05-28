@@ -36,10 +36,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Detonation;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityPrototype;
+import com.soartech.simjr.weapons.AbstractFlyoutWeapon;
 import com.soartech.simjr.weapons.Weapon;
 
 /**
@@ -57,8 +59,8 @@ public abstract class AbstractFlyout extends AbstractEntity
     // agent's "splash" call to sync up.
     public static final double DEFAULT_SPEED = 600.0;
 
-    private Weapon weapon;
-    private Entity target;
+    private AbstractFlyoutWeapon weapon;
+    private Entity target, shooter;
     private Vector3 staticTarget;
 
     private double speed = DEFAULT_SPEED;
@@ -72,7 +74,7 @@ public abstract class AbstractFlyout extends AbstractEntity
      * @param weapon The associated weapon
      * @param target THe target entity
      */
-    public AbstractFlyout(Weapon weapon, Entity target, EntityPrototype prototype)
+    public AbstractFlyout(AbstractFlyoutWeapon weapon, Entity target, EntityPrototype prototype)
     {
         this(weapon, target, null, prototype);
     }
@@ -83,12 +85,12 @@ public abstract class AbstractFlyout extends AbstractEntity
      * @param weapon The associated weapon
      * @param staticTarget The target position
      */
-    public AbstractFlyout(Weapon weapon, Vector3 staticTarget, EntityPrototype prototype)
+    public AbstractFlyout(AbstractFlyoutWeapon weapon, Vector3 staticTarget, EntityPrototype prototype)
     {
         this(weapon, null, staticTarget, prototype);
     }
 
-    private AbstractFlyout(Weapon weapon, Entity target, Vector3 staticTarget, EntityPrototype prototype)
+    private AbstractFlyout(AbstractFlyoutWeapon weapon, Entity target, Vector3 staticTarget, EntityPrototype prototype)
     {
         super(generateName(weapon, target, staticTarget), prototype);
 
@@ -117,6 +119,62 @@ public abstract class AbstractFlyout extends AbstractEntity
     {
         this.speed = speed;
     }
+    
+    public double getClosingSpeed()
+    {
+        if (target==null)
+        {
+            return this.getSpeed();
+        } else
+        {
+            return ((this.getVelocity()).subtract(target.getVelocity())).length();
+        }
+    }
+    
+    public int getTimeToTarget()
+    {
+        Vector3 targetPos = target != null ? target.getPosition() : staticTarget;
+        return (int)Math.round(targetPos.distance(getPosition())/this.getClosingSpeed());
+        
+    }
+    
+    public double getRangeToTarget()
+    {
+        Vector3 targetPos = target != null ? target.getPosition() : staticTarget;
+        return targetPos.distance(getPosition());
+    }
+    
+    public double getBearingToTarget()
+    {
+        Vector3 targetPos = target != null ? target.getPosition() : staticTarget;
+        targetPos.subtract(getPosition());
+        return Math.toDegrees(Angles.boundedAngleRadians(Angles.getBearing(targetPos)));
+    }
+    
+    public Entity getTarget()
+    {
+        return target;
+    }
+
+    public Vector3 getStaticTarget()
+    {
+        return staticTarget;
+    }
+
+    public Weapon getWeapon()
+    {
+        return weapon;
+    }
+
+    public void setShooter(Entity shooter)
+    {
+        this.shooter=shooter;
+    }
+
+    public Entity getShooter()
+    {
+        return shooter;
+    }
 
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.entities.AbstractEntity#tick(double)
@@ -143,10 +201,15 @@ public abstract class AbstractFlyout extends AbstractEntity
             hit = true;
 
             getSimulation().detonate(new Detonation(getSimulation(), weapon, target, staticTarget));
+            //if (shooter != null) 
+            //{
+            //    removeFlyOut(shooter, this);
+            //}
+            weapon.removeFlyout(this);
             getSimulation().removeEntity(this);
         }
     }
-
+    
     /**
      * Generate a unique name for a missile. Exactly one of target or
      * staticTarget must be non-null.
@@ -200,4 +263,5 @@ public abstract class AbstractFlyout extends AbstractEntity
             return id;
         }
     }
+
 }

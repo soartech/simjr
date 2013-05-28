@@ -160,7 +160,7 @@ public class SegmentFollower extends AbstractEntityCapability implements
         if(currentSegment == null)
         {
             getEntity().setVelocity(Vector3.ZERO);
-            logger.info("'" + getEntity().getName() + "' finished following assigned segments");
+            logger.debug("'" + getEntity().getName() + "' finished following assigned segments");
 
             for(SegmentFollowerListener listener : listeners)
             {
@@ -177,7 +177,7 @@ public class SegmentFollower extends AbstractEntityCapability implements
         {
             final Simulation sim = getEntity().getSimulation();
             sim.removeEntity(constructedRoute);
-            logger.info("Removed route '" + constructedRoute.getName() + "' for segment follower '"  + getEntity().getName() + "'");
+            logger.debug("Removed route '" + constructedRoute.getName() + "' for segment follower '"  + getEntity().getName() + "'");
             constructedRoute = null;
         }
     }
@@ -222,7 +222,7 @@ public class SegmentFollower extends AbstractEntityCapability implements
         routeEntity.setProperty(EntityConstants.PROPERTY_SHAPE_OPACITY, 0.5);
         routeEntity.setProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, false);
 
-        logger.info("Constructed route '" + routeEntity.getName() + "' for segment follower '"  + getEntity().getName() + "'");
+        logger.debug("Constructed route '" + routeEntity.getName() + "' for segment follower '"  + getEntity().getName() + "'");
         constructedRoute = routeEntity;
     }
 
