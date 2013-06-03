@@ -54,6 +54,7 @@ import javax.swing.text.BadLocationException;
 import net.miginfocom.swing.MigLayout;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
@@ -120,8 +121,9 @@ public class SourcePanel extends DefaultSingleCDockable implements ModelChangeLi
 
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         textArea.setEditable(false);
-        textArea.setContentType("text/xml");
         
+        //Note: this can lead to slow performance for large (thousands of entities) scenario files
+        textArea.setContentType(SimJrProps.get("simjr.editor.sourcepanel.contenttype", "text/xml"));
         
         app.getModel().addModelChangeListener(this);
         textArea.setText(app.getModel().toString());
