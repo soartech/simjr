@@ -49,7 +49,6 @@ import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelElement;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.sim.EntityPrototypeDatabase;
 
 /**
  * @author ray

@@ -76,8 +76,6 @@ import com.soartech.simjr.util.SwingTools;
  */
 public class SourcePanel extends DefaultSingleCDockable implements ModelChangeListener, ActionListener, DocumentListener
 {
-    private static final long serialVersionUID = 7341341823156862606L;
-
     static
     {
         jsyntaxpane.DefaultSyntaxKit.initKit();

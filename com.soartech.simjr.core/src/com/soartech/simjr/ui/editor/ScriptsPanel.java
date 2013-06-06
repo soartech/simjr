@@ -51,8 +51,6 @@ import com.soartech.simjr.scenario.model.ModelChangeListener;
  */
 public class ScriptsPanel extends DefaultSingleCDockable implements ModelChangeListener
 {
-    private static final long serialVersionUID = 7341341823156862606L;
-
     private final Model model;
     private final ScriptEditPanel preLoad;
     private final ScriptEditPanel postLoad;
