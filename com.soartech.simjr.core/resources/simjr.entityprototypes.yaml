@@ -413,6 +413,7 @@ prototypes:
     domain: role
     category: role
     properties: 
+        category: "Role"
         visible: false
         
 - &atc-support
