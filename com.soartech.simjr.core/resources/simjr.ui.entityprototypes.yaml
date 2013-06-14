@@ -166,3 +166,13 @@ prototypes:
     id: role
     properties:
         shape: !!com.soartech.simjr.ui.shapes.RoleShape$Factory []
+        
+- &atc-aic
+    id: atc-aic
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []
+        
+- &atc-adam-cell
+    id: atc-adam-cell
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []

@@ -423,3 +423,43 @@ prototypes:
     category: atc
     properties: 
         visible: false
+        
+- &atc-afatds
+    id: atc-afatds
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-ac2
+    id: atc-ac2
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-base-ops
+    id: atc-base-ops
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+
+- &atc-adam-cell
+    id: atc-adam-cell
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-aic
+    id: atc-aic
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
