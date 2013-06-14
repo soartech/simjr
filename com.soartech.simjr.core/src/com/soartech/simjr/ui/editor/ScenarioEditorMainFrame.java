@@ -97,7 +97,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
     private final CStackLocation defaultSourcePanelLocation  = defaultMAPLocation.stack(3);
     private final CStackLocation defaultEntityPropertiesLocation= CStackLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
     private final CStackLocation defaultScenarioPropertiesLocation = defaultEntityPropertiesLocation.stack(1);
-    private final CStackLocation defaultSingleDockableLocation = defaultEntityPropertiesLocation.stack(2);
+    //private final CStackLocation defaultSingleDockableLocation = defaultEntityPropertiesLocation.stack(2);
     
     private static final long serialVersionUID = 691070210836482404L;
     private final ScenarioEditorApplication app;

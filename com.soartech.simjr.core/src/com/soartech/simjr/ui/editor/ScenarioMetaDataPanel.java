@@ -19,6 +19,7 @@ import com.soartech.simjr.scenario.model.ModelChangeListener;
  */
 class ScenarioMetaDataPanel extends JPanel implements ModelChangeListener
 {
+    private static final long serialVersionUID = 1L;
 
     private final ScenarioEditorServiceManager app;
 
