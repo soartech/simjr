@@ -89,9 +89,12 @@ public class EntityElement implements ModelElement
         
         Boolean defaultVisibility = true;
         EntityPrototype ep = model.getEntityPrototype(prototype);
-        Object prototypeVisibility = ep.getProperty(EntityConstants.PROPERTY_VISIBLE);
-        if(prototypeVisibility != null && prototypeVisibility instanceof Boolean)  {
-            defaultVisibility = (Boolean)prototypeVisibility;
+        if(ep != null)
+        {
+            Object prototypeVisibility = ep.getProperty(EntityConstants.PROPERTY_VISIBLE);
+            if(prototypeVisibility != null && prototypeVisibility instanceof Boolean)  {
+                defaultVisibility = (Boolean)prototypeVisibility;
+            }
         }
         root.setAttribute("visible", defaultVisibility.toString(), Model.NAMESPACE);
         

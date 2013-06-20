@@ -80,7 +80,7 @@ public class Model
     public static final String FILE = "file";
     public static final String METADATA = "metadata";
     
-    private final ServiceManager services;
+    private final EntityPrototypeDatabase prototypeDb;
 
     private final List<ModelChangeListener> listeners = new CopyOnWriteArrayList<ModelChangeListener>();
 
@@ -110,7 +110,7 @@ public class Model
 
     public Model(ServiceManager serviceManager)
     {
-        this.services = serviceManager;
+        this.prototypeDb = serviceManager.findService(EntityPrototypeDatabase.class);
         newModel();
     }
 
@@ -219,8 +219,11 @@ public class Model
     
     public EntityPrototype getEntityPrototype(String prototype)
     {
-        final EntityPrototypeDatabase db = services.findService(EntityPrototypeDatabase.class);
-        return db.getPrototype(prototype);
+        if(prototypeDb != null)
+        {
+            return prototypeDb.getPrototype(prototype);
+        }
+        else return null;
     }
 
     public void save(File file) throws ModelException

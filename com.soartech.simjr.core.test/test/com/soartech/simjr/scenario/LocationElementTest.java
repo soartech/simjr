@@ -37,6 +37,7 @@ import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.services.DefaultServiceManager;
 
 public class LocationElementTest extends TestCase
 {
@@ -50,7 +51,7 @@ public class LocationElementTest extends TestCase
 
     public void testGetAndSetLatitude()
     {
-        Model model = new Model();
+        Model model = new Model(new DefaultServiceManager());
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetLatitude", "any"));
         LocationElement loc = entity.getLocation();
         assertEquals(0.0, loc.getLatitude(), 0.0001);
@@ -60,7 +61,7 @@ public class LocationElementTest extends TestCase
     
     public void testGetAndSetLongitude()
     {
-        Model model = new Model();
+        Model model = new Model(new DefaultServiceManager());
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetLongitude", "any"));
         LocationElement loc = entity.getLocation();
         assertEquals(0.0, loc.getLongitude(), 0.0001);
@@ -69,7 +70,7 @@ public class LocationElementTest extends TestCase
     }
     public void testGetAndSetAltitude()
     {
-        Model model = new Model();
+        Model model = new Model(new DefaultServiceManager());
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetAltitude", "any"));
         LocationElement loc = entity.getLocation();
         assertEquals(0.0, loc.getAltitude(), 0.0001);

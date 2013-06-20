@@ -32,6 +32,7 @@
 package com.soartech.simjr.scenario;
 
 import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.services.DefaultServiceManager;
 
 import junit.framework.TestCase;
 
@@ -39,7 +40,7 @@ public class MetadataElementTest extends TestCase
 {
     public void testSetName()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final MetadataElement meta = new MetadataElement(model);
         
         assertEquals(MetadataElement.DEFAULT_NAME, meta.getName());
@@ -49,7 +50,7 @@ public class MetadataElementTest extends TestCase
     
     public void testSetDescription()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final MetadataElement meta = new MetadataElement(model);
         
         assertEquals("", meta.getDescription());

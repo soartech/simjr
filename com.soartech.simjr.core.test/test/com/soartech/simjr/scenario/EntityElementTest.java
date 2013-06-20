@@ -35,6 +35,7 @@ import javax.swing.undo.UndoableEdit;
 
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.services.DefaultServiceManager;
 import com.soartech.simjr.sim.EntityConstants;
 
 import junit.framework.TestCase;
@@ -44,7 +45,7 @@ public class EntityElementTest extends TestCase
 
     public void testGetAndSetName()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElement e = EntityElement.attach(model, EntityElement.build(model, "firstName", "prototype"));
         assertEquals("firstName", e.getName());
         e.setName("finalName");
@@ -53,7 +54,7 @@ public class EntityElementTest extends TestCase
     
     public void testGetAndSetPrototype()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElement e = EntityElement.attach(model, EntityElement.build(model, "firstName", "prototype"));
         assertEquals("prototype", e.getPrototype());
         e.setPrototype("finalPrototype");
@@ -62,14 +63,14 @@ public class EntityElementTest extends TestCase
     
     public void testGetLocation()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElement e = EntityElement.attach(model, EntityElement.build(model, "firstName", "prototype"));
         assertNotNull(e.getLocation());
     }
     
     public void testGetAndSetForce()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElement e = EntityElement.attach(model, EntityElement.build(model, "firstName", "prototype"));
         assertEquals(EntityConstants.FORCE_FRIENDLY, e.getForce());
         final UndoableEdit edit = e.setForce(EntityConstants.FORCE_OPPOSING);
@@ -83,7 +84,7 @@ public class EntityElementTest extends TestCase
     
     public void testGetAndSetVisible()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElement e = EntityElement.attach(model, EntityElement.build(model, "firstName", "prototype"));
         assertTrue(e.isVisible());
         final UndoableEdit edit = e.setVisible(false);

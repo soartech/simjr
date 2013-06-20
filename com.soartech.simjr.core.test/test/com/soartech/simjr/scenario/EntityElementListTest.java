@@ -31,13 +31,12 @@
  */
 package com.soartech.simjr.scenario;
 
-import com.soartech.simjr.scenario.EntityElement;
-import com.soartech.simjr.scenario.EntityElementList;
+import junit.framework.TestCase;
+
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
-
-import junit.framework.TestCase;
+import com.soartech.simjr.services.DefaultServiceManager;
 
 /**
  * @author ray
@@ -47,7 +46,7 @@ public class EntityElementListTest extends TestCase
 
     public void testAddEntity()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElementList list = model.getEntities();
         assertTrue(list.getEntities().isEmpty());
         final EntityElement entity = list.addEntity("testAddEntity", "foo").getEntity();
@@ -61,7 +60,7 @@ public class EntityElementListTest extends TestCase
 
     public void testAddEntityFiresEvent()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final Object source[] = new Object[1];
         final String property[] = new String[1];
         model.addModelChangeListener(new ModelChangeListener() {
@@ -80,7 +79,7 @@ public class EntityElementListTest extends TestCase
     
     public void testAddEntityGeneratesUniqueName()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElementList list = model.getEntities();
         final EntityElement a = list.addEntity("testAddEntityGeneratesUniqueName", "foo").getEntity();
         final EntityElement b = list.addEntity("testAddEntityGeneratesUniqueName", "foo").getEntity();
@@ -89,7 +88,7 @@ public class EntityElementListTest extends TestCase
     
     public void testRemoveEntity()
     {
-        final Model model = new Model();
+        final Model model = new Model(new DefaultServiceManager());
         final EntityElementList list = model.getEntities();
         assertTrue(list.getEntities().isEmpty());
         final EntityElement entity = list.addEntity("testRemoveEntity", "foo").getEntity();
