@@ -34,6 +34,8 @@ package com.soartech.shapesystem.shapes;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.soartech.math.Polygon;
+import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Position;
 import com.soartech.shapesystem.PrimitiveRenderer;
@@ -44,6 +46,7 @@ import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
+import com.soartech.shapesystem.SimpleRotation;
 
 /**
  * @author ray
@@ -57,6 +60,10 @@ public class ImageShape extends Shape
 
     private double cachedWidth;
     private double cachedHeight;
+    
+    private SimplePosition center = new SimplePosition();
+    private SimpleRotation angle = SimpleRotation.fromDegrees(0.0);
+    private SimpleRotation baseAngle = SimpleRotation.fromDegrees(0.0);
     
     /**
      * @param name
@@ -74,6 +81,7 @@ public class ImageShape extends Shape
         this.width = width;
         this.height = height;
         this.image = image;
+        this.center = new SimplePosition(-1.0, -1.0);
     }
     
     
@@ -99,12 +107,18 @@ public class ImageShape extends Shape
     protected void calculateBase(ShapeSystem system,
             CoordinateTransformer transformer)
     {
-        points.add(new SimplePosition());
-        
         cachedWidth = transformer.scalarToPixels(width);
         cachedHeight = transformer.scalarToPixels(height);
+        
+        double halfWidth = cachedWidth / 2.0;
+        double halfHeight = cachedHeight / 2.0;
+        
+        points.add(new SimplePosition(-halfWidth, -halfHeight));
+        points.add(new SimplePosition(halfWidth, -halfHeight));
+        points.add(new SimplePosition(halfWidth, halfHeight));
+        points.add(new SimplePosition(-halfWidth, halfHeight));
     }
-
+    
     /* (non-Javadoc)
      * @see com.soartech.shapesystem.Shape#draw(com.soartech.shapesystem.PrimitiveRendererFactory)
      */
@@ -112,7 +126,20 @@ public class ImageShape extends Shape
     public void draw(PrimitiveRendererFactory rendererFactory)
     {
         PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
-        renderer.drawImage(points.get(0), angles.get(0), image, cachedWidth, cachedHeight);
+        
+        int counter;
+        for (counter = 0;counter < points.size();counter++)
+        {
+            center.x += points.get(counter).x;
+            center.y += points.get(counter).y;
+        }
+        
+        counter++;
+        
+        center.x /= counter;
+        center.y /= counter;
+        
+        renderer.drawImage(center, angles.get(0), image, cachedWidth, cachedHeight);
     }
 
     /* (non-Javadoc)
@@ -134,8 +161,17 @@ public class ImageShape extends Shape
         {
             return false;
         }
-        double distance = points.get(0).distance(x, y);
-        return distance <= Math.max(cachedHeight, cachedWidth);
+
+        // Ripped from Box.Java and then modified
+        List<Vector3> hullPoints = new ArrayList<Vector3>();
+        for(SimplePosition p : points)
+        {
+            hullPoints.add(new Vector3(p.x, p.y, 0.0));
+        }
+        Polygon p = Polygon.createConvexHull(hullPoints);
+        
+        boolean contains = p.contains(new Vector3(x, y, 0.0));
+        return contains;
     }
 
 }

@@ -75,8 +75,8 @@ public class SimplePosition
         
         // The negative on the y-component is because y travels
         // down in screen coordinates vs. up in Cartesian
-        x =  (x_orig*Math.cos(rad) - y_orig*Math.sin(rad));
-        y = -(y_orig*Math.cos(rad) + x_orig*Math.sin(rad));
+        x =  (x_orig*Math.cos(rad) + y_orig*Math.sin(rad));
+        y = -(y_orig*Math.cos(rad) - x_orig*Math.sin(rad));
     }
     
     public double distance(double x, double y)
