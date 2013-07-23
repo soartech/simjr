@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -323,7 +324,33 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         //TODO: implement setting the location next to the given component
     }
-    
+
+    /**
+     * Wrap the given component in a dockable frame and add it to the main frame.
+     * 
+     * @param id
+     * @param title
+     * @param c
+     * @param nextTo
+     */
+    public void addFrame(String id, String title, Component c, Component nextTo, Icon icon)
+    {
+        // create a dockable to hold the component
+        DefaultSingleCDockable dockable = new DefaultSingleCDockable(id, title,
+                c);
+        dockable.setMinimizable(false);
+        dockable.setCloseable(true);
+        if (icon != null)
+        {
+            dockable.setTitleIcon(icon);
+        }
+
+        // add the dockable to the main frame
+        addDockable(dockable, defaultSingleDockableLocation, id);
+
+        // TODO: implement setting the location next to the given component
+    }
+
     /**
      * Writes all the settings of this application.
      * @param element the xml element to write into

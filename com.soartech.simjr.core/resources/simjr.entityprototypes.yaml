@@ -320,6 +320,8 @@ prototypes:
     id: mobile-sam
     parent: *ground-vehicle
     category: mobile-sam
+    properties:
+        ms2525.template: "S%cGPUCDS--"
     
 #### F-18 #####################################################################
 - &fa-18

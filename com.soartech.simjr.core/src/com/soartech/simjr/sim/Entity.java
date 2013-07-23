@@ -100,6 +100,8 @@ public interface Entity extends Adaptable
      */
     void setVelocity(Vector3 velocity);
     
+    Vector3 getAcceleration();
+    
     // Keeping these around for backwards compatibility with old scripts
     @Deprecated
     /**

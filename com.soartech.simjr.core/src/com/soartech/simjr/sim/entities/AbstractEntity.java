@@ -47,9 +47,12 @@ import com.soartech.math.Angles;
 import com.soartech.math.Vector3;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sim.DefaultEntityMotionIntegrator;
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityAccelerationProvider;
 import com.soartech.simjr.sim.EntityCapability;
 import com.soartech.simjr.sim.EntityConstants;
+import com.soartech.simjr.sim.EntityMotionIntegrator;
 import com.soartech.simjr.sim.EntityPositionProvider;
 import com.soartech.simjr.sim.EntityPropertyAdapter;
 import com.soartech.simjr.sim.EntityPropertyAdapters;
@@ -78,7 +81,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     private final EntityPrototype prototype;
     private Vector3 position = Vector3.ZERO;
     private Vector3 velocity = Vector3.ZERO;
-
+    
     private double heading = Angles.navRadiansToMathRadians(0);
     private double pitch = 0.;
     private double roll = 0;
@@ -89,6 +92,11 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     private final Stack<EntityPositionProvider> positionProviderStack = new Stack<EntityPositionProvider>();
     private EntityPositionProvider positionProvider;
 
+    private final Stack<EntityAccelerationProvider> accelerationProviderStack = new Stack<EntityAccelerationProvider>();
+    private EntityAccelerationProvider accelerationProvider = EntityAccelerationProvider.NO_ACCELERATION_MODEL;
+    
+    private EntityMotionIntegrator motionIntegrator = DefaultEntityMotionIntegrator.getInstance();
+    
     /**
      * The base properties of the entity, i.e. those that are not calculated.
      */
@@ -198,6 +206,11 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         return velocity;
     }
 
+    @Override
+    public Vector3 getAcceleration()
+    {
+        return accelerationProvider.getAcceleration(getPosition(), getVelocity(), getSimulation().getTime());
+    }
 
     /* (non-Javadoc)
      * @see com.soartech.simjr.Entity#getProperties()
@@ -509,12 +522,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
      */
     protected void updatePosition(double dt)
     {
-        // There's roundoff error in force AGL which can cause the entity
-        // to move event if velocity is zero, so we do a special check here.
-        if(!velocity.equals(Vector3.ZERO))
-        {
-            setPosition(getPosition().add(velocity.multiply(dt)));
-        }
+        motionIntegrator.updateEntity(this, accelerationProvider, dt);
     }
 
     /* (non-Javadoc)
@@ -541,6 +549,13 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
             }
             positionProvider = posProvider;
         }
+        
+        final EntityAccelerationProvider accelProvider = Adaptables.adapt(capability, EntityAccelerationProvider.class);
+        if (accelProvider != null)
+        {
+            accelerationProviderStack.push(this.accelerationProvider);
+            accelerationProvider = accelProvider;
+        }
     }
 
     /* (non-Javadoc)
@@ -557,6 +572,10 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         if(capability == positionProvider)
         {
             positionProvider = !this.positionProviderStack.empty() ? this.positionProviderStack.pop() : null;
+        }
+        if(capability == accelerationProvider)
+        {
+            accelerationProvider = !this.accelerationProviderStack.empty() ? this.accelerationProviderStack.pop() : null;
         }
     }
 
