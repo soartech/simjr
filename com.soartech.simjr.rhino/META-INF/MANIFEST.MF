@@ -6,7 +6,7 @@ Bundle-Version: 2.2.0.qualifier
 Bundle-Vendor: Soar Technology, Inc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
- lib/rhino-js-1.7R4.jar
+ lib/rhino-js-1.7R3.jar
 Export-Package: org.mozilla.javascript
 DynamicImport-Package: *
 
