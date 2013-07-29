@@ -346,6 +346,12 @@ prototypes:
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHA---"
+        
+- &uh-60
+    id: uh-60
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cAPMHA---"
     
 - &ch-47
     id: ch-47
