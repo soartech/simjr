@@ -168,6 +168,11 @@ public class EntityVelocityController extends JPanel implements EntityController
         this.numberOfOvalsInController = ovals;
     }
     
+    public void setLinearController(boolean isLinear)
+    {
+        this.linearController = isLinear;
+    }
+    
     /**
      * Call dispose() to remove the controller from its entity.
      */
