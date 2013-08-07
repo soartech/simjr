@@ -127,11 +127,11 @@ public class ImageEntityShape extends EntityShape
         public Shape createSelection(String id, Entity selected)
         {
             return new Box(id, EntityConstants.LAYER_SELECTION,
-                    new Position(selected.getName() + ".bodyFrame"), 
-                    Rotation.createRelative(selected.getName() + ".bodyFrame"), 
-                    createSelectionStyle(),
-                    Scalar.createPixel(image.getIconWidth() + 5),
-                    Scalar.createPixel(image.getIconHeight() + 5));    
+                           new Position(selected.getName() + ".bodyFrame"), 
+                           Rotation.createRelative(selected.getName() + ".bodyFrame"), 
+                           createSelectionStyle(),
+                           Scalar.createPixel(image.getIconWidth() + 5),
+                           Scalar.createPixel(image.getIconHeight() + 5));    
         }
 
 
