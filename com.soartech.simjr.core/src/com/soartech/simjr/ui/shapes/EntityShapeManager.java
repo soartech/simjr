@@ -236,7 +236,6 @@ public class EntityShapeManager
     public void highlightEntity(Entity entity)
     {
         highlightEntity(entity, null);
-        
     }
     
     /**

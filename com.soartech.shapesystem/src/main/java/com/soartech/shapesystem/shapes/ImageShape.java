@@ -46,7 +46,6 @@ import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
-import com.soartech.shapesystem.SimpleRotation;
 
 /**
  * @author ray
@@ -62,8 +61,6 @@ public class ImageShape extends Shape
     private double cachedHeight;
     
     private SimplePosition center = new SimplePosition();
-    private SimpleRotation angle = SimpleRotation.fromDegrees(0.0);
-    private SimpleRotation baseAngle = SimpleRotation.fromDegrees(0.0);
     
     /**
      * @param name
@@ -127,17 +124,17 @@ public class ImageShape extends Shape
     {
         PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
         
-        int counter;
-        for (counter = 0;counter < points.size();counter++)
+        center.x = 0.0;
+        center.y = 0.0;
+        
+        for (int i = 0;i < points.size();i++)
         {
-            center.x += points.get(counter).x;
-            center.y += points.get(counter).y;
+            center.x += points.get(i).x;
+            center.y += points.get(i).y;
         }
         
-        counter++;
-        
-        center.x /= counter;
-        center.y /= counter;
+        center.x /= points.size();
+        center.y /= points.size();
         
         renderer.drawImage(center, angles.get(0), image, cachedWidth, cachedHeight);
     }
