@@ -481,8 +481,8 @@ public class PlanViewDisplay extends JPanel
                 
                 // TODO: JCC - Clean up. Now centers on the actual entity rather than the shadow.
                 Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
-                showPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
                 transformer.setRotation(-lockEntity.getHeading() + Math.PI/2);
+                showPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
             }
             time = sim.getTime();
             shapeAdapter.update();
