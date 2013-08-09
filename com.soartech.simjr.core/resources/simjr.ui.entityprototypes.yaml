@@ -51,24 +51,28 @@ prototypes:
 - &area
     id: area
     properties:
+        shape.label.displayIfParent: false
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$SimpleHullFactory []
         category: Areas
         
 - &complex-area
     id: complex-area
     properties:
+        shape.label.displayIfParent: false
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$ComplexHullFactory []
         category: Areas
         
 - &complex-area-static
     id: complex-area-static
     properties:
+        shape.label.displayIfParent: false
         shape: !!com.soartech.simjr.ui.shapes.AreaShape$ComplexHullFactory []
         category: Areas 
         
 - &compound-area
     id: compound-area
     properties:
+        shape.label.displayIfParent: false
         shape: !!com.soartech.simjr.ui.shapes.CompoundAreaShape$CompoundAreaShapeFactory []
         category: CompoundAreas 
 

@@ -107,6 +107,15 @@ public class CompoundAreaShape extends EntityShape implements EntityConstants
         }
         
         createLabel(0, 0, defaultCompoundPolygon.getName());
+        
+        List<Entity> children = this.compoundPolygon.getPolygons();
+        for (Entity child : children)
+        {
+            child.setParent(this.getEntity());
+            // Toggle the visibility to force an update of displaying labels if a parent
+            child.setProperty(EntityConstants.PROPERTY_VISIBLE, !(Boolean)child.getProperty(EntityConstants.PROPERTY_VISIBLE));
+            child.setProperty(EntityConstants.PROPERTY_VISIBLE, !(Boolean)child.getProperty(EntityConstants.PROPERTY_VISIBLE));
+        }
     }
 
     /* (non-Javadoc)
@@ -120,6 +129,15 @@ public class CompoundAreaShape extends EntityShape implements EntityConstants
         if(propertyName.equals(PROPERTY_POLYGONS))
         {
             updateShape = true;
+            
+            List<Entity> children = this.compoundPolygon.getPolygons();
+            for (Entity child : children)
+            {
+                child.setParent(this.getEntity());
+                // Toggle the visibility to force an update of displaying labels if a parent
+                child.setProperty(EntityConstants.PROPERTY_VISIBLE, !(Boolean)child.getProperty(EntityConstants.PROPERTY_VISIBLE));
+                child.setProperty(EntityConstants.PROPERTY_VISIBLE, !(Boolean)child.getProperty(EntityConstants.PROPERTY_VISIBLE));
+            }
         }
     }
 
