@@ -226,7 +226,15 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         //set the default look and feel
         LookAndFeelList lafList = LookAndFeelList.getDefaultList();
-        lafList.setLookAndFeel(lafList.getSystem());
+        int laf = SimJrProps.get("simjr.overrideLookAndFeel", -1);
+        if (laf < 0)
+        {
+            lafList.setLookAndFeel(lafList.getSystem());
+        }
+        else
+        {
+            lafList.setLookAndFeel(lafList.get(laf));
+        }
         
         // Listen for window closing event so we can save dock layout before
         // the frame is dispose.
