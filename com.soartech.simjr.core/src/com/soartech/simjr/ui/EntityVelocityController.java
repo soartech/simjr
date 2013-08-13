@@ -402,7 +402,7 @@ public class EntityVelocityController extends JPanel implements EntityController
             
             if (linearController)
             {
-                double arcTan = Math.atan(Math.abs(yPercentOnCurve/xPercentOnCurve));
+                double arcTan = Math.atan2(Math.abs(yPercentOnCurve), Math.abs(xPercentOnCurve));
                 
                 x = Math.abs(percentOfMaxTopSpeed * Math.cos(arcTan)) * maxSpeed;
                 y = Math.abs(percentOfMaxTopSpeed * Math.sin(arcTan)) * maxSpeed;
@@ -464,7 +464,7 @@ public class EntityVelocityController extends JPanel implements EntityController
                 // and apply the correction
                 
                 // The angle of the velocity vector
-                double arcTan = Math.atan(Math.abs(yPercentOnCurve/xPercentOnCurve));
+                double arcTan = Math.atan2(Math.abs(yPercentOnCurve), Math.abs(xPercentOnCurve));
                 
                 x = Math.abs(speed * Math.cos(arcTan));
                 y = Math.abs(speed * Math.sin(arcTan));
@@ -548,7 +548,7 @@ public class EntityVelocityController extends JPanel implements EntityController
                 // log(Y * C^(-1))/log(B) = X
                 double percentage = Math.log(Math.abs(totalSpeed) * CInverse) / Math.log(logConstant);
                 
-                double arcTan = Math.atan(Math.abs(velo.y/velo.x));
+                double arcTan = Math.atan2(Math.abs(velo.y), Math.abs(velo.x));
                 
                 percentageX = Math.abs(percentage * Math.cos(arcTan));
                 percentageY = Math.abs(percentage * Math.sin(arcTan));
