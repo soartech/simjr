@@ -177,7 +177,7 @@ public class ScriptRunner extends AbstractAdaptable implements SimulationService
         Reader reader = null;
         try
         {
-            logger.info("Evaluating sub script '" + script + "'");
+            logger.debug("Evaluating sub script '" + script + "'");
             fileStack.push(script);
             reader = new FileReader(script);
             Context context = Context.enter();
