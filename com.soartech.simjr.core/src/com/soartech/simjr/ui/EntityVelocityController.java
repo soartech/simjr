@@ -87,7 +87,7 @@ public class EntityVelocityController extends JPanel implements EntityController
     private double transitionSpeed = 5.0;
     private double numberOfOvalsInController = 4.0;
     private double transitionRing = 1.0;
-    private boolean linearController = true;
+    private boolean linearController = false;
     
     private List<EntityController> oldControllers = new ArrayList<EntityController>();
     
