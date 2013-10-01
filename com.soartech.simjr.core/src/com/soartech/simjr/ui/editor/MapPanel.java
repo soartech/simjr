@@ -99,8 +99,6 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
 
     public MapPanel(ScenarioEditorServiceManager app, EntityPropertiesPanel props)
     {
-        
-        
         super("MapPanel");
         
         this.propsPanel = props;
@@ -154,15 +152,12 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         SelectionManager.findService(app).addListener(this);
         
         add(pvd);
-        
 
         this.app.addService(this); // So PVD actions can access
         this.app.getModel().addModelChangeListener(this);
         
     }
     
-
-
     public PlanViewDisplay getActivePlanViewDisplay()
     {
         return pvd;

@@ -94,7 +94,6 @@ public class PlanViewDisplay extends JPanel
     private static final Logger logger = Logger.getLogger(PlanViewDisplay.class);
     
     private static final long serialVersionUID = 6151999888052532421L;
-    
 
     private ServiceManager app;
     private Simulation sim;
@@ -454,7 +453,6 @@ public class PlanViewDisplay extends JPanel
         coordinates.setBounds(10, 10, 200, 20);
     }
     
-
     /* (non-Javadoc)
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
@@ -692,9 +690,6 @@ public class PlanViewDisplay extends JPanel
         }
     }
     
-    /**
-     * 
-     */
     private void dragPan(MouseEvent e)
     {
         // modify the pan to account for changes in position of the mouse while dragging
@@ -712,9 +707,8 @@ public class PlanViewDisplay extends JPanel
     {
         return draggingEntity;
     }
-    protected void dragFinished()
-    {
-    }
+    
+    protected void dragFinished() { }
 
     /**
      * Zooms in or out based on mouse wheel rotation, but retains the mouse
