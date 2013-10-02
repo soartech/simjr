@@ -46,10 +46,10 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 /**
- * Simple dialog that shows a list with checkboxes that allows multiple objects
- * to be selected.
+ * Simple dialog that shows a list and allows multiple objects to be selected.
  * 
  * @author ray
  */
@@ -58,16 +58,43 @@ public class MultiSelectDialog extends JDialog
     private static final long serialVersionUID = -2750983942866294579L;
     
     private JList jList;
-    
     private Object[] result;
     
-    
+    /**
+     * Select from the list of objects, with no initial selection.
+     * @param owner The owner frame
+     * @param title The title of the dialog
+     * @param objects The objects to select from
+     * @return The selected objects
+     */
     public static Object[] select(Frame owner, String title, Object[] objects)
     {
         return select(owner, title, objects, new Object[]{});
     }
     
+    /**
+     * Select from the list of objects, with the given initial selection.
+     * @param owner The owner frame
+     * @param title The title of the dialog
+     * @param objects The objects to select from
+     * @param selected The initially selected objects
+     * @return The selected objects
+     */
     public static Object[] select(Frame owner, String title, Object[] objects, Object[] selected)
+    {
+        return select(owner, title, objects, selected, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    }
+    
+    /**
+     * Select from the list of objects, with the given initial selection and selection model. 
+     * @param owner The owner frame
+     * @param title The title of the dialog
+     * @param objects The objects to select from
+     * @param selected The initially selected objects
+     * @param selectMode The ListSelectionModel to use (single or multi)
+     * @return The selected objects
+     */
+    public static Object[] select(Frame owner, String title, Object[] objects, Object[] selected, int selectMode)
     {
         final Object[] sorted = Arrays.copyOf(objects, objects.length);
         Arrays.sort(sorted, new Comparator<Object>()
@@ -78,7 +105,7 @@ public class MultiSelectDialog extends JDialog
             }
         });
         
-        final MultiSelectDialog dialog = new MultiSelectDialog(owner, title, sorted, selected);
+        final MultiSelectDialog dialog = new MultiSelectDialog(owner, title, sorted, selected, selectMode);
         dialog.setSize(320, 320);
         if(owner != null)
         {
@@ -89,11 +116,12 @@ public class MultiSelectDialog extends JDialog
         return dialog.result;
     }
     
-    private MultiSelectDialog(Frame owner, String title, Object[] objects, Object[] selected)
+    private MultiSelectDialog(Frame owner, String title, Object[] objects, Object[] selected, int selectMode)
     {
         super(owner, title, true);
         
         jList = new JList(objects);
+        jList.setSelectionMode(selectMode);
 
         List<Object> selectedList = new ArrayList<Object>();
         for(int i = 0; i < selected.length; i++)
