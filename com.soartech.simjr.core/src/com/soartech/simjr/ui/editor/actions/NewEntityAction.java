@@ -57,8 +57,8 @@ public class NewEntityAction extends AbstractEditorAction
     //private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
-    private Geodetic.Point initialPosition;
-    private final String prototype;
+    protected Geodetic.Point initialPosition;
+    protected final String prototype;
     
     public static String getId(String prototype)
     {
