@@ -34,6 +34,7 @@ package com.soartech.simjr.ui.editor.actions;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
@@ -75,8 +76,9 @@ public class NewEntityGroupAction extends NewEntityAction
      */
     public void actionPerformed(ActionEvent e)
     {
-        final double originLat;
-        final double originLon;
+        final double spread = 0.0005;
+        double originLat;
+        double originLon;
         if(initialPosition == null)
         {
             originLat = getModel().getTerrain().getOriginLatitude();
@@ -90,6 +92,8 @@ public class NewEntityGroupAction extends NewEntityAction
         
         final CompoundEdit compound = new CompoundEdit();
         final List<EntityPrototype> prototypes = EntityPrototypesFilter.getUserPrototypes(getApplication());
+        
+        //Get the currently selected entity for setting default values
         final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
         EntityPrototype currentSelectedPrototype = null;
         if(selected != null) {
@@ -99,6 +103,12 @@ public class NewEntityGroupAction extends NewEntityAction
                     break;
                 }
             }
+        }
+        
+        //If we have a selected entity, start flight group offset
+        if(selected != null) {
+            originLat -= spread;
+            originLon -= spread;
         }
         
         //Request desired prototype from user 
@@ -116,13 +126,19 @@ public class NewEntityGroupAction extends NewEntityAction
             return;
         }
         
-        final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
-        final double spread = 0.0005;
-        final EntityElementList entities = getModel().getEntities();
+        //Request name of flight group from user
+        final String flightGroupName = JOptionPane.showInputDialog(getApplication().getFrame(), 
+                "Enter name of flight group", 
+                selected != null ? selected.getName() : "viper");
+        if(flightGroupName == null) {
+            return;
+        }
         
+        final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
+        final EntityElementList entities = getModel().getEntities();
         for(int i = 0; i < (Integer)flightGroupSize; i++) 
         {
-            final NewEntityEdit edit = entities.addEntity(prototypeId, prototypeId);
+            final NewEntityEdit edit = entities.addEntity((String)flightGroupName + (i + 1), prototypeId);
             compound.addEdit(edit);
             final UndoableEdit locEdit = edit.getEntity().getLocation().setLocation(originLat - i*spread, originLon - i*spread, 0.0);
             if(locEdit != null) {
