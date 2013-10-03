@@ -59,7 +59,13 @@ public class SingleSelectDialog
     
     public static void main(String[] args)
     {
-        final Object result = select(null, "Favorite Number?", new Object[] {"one", "two", "three", "four", "five"}, "three");
+        Object[] nums = new Object[100];
+        for(int i = 0; i < nums.length; i++) {
+            nums[i] = i;
+        }
+        final Object result = select(null, "Favorite Number?", 
+                nums, 
+                99);
         System.out.println(result != null ? Arrays.asList(result) : "cancel");
     }
 }
