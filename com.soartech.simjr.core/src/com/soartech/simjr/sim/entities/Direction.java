@@ -48,6 +48,18 @@ public enum Direction
         return NORTH;
     }
     
+    public static Direction parse(String string)
+    {
+        for(Direction dir : Direction.values())
+        {
+            if(string.equalsIgnoreCase(dir.ToString()))
+            {
+                return dir;
+            }
+        }
+        return null;
+    }
+    
     public Direction getOpposite()
     {
         return Direction.getOpposite(this);
