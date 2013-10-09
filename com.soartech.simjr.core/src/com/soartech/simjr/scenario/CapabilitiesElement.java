@@ -87,6 +87,10 @@ public class CapabilitiesElement
     public String getFollowTarget()
     {
         String value = this.entity.getModel().getText(followTargetPath, entity.getElement());
+        //For some reason, XPath.valueOf returns "" instead of null
+        if(value != null && value.isEmpty()) {
+            return null;
+        }
         return value;
     }
     
