@@ -72,7 +72,7 @@ public class EntityElement implements ModelElement
     private final ThreeDDataElement threeDData;
     private final ScriptBlockElement initScript;
     private final PointElementList points;
-    
+    private final CapabilitiesElement capabilities;
     
     public static EntityElement attach(Model model, Element element)
     {
@@ -103,6 +103,7 @@ public class EntityElement implements ModelElement
         root.addContent(ScriptBlockElement.buildDefault(model, "initScript", SimJrProps.get("simjr.editor.entityInitScript.default", "")));
         root.addContent(PointElementList.buildDefault(model));
         root.addContent(ThreeDDataElement.buildDefault(model));
+        root.addContent(CapabilitiesElement.buildDefault(model));
         return root;
     }
     
@@ -128,6 +129,7 @@ public class EntityElement implements ModelElement
         this.threeDData = new ThreeDDataElement(this);
         this.initScript = ScriptBlockElement.attach(model, this.element, "initScript");
         this.points = PointElementList.attach(model, this);
+        this.capabilities = new CapabilitiesElement(this);
     }
     
 
@@ -265,6 +267,11 @@ public class EntityElement implements ModelElement
     public PointElementList getPoints()
     {
         return points;
+    }
+    
+    public CapabilitiesElement getCapabilities()
+    {
+        return capabilities;
     }
     
     private class SetNameEdit extends AbstractUndoableEdit

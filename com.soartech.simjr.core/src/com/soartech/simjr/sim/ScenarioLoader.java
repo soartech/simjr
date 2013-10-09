@@ -44,6 +44,7 @@ import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.controllers.EntityFollower;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
@@ -280,6 +281,13 @@ public class ScenarioLoader
         entity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
         entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
         entity.setProperty(EntityConstants.PROPERTY_3DData, ee.getThreeDData().get3dSupported());
+        
+        //Capabilities
+        if(ee.getCapabilities().getFollowTarget() != null) {
+            final EntityFollower follower = new EntityFollower(ee.getCapabilities().getFollowTarget());
+            entity.addCapability(follower);
+        }
+        
         runEntityInitScript(ee, entity);
         
         sim.addEntity(entity);
