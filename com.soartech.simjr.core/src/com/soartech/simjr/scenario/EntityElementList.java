@@ -32,6 +32,7 @@
 package com.soartech.simjr.scenario;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jdom.Element;
@@ -89,7 +90,7 @@ public class EntityElementList
     
     public List<EntityElement> getEntities()
     {
-        return entities;
+        return Collections.unmodifiableList(entities);
     }
     
     public EntityElement getEntity(String name)
