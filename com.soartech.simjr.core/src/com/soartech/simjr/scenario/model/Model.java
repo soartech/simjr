@@ -453,7 +453,7 @@ public class Model
      * @return Whether or not the model
      * is propagating ModelChangeEvent.
      */
-    public boolean isResondingToModelChanges()
+    public boolean isRespondingToModelChanges()
     {
         return this.respondToModelChanges;
     }
