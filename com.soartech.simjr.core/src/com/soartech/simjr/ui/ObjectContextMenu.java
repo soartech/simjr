@@ -71,15 +71,8 @@ public class ObjectContextMenu extends JPopupMenu
         this.selectionManager = services.findService(SelectionManager.class);
         
         this.addPopupMenuListener(new PopupMenuListener() {
-
-            public void popupMenuCanceled(PopupMenuEvent e)
-            {
-            }
-
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
-            {
-            }
-
+            public void popupMenuCanceled(PopupMenuEvent e) { }
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) { }
             public void popupMenuWillBecomeVisible(PopupMenuEvent e)
             {
                 populate();
@@ -92,11 +85,23 @@ public class ObjectContextMenu extends JPopupMenu
     }
     
     /**
+     * Override this method to provide additional actions for the context menu
+     * 
      * @return Additional actions to be included in the context menu.
      */
     protected List<Action> getAdditionalActions()
     {
         return new ArrayList<Action>();
+    }
+    
+    /**
+     * Override this method to provide additional per-object actions for the context menu
+     * @param the selected object
+     * @return Additional actions to be included in the context menu
+     */
+    protected List<AbstractSimulationAction> getAdditionalActionsForObject(Object selected) 
+    {
+        return new ArrayList<AbstractSimulationAction>();
     }
     
     private void populate()
@@ -126,52 +131,63 @@ public class ObjectContextMenu extends JPopupMenu
                 addSeparator();
             }
             List<AbstractSimulationAction> actions = actionManager.getActionsForObject(selectionManager.getSelectedObject());
+            
             Collections.sort(actions, new Comparator<AbstractSimulationAction>(){
-
-                public int compare(AbstractSimulationAction o1,
-                        AbstractSimulationAction o2)
+                public int compare(AbstractSimulationAction o1, AbstractSimulationAction o2)
                 {
                     return o1.getValue(Action.NAME).toString().compareToIgnoreCase(o2.getValue(Action.NAME).toString());
                 }});
             
+            addActions(actions);
             
-            Map<String, JMenu> submenus = new HashMap<String, JMenu>();
-            
-            for(AbstractSimulationAction action : actions)
+            List<AbstractSimulationAction> extraActions = getAdditionalActionsForObject(selectionManager.getSelectedObject());
+            if(!extraActions.isEmpty()) {
+                addSeparator();
+                addActions(extraActions);
+            }
+
+        }//end if selected != null
+    }
+    
+    /**
+     * Adds the given actions to the menu.
+     * @param actions The list of actions to add to the menu.
+     */
+    private void addActions(List<AbstractSimulationAction> actions)
+    {
+        Map<String, JMenu> submenus = new HashMap<String, JMenu>();
+        for(AbstractSimulationAction action : actions)
+        {
+            if(action.isEnabled())
             {
-                if(action.isEnabled())
-                {
-                    //add this action to a submenu in the popup if necessary
-                    if(!action.getSubmenuId().isEmpty())
-                    {                        
-                        //try to get the submenu based on its id
-                        JMenu submenu = submenus.get(action.getSubmenuId());
-                        
-                        //create a new JMenu object if the submenu doesn't exist in the map
-                        if(submenu == null)
-                        {
-                            submenu = new JMenu();
-                            submenu.setText(action.getSubmenuId());
-                            
-                            //add the new submenu to this JPopupMenu
-                            add(submenu);
-                            
-                            //add the new submenu to the map
-                            submenus.put(action.getSubmenuId(), submenu);
-                        }
-                        
-                        //add the action to the submenu now that we know it exists
-                        submenu.add(action);
-                        
-                    }
-                    else //or just add as a regular menu item
+                //add this action to a submenu in the popup if necessary
+                if(!action.getSubmenuId().isEmpty())
+                {                        
+                    //try to get the submenu based on its id
+                    JMenu submenu = submenus.get(action.getSubmenuId());
+                    
+                    //create a new JMenu object if the submenu doesn't exist in the map
+                    if(submenu == null)
                     {
-                        add(action);
+                        submenu = new JMenu();
+                        submenu.setText(action.getSubmenuId());
+                        
+                        //add the new submenu to this JPopupMenu
+                        add(submenu);
+                        
+                        //add the new submenu to the map
+                        submenus.put(action.getSubmenuId(), submenu);
                     }
+                    
+                    //add the action to the submenu now that we know it exists
+                    submenu.add(action);
+                }
+                else //or just add as a regular menu item
+                {
+                    add(action);
                 }
             }
-            
-        }
+        }//end for actions
     }
 
     private boolean addAdditionalActions()
