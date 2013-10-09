@@ -57,6 +57,7 @@ public class CapabilitiesElement
     
     public static final String CAPABILITIES = CapabilitiesElement.class.getCanonicalName() + ".capabilities";
     
+    
     private final EntityElement entity;
     
     private final XPath capabilitiesPath;
@@ -140,10 +141,16 @@ public class CapabilitiesElement
                 {
                     logger.info("Creating new follow target attribute: " + newFollowTarget);
                     o = capabilitiesPath.selectSingleNode(context);
+                    Element capabilitiesElement;
                     if(o != null && o instanceof Element) {
-                        Element capabilitiesElement = (Element)o;
-                        capabilitiesElement.setAttribute("followTarget", newFollowTarget, Model.NAMESPACE);
+                        capabilitiesElement = (Element)o;
                     }
+                    else { //capabilities element doesn't exist
+                        logger.info("Creating new capabilities element");
+                        capabilitiesElement = CapabilitiesElement.buildDefault(entity.getModel());
+                        entity.getElement().addContent(capabilitiesElement);
+                    }
+                    capabilitiesElement.setAttribute("followTarget", newFollowTarget, Model.NAMESPACE);
                     changed = true;
                 }
                 else {
