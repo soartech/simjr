@@ -6,13 +6,11 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityController;
 
 /**
- * This is used to allow one entity to follow another entity with
- * given offsets.
+ * This is used to allow one entity to follow another entity with given offsets.
  * 
  * @author ACNickels
  */
-public class EntityFollower extends AbstractEntityCapability implements
-        EntityController
+public class EntityFollower extends AbstractEntityCapability implements EntityController
 {
     //This is how far off of due behind, the wing man will follow
     private static final double FOLLOW_OFFSET_ANGLE = Math.PI / 8; //45 degrees
@@ -21,13 +19,13 @@ public class EntityFollower extends AbstractEntityCapability implements
     //This is a multiplier on the current speed, so that the wing man will keep up with the leader
     private static final double CATCH_UP_RATE = 1.07;
     //This is the minimum speed the wing man will move while he is not in formation
-    private static final double REPOSITION_SPEED = 10;
+    //private static final double REPOSITION_SPEED = 10;
     
     //Entity to follow
     private Entity toFollow = null;
     private String nameToFollow = null;
     
-    private double previousDT = Double.MIN_VALUE;//Not 0
+    //private double previousDT = Double.MIN_VALUE;//Not 0
     
     public EntityFollower(String nameToFollow){
         this.nameToFollow = nameToFollow;
@@ -82,7 +80,7 @@ public class EntityFollower extends AbstractEntityCapability implements
             self.setVelocity(dir.multiply(speed * dt));
             self.setHeading(Math.atan2(dir.y, dir.x));
         }
-        previousDT = dt;
+        //previousDT = dt;
     }
 
     @Override
