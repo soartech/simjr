@@ -55,9 +55,9 @@ public class UpdateFollowAction extends AbstractEditorAction
     
     public static UpdateFollowAction create(ActionManager manager, EntityElement elt)
     {
-        logger.info("Creating UpdateFollowAction for entity: " + elt);
+        logger.debug("Creating UpdateFollowAction for entity: " + elt);
         String followTarget = elt.getCapabilities().getFollowTarget();
-        logger.info("Current follow target: " + followTarget);
+        logger.debug("Current follow target: " + followTarget);
         if(followTarget == null || followTarget.isEmpty())
         {
             return new UpdateFollowAction(manager, "Set as Follower", elt);

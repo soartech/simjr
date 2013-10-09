@@ -57,7 +57,6 @@ public class CapabilitiesElement
     
     public static final String CAPABILITIES = CapabilitiesElement.class.getCanonicalName() + ".capabilities";
     
-    
     private final EntityElement entity;
     
     private final XPath capabilitiesPath;
@@ -96,7 +95,7 @@ public class CapabilitiesElement
     
     public UndoableEdit setFollowTarget(String newFollowTarget) 
     {
-        logger.info("Setting follow target: " + newFollowTarget);
+        logger.debug("Setting follow target: " + newFollowTarget);
         
         final Model model = this.entity.getModel();
         final String oldFollowTarget = this.getFollowTarget();
@@ -113,7 +112,7 @@ public class CapabilitiesElement
     
     private boolean updateFollowTarget(String newFollowTarget)
     {
-        logger.info("Updating follow target to: " + newFollowTarget);
+        logger.debug("Updating follow target to: " + newFollowTarget);
         final Element context = entity.getElement();
         boolean changed = false;
         
@@ -126,13 +125,13 @@ public class CapabilitiesElement
                 Attribute followTargetAttr = (Attribute)o;
                 if(newFollowTarget != null) //Update it 
                 {
-                    logger.info("Changing existing follow target attribute to: " + newFollowTarget + " from: " + followTargetAttr.getValue());
+                    logger.debug("Changing existing follow target attribute to: " + newFollowTarget + " from: " + followTargetAttr.getValue());
                     changed = !followTargetAttr.getValue().equals(newFollowTarget);
                     followTargetAttr.setValue(newFollowTarget);
                 }
                 else //Remove it 
                 {
-                    logger.info("Removing existing follow target attribute: " + followTargetAttr.getValue());
+                    logger.debug("Removing existing follow target attribute: " + followTargetAttr.getValue());
                     if(followTargetAttr.getParent() != null) {
                         followTargetAttr.detach();
                         changed = true;
@@ -143,14 +142,14 @@ public class CapabilitiesElement
             {
                 if(newFollowTarget != null) //create it
                 {
-                    logger.info("Creating new follow target attribute: " + newFollowTarget);
+                    logger.debug("Creating new follow target attribute: " + newFollowTarget);
                     o = capabilitiesPath.selectSingleNode(context);
                     Element capabilitiesElement;
                     if(o != null && o instanceof Element) {
                         capabilitiesElement = (Element)o;
                     }
                     else { //capabilities element doesn't exist
-                        logger.info("Creating new capabilities element");
+                        logger.debug("Creating new capabilities element");
                         capabilitiesElement = CapabilitiesElement.buildDefault(entity.getModel());
                         entity.getElement().addContent(capabilitiesElement);
                     }
@@ -158,7 +157,7 @@ public class CapabilitiesElement
                     changed = true;
                 }
                 else {
-                    logger.info("No follow target attribute to remove.");
+                    logger.debug("No follow target attribute to remove.");
                 }
             }
         }
@@ -166,13 +165,12 @@ public class CapabilitiesElement
             logger.error("Unable to update follow target: " + e);
         }
         
-        logger.info("changed: " + changed);
         return changed;
     }
     
     public UndoableEdit removeFollowTarget()
     {
-        logger.info("Removing follow target.");
+        logger.debug("Removing follow target.");
         return setFollowTarget(null);
     }
 
