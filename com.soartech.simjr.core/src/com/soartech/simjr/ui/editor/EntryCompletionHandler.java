@@ -42,10 +42,8 @@ import javax.swing.JTextField;
 /**
  * @author ray
  */
-public class EntryCompletionHandler extends InputVerifier implements
-        ActionListener
+public class EntryCompletionHandler extends InputVerifier implements ActionListener
 {
-
     public EntryCompletionHandler(JComponent component)
     {
         component.setInputVerifier(this);
@@ -65,7 +63,6 @@ public class EntryCompletionHandler extends InputVerifier implements
     @Override
     public boolean verify(JComponent input)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
