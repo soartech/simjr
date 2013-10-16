@@ -392,14 +392,18 @@ public class EntityTools
     public static Color getLineColor(Entity e, Color def)
     {
         String color = (String)e.getPrototype().getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
-        Color entityColor;
-        try{
-            Field field = Color.class.getField(color);
-            entityColor = (Color)field.get(null);
-        }catch (Exception E){
-            entityColor = def;
+
+        Color entityColor = getColorByName(color);
+        if(entityColor != null) { 
+            return entityColor; 
         }
-        return entityColor;
+        
+        entityColor = getColorByCode(color);
+        if(entityColor != null) { 
+            return entityColor; 
+        }
+        
+        return def;
     }
     
     /**
@@ -419,7 +423,40 @@ public class EntityTools
             entityColor = def;
         }
         return entityColor;
-    } 
+    }
+    
+    /**
+     * Attempt to parse the given color string as a java.awt.Color
+     * @param colorName, e.g. "red"
+     * @return the Color object associated with the name, or null if not found
+     */
+    private static Color getColorByName(String colorName) 
+    {
+        Color c = null;
+        try {
+            Field field = Color.class.getField(colorName);
+            c = (Color)field.get(null);
+        } catch (Exception E){
+            //Color not found
+        }
+        return c;
+    }
+    
+    /**
+     * Attempt to parse the given color string as a java.awt.Color
+     * @param colorCode, e.g. #00FF00
+     * @return the Color object associated with the code, or null if not found
+     */
+    private static Color getColorByCode(String colorCode)
+    {
+        Color c = null;
+        try {
+            c = new Color(Integer.parseInt(colorCode, 16));
+        } catch (Exception E) {
+            // Color not found
+        }
+        return c;
+    }
     
     public static boolean getThreeDSupported(Entity e)
     {
