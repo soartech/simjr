@@ -76,7 +76,8 @@ prototypes:
     subcategory: Special_use_airspace
     properties:
         threeDData: true
-        shape.fill.color: cyan
+        # ASCA - Airspace Control Area = Light Gray
+        shape.fill.color: lightGray
         
 - &ROZ-cylinder
     id: ROZ-cylinder
@@ -84,7 +85,8 @@ prototypes:
     category: cylinder
     subcategory: ROZ
     properties:
-        shape.fill.color: red  
+        # ROA - Restricted Operations Area = Red
+        shape.fill.color: red
         threeDData: true
             
 - &polygon
@@ -116,6 +118,8 @@ prototypes:
     subcategory: route
     properties:
         polygon.closed: false
+        # AIRRTE - Air Route = Blue
+        shape.line.color: blue
 
 - &SAAFR
     id: SAAFR
@@ -123,7 +127,8 @@ prototypes:
     category: route
     subcategory: SAAFR
     properties:
-        shape.line.color: green
+        # SAAFR - Standard Use Army Aircraft Flight Route = Cyan
+        shape.line.color: cyan
         threeDData: true
         
 - &AIRCOR
@@ -132,14 +137,17 @@ prototypes:
     category: route
     subcategory: AIRCOR
     properties:
-        shape.line.color: red  
-        threeDData: true          
+        # AIRCOR = Dark Green
+        shape.line.color: "347235"
+        threeDData: true
 - &area
     id: area
     parent: *polygon
     category: area
     subcategory: area
     properties:
+        # ACA - Airspace Coordination Area = Light Gray
+        shape.line.color: lightGray
         polygon.closed: true
        
 - &ROZ
@@ -148,6 +156,7 @@ prototypes:
     category: area
     subcategory: ROZ
     properties:
+        # ROA - Restricted Operations Area = Red
         shape.fill.color: red  
         threeDData: true
         
@@ -157,7 +166,8 @@ prototypes:
     category: area
     subcategory: Special_use_airspace
     properties:
-        shape.fill.color: cyan
+        # ASCA - Airspace Control Area = Light Gray
+        shape.fill.color: lightGray
         threeDData: true
         
 - &complex-area
