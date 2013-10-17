@@ -41,6 +41,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
@@ -53,6 +55,8 @@ import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
  */
 public class MapImage
 {
+    private static final Logger logger = Logger.getLogger(MapImage.class);
+    
     private static class SingleMapImage
     {
         Vector3 centerMeters = Vector3.ZERO;
@@ -112,7 +116,7 @@ public class MapImage
         setImage(0, image);
     }
 
-    public void setImage(int index, File imageFile)
+    public void setImage(int index, File imageFile) 
     {
         SingleMapImage i = getOrCreate(index);
         i.imageFile = imageFile;
@@ -120,12 +124,13 @@ public class MapImage
 
         if (i.imageFile != null && !i.imageFile.getPath().equals(""))
         {
-            try {
+            try 
+            {
                 i.image = ImageIO.read(imageFile);
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                logger.error("Unable to read image: " + imageFile, e);
             }
         }
     }
