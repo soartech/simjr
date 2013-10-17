@@ -152,7 +152,7 @@ public class TerrainImageElement implements ModelElement
     
     public UndoableEdit setImageHref(String href)
     {
-        final UndoableEdit create = getOrCreateImageElement("", 1.0);
+        final UndoableEdit create = getOrCreateImageElement(href, 1.0);
         final UndoableEdit set;
         final String oldHref = getImageHref();
         if(getModel().setText(imageHref, null, href, new ModelChangeEvent(getModel(), this, HREF)))
