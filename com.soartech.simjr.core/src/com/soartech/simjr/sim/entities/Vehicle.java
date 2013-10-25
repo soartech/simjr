@@ -69,10 +69,11 @@ public class Vehicle extends AbstractEntity
      * 
      * @param newFuelModel The new FuelModel.
      */
-    protected void replaceFuelModel(FuelModel newFuelModel)
+    public void replaceFuelModel(FuelModel newFuelModel)
     {
         removeCapability(fuelModel);
         addCapability(newFuelModel);
+        fuelModel = newFuelModel;
     }
     
     
@@ -82,6 +83,7 @@ public class Vehicle extends AbstractEntity
     @Override
     protected boolean canUpdatePosition()
     {
+      
         return super.canUpdatePosition() && !fuelModel.isEmpty();
     }
 
