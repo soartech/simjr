@@ -79,7 +79,7 @@ import com.soartech.simjr.util.SwingTools;
 /**
  * @author ray
  */
-public class ScenarioEditorApplication extends DefaultServiceManager implements PropertyChangeListener, ScenarioEditorServiceManager
+public class ScenarioEditorApplication extends DefaultServiceManager implements PropertyChangeListener, ScenarioEditorServiceManager
 {
     private static final Logger logger = Logger.getLogger(ScenarioEditorApplication.class);
     
@@ -103,7 +103,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     
     private ScenarioEditorApplication(String args[])
     {
-        addService(this);
+        addService(this);
         
         addService(new PreferenceProvider("simjr/editor"));
         
@@ -201,15 +201,15 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         new AdjustMapOpacityAction(actionManager);
     }
     
-    /* (non-Javadoc)
-     * @see com.soartech.simjr.ui.editor.ScenarioEditorServiceManager#getModel()
-     */
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.editor.ScenarioEditorServiceManager#getModel()
+     */
     public Model getModel()
     {
         return model;
     }
     
-    public JFrame getFrame()
+    public JFrame getFrame()
     {
         return frame;
     }
@@ -219,11 +219,11 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         JOptionPane.showMessageDialog(frame, text, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    public void showPanel(JComponent component)
-    {
-        frame.showPanel(component);
-    }
-    
+    public void showPanel(JComponent component)
+    {
+        frame.showPanel(component);
+    }
+    
     public File selectFile(Object... filters)
     {
         final String cd = findService(PreferenceProvider.class).getPreferences().get("chooser.currentDirectory", null);
@@ -245,7 +245,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
      * 
      * @return false if the user asked to cancel
      */
-    @Override
+    @Override
     public boolean saveIfModelIsChanged()
     {
         if(getModel().isDirty())
@@ -298,19 +298,19 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         SwingUtilities.invokeLater(new Runnable() { public void run() { new ScenarioEditorApplication(args); }});
     }
 
-    @Override
-    public void shutdown() throws SimulationException
-    {        
-    }
-
-    @Override
-    public void start(ProgressMonitor progress) throws SimulationException
-    {        
-    }
-
-    @Override
-    public Object getAdapter(Class<?> klass)
-    {
-        return null;
-    }
+    @Override
+    public void shutdown() throws SimulationException
+    {        
+    }
+
+    @Override
+    public void start(ProgressMonitor progress) throws SimulationException
+    {        
+    }
+
+    @Override
+    public Object getAdapter(Class<?> klass)
+    {
+        return null;
+    }
 }

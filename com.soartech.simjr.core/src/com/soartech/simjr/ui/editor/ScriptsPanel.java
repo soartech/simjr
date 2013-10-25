@@ -57,7 +57,7 @@ public class ScriptsPanel extends JPanel implements ModelChangeListener
     /**
      * @param app
      */
-    public ScriptsPanel(ScenarioEditorServiceManager app)
+    public ScriptsPanel(ScenarioEditorServiceManager app)
     {
         super(new BorderLayout());
         
