@@ -300,6 +300,27 @@ prototypes:
     category: vehicle
     factory: !class com.soartech.simjr.sim.entities.Vehicle
     
+- &trawler
+    id: trawler
+    parent: *sea-vehicle
+    category: trawler
+    properties:
+        ms2525.template: "S%cSPXM----"
+
+- &merchantman
+    id: merchantman
+    parent: *sea-vehicle
+    category: merchantman
+    properties:
+        ms2525.template: "S%cSPXM----"
+    
+- &destroyer
+    id: destroyer
+    parent: *sea-vehicle
+    category: destroyer
+    properties:
+        ms2525.template: "S%cSPCLDD--"
+    
 - &cruiser
     id: cruiser
     parent: *sea-vehicle
