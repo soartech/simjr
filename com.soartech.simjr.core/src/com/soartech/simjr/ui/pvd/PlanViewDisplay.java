@@ -451,7 +451,7 @@ public class PlanViewDisplay extends JPanel
         this.coordinates = new CoordinatesPanel();
         this.coordinates.setActivePvd(this);
         add(coordinates);
-        coordinates.setBounds(10, 10, 200, 20);
+        coordinates.setBounds(10, 10, 300, 20);
     }
     
 
