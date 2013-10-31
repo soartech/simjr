@@ -35,24 +35,14 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
-import bibliothek.gui.dock.util.swing.Rotation;
-
-import com.soartech.math.Vector3;
 import com.soartech.shapesystem.FillStyle;
-import com.soartech.shapesystem.Position;
-import com.soartech.shapesystem.PositionType;
 import com.soartech.shapesystem.Scalar;
-import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
-import com.soartech.shapesystem.TextStyle;
-import com.soartech.shapesystem.shapes.Hull;
-import com.soartech.shapesystem.shapes.Text;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityTools;
-import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.sim.entities.DefaultCompoundPolygon;
 
 /**
