@@ -367,3 +367,16 @@ prototypes:
     parent: *generic-fighter
     properties:
         ms2525.template: "S%cAPMFQA"
+
+- &RAVEN
+    id: RAVEN
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
+
+- &REAPER
+    id: REAPER
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
+
