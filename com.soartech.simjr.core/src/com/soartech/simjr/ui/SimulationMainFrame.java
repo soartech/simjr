@@ -128,7 +128,7 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
  */
 public class SimulationMainFrame extends JFrame implements SimulationService, PlanViewDisplayProvider
 {
-//    public static final String PVD_FRAME_KEY = "__pvds";
+    public static final String PVD_FRAME_KEY = "__pvds";
     public static final String RADIO_MESSAGES_FRAME_KEY = "__radioMessages";
     public static final String CONSOLE_FRAME_KEY = "__console";
     public static final String SOAR_STATUS_FRAME_KEY = "__soarStatus";
@@ -232,7 +232,15 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         //set the default look and feel
         LookAndFeelList lafList = LookAndFeelList.getDefaultList();
-        lafList.setLookAndFeel(lafList.getSystem());
+        int laf = SimJrProps.get("simjr.overrideLookAndFeel", -1);
+        if (laf < 0)
+        {
+            lafList.setLookAndFeel(lafList.getSystem());
+        }
+        else
+        {
+            lafList.setLookAndFeel(lafList.get(laf));
+        }
 
         // Listen for window closing event so we can save dock layout before
         // the frame is dispose.
@@ -491,8 +499,51 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                 frame.setVisible(true);
             }
         }
-
-
+    }
+    
+    /**
+     * This removes all the docking panels to allow for pragmatically creating a new layout.
+     * 
+     */
+    public void blankDockingLayout()
+    {
+        //close all non-default dockables
+        for(SingleCDockable dockable : singleAuxillaryDockables.values())
+        {
+            if (dockable.isVisible())
+            {
+                dockable.setVisible(false);
+            }
+            control.removeDockable(dockable);
+        }
+        
+        //close each single dockable
+        for(SingleCDockable dockable : singleDockables.values())
+        {
+            dockable.setVisible(false);
+        }
+        
+        //close each pvd frame
+        for(PvdFrame frame : pvds)
+        {
+            if(frame.getControl() != null)
+            {
+                frame.setVisible(false);
+            }
+        }
+        
+        //reset the location of each single dockable
+        singleDockables.get(ENTITIES_FRAME_KEY).setLocation(defaultEntityListLocation);
+        singleDockables.get(ENTITY_PROPERTIES_FRAME_KEY).setLocation(defaultEntityPropertiesLocation);
+        singleDockables.get(RADIO_MESSAGES_FRAME_KEY).setLocation(defaultRadioMessagesLocation);
+        singleDockables.get(CONSOLE_FRAME_KEY).setLocation(defaultConsoleLocation);
+        singleDockables.get(CHEAT_SHEET_FRAME_KEY).setLocation(defaultCheatSheetLocation);
+        
+        //reset the location of each pvd frame
+        for(PvdFrame frame : pvds)
+        {
+            frame.setLocation(defaultPvdLocation);
+        }
     }
     
     /**
@@ -527,8 +578,23 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     {
         return createPvdFrame(null, split).pvd;
     }
+    
+    public PlanViewDisplay createPlanViewDisplay(boolean split, CLocation location)
+    {
+        return createPvdFrame(null, split, location).pvd;
+    }
+    
+    public PlanViewDisplay createPlanViewDisplay(String title, boolean split, CLocation location)
+    {
+        return createPvdFrame(title, split, location).pvd;
+    }
 
     private PvdFrame createPvdFrame(String title, boolean split)
+    {
+        return createPvdFrame(title, split, defaultPvdLocation);
+    }
+
+    private PvdFrame createPvdFrame(String title, boolean split, CLocation location)
     {
         boolean first = nextPvdId == 0;
         

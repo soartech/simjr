@@ -31,16 +31,13 @@
  */
 package com.soartech.simjr.scenario;
 
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.DefaultServiceManager;
-
 import junit.framework.TestCase;
 
 public class OrientationElementTest extends TestCase
 {
     public void testGetAndSetHeading()
     {
-        Model model = new Model(new DefaultServiceManager());
+        Model model = new Model();
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetHeading", "any"));
         OrientationElement loc = entity.getOrientation();
         assertEquals(0.0, loc.getHeading(), 0.0001);
@@ -50,7 +47,7 @@ public class OrientationElementTest extends TestCase
     
     public void testGetAndSetRoll()
     {
-        Model model = new Model(new DefaultServiceManager());
+        Model model = new Model();
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetRoll", "any"));
         OrientationElement loc = entity.getOrientation();
         assertEquals(0.0, loc.getRoll(), 0.0001);
@@ -59,7 +56,7 @@ public class OrientationElementTest extends TestCase
     }
     public void testGetAndSetPitch()
     {
-        Model model = new Model(new DefaultServiceManager());
+        Model model = new Model();
         EntityElement entity = EntityElement.attach(model, EntityElement.build(model, "testGetAndSetPitch", "any"));
         OrientationElement loc = entity.getOrientation();
         assertEquals(0.0, loc.getPitch(), 0.0001);

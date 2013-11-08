@@ -33,16 +33,13 @@ package com.soartech.simjr.scenario;
 
 import javax.swing.undo.UndoableEdit;
 
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.DefaultServiceManager;
-
 import junit.framework.TestCase;
 
 public class TerrainImageElementTest extends TestCase
 {
     public void testHasImageDefaultsToFalse()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final TerrainElement terrain = model.getTerrain();
         
         assertFalse(terrain.getImage().hasImage());
@@ -50,7 +47,7 @@ public class TerrainImageElementTest extends TestCase
     
     public void testHasImageBecomesTrueWhenImageIsSet()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final TerrainElement terrain = model.getTerrain();
         
         final UndoableEdit edit = terrain.getImage().setImageHref("test");
@@ -67,7 +64,7 @@ public class TerrainImageElementTest extends TestCase
     
     public void testClearImage()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final TerrainElement terrain = model.getTerrain();
         
         terrain.getImage().setImageHref("test");

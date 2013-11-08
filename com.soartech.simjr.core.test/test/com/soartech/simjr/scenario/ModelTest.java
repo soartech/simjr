@@ -31,9 +31,8 @@
  */
 package com.soartech.simjr.scenario;
 
+import com.soartech.simjr.scenario.Model;
 import com.soartech.simjr.scenario.ScriptBlockElement;
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.DefaultServiceManager;
 
 import junit.framework.TestCase;
 
@@ -42,13 +41,13 @@ public class ModelTest extends TestCase
 
     public void testPreLoadScript()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final ScriptBlockElement pre = model.getPreLoadScript();
         assertEquals("text/javascript", pre.getType());
     }
     public void testPostLoadScript()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final ScriptBlockElement post = model.getPostLoadScript();
         assertEquals("text/javascript", post.getType());
     }

@@ -31,12 +31,13 @@
  */
 package com.soartech.simjr.scenario;
 
-import junit.framework.TestCase;
+import com.soartech.simjr.scenario.EntityElement;
+import com.soartech.simjr.scenario.EntityElementList;
+import com.soartech.simjr.scenario.Model;
+import com.soartech.simjr.scenario.ModelChangeEvent;
+import com.soartech.simjr.scenario.ModelChangeListener;
 
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.scenario.model.ModelChangeEvent;
-import com.soartech.simjr.scenario.model.ModelChangeListener;
-import com.soartech.simjr.services.DefaultServiceManager;
+import junit.framework.TestCase;
 
 /**
  * @author ray
@@ -46,7 +47,7 @@ public class EntityElementListTest extends TestCase
 
     public void testAddEntity()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final EntityElementList list = model.getEntities();
         assertTrue(list.getEntities().isEmpty());
         final EntityElement entity = list.addEntity("testAddEntity", "foo").getEntity();
@@ -60,7 +61,7 @@ public class EntityElementListTest extends TestCase
 
     public void testAddEntityFiresEvent()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final Object source[] = new Object[1];
         final String property[] = new String[1];
         model.addModelChangeListener(new ModelChangeListener() {
@@ -79,7 +80,7 @@ public class EntityElementListTest extends TestCase
     
     public void testAddEntityGeneratesUniqueName()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final EntityElementList list = model.getEntities();
         final EntityElement a = list.addEntity("testAddEntityGeneratesUniqueName", "foo").getEntity();
         final EntityElement b = list.addEntity("testAddEntityGeneratesUniqueName", "foo").getEntity();
@@ -88,7 +89,7 @@ public class EntityElementListTest extends TestCase
     
     public void testRemoveEntity()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final EntityElementList list = model.getEntities();
         assertTrue(list.getEntities().isEmpty());
         final EntityElement entity = list.addEntity("testRemoveEntity", "foo").getEntity();

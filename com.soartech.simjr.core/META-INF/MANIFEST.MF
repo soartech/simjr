@@ -177,6 +177,9 @@ Export-Package: .,
  simjr.images.shapes.entities.battleship,
  simjr.images.shapes.entities.carrier,
  simjr.images.shapes.entities.cruiser,
+ simjr.images.shapes.entities.destroyer,
+ simjr.images.shapes.entities.trawler,
+ simjr.images.shapes.entities.merchantman,
  simjr.images.shapes.entities.rwa
 Bundle-Vendor: Soar Technology, Inc
 Import-Package: com.soartech.math,

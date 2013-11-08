@@ -53,6 +53,7 @@ public interface EntityConstants
     public static final String PROPERTY_SHAPE_WIDTH_PIXELS = "shape.line.width.pixels";
     public static final String PROPERTY_SHAPE_OPACITY = "shape.opacity";
     public static final String PROPERTY_SHAPE_LABEL_VISIBLE = "shape.label.visible";
+    public static final String PROPERTY_SHAPE_LABEL_DISPLAYIFPARENT = "shape.label.displayIfParent";
     public static final String PROPERTY_VISIBLE = "visible";
     public static final String PROPERTY_LOCKED = "locked";
     public static final String PROPERTY_CATEGORY = "category";
@@ -74,6 +75,7 @@ public interface EntityConstants
     public static final String PROPERTY_ALTITUDE = "altitude";
     public static final String PROPERTY_POINTS = "points";
     public static final String PROPERTY_POLYGONS = "polygons";
+    public static final String PROPERTY_DIAMETER = "diameter";
     
     public static final String PROPERTY_MINALTITUDE = "min_altitude";
     public static final String PROPERTY_MAXALTITUDE = "max_altitude";

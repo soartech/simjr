@@ -46,6 +46,7 @@ import com.soartech.shapesystem.Shape;
 import com.soartech.shapesystem.ShapeStyle;
 import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
+import com.soartech.shapesystem.SimpleRotation;
 
 /**
  * @author ray
@@ -55,6 +56,10 @@ public class Box extends Shape
 
     private Scalar width;
     private Scalar height;
+    
+    private SimplePosition center = new SimplePosition();
+    
+    private CoordinateTransformer lastTransform = null;
 
     /**
      * @param name
@@ -79,6 +84,8 @@ public class Box extends Shape
     protected void calculateBase(ShapeSystem system,
             CoordinateTransformer transformer)
     {
+        lastTransform = transformer;
+        
         double halfWidth = transformer.scalarToPixels(width) / 2.0;
         double halfHeight = transformer.scalarToPixels(height) / 2.0;
         
@@ -94,12 +101,40 @@ public class Box extends Shape
     @Override
     public void draw(PrimitiveRendererFactory rendererFactory)
     {
+        if (lastTransform == null)
+        {
+            // This should never be true but if it is, it's okay to skip a frame until we get it again
+            return;
+        }
+        
+        double halfWidth = lastTransform.scalarToPixels(width) / 2.0;
+        double halfHeight = lastTransform.scalarToPixels(height) / 2.0;
+        
         List<SimplePosition> bounds = new ArrayList<SimplePosition>();
-        bounds.add(points.get(0));
-        bounds.add(points.get(1));
-        bounds.add(points.get(2));
-        bounds.add(points.get(3));
-        bounds.add(points.get(0));
+        bounds.add(new SimplePosition(-halfWidth, -halfHeight));
+        bounds.add(new SimplePosition( halfWidth, -halfHeight));
+        bounds.add(new SimplePosition( halfWidth,  halfHeight));
+        bounds.add(new SimplePosition(-halfWidth,  halfHeight));
+        
+        center.x = 0.0;
+        center.y = 0.0;
+        
+        for (int i = 0;i < points.size();i++)
+        {
+            center.x += points.get(i).x;
+            center.y += points.get(i).y;
+        }
+        
+        center.x /= points.size();
+        center.y /= points.size();
+        
+        for (SimplePosition p : bounds)
+        {
+            p.rotate(SimpleRotation.fromDegrees(-angles.get(0).inDegrees()));
+            p.translate(center);
+        }
+        
+        bounds.add(bounds.get(0));
         
         PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
         renderer.drawPolygon(bounds);

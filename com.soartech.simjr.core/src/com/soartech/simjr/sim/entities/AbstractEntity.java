@@ -97,6 +97,8 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     
     private EntityMotionIntegrator motionIntegrator = DefaultEntityMotionIntegrator.getInstance();
     
+    private Entity parent = null;
+    
     /**
      * The base properties of the entity, i.e. those that are not calculated.
      */
@@ -606,4 +608,15 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         return getName();
     }
 
+    @Override
+    public void setParent(Entity parent)
+    {
+        this.parent = parent;
+    }
+    
+    @Override
+    public Entity getParent()
+    {
+        return parent;
+    }
 }

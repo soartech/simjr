@@ -450,7 +450,7 @@ public class PlanViewDisplay extends JPanel
         this.coordinates = new CoordinatesPanel();
         this.coordinates.setActivePvd(this);
         add(coordinates);
-        coordinates.setBounds(10, 10, 200, 20);
+        coordinates.setBounds(10, 10, 300, 20);
     }
     
     /* (non-Javadoc)
@@ -474,13 +474,9 @@ public class PlanViewDisplay extends JPanel
         {
             if(lockEntity != null)
             {
-                // TODO: JCC - Remove before finalizing.
-                lockEntity.setHeading(lockEntity.getHeading() + Math.PI/6400);
-                
-                // TODO: JCC - Clean up. Now centers on the actual entity rather than the shadow.
                 Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
-                showPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
                 transformer.setRotation(-lockEntity.getHeading() + Math.PI/2);
+                showPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
             }
             time = sim.getTime();
             shapeAdapter.update();

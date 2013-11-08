@@ -83,7 +83,12 @@ public class EntityVelocityController extends JPanel implements EntityController
     private static final int END_RADIUS = 4;
     
     private Entity entity;
-    private double maxSpeed = 100.0;
+    private double maxSpeed = 350.0;
+    private double transitionSpeed = 5.0;
+    private double numberOfOvalsInController = 4.0;
+    private double transitionRing = 1.0;
+    private boolean linearController = false;
+    
     private List<EntityController> oldControllers = new ArrayList<EntityController>();
     
     private ZController zController = new ZController();
@@ -146,6 +151,26 @@ public class EntityVelocityController extends JPanel implements EntityController
     public void setMaxSpeed(double maxSpeed)
     {
         this.maxSpeed = maxSpeed;
+    }
+    
+    public void setTransitionSpeed(double transitionSpeed)
+    {
+        this.transitionSpeed = transitionSpeed;
+    }
+    
+    public void setTransitionRing(int ring)
+    {
+        this.transitionRing = ring;
+    }
+    
+    public void setNumberOfOvalsInController(int ovals)
+    {
+        this.numberOfOvalsInController = ovals;
+    }
+    
+    public void setLinearController(boolean isLinear)
+    {
+        this.linearController = isLinear;
     }
     
     /**
@@ -343,6 +368,8 @@ public class EntityVelocityController extends JPanel implements EntityController
         
         private void updateVelocity(Point p)
         {
+            // Modified to be either a linear controller or a linear + exponential hybrid by ALT
+            
             if(p.x < 0) p.x = 0;
             if(p.x >= getWidth()) p.x = getWidth() - 1;
             if(p.y < 0) p.y = 0;
@@ -352,20 +379,193 @@ public class EntityVelocityController extends JPanel implements EntityController
             double xOff = p.x - center.x;
             double yOff = -(p.y - center.y);
             
-            double x = (xOff / getWidth()) * 2.0 * maxSpeed;
-            double y = (yOff / getHeight()) * 2.0 * maxSpeed;
+            // Exponential Curve
+            
+            double xPercentOnCurve = xOff / (getWidth() / 2.0);
+            double yPercentOnCurve = yOff / (getHeight() / 2.0);
+            
+            // Pythagorean Theorem
+            double percentOfMaxTopSpeed = Math.sqrt(Math.pow(xPercentOnCurve, 2) + Math.pow(yPercentOnCurve, 2));
+            
+            if (percentOfMaxTopSpeed > 1.0)
+            {
+                percentOfMaxTopSpeed = 1.0;
+            }
+            else if (percentOfMaxTopSpeed < 0.0)
+            {
+                percentOfMaxTopSpeed = 0.0;
+                throw new AssertionError("Math doesn't work!");
+            }
+            
+            double x = 0.0;
+            double y = 0.0;
+            
+            if (linearController)
+            {
+                double arcTan = Math.atan2(Math.abs(yPercentOnCurve), Math.abs(xPercentOnCurve));
+                
+                x = Math.abs(percentOfMaxTopSpeed * Math.cos(arcTan)) * maxSpeed;
+                y = Math.abs(percentOfMaxTopSpeed * Math.sin(arcTan)) * maxSpeed;
+                
+                if (xOff < 0.0)
+                {
+                    x *= -1;
+                }
+                
+                if (yOff < 0.0)
+                {
+                    y *= -1;
+                }
+            }
+            else if (percentOfMaxTopSpeed <= (transitionRing/numberOfOvalsInController))
+            {
+                // Linear
+                x = xPercentOnCurve / (transitionRing/numberOfOvalsInController) * transitionSpeed;
+                y = yPercentOnCurve / (transitionRing/numberOfOvalsInController) * transitionSpeed;
+            }
+            else if (percentOfMaxTopSpeed > (transitionRing/numberOfOvalsInController))
+            {   
+                // Non-Linear, Exponential
+                // Derived via Y=CB^X with two equations
+                
+                // T = Top Speed
+                // M = Transition Speed
+                // N = Number of Ovals in Controller
+                // R = The Ring to Complete the Transition On
+                // R is between 1 and N
+                
+                // T = C * B ^ 1
+                // M = C * B ^ R/N
+                
+                // C = M * (T/M)^(-R/(N-R))
+                double C = Math.abs(transitionSpeed * Math.pow(maxSpeed/transitionSpeed, -transitionRing/(numberOfOvalsInController - transitionRing)));
+                // B = (T/M)^(1.0/(1.0 - R/N))
+                double B = Math.abs(Math.pow(maxSpeed/transitionSpeed, 1.0/(1.0 - transitionRing/numberOfOvalsInController)));
+                
+                // The magnitude of the velocity vector (always positive)
+                double speed = C * Math.pow(B, percentOfMaxTopSpeed);
+                
+                // Calculation of the vector math here
+                //
+                // |
+                // |     o
+                // |    /|
+                // | v / |
+                // |  /  | y
+                // | /   |
+                // _/____|_________________
+                //     x
+                //
+                // x = v * cos(arctan(y/x))
+                // y = v * sin(arctan(y/x))
+                
+                // If we do these as absolute values, then at the
+                // end we just check if xOff and yOff are negative
+                // and apply the correction
+                
+                // The angle of the velocity vector
+                double arcTan = Math.atan2(Math.abs(yPercentOnCurve), Math.abs(xPercentOnCurve));
+                
+                x = Math.abs(speed * Math.cos(arcTan));
+                y = Math.abs(speed * Math.sin(arcTan));
+                
+                if (xOff < 0.0)
+                {
+                    x *= -1;
+                }
+                
+                if (yOff < 0.0)
+                {
+                    y *= -1;
+                }
+            }
             
             setVelocity(new Vector3(x, y, entity.getVelocity().z));
         }
         
-        private int speedToPixelX(double speed)
+        // Modified to be either a linear controller or a linear + exponential hybrid by ALT
+        private Vector3 speedToPixel(Vector3 velo)
         {
-            return (int) ((speed / (maxSpeed * 2.0)) * (double) getWidth());
-        }
-        
-        private int speedToPixelY(double speed)
-        {
-            return (int) ((speed / (maxSpeed * 2.0)) * (double) getHeight());
+            double totalSpeed = Math.sqrt(Math.pow(velo.x, 2) + Math.pow(velo.y, 2));
+                                    
+            double percentageX = 0.0;
+            double percentageY = 0.0;
+            
+            if (linearController)
+            {
+                percentageX = Math.abs(velo.x) / maxSpeed;
+                percentageY = Math.abs(velo.y) / maxSpeed;
+                
+                if (velo.x < 0.0)
+                {
+                    percentageX *= -1;
+                }
+                
+                if (velo.y < 0.0)
+                {
+                    percentageY *= -1;
+                }
+            }
+            else if (totalSpeed <= transitionSpeed)
+            {
+                // Linear Speed Calculation
+                percentageX = (Math.abs(velo.x) / transitionSpeed) * (transitionRing/numberOfOvalsInController);
+                percentageY = (Math.abs(velo.y) / transitionSpeed) * (transitionRing/numberOfOvalsInController);
+                
+                if (velo.x < 0.0)
+                {
+                    percentageX *= -1;
+                }
+                
+                if (velo.y < 0.0)
+                {
+                    percentageY *= -1;
+                }
+            }
+            else
+            {
+                // Exponential Speed Calculation
+                
+                // We are getting the % in pixels based on the total speed, length of the velocity vector
+                
+                // T = Top Speed
+                // M = Transition Speed
+                // N = Number of Ovals in Controller
+                // R = The Ring to Complete the Transition On
+                // R is between 1 and N
+                
+                // This is: (T/M)^(1.0/(1.0 - R/N)
+                // Otherwise known as B
+                double logConstant = Math.pow(maxSpeed/transitionSpeed, 1.0/(1.0 - transitionRing/numberOfOvalsInController));
+                // This is: 1/(M*((T/M)^(-R/(N-R))))
+                // Otherwise known as C^(-1)
+                double CInverse = 1.0/(transitionSpeed * Math.pow(maxSpeed/transitionSpeed, -transitionRing/(numberOfOvalsInController-transitionRing)));
+                
+                // Basically we are taking the function: Y=C*B^X
+                // And solving for X.  The result is:
+                // Log(Base: B) of (Y * C^(-1)) = X
+                // Which using the change of base formula is:
+                // log(Y * C^(-1))/log(B) = X
+                double percentage = Math.log(Math.abs(totalSpeed) * CInverse) / Math.log(logConstant);
+                
+                double arcTan = Math.atan2(Math.abs(velo.y), Math.abs(velo.x));
+                
+                percentageX = Math.abs(percentage * Math.cos(arcTan));
+                percentageY = Math.abs(percentage * Math.sin(arcTan));
+                
+                if (velo.x < 0.0)
+                {
+                    percentageX *= -1;
+                }
+                
+                if (velo.y < 0.0)
+                {
+                    percentageY *= -1;
+                }
+            }
+            
+            // Since we have the percentages, we return the percentages converted to pixels
+            return new Vector3(percentageX * (getWidth() / 2.0), percentageY * (getHeight() / 2.0), 0.0);
         }
         
         private Point getSpeedPoint()
@@ -373,8 +573,11 @@ public class EntityVelocityController extends JPanel implements EntityController
             Point center = new Point(getWidth() / 2, getHeight() / 2);
             
             Vector3 velocity = entity.getVelocity();
-            return new Point(center.x + speedToPixelX(velocity.x),
-                             center.y - speedToPixelY(velocity.y));
+            
+            Vector3 pixels = speedToPixel(velocity);
+            
+            return new Point((new Double(center.x + pixels.x)).intValue(),
+                             (new Double(center.y - pixels.y)).intValue());
         }
         
         /* (non-Javadoc)
@@ -396,19 +599,20 @@ public class EntityVelocityController extends JPanel implements EntityController
             g.fillRect(0, 0, width, height);
             
             g.setColor(Color.GRAY);
-            double ds = maxSpeed / 4;
-            for(int i = 0; i < 4; ++i)
+            for(int i = 0; i < numberOfOvalsInController; ++i)
             {
-                double speed = maxSpeed - ds * i;
-                int x = speedToPixelX(speed);
-                int y = speedToPixelY(speed);
+                double percentage = (i+1.0)/numberOfOvalsInController;
+
+                int x = (new Double(percentage * (getWidth() / 2.0))).intValue();
+                int y = (new Double(percentage * (getHeight() / 2.0))).intValue();
                 
                 g.drawOval(center.x - x, center.y - y, 2 * x, 2 * y);
             }
             
             Vector3 velocity = entity.getVelocity();
-            int x = center.x + speedToPixelX(velocity.x);
-            int y = center.y - speedToPixelY(velocity.y);
+            Vector3 pixels = speedToPixel(velocity);
+            int x = (new Double(center.x + pixels.x)).intValue();
+            int y = (new Double(center.y - pixels.y)).intValue();
             
             g.setColor(Color.BLACK);
             g2d.setStroke(XY_VECTOR_STROKE);

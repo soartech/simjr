@@ -34,9 +34,6 @@ package com.soartech.simjr.scenario;
 import java.util.Arrays;
 import java.util.List;
 
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.DefaultServiceManager;
-
 import junit.framework.TestCase;
 
 public class PointElementListTest extends TestCase
@@ -44,7 +41,7 @@ public class PointElementListTest extends TestCase
 
     public void testGetPoints()
     {
-        Model model = new Model(new DefaultServiceManager());
+        Model model = new Model();
         EntityElement e = model.getEntities().addEntity("test", "test").getEntity();
         PointElementList points = PointElementList.attach(model, e);
         points.setPoints(Arrays.asList("point", "point2"));

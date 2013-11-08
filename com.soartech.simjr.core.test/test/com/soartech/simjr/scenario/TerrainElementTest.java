@@ -33,16 +33,13 @@ package com.soartech.simjr.scenario;
 
 import javax.swing.undo.UndoableEdit;
 
-import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.DefaultServiceManager;
-
 import junit.framework.TestCase;
 
 public class TerrainElementTest extends TestCase
 {
     public void testSetOrigin()
     {
-        final Model model = new Model(new DefaultServiceManager());
+        final Model model = new Model();
         final TerrainElement terrain = model.getTerrain();
         assertEquals(0.0, terrain.getOriginLatitude(), 0.001);
         assertEquals(0.0, terrain.getOriginLongitude(), 0.001);

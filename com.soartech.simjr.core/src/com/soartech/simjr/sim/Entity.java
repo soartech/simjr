@@ -256,4 +256,18 @@ public interface Entity extends Adaptable
      * @param capability the capability to remove
      */
     void removeCapability(EntityCapability capability);
+    
+    /**
+     * Sets the parent of an entity
+     * 
+     * @param parent of the entity
+     */
+    void setParent(Entity parent);
+
+    /**
+     * Gets the parent of an entity
+     * 
+     * @return the parent
+     */
+    Entity getParent();
 }

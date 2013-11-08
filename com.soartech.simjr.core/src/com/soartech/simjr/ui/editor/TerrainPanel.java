@@ -63,7 +63,7 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
     private final JTextField lonField = new JTextField(15);
     private final JTextField metersPerPixelField = new JTextField(15);
     
-    public TerrainPanel(ScenarioEditorServiceManager app)
+    public TerrainPanel(ScenarioEditorServiceManager app)
     {
         super(new MigLayout());
         

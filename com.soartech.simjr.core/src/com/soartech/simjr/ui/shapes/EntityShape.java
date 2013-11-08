@@ -354,7 +354,14 @@ public class EntityShape implements EntityPropertyListener
                         (Boolean) EntityTools.getProperty(entity.getProperties(), 
                                 EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, true);
                 
-                if(visible && !labelVisible)
+                boolean displayLabelIfHasParent = (Boolean) EntityTools.getProperty(entity.getProperties(),
+                                EntityConstants.PROPERTY_SHAPE_LABEL_DISPLAYIFPARENT, true);
+                
+                if (!displayLabelIfHasParent && entity.getParent() != null)
+                {
+                    lf.label.setVisible(false);
+                }
+                else if(visible && !labelVisible)
                 {
                     lf.label.setVisible(false);
                 }
@@ -470,7 +477,8 @@ public class EntityShape implements EntityPropertyListener
     public void onPropertyChanged(Entity entity, String propertyName)
     {
         if(EntityConstants.PROPERTY_VISIBLE.equals(propertyName) ||
-           EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE.equals(propertyName))
+           EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE.equals(propertyName) ||
+           EntityConstants.PROPERTY_SHAPE_LABEL_DISPLAYIFPARENT.equals(propertyName))
         {
             updateVisibility = true;
         }
