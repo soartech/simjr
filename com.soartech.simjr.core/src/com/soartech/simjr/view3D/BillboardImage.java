@@ -93,7 +93,8 @@ public class BillboardImage extends AbstractConstruct implements TransformationL
      * @param viewer
      * @param type
      */
-    public BillboardImage(SceneGraphPath cameraPath, Viewer viewer, String type)    {
+    public BillboardImage(SceneGraphPath cameraPath, Viewer viewer, String type)
+    {
         super("Billboard Image");
         
         this.viewer = viewer;

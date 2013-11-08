@@ -57,7 +57,8 @@ public class TerrainPanel extends JPanel implements ModelChangeListener
 {
     private static final long serialVersionUID = -973913392305900522L;
     
-    private final ScenarioEditorServiceManager app;    private final Simulation sim;
+    private final ScenarioEditorServiceManager app;
+    private final Simulation sim;
     
     private final JTextField latField = new JTextField(15);
     private final JTextField lonField = new JTextField(15);

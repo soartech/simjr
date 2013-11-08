@@ -65,7 +65,8 @@ public class Grid extends SceneGraphComponent
      * @param zDepth
      * @param spacing
      */
-    public Grid(int xWidth, int zDepth, double spacing)    {
+    public Grid(int xWidth, int zDepth, double spacing)
+    {
         super("Grid");
         
         this.xWidth = xWidth;

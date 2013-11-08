@@ -68,7 +68,8 @@ public class Area extends ExtrudedPolygon implements EntityPropertyListener
      * @param minHeight
      * @param maxHeight
      */
-    public Area(double[][] path, double minHeight, double maxHeight)    {
+    public Area(double[][] path, double minHeight, double maxHeight)
+    {
         super("Area");
         
         path = cleanPath(path);

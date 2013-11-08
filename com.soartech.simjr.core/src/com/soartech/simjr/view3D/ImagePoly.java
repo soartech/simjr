@@ -64,7 +64,8 @@ public class ImagePoly extends SceneGraphComponent
      * Main constuctor.
      * 
      */
-    public ImagePoly()    {
+    public ImagePoly()
+    {
         super("Terrain Image");
         
         IndexedFaceSetFactory ifsf = new IndexedFaceSetFactory();
