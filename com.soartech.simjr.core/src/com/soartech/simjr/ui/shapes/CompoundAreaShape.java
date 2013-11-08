@@ -32,6 +32,7 @@
 package com.soartech.simjr.ui.shapes;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Map;
 
 import com.soartech.shapesystem.FillStyle;
