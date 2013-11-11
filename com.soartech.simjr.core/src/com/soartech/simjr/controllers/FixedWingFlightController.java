@@ -52,7 +52,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      */
     public static final String PROPERTY_USE_FULL_ORIENTATION = "use-full-orientation";
     public static final String PROPERTY_DESIRED_VELOCITY = "desired-velocity";
-    public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
+    public static final String PROPERTY_MAX_TURN_RATE = "max-turn-rate";
     public static final String PROPERTY_DESIRED_ALTITUDE = "desired-altitude";
     public static final String PROPERTY_DESIRED_FPA = "desired-fpa";
     public static final String PROPERTY_DESIRED_ALTITUDE_RATE = "desired-altitude-rate";
@@ -96,7 +96,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     /**
      * Maximum turning rate in radians per second
      */
-    private double desiredTurnRate = Math.toRadians(15.0);
+    private double maxTurnRate = Math.toRadians(15.0);
 
     /**
      * Desired turn direction to achieve the current desired heading.  Must be "left" or "right".
@@ -198,12 +198,12 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      * 
      * @param turnRate in radians/second
      */
-    public void setDesiredTurnRate(Double turnRate)
+    public void setMaxTurnRate(Double turnRate)
     {
-        this.desiredTurnRate = turnRate;
+        this.maxTurnRate = turnRate;
         if(getEntity() != null)
         {
-            getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
+            getEntity().setProperty(PROPERTY_MAX_TURN_RATE, Math.toDegrees(maxTurnRate));
         }
     }
 
@@ -258,7 +258,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_FPA, Math.toDegrees(desiredFpa));
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, desiredAltitudeRate);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, desiredAltitude);
-        getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
+        getEntity().setProperty(PROPERTY_MAX_TURN_RATE, Math.toDegrees(maxTurnRate));
         getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, desiredTurnDir);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, true);
     }
@@ -275,7 +275,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_FPA, null);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE_RATE, null);
         getEntity().setProperty(PROPERTY_DESIRED_ALTITUDE, null);
-        getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, null);
+        getEntity().setProperty(PROPERTY_MAX_TURN_RATE, null);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, null);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, null);
         super.detach();
@@ -328,6 +328,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
             desiredVelocityZ = -desiredAltitudeRate;
         }
         
+        // TODO: Consider using a property listener to handle the following instead of reading it
+        // from the properties each tick
         // Setting the pitch based simply on the velocity vector
         boolean useFullOrientation = true;
         Object ufoObj = getEntity().getProperty(PROPERTY_USE_FULL_ORIENTATION);
@@ -365,7 +367,14 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // controller doesn't accidentally "overshoot" the desired heading due to rounding errors, which
         // would then cause the aircraft to attempt another full circle to achieve the desired heading).
         
-        double maxDeltaAngle = desiredTurnRate * dt;
+        // TODO: Consider using property listener instead of reading it from the properties each tick
+        Object mtrobj = getEntity().getProperty(PROPERTY_MAX_TURN_RATE);
+        if ( mtrobj != null && mtrobj instanceof Number)
+        {
+            maxTurnRate = ((Number) mtrobj).doubleValue();
+        }
+        
+        double maxDeltaAngle = maxTurnRate * dt;
         double desiredDeltaAngle;
         if (Math.abs(angleDiff) < maxDeltaAngle) {
             desiredDeltaAngle = Math.abs(angleDiff);
