@@ -94,4 +94,18 @@ public class EntityElementTest extends TestCase
         edit.redo();
         assertFalse(e.isVisible());
     }
+    
+    public void testGetAndSetLabelVisible()
+    {
+        final Model model = new Model();
+        final EntityElement e = EntityElement.attach(model,  EntityElement.build(model, "firstName", "prototype"));
+        assertTrue(e.isLabelVisible());
+        final UndoableEdit edit = e.setLabelVisible(false);
+        assertNotNull(edit);
+        assertFalse(e.isLabelVisible());
+        edit.undo();
+        assertTrue(e.isLabelVisible());
+        edit.redo();
+        assertFalse(e.isLabelVisible());
+    }
 }

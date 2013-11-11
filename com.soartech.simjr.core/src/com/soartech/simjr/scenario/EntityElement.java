@@ -55,6 +55,7 @@ public class EntityElement implements ModelElement
     public static final String PROTOTYPE = EntityElement.class.getCanonicalName() + ".prototype";
     public static final String FORCE = EntityElement.class.getCanonicalName() + ".force";
     public static final String VISIBLE = EntityElement.class.getCanonicalName() + ".visible";
+    public static final String LABEL_VISIBLE = EntityElement.class.getCanonicalName() + ".labelVisible";
     
     private final Model model;
     private final Element element;
@@ -62,6 +63,7 @@ public class EntityElement implements ModelElement
     private final XPath prototypePath;
     private final XPath forcePath;
     private final XPath visiblePath;
+    private final XPath labelVisiblePath;
     private final LocationElement location;
     private final OrientationElement orientation;
     private final ScriptBlockElement initScript;
@@ -81,6 +83,7 @@ public class EntityElement implements ModelElement
         root.setAttribute("prototype", prototype, Model.NAMESPACE);
         root.setAttribute("force", "friendly", Model.NAMESPACE);
         root.setAttribute("visible", "true", Model.NAMESPACE);
+        root.setAttribute("labelVisible","true", Model.NAMESPACE);
         
         root.addContent(LocationElement.buildDefault(model));
         root.addContent(OrientationElement.buildDefault(model));
@@ -106,6 +109,7 @@ public class EntityElement implements ModelElement
         this.prototypePath = model.newXPath("@simjr:prototype");
         this.forcePath = model.newXPath("@simjr:force");
         this.visiblePath = model.newXPath("@simjr:visible");
+        this.labelVisiblePath = model.newXPath("@simjr:labelVisible");
         
         this.location = new LocationElement(this);
         this.orientation = new OrientationElement(this);
@@ -225,6 +229,22 @@ public class EntityElement implements ModelElement
         }
         return null;
     }
+    
+    public boolean isLabelVisible()
+    {
+        return Boolean.parseBoolean(model.getText(labelVisiblePath, element));
+    }
+    
+    public UndoableEdit setLabelVisible(boolean labelVisible)
+    {
+        final boolean oldLabelVisible = isLabelVisible();
+        if (model.setText(labelVisiblePath, element, Boolean.toString(labelVisible), new ModelChangeEvent(model, this, LABEL_VISIBLE)))
+        {
+            return new SetLabelVisibleEdit(oldLabelVisible);
+        }
+        return null;
+    }
+    
     public LocationElement getLocation()
     {
         return location;
@@ -324,11 +344,12 @@ public class EntityElement implements ModelElement
         }
         
     }
+    
     private class SetVisibleEdit extends AbstractUndoableEdit
     {
         private static final long serialVersionUID = 3408336109329832867L;
         private final boolean oldVisible;
-        private final boolean newForce = isVisible();
+        private final boolean newVisible = isVisible();
         
         public SetVisibleEdit(boolean oldForce)
         {
@@ -339,7 +360,7 @@ public class EntityElement implements ModelElement
         public void redo() throws CannotRedoException
         {
             super.redo();
-            setVisible(newForce);
+            setVisible(newVisible);
         }
 
         @Override
@@ -350,6 +371,34 @@ public class EntityElement implements ModelElement
         }
         
     }
+    
+    private class SetLabelVisibleEdit extends AbstractUndoableEdit
+    {
+        private static final long serialVersionUID = -1455000545836516785L;
+        private final boolean oldLabelVisible;
+        private final boolean newLabelVisible = isLabelVisible();
+        
+        public SetLabelVisibleEdit(boolean oldLabelVisible)
+        {
+            this.oldLabelVisible = oldLabelVisible;
+        }
+        
+        @Override
+        public void redo() throws CannotRedoException
+        {
+            super.redo();
+            setLabelVisible(newLabelVisible);
+        }
+        
+        @Override
+        public void undo() throws CannotRedoException
+        {
+           super.undo();
+           setLabelVisible(oldLabelVisible);
+        }
+        
+    }
+    
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

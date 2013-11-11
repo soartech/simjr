@@ -46,7 +46,7 @@ public class ImportOSMAction extends AbstractEditorAction
      */
     public ImportOSMAction(ActionManager actionManager) 
     {
-        super( actionManager, "Import Open StreetMap Data...");
+        super( actionManager, "Import Open Street Map Data...");
     }
 
     /* (non-Javadoc)
@@ -91,8 +91,11 @@ public class ImportOSMAction extends AbstractEditorAction
         
         // The terrain origin must be set before entities are added to the terrain (seems like a bug
         // since the model document has the right data in it anyway)
-        Geodetic.Point gdorigin = calculateNodeCenter(nodes);
-        getModel().getTerrain().setOrigin(Math.toDegrees(gdorigin.latitude), Math.toDegrees(gdorigin.longitude));
+        if ( !getModel().getTerrain().getImage().hasImage() )
+        {
+            Geodetic.Point gdorigin = calculateNodeCenter(nodes);
+            getModel().getTerrain().setOrigin(Math.toDegrees(gdorigin.latitude), Math.toDegrees(gdorigin.longitude));
+        }
         
         // Creating the various entities (you need the id to name map because of possible
         // name collisions). A waypoint's id might not match the name assigned to it on creation.
@@ -124,6 +127,7 @@ public class ImportOSMAction extends AbstractEditorAction
             
             NewEntityEdit edit = getModel().getEntities().addEntity(name, "route");
             edit.getEntity().getPoints().setPoints(nodeNames);
+            edit.getEntity().setLabelVisible(false);
         }
     }
 
@@ -138,6 +142,7 @@ public class ImportOSMAction extends AbstractEditorAction
             // TODO: Not sure where to get altitude of ground level for the following
             edit.getEntity().getLocation().setLocation(node.latitude, node.longitude, 0.);
             edit.getEntity().setVisible(false);
+            edit.getEntity().setLabelVisible(false);
             
             idToWaypointNameMap.put(node.id, edit.getEntity().getName());
         }
