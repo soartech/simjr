@@ -300,6 +300,17 @@ public class EntityTools
     }
     
     /**
+     * Set the "label visible" property of the given entity. This is a convenience method for scripting.
+     * 
+     * @param e The entity
+     * @param labelVisible True if the label should be visible, false if not
+     */
+    public static void setLabelVisible(Entity e, boolean labelVisible)
+    {
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_LABEL_VISIBLE, labelVisible);
+    }
+    
+    /**
      * Returns true if the given entity is visible. This is a convenience 
      * method for scripting.
      * 
