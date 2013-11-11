@@ -236,6 +236,14 @@ prototypes:
     properties:
         ms2525.template: "S%cGPUC----"
 
+- &person
+    id: person
+    parent: *ground
+    category: person
+    factory: !class com.soartech.simjr.sim.entities.Person
+    properties:
+        ms2525.template: "O%cPP------"
+
 - &ground-vehicle
     id: ground-vehicle
     parent: *ground
@@ -247,8 +255,29 @@ prototypes:
     parent: *ground-vehicle
     category: truck
     properties:
-        ms2525.template: "S%cGPUCAW-"
-        
+        ms2525.template: "S%cGPEVCO--"
+
+- &car
+    id: car
+    parent: *ground-vehicle
+    category: car
+    properties:
+        ms2525.template: "S%cGPEVC---"
+
+- &van
+    id: van
+    parent: *ground-vehicle
+    category: van
+    properties:
+        ms2525.template: "S%cGPEVCML-"
+
+- &bus
+    id: bus
+    parent: *ground-vehicle
+    category: bus
+    properties:
+        ms2525.template: "S%cGPEVCMH-"
+                
 - &tank
     id: tank
     parent: *ground-vehicle
@@ -368,15 +397,36 @@ prototypes:
     properties:
         ms2525.template: "S%cAPMFQA"
 
-- &RAVEN
-    id: RAVEN
+- &raven
+    id: raven
     parent: *generic-fighter
     properties:
         ms2525.template: "S%cAPMFQA"
 
-- &REAPER
-    id: REAPER
+- &reaper
+    id: reaper
     parent: *generic-fighter
     properties:
         ms2525.template: "S%cAPMFQA"
 
+- &triton
+    id: triton
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cGPUCVUF-"
+
+- &uclass
+    id: uclass
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cGPUCVUF-"
+
+- &fire-scout
+    id: fire-scout
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cGPUCVUR-"
+
+- &ugv
+    id: ugv
+    parent: *ground-vehicle
