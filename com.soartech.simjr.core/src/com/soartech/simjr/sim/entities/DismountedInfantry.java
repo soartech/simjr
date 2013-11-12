@@ -32,16 +32,14 @@
 package com.soartech.simjr.sim.entities;
 
 import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.sensors.DefaultSensorPlatform;
 import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.DefaultWeaponPlatform;
 import com.soartech.simjr.weapons.Weapon;
 import com.soartech.simjr.weapons.WeaponPlatform;
 
 /**
  * @author ray
  */
-public class DismountedInfantry extends AbstractEntity
+public class DismountedInfantry extends Person
 {
     /**
      * @param name
@@ -49,9 +47,6 @@ public class DismountedInfantry extends AbstractEntity
     public DismountedInfantry(String name, EntityPrototype prototype)
     {
         super(name, prototype);
-        
-        addCapability(new DefaultWeaponPlatform());
-        addCapability(new DefaultSensorPlatform());
         
         WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
         weapons.addWeapon(Weapon.load("9mm-rifle", 200));
