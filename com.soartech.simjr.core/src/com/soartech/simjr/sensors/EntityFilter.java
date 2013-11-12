@@ -31,7 +31,5 @@ public class EntityFilter
         }
         
         return entity instanceof Person || entity instanceof Vehicle;
-
     }
-
 }
