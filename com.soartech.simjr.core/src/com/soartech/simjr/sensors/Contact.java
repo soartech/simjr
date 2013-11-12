@@ -6,7 +6,7 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.EntityTools;
-import com.soartech.simjr.sim.entities.DismountedInfantry;
+import com.soartech.simjr.sim.entities.Person;
 import com.soartech.simjr.sim.entities.Vehicle;
 
 public class Contact
@@ -119,9 +119,9 @@ public class Contact
         return force;
     }
 
-    public boolean isDismountedInfantry()
+    public boolean isPerson()
     {
-        return this.entity instanceof DismountedInfantry;
+        return this.entity instanceof Person;
     }
 
     public Object getDamageStatus()
