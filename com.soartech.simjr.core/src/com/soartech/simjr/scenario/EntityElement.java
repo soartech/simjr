@@ -232,7 +232,16 @@ public class EntityElement implements ModelElement
     
     public boolean isLabelVisible()
     {
-        return Boolean.parseBoolean(model.getText(labelVisiblePath, element));
+        String labelVisText = model.getText(labelVisiblePath, element);
+        if ( labelVisText == null || labelVisText.isEmpty() ) 
+        {
+            // If the label visible attribute hasn't been specified then default to true
+            return true;
+        }
+        else 
+        {
+            return Boolean.parseBoolean(labelVisText);
+        }
     }
     
     public UndoableEdit setLabelVisible(boolean labelVisible)
