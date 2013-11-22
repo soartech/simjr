@@ -343,6 +343,28 @@ prototypes:
     properties:
         ms2525.template: "S%cSPXM----"
     
+- &tanker
+    id: tanker
+    parent: *sea-vehicle
+    category: tanker
+    properties:
+        ms2525.template: "S%cSPXMO---"
+   
+# Can't find the 2525 SIDC for this one 
+- &lcs
+    id: lcs
+    parent: *sea-vehicle
+    category: lcs
+    properties:
+        ms2525.template: "S%cSPCLDD--"
+
+- &lpd
+    id: lpd
+    parent: *sea-vehicle
+    category: lpd
+    properties:
+        ms2525.template: "S%cSPCA----"
+
 - &destroyer
     id: destroyer
     parent: *sea-vehicle
