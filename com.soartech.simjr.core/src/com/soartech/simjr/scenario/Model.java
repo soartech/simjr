@@ -34,11 +34,14 @@ package com.soartech.simjr.scenario;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -55,10 +58,6 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.SimJrProps;
-import com.soartech.simjr.scenario.EntityElementList;
-import com.soartech.simjr.scenario.MetadataElement;
-import com.soartech.simjr.scenario.ScriptBlockElement;
-import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.util.JDomTools;
 
 /**
@@ -130,7 +129,7 @@ public class Model
     {
         try
         {
-            this.doc = newBuilder().build(new BufferedReader(new FileReader(file)));
+            this.doc = newBuilder().build(file);
             this.entities = EntityElementList.attach(this);
             setFile(file);
             setDirty(false);
