@@ -45,6 +45,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.ModelChangeEvent;
 import com.soartech.simjr.scenario.ModelChangeListener;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -81,7 +82,11 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         tabs = new JTabbedPane();
         tabs.addTab("Map", new MapPanel(app));
         tabs.addTab("Scripts", new ScriptsPanel(app));
-        tabs.addTab("Source", new SourcePanel(app));
+        
+        if ( SimJrProps.get("simjr.editor.showSourceTab", true) ) 
+        {
+            tabs.addTab("Source", new SourcePanel(app));
+        }
                 
         final RunPanel runPanel = new RunPanel();
         tabs.addTab("Run", runPanel);

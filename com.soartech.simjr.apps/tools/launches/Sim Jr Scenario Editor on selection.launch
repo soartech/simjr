@@ -19,7 +19,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-clean -console -os ${target.os} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx8g -Declipse.ignoreApp=true -Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.app=editor &quot;-Dsimjr.args=${selected_resource_loc}&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx8g -Declipse.ignoreApp=true -Dosgi.noShutdown=true &quot;-Dsimjr.home=${workspace_loc:simjr-resources}&quot; -Dsimjr.editor.showSourceTab=false -Dsimjr.app=editor &quot;-Dsimjr.args=${selected_resource_loc}&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:simjr-resources}"/>
 <booleanAttribute key="pde.generated.config" value="true"/>
 <stringAttribute key="pde.version" value="3.3"/>
@@ -28,5 +28,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.example.simjr.hello@default:default,com.soartech.math.test@default:false,com.soartech.math@default:default,com.soartech.shapesystem@default:default,com.soartech.simjr.apps@default:default,com.soartech.simjr.core.test@default:false,com.soartech.simjr.core@default:default,com.soartech.simjr.lcm@default:default,com.soartech.simjr.log4j@default:false,com.soartech.simjr.osgi@default:default,com.soartech.simjr.rhino@default:default,com.soartech.simjr.sapient@default:default,com.soartech.simjr.startup@5:default,com.soartech.simjr.terraintools@default:default,com.soartech.simjr.web@default:default,sapient-net@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.example.simjr.hello@default:default,com.soartech.math.test@default:false,com.soartech.math@default:default,com.soartech.shapesystem@default:default,com.soartech.simjr.apps@default:default,com.soartech.simjr.clutter@default:default,com.soartech.simjr.core.test@default:false,com.soartech.simjr.core@default:default,com.soartech.simjr.lcm@default:default,com.soartech.simjr.log4j@default:false,com.soartech.simjr.osgi@default:default,com.soartech.simjr.pathplanner@default:default,com.soartech.simjr.rhino@default:default,com.soartech.simjr.sapient@default:default,com.soartech.simjr.startup@5:default,com.soartech.simjr.terraintools@default:default,com.soartech.simjr.web@default:default,sapient-net@default:default"/>
 </launchConfiguration>
