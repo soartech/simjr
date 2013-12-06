@@ -75,7 +75,7 @@ public interface EntityConstants
     public static final String PROPERTY_ALTITUDE = "altitude";
     public static final String PROPERTY_POINTS = "points";
     public static final String PROPERTY_POLYGONS = "polygons";
-    public static final String PROPERTY_DIAMETER = "diameter";
+    public static final String PROPERTY_DIAMETER = "diameter"; // in meters
     
     public static final String PROPERTY_MAXSPEED = "limits.maxSpeed";
     
