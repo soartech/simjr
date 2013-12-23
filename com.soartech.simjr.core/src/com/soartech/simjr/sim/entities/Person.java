@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Soar Technology, Inc.
+ * Copyright (c) 2013, Soar Technology, Inc.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,28 +27,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 13, 2007
+ * Created on Nov 8, 2013
  */
 package com.soartech.simjr.sim.entities;
 
-import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.sensors.DefaultSensorPlatform;
 import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.weapons.Weapon;
-import com.soartech.simjr.weapons.WeaponPlatform;
+import com.soartech.simjr.weapons.DefaultWeaponPlatform;
 
 /**
- * @author ray
+ * @author rdf
  */
-public class DismountedInfantry extends Person
+public class Person extends AbstractEntity
 {
     /**
      * @param name
      */
-    public DismountedInfantry(String name, EntityPrototype prototype)
+    public Person(String name, EntityPrototype prototype)
     {
         super(name, prototype);
         
-        WeaponPlatform weapons = Adaptables.adapt(this, WeaponPlatform.class);
-        weapons.addWeapon(Weapon.load("9mm-rifle", 200));
+        addCapability(new DefaultWeaponPlatform());
+        addCapability(new DefaultSensorPlatform());        
     }
 }

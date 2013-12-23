@@ -61,6 +61,8 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     private double altitude;
     private double speed = 1.0;
     private double radius;
+    
+    private boolean clockwise = true;
 
     /**
      * Construct a new orbit flight controller. The controller must still be added
@@ -153,7 +155,16 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     {
         this.radius = radius;
     }
-
+    
+    /**
+     * Sets the direction of the orbit, true for Clockwise, false for counter clockwise.
+     * 
+     * @param cw true for a clockwise orbit false otherwise
+     */
+    public void setClockwise(boolean cw)
+    {
+        this.clockwise = cw;
+    }
 
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.EntityController#openDebugger()
@@ -213,7 +224,7 @@ public class OrbitFlightController extends AbstractEntityCapability implements
         double relativeRadiusError = 0.0;
         double currentBearing = Angles.mathRadiansToNavRadians(entity.getHeading());
         double currentRelativeBearing = (Math.PI + Angles.getBearing(delta)) - currentBearing;
-        int oriSign = -1; // use +1 for ccw, -1 for clockwise
+        int oriSign = this.clockwise ? -1 : 1; // use +1 for ccw, -1 for clockwise
 
         if (currentRadius <= desiredRadius)
         {

@@ -31,10 +31,8 @@
  */
 package com.soartech.simjr.scenario.model;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
@@ -136,7 +134,7 @@ public class Model
     {
         try
         {
-            this.doc = newBuilder().build(new BufferedReader(new FileReader(file)));
+            this.doc = newBuilder().build(file);
             this.entities = EntityElementList.attach(this);
             setFile(file);
             setDirty(false);

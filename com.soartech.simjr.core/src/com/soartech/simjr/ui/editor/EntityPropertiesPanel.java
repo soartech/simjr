@@ -321,7 +321,8 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         if(e.property.equals(EntityElement.NAME)      || 
            e.property.equals(EntityElement.PROTOTYPE) ||
            e.property.equals(EntityElement.FORCE) ||
-           e.property.equals(EntityElement.VISIBLE))
+           e.property.equals(EntityElement.VISIBLE) ||
+           e.property.equals(EntityElement.LABEL_VISIBLE))
         {
             setEntity(entity); // force an update
         }

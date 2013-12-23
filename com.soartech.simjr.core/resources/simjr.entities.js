@@ -178,6 +178,10 @@ simjr.entities = new (function() {
 	
 	thisFunc.create = createEntity;
 	
+	thisFunc.remove = function(entity) {
+		simulation.removeEntity(entity);
+	};
+	
 	thisFunc.factoryForPrototype = function(prototype) {
 		return function(options) {
 			if(typeof(options) == "string") {

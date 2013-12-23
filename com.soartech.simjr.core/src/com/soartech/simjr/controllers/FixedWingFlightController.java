@@ -52,15 +52,17 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
      */
     public static final String PROPERTY_USE_FULL_ORIENTATION = "use-full-orientation";
     public static final String PROPERTY_DESIRED_VELOCITY = "desired-velocity";
-    public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
     public static final String PROPERTY_DESIRED_ALTITUDE = "desired-altitude";
     public static final String PROPERTY_DESIRED_FPA = "desired-fpa";
     public static final String PROPERTY_DESIRED_ALTITUDE_RATE = "desired-altitude-rate";
+    public static final String PROPERTY_DESIRED_TURN_RATE = "desired-turn-rate";
     public static final String PROPERTY_USE_DESIRED_FPA = "use-desired-fpa";
     public static final String PROPERTY_DESIRED_HEADING = "desired-heading";
     public static final String PROPERTY_DESIRED_SPEED = "desired-speed";
     public static final String PROPERTY_DESIRED_TURN_DIR = "desired-turn-dir";
     
+    public static final String PROPERTY_MAX_TURN_RATE = "max-turn-rate";
+
     /**
      * Desired ground speed in m/s
      */
@@ -94,9 +96,14 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     private boolean useDesiredFpa = true;
     
     /**
-     * Maximum turning rate in radians per second
+     * Maximum desired turning rate in radians per second (as commanded by the controller)
      */
     private double desiredTurnRate = Math.toRadians(15.0);
+    
+    /**
+     * Maximum turning rate allowed by the platform
+     */
+    private double maxTurnRate = Math.toRadians(15.0);
 
     /**
      * Desired turn direction to achieve the current desired heading.  Must be "left" or "right".
@@ -194,14 +201,28 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
     }
 
     /**
-     * Sets the maximum turn rate the entity will use to reach the desired target heading.
+     * Sets the maximum turn rate allowed by the platform.
+     * 
+     * @param turnRate in radians/second
+     */
+    public void setMaxTurnRate(Double turnRate)
+    {
+        this.maxTurnRate = turnRate;
+        if(getEntity() != null)
+        {
+            getEntity().setProperty(PROPERTY_MAX_TURN_RATE, Math.toDegrees(maxTurnRate));
+        }
+    }
+    
+    /**
+     * Sets the maximum turn rate the entity will use to achieve the desired heading
      * 
      * @param turnRate in radians/second
      */
     public void setDesiredTurnRate(Double turnRate)
     {
         this.desiredTurnRate = turnRate;
-        if(getEntity() != null)
+        if (getEntity() != null)
         {
             getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
         }
@@ -261,6 +282,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, Math.toDegrees(desiredTurnRate));
         getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, desiredTurnDir);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, true);
+
+        getEntity().setProperty(PROPERTY_MAX_TURN_RATE, Math.toDegrees(maxTurnRate));
     }
 
     /* (non-Javadoc)
@@ -278,6 +301,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setProperty(PROPERTY_DESIRED_TURN_RATE, null);
         getEntity().setProperty(PROPERTY_DESIRED_TURN_DIR, null);
         getEntity().setProperty(PROPERTY_USE_FULL_ORIENTATION, null);
+
+        getEntity().setProperty(PROPERTY_MAX_TURN_RATE, null);
         super.detach();
     }
 
@@ -328,6 +353,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
             desiredVelocityZ = -desiredAltitudeRate;
         }
         
+        // TODO: Consider using a property listener to handle the following instead of reading it
+        // from the properties each tick
         // Setting the pitch based simply on the velocity vector
         boolean useFullOrientation = true;
         Object ufoObj = getEntity().getProperty(PROPERTY_USE_FULL_ORIENTATION);
@@ -365,7 +392,8 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         // controller doesn't accidentally "overshoot" the desired heading due to rounding errors, which
         // would then cause the aircraft to attempt another full circle to achieve the desired heading).
         
-        double maxDeltaAngle = desiredTurnRate * dt;
+        double maxDeltaAngle = Math.min(maxTurnRate * dt, desiredTurnRate*dt);
+        
         double desiredDeltaAngle;
         if (Math.abs(angleDiff) < maxDeltaAngle) {
             desiredDeltaAngle = Math.abs(angleDiff);
@@ -382,7 +410,7 @@ public class FixedWingFlightController extends AbstractEntityCapability implemen
         getEntity().setHeading(newOrientation);
         
         if ( useFullOrientation ) {
-            getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/maxDeltaAngle);
+            getEntity().setRoll(-Math.PI/2. * desiredDeltaAngle/(maxTurnRate*dt));
         }
 
         Vector3 newVelocity = new Vector3(Math.cos(newOrientation), Math.sin(newOrientation), 0.0);

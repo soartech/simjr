@@ -257,6 +257,9 @@ public class ScenarioLoader
         // Visible
         EntityTools.setVisible(entity, ee.isVisible());
         
+        // Label visibility
+        EntityTools.setLabelVisible(entity, ee.isLabelVisible());
+        
         // Force
         entity.setProperty(EntityConstants.PROPERTY_FORCE, ee.getForce());
         
