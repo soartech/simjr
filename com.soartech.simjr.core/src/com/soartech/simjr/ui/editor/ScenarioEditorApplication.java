@@ -84,7 +84,7 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
     private static final Logger logger = Logger.getLogger(ScenarioEditorApplication.class);
     
     private ScenarioEditorMainFrame frame;
-    private Model model = new Model(this);
+    private Model model = new Model();
     
     public final WindowAdapter exitHandler = new WindowAdapter()
     {

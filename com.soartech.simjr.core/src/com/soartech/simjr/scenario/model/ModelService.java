@@ -49,7 +49,7 @@ public class ModelService implements SimulationService
     
     public ModelService(ServiceManager services)
     {
-        this.model = new Model(services);
+        this.model = new Model();
     }
     
     public Model getModel()

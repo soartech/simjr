@@ -31,20 +31,17 @@
  */
 package com.soartech.simjr.scenario;
 
-import com.soartech.simjr.scenario.EntityElement;
-import com.soartech.simjr.scenario.EntityElementList;
-import com.soartech.simjr.scenario.Model;
-import com.soartech.simjr.scenario.ModelChangeEvent;
-import com.soartech.simjr.scenario.ModelChangeListener;
-
 import junit.framework.TestCase;
+
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * @author ray
  */
 public class EntityElementListTest extends TestCase
 {
-
     public void testAddEntity()
     {
         final Model model = new Model();

@@ -36,6 +36,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import com.soartech.simjr.scenario.model.Model;
+
 public class PointElementListTest extends TestCase
 {
 

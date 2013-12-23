@@ -33,6 +33,8 @@ package com.soartech.simjr.scenario;
 
 import junit.framework.TestCase;
 
+import com.soartech.simjr.scenario.model.Model;
+
 public class OrientationElementTest extends TestCase
 {
     public void testGetAndSetHeading()

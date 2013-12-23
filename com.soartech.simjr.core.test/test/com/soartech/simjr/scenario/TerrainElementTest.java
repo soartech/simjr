@@ -35,6 +35,8 @@ import javax.swing.undo.UndoableEdit;
 
 import junit.framework.TestCase;
 
+import com.soartech.simjr.scenario.model.Model;
+
 public class TerrainElementTest extends TestCase
 {
     public void testSetOrigin()

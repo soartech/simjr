@@ -35,6 +35,8 @@ import javax.swing.undo.UndoableEdit;
 
 import junit.framework.TestCase;
 
+import com.soartech.simjr.scenario.model.Model;
+
 public class TerrainImageElementTest extends TestCase
 {
     public void testHasImageDefaultsToFalse()

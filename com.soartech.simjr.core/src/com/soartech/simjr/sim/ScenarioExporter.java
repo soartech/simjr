@@ -56,7 +56,7 @@ public class ScenarioExporter
     
     public Model createModel(ServiceManager services)
     {
-        final Model model = new Model(services);
+        final Model model = new Model();
         
         final Simulation sim = Simulation.findService(services);
         if(sim == null)

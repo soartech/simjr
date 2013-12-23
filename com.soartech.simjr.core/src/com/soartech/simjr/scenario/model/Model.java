@@ -57,9 +57,6 @@ import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.MetadataElement;
 import com.soartech.simjr.scenario.ScriptBlockElement;
 import com.soartech.simjr.scenario.TerrainElement;
-import com.soartech.simjr.services.ServiceManager;
-import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.sim.EntityPrototypeDatabase;
 import com.soartech.simjr.util.JDomTools;
 
 /**
@@ -78,8 +75,6 @@ public class Model
     public static final String FILE = "file";
     public static final String METADATA = "metadata";
     
-    private final EntityPrototypeDatabase prototypeDb;
-
     private final List<ModelChangeListener> listeners = new CopyOnWriteArrayList<ModelChangeListener>();
 
     private File file;
@@ -105,10 +100,9 @@ public class Model
             }
         }
     }
-
-    public Model(ServiceManager serviceManager)
+    
+    public Model()
     {
-        this.prototypeDb = serviceManager.findService(EntityPrototypeDatabase.class);
         newModel();
     }
 
@@ -215,15 +209,6 @@ public class Model
         return entities;
     }
     
-    public EntityPrototype getEntityPrototype(String prototype)
-    {
-        if(prototypeDb != null)
-        {
-            return prototypeDb.getPrototype(prototype);
-        }
-        else return null;
-    }
-
     public void save(File file) throws ModelException
     {
         final XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());

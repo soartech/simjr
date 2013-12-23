@@ -56,6 +56,7 @@ import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
+import com.soartech.simjr.services.ConstructOnDemand;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 
@@ -68,6 +69,7 @@ import com.soartech.simjr.services.SimulationService;
  * @see EntityPrototypes
  * @author ray
  */
+@ConstructOnDemand
 public class EntityPrototypeDatabase extends AbstractAdaptable implements SimulationService
 {
     private static final Logger logger = Logger.getLogger(EntityPrototypeDatabase.class);
