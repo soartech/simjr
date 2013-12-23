@@ -54,7 +54,7 @@ public class CoordinatesPanel extends JXPanel
     private static final long serialVersionUID = -8184639289927366228L;
 
     private PlanViewDisplay pvd = null;
-    private JComboBox combo = new JComboBox(new Object[] { new Mgrs(), new Meters(), new LatLon() });
+    private JComboBox<Object> combo = new JComboBox<Object>(new Object[] { new Mgrs(), new Meters(), new LatLon() });
     private JLabel label = new JLabel("");
     private MouseMotionListener mouseListener = new MouseMotionAdapter() {
 
