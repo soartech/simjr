@@ -35,8 +35,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXPanel;
@@ -72,6 +75,19 @@ public class ActiveEditorPanel extends JXPanel
         }
     };
     
+    private MouseAdapter mouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            logger.info("Mouse click");
+            if(SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                logger.info("Double clicked!");
+            }
+            else if(SwingUtilities.isRightMouseButton(e)) {
+                logger.info("Right clicked!");
+            }
+        }
+    };
+    
     public ActiveEditorPanel(PlanViewDisplay pvd)
     {
         super();
@@ -79,7 +95,6 @@ public class ActiveEditorPanel extends JXPanel
         this.pvd = pvd;
         
         this.add(doneButton);
-        
         doneButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,12 +103,11 @@ public class ActiveEditorPanel extends JXPanel
         });
         
         setAlpha(0.7f);
-        
-        final int width = 100;
-        final int height = 35;
         setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
         
+        pvd.addMouseListener(mouseAdapter);
         pvd.addComponentListener(resizeListener);
+        pvd.setContextMenuEnabled(false);
         
         this.pvd.add(this);
     }
@@ -102,6 +116,8 @@ public class ActiveEditorPanel extends JXPanel
     {
         pvd.remove(ActiveEditorPanel.this);
         pvd.removeComponentListener(resizeListener);
+        pvd.removeMouseListener(mouseAdapter);
+        pvd.setContextMenuEnabled(true);
         
         if(onCompleteListener != null) {
             onCompleteListener.onComplete();
