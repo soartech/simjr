@@ -48,10 +48,19 @@ public class ActiveEditorPanel extends JXPanel
 {
     private static final long serialVersionUID = -1L;
     private static final Logger logger = Logger.getLogger(ActiveEditorPanel.class);
+    
+    private static final int width= 100, height = 35;
 
     private PlanViewDisplay pvd = null;
     
     private JButton doneButton = new JButton("Done");
+    
+    private ComponentAdapter resizeListener = new ComponentAdapter() {
+        public void componentResized(ComponentEvent evt) {
+            logger.info("PVD resized: " + evt);
+            setBounds(ActiveEditorPanel.this.pvd.getWidth()/2 - width/2, 10, width, height);
+        }
+    };
     
     public ActiveEditorPanel(PlanViewDisplay pvd)
     {
@@ -65,6 +74,7 @@ public class ActiveEditorPanel extends JXPanel
             @Override
             public void actionPerformed(ActionEvent e) {
                 ActiveEditorPanel.this.pvd.remove(ActiveEditorPanel.this);
+                ActiveEditorPanel.this.pvd.removeComponentListener(resizeListener);
             }
         });
         
@@ -74,12 +84,7 @@ public class ActiveEditorPanel extends JXPanel
         final int height = 35;
         setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
         
-        pvd.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent evt) {
-                logger.info("PVD resized: " + evt);
-                setBounds(ActiveEditorPanel.this.pvd.getWidth()/2 - width/2, 10, width, height);
-            }
-        });
+        pvd.addComponentListener(resizeListener);
         
         this.pvd.add(this);
     }
