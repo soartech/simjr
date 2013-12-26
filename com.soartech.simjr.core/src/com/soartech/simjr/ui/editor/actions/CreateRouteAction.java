@@ -101,10 +101,19 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         logger.info("CreateRouteAction - actionPerformed");
         
+        //this.getActionManager().getAction(this.getId()).setEnabled(false);
+        setEnabled(false);
+        
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
         final PlanViewDisplay pvd = pvdProvider.getActivePlanViewDisplay();
         
         final ActiveEditorPanel aep = new ActiveEditorPanel(pvd);
+        aep.setOnCompleteListener(new ActiveEditorPanel.OnCompleteListener() {
+            @Override
+            public void onComplete() {
+                CreateRouteAction.this.setEnabled(true);
+            }
+        });
         
         /*
         final double originLat;

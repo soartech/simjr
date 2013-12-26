@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXPanel;
 
 /**
- * @author ray
+ * Encapsulates the functionality of a graphical route/area editor.
  */
 public class ActiveEditorPanel extends JXPanel
 {
@@ -54,6 +54,16 @@ public class ActiveEditorPanel extends JXPanel
     private PlanViewDisplay pvd = null;
     
     private JButton doneButton = new JButton("Done");
+    
+    //Callback for when the edit is completed
+    public interface OnCompleteListener {
+        void onComplete();
+    };
+    private OnCompleteListener onCompleteListener;
+    public void setOnCompleteListener(OnCompleteListener l) {
+        this.onCompleteListener = l;
+    }
+    
     
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
@@ -73,8 +83,7 @@ public class ActiveEditorPanel extends JXPanel
         doneButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ActiveEditorPanel.this.pvd.remove(ActiveEditorPanel.this);
-                ActiveEditorPanel.this.pvd.removeComponentListener(resizeListener);
+                onComplete();
             }
         });
         
@@ -88,5 +97,14 @@ public class ActiveEditorPanel extends JXPanel
         
         this.pvd.add(this);
     }
-    
+
+    private void onComplete()
+    {
+        pvd.remove(ActiveEditorPanel.this);
+        pvd.removeComponentListener(resizeListener);
+        
+        if(onCompleteListener != null) {
+            onCompleteListener.onComplete();
+        }
+    }
 }
