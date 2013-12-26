@@ -99,6 +99,7 @@ public class PlanViewDisplay extends JPanel
     private Simulation sim;
     private Point contextMenuPoint;
     private ObjectContextMenu contextMenu;
+    private boolean contextMenuEnabled = true;
     
     private SelectionManagerListener selectionListener = new SelectionManagerListener(){
 
@@ -227,6 +228,11 @@ public class PlanViewDisplay extends JPanel
             throw new NullPointerException("Context menu cannot be null");
         }
         this.contextMenu = contextMenu;
+    }
+    
+    public void setContextMenuEnabled(boolean enabled)
+    {
+        this.contextMenuEnabled = enabled;
     }
 
     public Terrain getTerrain()
@@ -588,7 +594,7 @@ public class PlanViewDisplay extends JPanel
         final List<Entity> selectedEntities = getSelectedEntities();
         final Entity entityUnderCursor = getEntityAtScreenPoint(e.getPoint());
         
-        if(SwingUtilities.isRightMouseButton(e))
+        if(SwingUtilities.isRightMouseButton(e) && contextMenuEnabled)
         {
             contextMenuPoint = e.getPoint();
             contextMenu.show(this, e.getX(), e.getY());
