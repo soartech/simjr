@@ -224,7 +224,7 @@ public class PlanViewDisplay extends JPanel
     {
         if(contextMenu == null)
         {
-            throw new NullPointerException("contextMeny cannot be null");
+            throw new NullPointerException("Context menu cannot be null");
         }
         this.contextMenu = contextMenu;
     }
