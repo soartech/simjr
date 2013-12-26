@@ -70,17 +70,14 @@ public class CreateRouteAction extends AbstractEditorAction
         {
             setAcceleratorKey(KeyStroke.getKeyStroke(keyStroke));
         }
-        
     }
 
     public CreateRouteAction(ActionManager manager, String label, Geodetic.Point position)
     {
-        super(label);
+        super(manager, label);
         logger.debug("Creating CreateRouteAction");
         
         this.initialPosition = position;
-        
-        setActionManager(manager);
     }
     
     public void setInitialPosition(Geodetic.Point position)
