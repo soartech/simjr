@@ -93,11 +93,10 @@ public class ActiveEditorPanel extends JXPanel
             if(SwingUtilities.isLeftMouseButton(e)) {
                 if(e.getClickCount() == 2) {
                     logger.info("Double clicked!");
+                    onComplete();
                 }
                 else {
-                    logger.info("Clicked at screen coords: " + e.getX() + "," + e.getY());
                     final Vector3 meters = pvd.getTransformer().screenToMeters((double) e.getX(), (double) e.getY());
-                    logger.info("Clicked at meters: " + meters.x + "," + meters.y);
                     final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
                     logger.info("Clicked at latlon: " + lla.latitude + "," + lla.longitude);
                     createWaypoint(lla);
