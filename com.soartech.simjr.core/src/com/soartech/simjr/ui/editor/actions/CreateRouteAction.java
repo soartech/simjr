@@ -32,18 +32,29 @@
 package com.soartech.simjr.ui.editor.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.undo.CompoundEdit;
 
 import org.apache.log4j.Logger;
 
+import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.scenario.EntityElement;
+import com.soartech.simjr.scenario.EntityElementList;
+import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.ActiveEditorPanel;
+import com.soartech.simjr.ui.editor.UndoService;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
@@ -57,44 +68,74 @@ public class CreateRouteAction extends AbstractEditorAction
     
     protected Geodetic.Point initialPosition;
     
+    private static final int width= 100, height = 35;
+
+    private Simulation sim;
+    private PlanViewDisplay pvd;
+    
+    private JButton doneButton = new JButton("Done");
+    
+    private CompoundEdit compoundEdit;
+    
+    private List<EntityElement> waypoints = new ArrayList<EntityElement>();
+    
+    private ComponentAdapter resizeListener = new ComponentAdapter() {
+        public void componentResized(ComponentEvent evt) {
+            logger.info("PVD resized: " + evt);
+            doneButton.setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
+        }
+    };
+    
+    private MouseAdapter mouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            logger.info("Mouse click");
+            if(SwingUtilities.isLeftMouseButton(e)) {
+                if(e.getClickCount() == 2) {
+                    logger.info("Double clicked!");
+                    onComplete();
+                }
+                else {
+                    final Vector3 meters = pvd.getTransformer().screenToMeters((double) e.getX(), (double) e.getY());
+                    final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
+                    logger.info("Clicked at latlon: " + lla.latitude + "," + lla.longitude);
+                    createWaypoint(lla);
+                }
+            }
+            else if(SwingUtilities.isRightMouseButton(e)) {
+                logger.info("Right clicked");
+            }
+        }
+    };
+    
     /**
      * @param manager
      * @param label
      * @param icon
      */
-    public CreateRouteAction(ActionManager manager, String label, String keyStroke)
+    public CreateRouteAction(ActionManager manager, String label, String keyStroke, Geodetic.Point position)
     {
         super(manager, label);
         logger.debug("Creating CreateRouteAction");
         
-        if(keyStroke != null)
-        {
+        if(keyStroke != null) {
             setAcceleratorKey(KeyStroke.getKeyStroke(keyStroke));
         }
-    }
-
-    public CreateRouteAction(ActionManager manager, String label, Geodetic.Point position)
-    {
-        super(manager, label);
-        logger.debug("Creating CreateRouteAction");
         
         this.initialPosition = position;
+        
+        PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
+        pvd = pvdProvider.getActivePlanViewDisplay();
+        sim = getServices().findService(Simulation.class);
+        
+        doneButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onComplete();
+            }
+        });
     }
-    
-    public void setInitialPosition(Geodetic.Point position)
-    {
-        this.initialPosition = position;
-    }
-    
 
-    /* (non-Javadoc)
-     * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
-     */
-    @Override
-    public void update()
-    {
-    }
-    
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
@@ -102,81 +143,48 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         logger.info("CreateRouteAction - actionPerformed");
         
-        //this.getActionManager().getAction(this.getId()).setEnabled(false);
         setEnabled(false);
         
-        PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
-        final PlanViewDisplay pvd = pvdProvider.getActivePlanViewDisplay();
-        final Simulation sim = getServices().findService(Simulation.class);
+        doneButton.setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
+        pvd.add(doneButton);
+        pvd.addComponentListener(resizeListener);
+        pvd.addMouseListener(mouseAdapter);
+        pvd.setContextMenuEnabled(false);
+        pvd.repaint();
         
-        final ActiveEditorPanel aep = new ActiveEditorPanel(sim, getModel(), pvd);
-        aep.setOnCompleteListener(new ActiveEditorPanel.OnCompleteListener() {
-            @Override
-            public void onComplete() {
-                CreateRouteAction.this.setEnabled(true);
-            }
-        });
+        compoundEdit = new CompoundEdit();
+    }
+    
+    /**
+     * Called when the user is done graphically creating points.
+     */
+    private void onComplete()
+    {
+        logger.info("CreateRouteAction complete");
         
-        /*
-        final double originLat;
-        final double originLon;
-        if(initialPosition == null)
-        {
-            originLat = getModel().getTerrain().getOriginLatitude();
-            originLon = getModel().getTerrain().getOriginLongitude();
-        }
-        else
-        {
-            originLat = Math.toDegrees(initialPosition.latitude);
-            originLon = Math.toDegrees(initialPosition.longitude);
-        }
+        boolean edited = findService(UndoService.class).addEdit(compoundEdit);
+        
+        pvd.remove(doneButton);
+        pvd.removeComponentListener(resizeListener);
+        pvd.removeMouseListener(mouseAdapter);
+        pvd.setContextMenuEnabled(true);
+        
+        CreateRouteAction.this.setEnabled(true);
+        
+        pvd.repaint();
+    }
+    
+    private void createWaypoint(Geodetic.Point lla)
+    {
+        CompoundEdit edit = new CompoundEdit();
         
         final EntityElementList entities = getModel().getEntities();
-        // all of this is within a compound edit
-        final CompoundEdit compound = new CompoundEdit();
-        final int requiredPoints = 2;
-        final Object[] waypoints = getWaypoints();
-        final Object selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
-        final Object[] pointElements = MultiSelectDialog.select(getApplication().getFrame(), 
-                "Select at least " + requiredPoints + " points for new route", waypoints,
-                selected != null ? new Object[] { selected } : new Object[] {});
-        if(pointElements == null)
-        {
-            return;
-        }
-        if(pointElements.length < requiredPoints)
-        {
-            JOptionPane.showMessageDialog(getApplication().getFrame(), "Please select at least " + requiredPoints + " points");
-            return;
-        }
-        
-        // Create two waypoints a little bit apart
-        final List<String> points = new ArrayList<String>();
-        for(Object o : pointElements)
-        {
-            points.add(((EntityElement) o).getName());
-        }
-        
-        // Create the route object and add the two points to it
-        final NewEntityEdit edit = entities.addEntity(points.get(0) + "-" + points.get(points.size() - 1), "route");
-        compound.addEdit(edit);
-        edit.getEntity().getPoints().setPoints(points);
-        
-        compound.end();
-        findService(UndoService.class).addEdit(compound);
-        */
+        NewEntityEdit addEntityEdit = entities.addEntity("waypoint", "waypoint"); 
+        edit.addEdit(addEntityEdit);
+        edit.addEdit(addEntityEdit.getEntity().getLocation().setLocation(Math.toDegrees(lla.latitude), Math.toDegrees(lla.longitude), lla.altitude));
+        compoundEdit.addEdit(edit);
     }
 
-    private Object[] getWaypoints()
-    {
-        final List<EntityElement> waypoints = new ArrayList<EntityElement>();
-        for(EntityElement e : getModel().getEntities().getEntities())
-        {
-            if("waypoint".equals(e.getPrototype()))
-            {
-                waypoints.add(e);
-            }
-        }
-        return waypoints.toArray();
-    }
+    @Override
+    public void update() {  }
 }
