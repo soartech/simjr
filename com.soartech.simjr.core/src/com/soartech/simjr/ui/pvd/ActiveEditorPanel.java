@@ -40,9 +40,17 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
+import javax.swing.undo.CompoundEdit;
 
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXPanel;
+
+import com.soartech.math.Vector3;
+import com.soartech.math.geotrans.Geodetic;
+import com.soartech.simjr.scenario.EntityElementList;
+import com.soartech.simjr.scenario.edits.NewEntityEdit;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.sim.Simulation;
 
 /**
  * Encapsulates the functionality of a graphical route/area editor.
@@ -54,9 +62,13 @@ public class ActiveEditorPanel extends JXPanel
     
     private static final int width= 100, height = 35;
 
-    private PlanViewDisplay pvd = null;
+    private Simulation sim;
+    private Model model;
+    private PlanViewDisplay pvd;
     
     private JButton doneButton = new JButton("Done");
+    
+    private CompoundEdit compoundEdit = new CompoundEdit();
     
     //Callback for when the edit is completed
     public interface OnCompleteListener {
@@ -66,7 +78,6 @@ public class ActiveEditorPanel extends JXPanel
     public void setOnCompleteListener(OnCompleteListener l) {
         this.onCompleteListener = l;
     }
-    
     
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
@@ -79,19 +90,31 @@ public class ActiveEditorPanel extends JXPanel
         @Override
         public void mouseClicked(MouseEvent e) {
             logger.info("Mouse click");
-            if(SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-                logger.info("Double clicked!");
+            if(SwingUtilities.isLeftMouseButton(e)) {
+                if(e.getClickCount() == 2) {
+                    logger.info("Double clicked!");
+                }
+                else {
+                    logger.info("Clicked at screen coords: " + e.getX() + "," + e.getY());
+                    final Vector3 meters = pvd.getTransformer().screenToMeters((double) e.getX(), (double) e.getY());
+                    logger.info("Clicked at meters: " + meters.x + "," + meters.y);
+                    final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
+                    logger.info("Clicked at latlon: " + lla.latitude + "," + lla.longitude);
+                    createWaypoint(lla);
+                }
             }
             else if(SwingUtilities.isRightMouseButton(e)) {
-                logger.info("Right clicked!");
+                logger.info("Right clicked");
             }
         }
     };
     
-    public ActiveEditorPanel(PlanViewDisplay pvd)
+    public ActiveEditorPanel(Simulation sim, Model model, PlanViewDisplay pvd)
     {
         super();
         
+        this.sim = sim;
+        this.model = model;
         this.pvd = pvd;
         
         this.add(doneButton);
@@ -110,6 +133,7 @@ public class ActiveEditorPanel extends JXPanel
         pvd.setContextMenuEnabled(false);
         
         this.pvd.add(this);
+        this.pvd.repaint();
     }
 
     private void onComplete()
@@ -122,5 +146,16 @@ public class ActiveEditorPanel extends JXPanel
         if(onCompleteListener != null) {
             onCompleteListener.onComplete();
         }
+    }
+    
+    private void createWaypoint(Geodetic.Point lla)
+    {
+        CompoundEdit edit = new CompoundEdit();
+        
+        final EntityElementList entities = model.getEntities();
+        NewEntityEdit addEntityEdit = entities.addEntity("waypoint", "waypoint"); 
+        edit.addEdit(addEntityEdit);
+        edit.addEdit(addEntityEdit.getEntity().getLocation().setLocation(Math.toDegrees(lla.latitude), Math.toDegrees(lla.longitude), lla.altitude));
+        compoundEdit.addEdit(edit);
     }
 }

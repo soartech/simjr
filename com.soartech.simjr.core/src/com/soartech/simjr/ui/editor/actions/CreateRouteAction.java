@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.scenario.EntityElement;
+import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.ActiveEditorPanel;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -106,8 +107,9 @@ public class CreateRouteAction extends AbstractEditorAction
         
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
         final PlanViewDisplay pvd = pvdProvider.getActivePlanViewDisplay();
+        final Simulation sim = getServices().findService(Simulation.class);
         
-        final ActiveEditorPanel aep = new ActiveEditorPanel(pvd);
+        final ActiveEditorPanel aep = new ActiveEditorPanel(sim, getModel(), pvd);
         aep.setOnCompleteListener(new ActiveEditorPanel.OnCompleteListener() {
             @Override
             public void onComplete() {
