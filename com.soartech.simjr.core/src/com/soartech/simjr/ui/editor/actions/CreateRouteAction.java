@@ -79,6 +79,8 @@ public class CreateRouteAction extends AbstractEditorAction
     
     private List<EntityElement> waypoints;
     
+    private NewEntityEdit currentGeometry;
+    
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
             logger.info("PVD resized: " + evt);
@@ -100,6 +102,11 @@ public class CreateRouteAction extends AbstractEditorAction
                     final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
                     logger.info("Clicked at latlon: " + lla.latitude + "," + lla.longitude);
                     createWaypoint(lla);
+                    
+                    if(currentGeometry != null) {
+                        currentGeometry.undo();
+                    }
+                    currentGeometry = createRoute();
                 }
             }
             else if(SwingUtilities.isRightMouseButton(e)) {
@@ -155,6 +162,7 @@ public class CreateRouteAction extends AbstractEditorAction
         compoundEdit = new CompoundEdit();
         
         waypoints = new ArrayList<EntityElement>();
+        currentGeometry = null;
     }
     
     /**
@@ -164,7 +172,7 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         logger.info("CreateRouteAction complete");
         
-        createRoute();
+        compoundEdit.addEdit(currentGeometry);
         
         compoundEdit.end();
         findService(UndoService.class).addEdit(compoundEdit);
@@ -179,6 +187,10 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.repaint();
     }
     
+    /**
+     * Creates a waypoint and adds it to the geometry.
+     * @param lla
+     */
     private void createWaypoint(Geodetic.Point lla)
     {
         CompoundEdit edit = new CompoundEdit();
@@ -193,15 +205,24 @@ public class CreateRouteAction extends AbstractEditorAction
         waypoints.add(addEntityEdit.getEntity());
     }
     
-    private void createRoute()
+    /**
+     * Creates a route edit from the current waypoints.
+     * @return
+     */
+    private NewEntityEdit createRoute()
     {
+        if(waypoints.size() < 2) {
+            return null;
+        }
+        
         final NewEntityEdit edit = getModel().getEntities().addEntity("route", "route");
         ArrayList<String> points = new ArrayList<String>();
         for(EntityElement wp: waypoints) {
             points.add(wp.getName());
         }
         edit.getEntity().getPoints().setPoints(points);
-        compoundEdit.addEdit(edit);
+        
+        return edit;
     }
 
     @Override
