@@ -162,6 +162,7 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         logger.info("CreateRouteAction complete");
         
+        compoundEdit.end();
         boolean edited = findService(UndoService.class).addEdit(compoundEdit);
         
         pvd.remove(doneButton);
@@ -182,6 +183,7 @@ public class CreateRouteAction extends AbstractEditorAction
         NewEntityEdit addEntityEdit = entities.addEntity("waypoint", "waypoint"); 
         edit.addEdit(addEntityEdit);
         edit.addEdit(addEntityEdit.getEntity().getLocation().setLocation(Math.toDegrees(lla.latitude), Math.toDegrees(lla.longitude), lla.altitude));
+        edit.end();
         compoundEdit.addEdit(edit);
     }
 
