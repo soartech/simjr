@@ -77,7 +77,7 @@ public class CreateRouteAction extends AbstractEditorAction
     
     private CompoundEdit compoundEdit;
     
-    private List<EntityElement> waypoints = new ArrayList<EntityElement>();
+    private List<EntityElement> waypoints;
     
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
@@ -153,6 +153,8 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.repaint();
         
         compoundEdit = new CompoundEdit();
+        
+        waypoints = new ArrayList<EntityElement>();
     }
     
     /**
@@ -162,8 +164,10 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         logger.info("CreateRouteAction complete");
         
+        createRoute();
+        
         compoundEdit.end();
-        boolean edited = findService(UndoService.class).addEdit(compoundEdit);
+        findService(UndoService.class).addEdit(compoundEdit);
         
         pvd.remove(doneButton);
         pvd.removeComponentListener(resizeListener);
@@ -184,6 +188,19 @@ public class CreateRouteAction extends AbstractEditorAction
         edit.addEdit(addEntityEdit);
         edit.addEdit(addEntityEdit.getEntity().getLocation().setLocation(Math.toDegrees(lla.latitude), Math.toDegrees(lla.longitude), lla.altitude));
         edit.end();
+        compoundEdit.addEdit(edit);
+        
+        waypoints.add(addEntityEdit.getEntity());
+    }
+    
+    private void createRoute()
+    {
+        final NewEntityEdit edit = getModel().getEntities().addEntity("route", "route");
+        ArrayList<String> points = new ArrayList<String>();
+        for(EntityElement wp: waypoints) {
+            points.add(wp.getName());
+        }
+        edit.getEntity().getPoints().setPoints(points);
         compoundEdit.addEdit(edit);
     }
 
