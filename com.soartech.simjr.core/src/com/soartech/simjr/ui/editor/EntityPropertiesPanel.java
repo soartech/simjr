@@ -78,10 +78,10 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
     final JFormattedTextField minimumAltitude= new JFormattedTextField(NumberFormat.getNumberInstance());
     final JFormattedTextField maximumAltitude = new JFormattedTextField(NumberFormat.getNumberInstance());
     final JFormattedTextField width = new JFormattedTextField(NumberFormat.getNumberInstance());
-    private final DefaultComboBoxModel typeModel = new DefaultComboBoxModel();
-    private final JComboBox typeCombo = new JComboBox(typeModel);
-    private final DefaultComboBoxModel forceModel = new DefaultComboBoxModel(EntityConstants.ALL_FORCES);
-    private final JComboBox forceCombo = new JComboBox(forceModel);
+    private final DefaultComboBoxModel<EntityPrototype> typeModel = new DefaultComboBoxModel<EntityPrototype>();
+    private final JComboBox<EntityPrototype> typeCombo = new JComboBox<EntityPrototype>(typeModel);
+    private final DefaultComboBoxModel<String> forceModel = new DefaultComboBoxModel<String>(EntityConstants.ALL_FORCES);
+    private final JComboBox<String> forceCombo = new JComboBox<String>(forceModel);
     private final JCheckBox visibleCheckBox = new JCheckBox();
     private final JCheckBox threeDCheckBox = new JCheckBox();
     private final HeadingSpinner headingSpinner;
@@ -89,9 +89,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
     
     public EntityPropertiesPanel(final ServiceManager services, final Model model)
     {
-        
         super("EntityProperties");
-        
         
         //DF settings
         setLayout(new MigLayout());
@@ -101,7 +99,6 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         setMaximizable(true);
         setTitleText("Entity Properties");
         setResizeLocked(true);
-
         
         this.model = model;
         this.services = services;
@@ -141,29 +138,21 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         maximumAltitude.addKeyListener(this);
         add(maximumAltitude, "wrap, span 2");
         
-        
-        
-        
         add(new JLabel("Init Script"), "top");
         add(initScript = new ScriptEditPanel(undoService, 50), "span, growx, growy");
 
-        
         new EntryCompletionHandler(nameField) {
-
             @Override
-            public boolean verify(JComponent input)
-            {
+            public boolean verify(JComponent input) {
                 if(entity != null)
                 {
                     final String newName = nameField.getText().trim();
-                    if(!newName.equals(entity.getName()) &&model.getEntities().getEntity(newName) != null)
-                    {
+                    if(!newName.equals(entity.getName()) &&model.getEntities().getEntity(newName) != null) {
                         return false;
                     }
                     
                     final UndoableEdit edit = entity.setName(newName);
-                    if(edit != null)
-                    {
+                    if(edit != null) {
                         services.findService(UndoService.class).addEdit(edit);
                     }
                 }
@@ -171,50 +160,42 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             }};
         
         populateTypeModel();
+        
         new EntryCompletionHandler(typeCombo) {
-
             @Override
-            public boolean verify(JComponent input)
-            {
+            public boolean verify(JComponent input) {
                 EntityPrototype p = (EntityPrototype) typeCombo.getSelectedItem();
-                if(entity != null)
-                {
+                if(entity != null) {
                     services.findService(UndoService.class).addEdit(entity.setPrototype(p.getId()));
                 }
                 return true;
-            }};
+            }
+        };
         
         typeCombo.setRenderer(new DefaultListCellRenderer() {
-
             private static final long serialVersionUID = 418324624637909108L;
-
             /* (non-Javadoc)
              * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
              */
             @Override
-            public Component getListCellRendererComponent(JList list,
-                    Object value, int index, boolean isSelected,
-                    boolean cellHasFocus)
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
             {
-                final JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected,
-                        cellHasFocus);
+                final JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 final EntityPrototype p = (EntityPrototype) value;
                 setText(String.format("<html>%s / %s / <b>%s</b></html>", p.getDomain(), p.getCategory(), p.getSubcategory()));
                 return label;
             }});
         
         new EntryCompletionHandler(forceCombo) {
-
             @Override
-            public boolean verify(JComponent input)
-            {
+            public boolean verify(JComponent input) {
                 String force = forceCombo.getSelectedItem().toString();
-                if(entity != null)
-                {
+                if(entity != null) {
                     services.findService(UndoService.class).addEdit(entity.setForce(force));
                 }
                 return true;
-            }};
+            }
+        };
         setEntity(null);
         this.model.addModelChangeListener(this);
     }
@@ -398,9 +379,5 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)width.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
-
     }
-    
-    
-    
 }
