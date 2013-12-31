@@ -56,6 +56,7 @@ import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
@@ -285,12 +286,9 @@ public class CreateRouteAction extends AbstractEditorAction
     
     private void updateVisibility()
     {
-        if(newGeometryEdit.getEntity().getPoints().getPoints().size() < NUM_POINTS) {
-            newGeometryEdit.getEntity().setLabelVisible(false);
-        }
-        else {
-            newGeometryEdit.getEntity().setLabelVisible(true);
-        }
+        Entity e = sim.getEntity(newGeometryEdit.getEntity().getName());
+        boolean showGeometry = newGeometryEdit.getEntity().getPoints().getPoints().size() >= NUM_POINTS; 
+        EntityTools.setVisible(e, showGeometry);
     }
     
     /**
