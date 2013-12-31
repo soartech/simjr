@@ -68,19 +68,32 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
  * 
  * TODO: Does saving in the middle of this action cause issues?
  */
-public class CreateRouteAction extends AbstractEditorAction
+public class CreateGeometryAction extends AbstractEditorAction
 {
     private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
     private static final int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 35;
     private static final double SELECTION_TOLERANCE = 15.0;
-    private static final int NUM_POINTS = 2;
-
+    
     private final Simulation sim;
     private final PlanViewDisplay pvd;
     
     private JButton doneButton = new JButton("Done");
+
+    private final GeometryType geometryType = GeometryType.ROUTE;
+    public enum GeometryType { 
+        ROUTE("route", 2), AREA("area", 3); 
+        private final String prototype;
+        private final int minPts;
+        private GeometryType(String prototype, int minPts) {
+            this.prototype = prototype;
+            this.minPts = minPts; 
+        }
+        public String getPrototype() { return prototype; }
+        public int getMinPoints() { return minPts; }
+    };
+    
     
     protected Geodetic.Point initialPosition;
     
@@ -112,7 +125,7 @@ public class CreateRouteAction extends AbstractEditorAction
                 else 
                 {
                     Entity selected = getWaypointAt(evt.getX(), evt.getY());
-                    if(selected != null) //add existing wp to route
+                    if(selected != null) //add existing wp to geometry
                     {
                         addExistingPoint(selected.getName());
                     }
@@ -164,7 +177,7 @@ public class CreateRouteAction extends AbstractEditorAction
         AddPointEdit ape = new AddPointEdit(wpName);
         
         addPoint(wpName);
-        pointEdits.add(ape);
+        pointEdits.push(ape);
     }
     
     private void addNewPoint(int x, int y) 
@@ -183,7 +196,7 @@ public class CreateRouteAction extends AbstractEditorAction
         compoundEdit.end();
         
         addPoint(addEntityEdit.getEntity().getName());
-        pointEdits.add(compoundEdit);
+        pointEdits.push(compoundEdit);
     }
     
     private void addPoint(String wpName) 
@@ -200,6 +213,12 @@ public class CreateRouteAction extends AbstractEditorAction
      */
     private void removeLastPoint()
     {
+        //Quit the action if we're already empty
+        if(pointEdits.isEmpty()) {
+            onComplete();
+            return;
+        }
+        
         UndoableEdit lastEdit = pointEdits.pop();
         if(lastEdit != null) {
             lastEdit.undo();
@@ -213,10 +232,10 @@ public class CreateRouteAction extends AbstractEditorAction
      * @param label
      * @param icon
      */
-    public CreateRouteAction(ActionManager manager, String label, String keyStroke, Geodetic.Point position)
+    public CreateGeometryAction(ActionManager manager, String label, String keyStroke, Geodetic.Point position)
     {
         super(manager, label);
-        logger.debug("Creating CreateRouteAction");
+        logger.debug("Creating CreateGeometryAction");
         
         if(keyStroke != null) {
             setAcceleratorKey(KeyStroke.getKeyStroke(keyStroke));
@@ -241,7 +260,7 @@ public class CreateRouteAction extends AbstractEditorAction
      */
     public void actionPerformed(ActionEvent e)
     {
-        logger.info("CreateRouteAction - actionPerformed");
+        logger.info("CreateGeometryAction - actionPerformed");
         
         setEnabled(false);
         
@@ -254,7 +273,7 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.repaint();
         
         pointEdits = new Stack<UndoableEdit>();
-        newGeometryEdit = getModel().getEntities().addEntity("route", "route");
+        newGeometryEdit = getModel().getEntities().addEntity(geometryType.getPrototype(), geometryType.getPrototype());
         updateVisibility();
         
         if(initialPosition != null) {
@@ -267,7 +286,7 @@ public class CreateRouteAction extends AbstractEditorAction
      */
     private void onComplete()
     {
-        logger.info("CreateRouteAction complete");
+        logger.info("CreateGeometryAction complete");
         
         final CompoundEdit compoundEdit = new CompoundEdit();
         compoundEdit.addEdit(newGeometryEdit);
@@ -276,7 +295,7 @@ public class CreateRouteAction extends AbstractEditorAction
         }
         compoundEdit.end();
         
-        if(pointEdits.size() >= NUM_POINTS) { //TODO: Generalize
+        if(pointEdits.size() >= geometryType.getMinPoints()) { 
             findService(UndoService.class).addEdit(compoundEdit);
         }
         else {
@@ -288,7 +307,7 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.removeMouseListener(mouseAdapter);
         pvd.setContextMenuEnabled(true);
         
-        CreateRouteAction.this.setEnabled(true);
+        CreateGeometryAction.this.setEnabled(true);
         
         pvd.repaint();
     }
@@ -296,7 +315,7 @@ public class CreateRouteAction extends AbstractEditorAction
     private void updateVisibility()
     {
         Entity e = sim.getEntity(newGeometryEdit.getEntity().getName());
-        boolean showGeometry = newGeometryEdit.getEntity().getPoints().getPoints().size() >= NUM_POINTS; 
+        boolean showGeometry = newGeometryEdit.getEntity().getPoints().getPoints().size() >= geometryType.getMinPoints(); 
         EntityTools.setVisible(e, showGeometry);
     }
     
