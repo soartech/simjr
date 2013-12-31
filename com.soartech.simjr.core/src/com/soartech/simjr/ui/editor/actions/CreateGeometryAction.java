@@ -81,7 +81,7 @@ public class CreateGeometryAction extends AbstractEditorAction
     
     private JButton doneButton = new JButton("Done");
 
-    private final GeometryType geometryType = GeometryType.ROUTE;
+    private final GeometryType geometryType;
     public enum GeometryType { 
         ROUTE("route", 2), AREA("area", 3); 
         private final String prototype;
@@ -172,67 +172,12 @@ public class CreateGeometryAction extends AbstractEditorAction
         }
     }
     
-    private void addExistingPoint(String wpName)
-    {
-        AddPointEdit ape = new AddPointEdit(wpName);
-        
-        addPoint(wpName);
-        pointEdits.push(ape);
-    }
-    
-    private void addNewPoint(int x, int y) 
-    {
-        final Vector3 meters = pvd.getTransformer().screenToMeters((double) x, (double) y);
-        final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
-        addNewPoint(lla);
-    }
-    
-    private void addNewPoint(Geodetic.Point lla)
-    {
-        CompoundEdit compoundEdit = new CompoundEdit();
-        NewEntityEdit addEntityEdit = createWaypoint(lla);
-        compoundEdit.addEdit(addEntityEdit);
-        compoundEdit.addEdit(new AddPointEdit(addEntityEdit.getEntity().getName()));
-        compoundEdit.end();
-        
-        addPoint(addEntityEdit.getEntity().getName());
-        pointEdits.push(compoundEdit);
-    }
-    
-    private void addPoint(String wpName) 
-    {
-        List<String> points = newGeometryEdit.getEntity().getPoints().getPoints();
-        points.add(wpName);
-        newGeometryEdit.getEntity().getPoints().setPoints(points);
-        
-        updateVisibility();
-    }
-    
-    /**
-     * Removes the last waypoint added.
-     */
-    private void removeLastPoint()
-    {
-        //Quit the action if we're already empty
-        if(pointEdits.isEmpty()) {
-            onComplete();
-            return;
-        }
-        
-        UndoableEdit lastEdit = pointEdits.pop();
-        if(lastEdit != null) {
-            lastEdit.undo();
-        }
-        
-        updateVisibility();
-    }
-    
     /**
      * @param manager
      * @param label
      * @param icon
      */
-    public CreateGeometryAction(ActionManager manager, String label, String keyStroke, Geodetic.Point position)
+    public CreateGeometryAction(ActionManager manager, String label, String keyStroke, GeometryType type, Geodetic.Point position)
     {
         super(manager, label);
         logger.debug("Creating CreateGeometryAction");
@@ -241,6 +186,7 @@ public class CreateGeometryAction extends AbstractEditorAction
             setAcceleratorKey(KeyStroke.getKeyStroke(keyStroke));
         }
         
+        this.geometryType = type;
         this.initialPosition = position;
         
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
@@ -310,6 +256,61 @@ public class CreateGeometryAction extends AbstractEditorAction
         CreateGeometryAction.this.setEnabled(true);
         
         pvd.repaint();
+    }
+    
+    private void addExistingPoint(String wpName)
+    {
+        AddPointEdit ape = new AddPointEdit(wpName);
+        
+        addPoint(wpName);
+        pointEdits.push(ape);
+    }
+    
+    private void addNewPoint(int x, int y) 
+    {
+        final Vector3 meters = pvd.getTransformer().screenToMeters((double) x, (double) y);
+        final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
+        addNewPoint(lla);
+    }
+    
+    private void addNewPoint(Geodetic.Point lla)
+    {
+        CompoundEdit compoundEdit = new CompoundEdit();
+        NewEntityEdit addEntityEdit = createWaypoint(lla);
+        compoundEdit.addEdit(addEntityEdit);
+        compoundEdit.addEdit(new AddPointEdit(addEntityEdit.getEntity().getName()));
+        compoundEdit.end();
+        
+        addPoint(addEntityEdit.getEntity().getName());
+        pointEdits.push(compoundEdit);
+    }
+    
+    private void addPoint(String wpName) 
+    {
+        List<String> points = newGeometryEdit.getEntity().getPoints().getPoints();
+        points.add(wpName);
+        newGeometryEdit.getEntity().getPoints().setPoints(points);
+        
+        updateVisibility();
+    }
+    
+    /**
+     * Removes the last waypoint added.
+     */
+    private void removeLastPoint()
+    {
+        //Quit the action if we're already empty
+        if(pointEdits.isEmpty()) {
+            onComplete();
+            return;
+        }
+        
+        UndoableEdit lastEdit = pointEdits.pop();
+        if(lastEdit != null) {
+            lastEdit.undo();
+        }
+        
+        updateVisibility();
     }
     
     private void updateVisibility()
