@@ -37,13 +37,15 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
@@ -51,20 +53,19 @@ import org.apache.log4j.Logger;
 
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
-import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.ui.SelectionManager;
-import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
- * @author ray
+ * Begins a geometry creation mode that adds and removes points based on user clicks in the PVD.
+ * 
+ * TODO: Does saving in the middle of this action cause issues?
  */
 public class CreateRouteAction extends AbstractEditorAction
 {
@@ -75,18 +76,20 @@ public class CreateRouteAction extends AbstractEditorAction
     
     private static final int width= 100, height = 35;
     private static final double SELECTION_TOLERANCE = 15.0;
+    private static final int NUM_POINTS = 2;
 
     private final Simulation sim;
     private final PlanViewDisplay pvd;
-    private final SelectionManager selectionMgr;
     
     private JButton doneButton = new JButton("Done");
     
-    private List<String> waypoints;
-    private List<UndoableEdit> waypointEdits;
+    //The edit responsible for creating the new geometry
+    private NewEntityEdit newGeometryEdit;
     
-    private NewEntityEdit currentGeometryEdit;
+    //The individual point edits
+    private Stack<UndoableEdit> pointEdits;
     
+    //Keep the Done button in the center of the PVD
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
             logger.info("PVD resized: " + evt);
@@ -94,6 +97,7 @@ public class CreateRouteAction extends AbstractEditorAction
         }
     };
     
+    //Controller
     private MouseAdapter mouseAdapter = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent evt) 
@@ -106,62 +110,97 @@ public class CreateRouteAction extends AbstractEditorAction
                 }
                 else 
                 {
-                    final List<Entity> entities = pvd.getShapeAdapter().getEntitiesAtScreenPoint(evt.getX(), evt.getY(), SELECTION_TOLERANCE);
-                    Entity selected = null;
-                    if(!entities.isEmpty()) {
-                        for(Entity e: entities) {
-                            if(e.getPrototype().getCategory().equals("waypoint")) {
-                                selected = e;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    //TODO: rethink this waypoint adding, maybe createwaypoint / addwaypoint functions return an edit
+                    Entity selected = getWaypointAt(evt.getX(), evt.getY());
                     if(selected != null) //add existing wp to route
                     {
-                        waypoints.add(selected.getName());
-                        waypointEdits.add(new AbstractUndoableEdit(){});
+                        addExistingPoint(selected.getName());
                     }
                     else //create wp at click
                     {
-                        final Vector3 meters = pvd.getTransformer().screenToMeters((double) evt.getX(), (double) evt.getY());
-                        final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
-                        createWaypoint(lla);
+                        addNewPoint(evt.getX(), evt.getY());
                     }
-                    
-                    if(currentGeometryEdit != null) {
-                        currentGeometryEdit.undo();
-                    }
-                    currentGeometryEdit = createRoute();
                 }
             }
             else if(SwingUtilities.isRightMouseButton(evt))
             {
-                if(!waypoints.isEmpty()) {
-                    waypoints.remove(waypoints.size()-1);
-                }
-                
-                if(!waypointEdits.isEmpty()) {
-                    if(currentGeometryEdit != null) {
-                        currentGeometryEdit.undo();
-                    }
-                    UndoableEdit last = waypointEdits.remove(waypointEdits.size()-1);
-                    last.undo();
-                    currentGeometryEdit = createRoute();
-                }
+                removeLastPoint();
             }
         }
     };
     
-    private SelectionManagerListener selectionListener = new SelectionManagerListener() {
-        public void selectionChanged(Object source) {
-            Entity selected = Adaptables.adapt(selectionMgr.getSelectedObject(), Entity.class);
-            if(selected != null) {
-                logger.info("Entity selected: " + selected);
-            }
+    /**
+     * Handles adding/removing a point to/from a geometric entity.
+     */
+    private class AddPointEdit extends AbstractUndoableEdit 
+    {
+        private static final long serialVersionUID = 1L;
+        private final String wpName;
+        
+        public AddPointEdit(String wpName) {
+            this.wpName = wpName;
         }
-    };
+        
+        @Override
+        public void redo() throws CannotRedoException {
+            super.redo();
+            addPoint(wpName);
+        }
+        
+        @Override
+        public void undo() throws CannotUndoException {
+            super.undo();
+            List<String> points = newGeometryEdit.getEntity().getPoints().getPoints();
+            int i = points.lastIndexOf(wpName);
+            if(i != -1) {
+                points.remove(i);
+            }
+            newGeometryEdit.getEntity().getPoints().setPoints(points);
+        }
+    }
+    
+    private void addExistingPoint(String wpName)
+    {
+        AddPointEdit ape = new AddPointEdit(wpName);
+        
+        addPoint(wpName);
+        pointEdits.add(ape);
+    }
+    
+    private void addNewPoint(int x, int y) 
+    {
+        final Vector3 meters = pvd.getTransformer().screenToMeters((double) x, (double) y);
+        final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
+        CompoundEdit compoundEdit = new CompoundEdit();
+        NewEntityEdit addEntityEdit = createWaypoint(lla);
+        compoundEdit.addEdit(addEntityEdit);
+        compoundEdit.addEdit(new AddPointEdit(addEntityEdit.getEntity().getName()));
+        compoundEdit.end();
+        
+        addPoint(addEntityEdit.getEntity().getName());
+        pointEdits.add(compoundEdit);
+    }
+    
+    private void addPoint(String wpName) 
+    {
+        List<String> points = newGeometryEdit.getEntity().getPoints().getPoints();
+        points.add(wpName);
+        newGeometryEdit.getEntity().getPoints().setPoints(points);
+        
+        updateVisibility();
+    }
+    
+    /**
+     * Removes the last waypoint added.
+     */
+    private void removeLastPoint()
+    {
+        UndoableEdit lastEdit = pointEdits.pop();
+        if(lastEdit != null) {
+            lastEdit.undo();
+        }
+        
+        updateVisibility();
+    }
     
     /**
      * @param manager
@@ -182,7 +221,6 @@ public class CreateRouteAction extends AbstractEditorAction
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
         pvd = pvdProvider.getActivePlanViewDisplay();
         sim = getServices().findService(Simulation.class);
-        selectionMgr = getServices().findService(SelectionManager.class);
         
         doneButton.addActionListener(new ActionListener() {
             @Override
@@ -207,34 +245,31 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.addMouseListener(mouseAdapter);
         pvd.setContextMenuEnabled(false);
         
-        selectionMgr.addListener(selectionListener);
-        
         pvd.repaint();
         
-        waypoints = new ArrayList<String>();
-        waypointEdits = new ArrayList<UndoableEdit>();
-        currentGeometryEdit = null;
+        pointEdits = new Stack<UndoableEdit>();
+        newGeometryEdit = getModel().getEntities().addEntity("route", "route");
+        updateVisibility();
     }
     
     /**
-     * Called when the user is done graphically creating points.
+     * Called when the user is done adding points to the geometry.
      */
     private void onComplete()
     {
         logger.info("CreateRouteAction complete");
         
         final CompoundEdit compoundEdit = new CompoundEdit();
-        for(UndoableEdit edit: waypointEdits) {
+        compoundEdit.addEdit(newGeometryEdit);
+        for(UndoableEdit edit: pointEdits) {
             compoundEdit.addEdit(edit);
         }
+        compoundEdit.end();
         
-        if(currentGeometryEdit != null) {
-            compoundEdit.addEdit(currentGeometryEdit);
-            compoundEdit.end();
+        if(pointEdits.size() >= NUM_POINTS) { //TODO: Generalize
             findService(UndoService.class).addEdit(compoundEdit);
         }
-        else { //user didn't create valid geometry, undo it all
-            compoundEdit.end();
+        else {
             compoundEdit.undo();
         }
         
@@ -243,42 +278,53 @@ public class CreateRouteAction extends AbstractEditorAction
         pvd.removeMouseListener(mouseAdapter);
         pvd.setContextMenuEnabled(true);
         
-        selectionMgr.removeListener(selectionListener);
-        
         CreateRouteAction.this.setEnabled(true);
         
         pvd.repaint();
     }
     
+    private void updateVisibility()
+    {
+        if(newGeometryEdit.getEntity().getPoints().getPoints().size() < NUM_POINTS) {
+            newGeometryEdit.getEntity().setLabelVisible(false);
+        }
+        else {
+            newGeometryEdit.getEntity().setLabelVisible(true);
+        }
+    }
+    
     /**
-     * Creates a waypoint and adds it to the geometry.
+     * Creates a waypoint at the given position.
      * @param lla
      */
-    private void createWaypoint(Geodetic.Point lla)
+    private NewEntityEdit createWaypoint(Geodetic.Point lla)
     {
         final EntityElementList entities = getModel().getEntities();
         NewEntityEdit addEntityEdit = entities.addEntity("waypoint", "waypoint"); 
         
         addEntityEdit.getEntity().getLocation().setLocation(Math.toDegrees(lla.latitude), Math.toDegrees(lla.longitude), lla.altitude);
-        
-        waypoints.add(addEntityEdit.getEntity().getName());
-        waypointEdits.add(addEntityEdit);
+        return addEntityEdit;
     }
     
     /**
-     * Creates a route edit from the current waypoints.
-     * @return
+     * Gets the first waypoint found at the given screen coords.
+     * @param x
+     * @param y
+     * @return The waypoint at x,y or null if none found.
      */
-    private NewEntityEdit createRoute()
+    private Entity getWaypointAt(double x, double y)
     {
-        if(waypoints.size() < 2) {
-            return null;
+        final List<Entity> entities = pvd.getShapeAdapter().getEntitiesAtScreenPoint(x, y, SELECTION_TOLERANCE);
+        Entity selected = null;
+        if(!entities.isEmpty()) {
+            for(Entity e: entities) {
+                if(e.getPrototype().getCategory().equals("waypoint")) {
+                    selected = e;
+                    break;
+                }
+            }
         }
-        
-        final NewEntityEdit edit = getModel().getEntities().addEntity("route", "route");
-        edit.getEntity().getPoints().setPoints(waypoints);
-        
-        return edit;
+        return selected;
     }
 
     @Override
