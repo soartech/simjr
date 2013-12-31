@@ -73,9 +73,7 @@ public class CreateRouteAction extends AbstractEditorAction
     private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
-    protected Geodetic.Point initialPosition;
-    
-    private static final int width= 100, height = 35;
+    private static final int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 35;
     private static final double SELECTION_TOLERANCE = 15.0;
     private static final int NUM_POINTS = 2;
 
@@ -83,6 +81,8 @@ public class CreateRouteAction extends AbstractEditorAction
     private final PlanViewDisplay pvd;
     
     private JButton doneButton = new JButton("Done");
+    
+    protected Geodetic.Point initialPosition;
     
     //The edit responsible for creating the new geometry
     private NewEntityEdit newGeometryEdit;
@@ -94,7 +94,7 @@ public class CreateRouteAction extends AbstractEditorAction
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
             logger.info("PVD resized: " + evt);
-            doneButton.setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
+            doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
         }
     };
     
@@ -171,6 +171,11 @@ public class CreateRouteAction extends AbstractEditorAction
     {
         final Vector3 meters = pvd.getTransformer().screenToMeters((double) x, (double) y);
         final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
+        addNewPoint(lla);
+    }
+    
+    private void addNewPoint(Geodetic.Point lla)
+    {
         CompoundEdit compoundEdit = new CompoundEdit();
         NewEntityEdit addEntityEdit = createWaypoint(lla);
         compoundEdit.addEdit(addEntityEdit);
@@ -240,7 +245,7 @@ public class CreateRouteAction extends AbstractEditorAction
         
         setEnabled(false);
         
-        doneButton.setBounds(pvd.getWidth()/2 - width/2, 10, width, height);
+        doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
         pvd.add(doneButton);
         pvd.addComponentListener(resizeListener);
         pvd.addMouseListener(mouseAdapter);
@@ -251,6 +256,10 @@ public class CreateRouteAction extends AbstractEditorAction
         pointEdits = new Stack<UndoableEdit>();
         newGeometryEdit = getModel().getEntities().addEntity("route", "route");
         updateVisibility();
+        
+        if(initialPosition != null) {
+            addNewPoint(initialPosition);
+        }
     }
     
     /**
