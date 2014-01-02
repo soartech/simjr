@@ -60,7 +60,7 @@ public class OrbitFlightController extends AbstractEntityCapability implements
 
     private double altitude;
     private double speed = 1.0;
-    private double radius;
+    private double radius = 50;
     
     private boolean clockwise = true;
 
