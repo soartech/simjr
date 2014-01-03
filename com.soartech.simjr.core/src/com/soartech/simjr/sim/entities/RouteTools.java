@@ -7,17 +7,14 @@ import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.PointElementList;
 import com.soartech.simjr.scenario.model.Model;
-import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 
 public class RouteTools implements SimulationService
 {
-    private ServiceManager services;
     com.soartech.simjr.scenario.model.Model model;
     
-    public RouteTools(ServiceManager services, Model model)
+    public RouteTools(Model model)
     {
-        this.services = services;
         this.model = model;
     }
     
