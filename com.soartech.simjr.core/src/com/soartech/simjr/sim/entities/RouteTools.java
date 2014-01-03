@@ -1,6 +1,5 @@
 package com.soartech.simjr.sim.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.soartech.simjr.ProgressMonitor;
