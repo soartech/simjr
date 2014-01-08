@@ -8,7 +8,7 @@
   <taskdef uri="antlib:org.ant4eclipse" resource="org/ant4eclipse/antlib.xml"/>
 
   <!-- import the ant4eclipse pde macros -->
-  <import file="${basedir}/tools/org.ant4eclipse_1.0.0.M3/macros/a4e-pde-macros.xml" />
+  <import file="${basedir}/tools/org.ant4eclipse_1.0.0-b44de7/macros/a4e-pde-macros.xml" />
 
   <target name="env-init">
     <tstamp/>

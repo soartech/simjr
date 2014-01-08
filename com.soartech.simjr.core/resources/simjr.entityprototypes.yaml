@@ -577,8 +577,14 @@ prototypes:
     properties:
         ms2525.template: "S%cGPUCVUF-"
 
-- &fire-scout
-    id: fire-scout
+- &fire-scout-b
+    id: fire-scout-b
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cGPUCVUR-"
+
+- &fire-scout-c
+    id: fire-scout-c
     parent: *rwa
     properties:
         ms2525.template: "S%cGPUCVUR-"
