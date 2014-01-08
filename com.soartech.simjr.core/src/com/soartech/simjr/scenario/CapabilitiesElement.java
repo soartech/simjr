@@ -44,6 +44,7 @@ import org.jdom.xpath.XPath;
 
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
 
 /**
  * A CapabilitiesElement contains data for recreating entity capabilities, such as controllers.
@@ -59,8 +60,44 @@ public class CapabilitiesElement
     
     private final EntityElement entity;
     
+    private EntityElement followTargetEntity; //Need to store this to track renames
+    
     private final XPath capabilitiesPath;
     private final XPath followTargetPath;
+    
+    private ModelChangeListener modelChangeListener = new ModelChangeListener() {
+        @Override
+        public void onModelChanged(ModelChangeEvent e) 
+        {
+            //Catch entity creation to track our EntityElement target
+            if(Model.LOADED.equals(e.property)) 
+            {
+                followTargetEntity = entity.getModel().getEntities().getEntity(getFollowTarget());
+            }
+            else if(e.source instanceof EntityElement) 
+            {
+                EntityElement source = (EntityElement) e.source;
+                
+                //Remove listener for follower deletion, remove target for target deletion
+                if(EntityElementList.ENTITY_REMOVED.equals(e.property)) 
+                {
+                    if(source.getName().equals(entity.getName()))  {
+                        entity.getModel().removeModelChangeListener(this);
+                    }
+                    if(source.getName().equals(getFollowTarget()))  {
+                        removeFollowTarget();
+                    }
+                }
+                //On entity rename, update
+                else if(EntityElement.NAME.equals(e.property)) 
+                {
+                    if(followTargetEntity == source) {
+                        updateFollowTarget(source.getName());
+                    }
+                }
+            }
+        }
+    };
     
     public static Element buildDefault(Model model)
     {
@@ -76,6 +113,11 @@ public class CapabilitiesElement
         this.entity = entity;
         this.capabilitiesPath = this.entity.getModel().newXPath("simjr:capabilities");
         this.followTargetPath = this.entity.getModel().newXPath("simjr:capabilities/@simjr:followTarget");
+        
+        String followTargetName = getFollowTarget();
+        if(followTargetName != null) {
+            entity.getModel().addModelChangeListener(modelChangeListener);
+        }
     }
     
     public EntityElement getEntity()
@@ -104,7 +146,7 @@ public class CapabilitiesElement
         
         UndoableEdit edit = null;
         if(changed) {
-            model.fireChange(newEvent(CAPABILITIES));
+            model.fireChange(new ModelChangeEvent(this.entity.getModel(), this, CAPABILITIES));
             edit = new ChangeCapabilitiesEdit(oldFollowTarget, newFollowTarget);
         }
         return edit;
@@ -135,6 +177,8 @@ public class CapabilitiesElement
                     if(followTargetAttr.getParent() != null) {
                         followTargetAttr.detach();
                         changed = true;
+                        
+                        entity.getModel().removeModelChangeListener(modelChangeListener);
                     }
                 }
             }
@@ -155,6 +199,8 @@ public class CapabilitiesElement
                     }
                     capabilitiesElement.setAttribute("followTarget", newFollowTarget, Model.NAMESPACE);
                     changed = true;
+                    
+                    entity.getModel().addModelChangeListener(modelChangeListener);
                 }
                 else {
                     logger.debug("No follow target attribute to remove.");
@@ -163,6 +209,10 @@ public class CapabilitiesElement
         }
         catch (JDOMException e) {
             logger.error("Unable to update follow target: " + e);
+        }
+        
+        if(changed) {
+            followTargetEntity = entity.getModel().getEntities().getEntity(getFollowTarget());
         }
         
         return changed;
@@ -174,11 +224,6 @@ public class CapabilitiesElement
         return setFollowTarget(null);
     }
 
-    private ModelChangeEvent newEvent(String prop)
-    {
-        return new ModelChangeEvent(this.entity.getModel(), this, prop);
-    }
-    
     private class ChangeCapabilitiesEdit extends AbstractUndoableEdit
     {
         private static final long serialVersionUID = -8050360351980227293L;

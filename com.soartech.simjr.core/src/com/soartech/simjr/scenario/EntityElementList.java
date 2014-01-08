@@ -95,10 +95,8 @@ public class EntityElementList
     
     public EntityElement getEntity(String name)
     {
-        for(EntityElement e : entities)
-        {
-            if(name.equals(e.getName()))
-            {
+        for(EntityElement e : entities) {
+            if(e.getName().equals(name)) {
                 return e;
             }
         }
