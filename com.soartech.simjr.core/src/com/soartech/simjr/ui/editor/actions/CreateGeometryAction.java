@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.ui.editor.actions;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.undo.AbstractUndoableEdit;
@@ -73,24 +75,37 @@ public class CreateGeometryAction extends AbstractEditorAction
     private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
-    private static final int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 35;
+    private static final int BUTTON_WIDTH = 75, BUTTON_HEIGHT = 25;
+    private static final int LABEL_WIDTH = 225, LABEL_HEIGHT = 35;
     private static final double SELECTION_TOLERANCE = 15.0;
     
     private final Simulation sim;
     private final PlanViewDisplay pvd;
     
+    //TODO: Merge these GUI components into a container or another class?
+    
+    //Making this always disabled is an easy way to provide a nice outline
+    private JLabel modeLabel = new JLabel() {
+        private static final long serialVersionUID = 1L;
+        @Override
+        public boolean isEnabled() { return false; }
+    };
+    
     private JButton doneButton = new JButton("Done");
 
     private final GeometryType geometryType;
     public enum GeometryType { 
-        ROUTE("route", 2), AREA("area", 3); 
+        ROUTE("route", "ROUTE", 2), AREA("area", "AREA", 3); 
         private final String prototype;
+        private final String label;
         private final int minPts;
-        private GeometryType(String prototype, int minPts) {
+        private GeometryType(String prototype, String label, int minPts) {
             this.prototype = prototype;
-            this.minPts = minPts; 
+            this.label = label;
+            this.minPts = minPts;
         }
         public String getPrototype() { return prototype; }
+        public String getLabel() { return label; }
         public int getMinPoints() { return minPts; }
     };
     
@@ -107,7 +122,7 @@ public class CreateGeometryAction extends AbstractEditorAction
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
             logger.info("PVD resized: " + evt);
-            doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
+            updateGuiPosition();
         }
     };
     
@@ -199,6 +214,12 @@ public class CreateGeometryAction extends AbstractEditorAction
                 onComplete();
             }
         });
+        
+        modeLabel.setText("CREATE " + type.getLabel() + " MODE");
+        modeLabel.setFont(new Font("Courier New", Font.BOLD, 20));
+        modeLabel.setHorizontalAlignment(JLabel.CENTER);
+        modeLabel.setVerticalAlignment(JLabel.CENTER);
+
     }
 
     /* (non-Javadoc)
@@ -210,8 +231,10 @@ public class CreateGeometryAction extends AbstractEditorAction
         
         setEnabled(false);
         
-        doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
+        updateGuiPosition();
         pvd.add(doneButton);
+        pvd.add(modeLabel);
+        
         pvd.addComponentListener(resizeListener);
         pvd.addMouseListener(mouseAdapter);
         pvd.setContextMenuEnabled(false);
@@ -249,6 +272,7 @@ public class CreateGeometryAction extends AbstractEditorAction
         }
         
         pvd.remove(doneButton);
+        pvd.remove(modeLabel);
         pvd.removeComponentListener(resizeListener);
         pvd.removeMouseListener(mouseAdapter);
         pvd.setContextMenuEnabled(true);
@@ -352,6 +376,12 @@ public class CreateGeometryAction extends AbstractEditorAction
             }
         }
         return selected;
+    }
+    
+    private void updateGuiPosition()
+    {
+        doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, LABEL_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        modeLabel.setBounds(pvd.getWidth()/2 - LABEL_WIDTH/2, 5, LABEL_WIDTH, LABEL_HEIGHT);
     }
 
     @Override
