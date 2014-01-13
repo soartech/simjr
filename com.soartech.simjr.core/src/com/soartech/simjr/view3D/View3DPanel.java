@@ -41,10 +41,14 @@ import javax.swing.JPanel;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.LocationElement;
-import com.soartech.simjr.scenario.model.*;
 import com.soartech.simjr.scenario.PointElementList;
 import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.ThreeDDataElement;
+import com.soartech.simjr.scenario.model.Model;
+import com.soartech.simjr.scenario.model.ModelChangeEvent;
+import com.soartech.simjr.scenario.model.ModelChangeListener;
+import com.soartech.simjr.scenario.model.ModelElement;
+import com.soartech.simjr.scenario.model.ModelService;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Detonation;
 import com.soartech.simjr.sim.Entity;
@@ -54,7 +58,6 @@ import com.soartech.simjr.ui.editor.MapPanel;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
 import com.soartech.simjr.ui.editor.TerrainImageEntity;
 
-import de.jreality.jogl.Viewer;
 import de.jreality.math.MatrixBuilder;
 import de.jreality.scene.Appearance;
 import de.jreality.scene.Camera;
@@ -62,7 +65,9 @@ import de.jreality.scene.DirectionalLight;
 import de.jreality.scene.Light;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.SceneGraphPath;
+import de.jreality.scene.Viewer;
 import de.jreality.shader.CommonAttributes;
+import de.jreality.softviewer.SoftViewer;
 import de.jreality.toolsystem.ToolSystem;
 import de.jreality.util.RenderTrigger;
 
@@ -167,7 +172,14 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
             camPath = new SceneGraphPath(rootNode, cameraNode);
             camPath.push(camera);
 
-            viewer = new Viewer();
+            try {
+                if ("Mac OS X".equals(System.getProperty("os.name"))) {
+                    throw new Exception("JOGL is broken on OSX");
+                }
+                viewer = new de.jreality.jogl.Viewer();
+            } catch (Exception e) {
+                viewer = new SoftViewer();
+            }
 
             viewer.setSceneRoot(rootNode);
             viewer.setCameraPath(camPath);
