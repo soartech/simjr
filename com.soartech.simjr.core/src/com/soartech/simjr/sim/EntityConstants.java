@@ -78,6 +78,7 @@ public interface EntityConstants
     public static final String PROPERTY_DIAMETER = "diameter"; // in meters
     
     public static final String PROPERTY_MAXSPEED = "limits.maxSpeed";
+    public static final String PROPERTY_MAX_ALTITUDE = "limits.maxAltitude";
     
     public static final String PROPERTY_BEHOLDER_RANGE = "beholder.range";
     public static final String PROPERTY_BEHOLDER_ARC = "beholder.arc";
