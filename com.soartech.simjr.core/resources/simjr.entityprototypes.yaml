@@ -435,7 +435,7 @@ prototypes:
     parent: *sea-vehicle
     category: lcs
     properties:
-        ms2525.template: "S%cSPCLDD--"
+        ms2525.template: "S%cSPCLLL--"
 
 - &lpd
     id: lpd
