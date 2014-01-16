@@ -377,8 +377,11 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
      */
     public void setHeading(double radians)
     {
-        double rotations = radians/(2.*Math.PI);
-        this.heading = (rotations - Math.floor(rotations))*2.*Math.PI;
+        if(canUpdatePosition())
+        {
+            double rotations = radians/(2.*Math.PI);
+            this.heading = (rotations - Math.floor(rotations))*2.*Math.PI;
+        }
     }
 
     public double getOrientation()
@@ -404,11 +407,14 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
      * @see com.soartech.simjr.sim.Entity#setPitch(double)
      */
     public void setPitch(double radians) {
-        double rotations = radians/(2.*Math.PI);
-        this.pitch = (rotations - Math.floor(rotations))*2.*Math.PI;
-        if ( this.pitch > Math.PI ) 
+        if(canUpdatePosition())
         {
-            this.pitch -= 2.*Math.PI;
+            double rotations = radians/(2.*Math.PI);
+            this.pitch = (rotations - Math.floor(rotations))*2.*Math.PI;
+            if ( this.pitch > Math.PI ) 
+            {
+                this.pitch -= 2.*Math.PI;
+            }
         }
     }
 
@@ -425,11 +431,14 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
      * @see com.soartech.simjr.sim.Entity#setRoll(double)
      */
     public void setRoll(double radians) {
-        double rotations = radians/(2.*Math.PI);
-        this.roll = (rotations - Math.floor(rotations))*2.*Math.PI;
-        if ( this.roll > Math.PI ) 
+        if(canUpdatePosition())
         {
-            this.roll -= 2.*Math.PI;
+            double rotations = radians/(2.*Math.PI);
+            this.roll = (rotations - Math.floor(rotations))*2.*Math.PI;
+            if ( this.roll > Math.PI ) 
+            {
+                this.roll -= 2.*Math.PI;
+            }
         }
     }
 
@@ -470,7 +479,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
                 Vector3 v = new Vector3(velocity.x, velocity.y, 0);
                 if(v.length() > maxSpeed)
                 {
-                    v = v.normalized().multiply(maxSpeed);
+                    v = v.normalized().multiply(Math.max(0, maxSpeed));
                     velocity = new Vector3(v.x, v.y, velocity.z);
                 }
             }
