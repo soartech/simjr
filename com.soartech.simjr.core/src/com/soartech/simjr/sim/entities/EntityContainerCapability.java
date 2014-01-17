@@ -91,6 +91,12 @@ public class EntityContainerCapability  extends AbstractEntityCapability
         }
     }
     
+    //remove the contained entity at the container's location
+    public void remove(Entity e)
+    {
+        remove(e, getEntity().getPosition());
+    }
+    
     public void remove(Entity e, Vector3 position)
     {
         synchronized (getLock())
