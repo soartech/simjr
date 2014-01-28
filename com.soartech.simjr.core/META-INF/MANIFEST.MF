@@ -176,6 +176,8 @@ Export-Package: .,
  simjr.images.shapes.entities.lcs,
  simjr.images.shapes.entities.lpd,
  simjr.images.shapes.entities.trawler,
+ simjr.images.shapes.entities.car,
+ simjr.images.shapes.entities.semi,
  simjr.images.shapes.entities.merchantman,
  simjr.images.shapes.entities.tanker,
  simjr.images.shapes.entities.rwa

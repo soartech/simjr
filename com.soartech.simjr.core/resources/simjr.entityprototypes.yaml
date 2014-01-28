@@ -257,6 +257,13 @@ prototypes:
     properties:
         ms2525.template: "S%cGPEVCO--"
 
+- &semi
+    id: semi
+    parent: *ground-vehicle
+    category: semi
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+        
 - &car
     id: car
     parent: *ground-vehicle
