@@ -94,7 +94,7 @@ public class Simulation extends AbstractAdaptable implements SimulationService
     }
     
     private List<TimerEntry> timers = new ArrayList<TimerEntry>();
-    
+    private List<TimerEntry> newTimers = new ArrayList<TimerEntry>();
     /**
      * Construct a new simulation and start a {@link SimulationThread} to run it.
      * The simulation is initially paused.
@@ -423,7 +423,7 @@ public class Simulation extends AbstractAdaptable implements SimulationService
             e.runnable = runnable;
             e.repeat = repeat;
           
-            timers.add(e);
+            newTimers.add(e);
         }
     }
     
@@ -450,7 +450,6 @@ public class Simulation extends AbstractAdaptable implements SimulationService
         synchronized (lock)
         {
             time.set(time.get() + dt);
-            
             // Entities may be removed/added during this loop, but we're using
             // CopyOnWrite array list so it's ok.
             for(Entity e : entities)
@@ -472,6 +471,12 @@ public class Simulation extends AbstractAdaptable implements SimulationService
      */
     private void updateTimers()
     {
+        final Iterator<TimerEntry> i = newTimers.iterator();
+        while(i.hasNext())
+        {
+            timers.add(i.next());
+        }
+        newTimers.clear();
         final Iterator<TimerEntry> it = timers.iterator();
         while(it.hasNext())
         {
