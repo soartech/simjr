@@ -50,10 +50,12 @@ import com.soartech.simjr.sim.EntityTools;
 public class TruckShape extends EntityShape
 {
     public static final String NAME = "truck";
-    
+    private Box cab, body;
+    private Entity parent;
+    private final int TRUCK_WIDTH = 10;
     public static final EntityShapeFactory FACTORY = new Factory();
     public static class Factory extends AbstractEntityShapeFactory {
-
+    
         public EntityShape create(Entity entity, ShapeSystem system)
         {
             return new TruckShape(entity, system);
@@ -69,20 +71,20 @@ public class TruckShape extends EntityShape
     public TruckShape(Entity entity, ShapeSystem system)
     {
         super(entity, system);
-        
+        parent = entity;
         String name = getRootFrame().getName();
         style.setFillStyle(FillStyle.FILLED);
         updateForce();
         style.setLineColor(Color.DARK_GRAY);
         
-        Box body = createBodyShape(name + ".body", style);
+        this.body = createBodyShape(name + ".body", style);
         
-        Box cab = new Box(name + ".cab", EntityConstants.LAYER_GROUND, 
-                Position.createRelativePixel(11,0,name),
+        this.cab = new Box(name + ".cab", EntityConstants.LAYER_GROUND, 
+                Position.createRelativePixel(TRUCK_WIDTH,0,name ),
                 Rotation.createRelative(name),
                 style, 
                 Scalar.createPixel(5),
-                Scalar.createPixel(10));
+                Scalar.createPixel(TRUCK_WIDTH));
                 
         createLabel(16, 16, name);
         
@@ -98,7 +100,7 @@ public class TruckShape extends EntityShape
                 Rotation.createRelative(getRootFrame().getName()),
                 shapeStyle, 
                 Scalar.createPixel(15),
-                Scalar.createPixel(10));
+                Scalar.createPixel(TRUCK_WIDTH));
     	
     	return body;
     }
@@ -108,5 +110,15 @@ public class TruckShape extends EntityShape
     {
         String force = EntityTools.getForce(getEntity());
         style.setFillColor(getForceColor(force));
+    }
+    
+    @Override
+    public void update()
+    {
+       super.update();
+       //hack to fix the error with rotating truck shape
+       //TODO: properly fix the cab rotation
+       double heading = parent.getHeading() *2;
+       cab.setPosition(Position.createRelativePixel(TRUCK_WIDTH * Math.cos(heading), TRUCK_WIDTH * Math.sin(heading),getRootFrame().getName()));
     }
 }
