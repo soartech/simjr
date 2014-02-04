@@ -55,6 +55,8 @@ import org.apache.log4j.Logger;
 
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
+import com.soartech.math.geotrans.Geodetic.Point;
+import com.soartech.shapesystem.SimplePosition;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.Entity;
@@ -139,15 +141,7 @@ public class CreateGeometryAction extends AbstractEditorAction
                 }
                 else 
                 {
-                    Entity selected = getWaypointAt(evt.getX(), evt.getY());
-                    if(selected != null) //add existing wp to geometry
-                    {
-                        addExistingPoint(selected.getName());
-                    }
-                    else //create wp at click
-                    {
-                        addNewPoint(evt.getX(), evt.getY());
-                    }
+                    addNewOrExistingPoint(evt.getX(), evt.getY());
                 }
             }
             else if(SwingUtilities.isRightMouseButton(evt))
@@ -245,11 +239,11 @@ public class CreateGeometryAction extends AbstractEditorAction
         newGeometryEdit = getModel().getEntities().addEntity(geometryType.getPrototype(), geometryType.getPrototype());
         updateVisibility();
         
-        if(initialPosition != null) {
-            addNewPoint(initialPosition);
+        if(initialPosition != null) {           
+            addNewOrExistingPoint(initialPosition);
         }
     }
-    
+
     /**
      * Called when the user is done adding points to the geometry.
      */
@@ -288,6 +282,27 @@ public class CreateGeometryAction extends AbstractEditorAction
         
         addPoint(wpName);
         pointEdits.push(ape);
+    }
+
+    private void addNewOrExistingPoint(int guiLocationX, int guiLocationY)
+    {
+        Entity selected = getWaypointAt(guiLocationX, guiLocationY);
+        if(selected != null) //add existing wp to geometry
+        {
+            addExistingPoint(selected.getName());
+        }
+        else //create wp at click
+        {
+            addNewPoint(guiLocationX, guiLocationY);
+        }
+    }
+
+    
+    private void addNewOrExistingPoint(Point position)
+    {
+        Vector3 xyz = sim.getTerrain().fromGeodetic(position);
+        final SimplePosition screenLocation = pvd.getTransformer().metersToScreen(xyz.x, xyz.y);
+        addNewOrExistingPoint((int)screenLocation.x, (int)screenLocation.y);        
     }
     
     private void addNewPoint(int x, int y) 
