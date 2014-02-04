@@ -471,27 +471,26 @@ public class Simulation extends AbstractAdaptable implements SimulationService
      */
     private void updateTimers()
     {
-        final Iterator<TimerEntry> i = newTimers.iterator();
-        while(i.hasNext())
+        synchronized(lock)
         {
-            timers.add(i.next());
-        }
-        newTimers.clear();
-        final Iterator<TimerEntry> it = timers.iterator();
-        while(it.hasNext())
-        {
-            final TimerEntry te = it.next();
-            if(time.get() >= te.time)
+            timers.addAll(newTimers);
+            newTimers.clear();
+            final Iterator<TimerEntry> it = timers.iterator();
+            while(it.hasNext())
             {
-                if(!te.repeat)
+                final TimerEntry te = it.next();
+                if(time.get() >= te.time)
                 {
-                    it.remove();
+                    if(!te.repeat)
+                    {
+                        it.remove();
+                    }
+                    else
+                    {
+                        te.time = te.time + te.period;
+                    }
+                    te.runnable.run();
                 }
-                else
-                {
-                    te.time = te.time + te.period;
-                }
-                te.runnable.run();
             }
         }
     }
