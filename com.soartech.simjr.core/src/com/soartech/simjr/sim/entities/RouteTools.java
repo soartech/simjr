@@ -24,21 +24,18 @@ public class RouteTools implements SimulationService
         this(model);
     }
     
-    public Direction getRouteDirection(String RouteName)
+    public Direction getRouteDirection(String routeName)
     {
-        if(RouteName == null)
-            return Direction.NORTH;
-        //Determine the Directionality of the Route
-        EntityElement route = model.getEntities().getEntity(RouteName);
+        if(routeName == null) return Direction.UNKNOWN;
+        EntityElement route = model.getEntities().getEntity(routeName);
         return getRouteDirection(route);
     }
 
     public Direction getRouteDirection(EntityElement route)
     {
+        if(route == null) return Direction.UNKNOWN;
         PointElementList pointList = route.getPoints();
-        
         List<String> points = pointList.getPoints();
-        
         return getRouteDirection(points);
     }
     

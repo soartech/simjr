@@ -10,7 +10,8 @@ public enum Direction
     NORTHWEST("NW"),
     SOUTHWEST("SW"),
     NORTHEAST("NE"), 
-    SOUTHEAST("SE");
+    SOUTHEAST("SE"),
+    UNKNOWN("?");
     
     private String value;
     
@@ -45,7 +46,7 @@ public enum Direction
         case SOUTHWEST:
             return NORTHEAST;
         }
-        return NORTH;
+        return UNKNOWN;
     }
     
     public static Direction parse(String string)
