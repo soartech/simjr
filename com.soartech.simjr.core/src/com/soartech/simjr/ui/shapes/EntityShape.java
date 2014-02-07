@@ -81,6 +81,7 @@ public class EntityShape implements EntityPropertyListener
     private List<LabelFrame> labels = new ArrayList<LabelFrame>();
     public class LabelFrame 
     {
+        public final static String MAIN_LABEL = "_mainLabel";
         public Frame frame;
         public Text label;
         public String labelType;
@@ -234,10 +235,15 @@ public class EntityShape implements EntityPropertyListener
     {
     	return null;
     }
+
+    public List<LabelFrame> getLabels()
+    {
+        return labels;
+    }
     
     public Text createLabel(int xOffset, int yOffset, String text)
     {
-        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), "_mainLabel"); 
+        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), LabelFrame.MAIN_LABEL); 
         
         return lf.label;
     }

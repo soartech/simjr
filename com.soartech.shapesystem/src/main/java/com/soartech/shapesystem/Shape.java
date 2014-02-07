@@ -106,6 +106,11 @@ public abstract class Shape
     {
         return style;
     }
+    
+    public void setStyle(ShapeStyle style)
+    {
+        this.style = style;
+    }
 
     public void reset()
     {

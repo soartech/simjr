@@ -45,6 +45,7 @@ import com.soartech.shapesystem.shapes.Text;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.EntityTools;
+import com.soartech.simjr.ui.shapes.EntityShape.LabelFrame;
 
 /**
  * @author ray
@@ -102,7 +103,7 @@ public class WaypointShape extends EntityShape
     
     public Text createLabel(int xOffset, int yOffset, String text)
     {
-        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), "_mainLabel"); 
+        LabelFrame lf = createLabel(xOffset, yOffset, text, new Color(0xF0, 0xF0, 0xE0), LabelFrame.MAIN_LABEL); 
         
         return lf.label;
     }
