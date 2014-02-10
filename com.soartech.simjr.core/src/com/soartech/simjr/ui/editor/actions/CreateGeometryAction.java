@@ -57,6 +57,7 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.shapesystem.SimplePosition;
+import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.Entity;
@@ -401,4 +402,9 @@ public class CreateGeometryAction extends AbstractEditorAction
 
     @Override
     public void update() {  }
+
+    public EntityElement getNewGeometry()
+    {
+        return newGeometryEdit != null ? newGeometryEdit.getEntity() : null;
+    }
 }
