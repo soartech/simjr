@@ -302,7 +302,6 @@ public class EntityShapeManager
     
     public void addDecoration(Entity e, Shape shape)
     {
-        shape.setPosition(new Position(shapes.get(e).getPrimaryDisplayShape()));
         String id = shape.getName();
         if (shapeSystem.getShape(id) != null)
         {
