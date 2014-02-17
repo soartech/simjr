@@ -60,9 +60,9 @@ public class ThreeDDataElement
     {
         Element root = model.newElement("threeddata");
         root.setAttribute("minAltitude", "0.0", Model.NAMESPACE);
-        root.setAttribute("maxAltitude", "0.0", Model.NAMESPACE);
-        root.setAttribute("routeWidth", "0.0", Model.NAMESPACE);
-        root.setAttribute("view3DSupported", "false", Model.NAMESPACE);
+        root.setAttribute("maxAltitude", "500", Model.NAMESPACE);
+        root.setAttribute("routeWidth", "100", Model.NAMESPACE);
+        root.setAttribute("view3DSupported", "true", Model.NAMESPACE);
         return root;
     }
     
