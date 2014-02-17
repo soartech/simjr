@@ -54,7 +54,6 @@ import com.soartech.simjr.sim.Detonation;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.SimulationListener;
-import com.soartech.simjr.ui.editor.MapPanel;
 import com.soartech.simjr.ui.editor.ScenarioEditorServiceManager;
 import com.soartech.simjr.ui.editor.TerrainImageEntity;
 
@@ -79,14 +78,13 @@ import de.jreality.util.RenderTrigger;
 public class View3DPanel extends JPanel implements ModelChangeListener, SimulationListener
 {
     private static final long serialVersionUID = -4534167209676146675L;
-    private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
+    //private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
     private Model model;
     private Simulation sim;
     private SceneGraphComponent constructs;
     private HashMap<EntityElement, AbstractConstruct> map = new HashMap<EntityElement, AbstractConstruct>();
     private Grid grid;
     private ImagePoly imagePoly;
-    private ServiceManager services;
     private SceneGraphPath camPath;
     private Viewer viewer;
     
@@ -105,7 +103,6 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
 
         this.model =  services.findService(ModelService.class).getModel();
         model.addModelChangeListener(this);
-        this.services = services;
         this.sim = services.findService(Simulation.class);
         sim.addListener(this);
 

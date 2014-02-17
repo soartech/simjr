@@ -45,6 +45,8 @@ public enum Direction
             return NORTHWEST;
         case SOUTHWEST:
             return NORTHEAST;
+        case UNKNOWN: 
+            return UNKNOWN;
         }
         return UNKNOWN;
     }

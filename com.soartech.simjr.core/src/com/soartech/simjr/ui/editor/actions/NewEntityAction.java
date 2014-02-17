@@ -32,29 +32,21 @@
 package com.soartech.simjr.ui.editor.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
 import com.soartech.math.geotrans.Geodetic;
-import com.soartech.shapesystem.SimplePosition;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
-import com.soartech.simjr.sim.Entity;
-import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.util.MultiSelectDialog;
 
 /**
