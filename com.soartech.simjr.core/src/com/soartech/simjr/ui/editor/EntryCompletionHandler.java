@@ -53,7 +53,7 @@ public class EntryCompletionHandler extends InputVerifier implements ActionListe
         }
         else if(component instanceof JComboBox)
         {
-            ((JComboBox) component).addActionListener(this);
+            ((JComboBox<?>) component).addActionListener(this);
         }
     }
     

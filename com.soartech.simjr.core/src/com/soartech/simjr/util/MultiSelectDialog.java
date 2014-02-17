@@ -57,7 +57,7 @@ public class MultiSelectDialog extends JDialog
 {
     private static final long serialVersionUID = -2750983942866294579L;
     
-    private JList jList;
+    private JList<Object> jList;
     private Object[] result;
     
     /**
@@ -120,7 +120,7 @@ public class MultiSelectDialog extends JDialog
     {
         super(owner, title, true);
         
-        jList = new JList(objects);
+        jList = new JList<Object>(objects);
         jList.setSelectionMode(selectMode);
 
         List<Object> selectedList = new ArrayList<Object>();
@@ -155,7 +155,7 @@ public class MultiSelectDialog extends JDialog
 
             public void actionPerformed(ActionEvent e)
             {
-                result = jList.getSelectedValues();
+                result = jList.getSelectedValuesList().toArray();
                 MultiSelectDialog.this.dispose();
             }
         });

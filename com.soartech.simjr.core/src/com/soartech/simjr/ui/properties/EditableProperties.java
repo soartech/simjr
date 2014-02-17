@@ -117,7 +117,7 @@ public class EditableProperties
         
         public TableCellEditor getEditor()
         {
-            JComboBox cb = new JComboBox(values);
+            JComboBox<Object> cb = new JComboBox<Object>(values);
             return new DefaultCellEditor(cb);
         }
     }

@@ -57,17 +57,17 @@ public class SimulationTimePanel extends JPanel
     
     private ServiceManager services;
     private Simulation sim;
-    private JComboBox factor = new JComboBox(
-            new Object[] { new ScaleFactor(1), 
-                           new ScaleFactor(2),
-                           new ScaleFactor(5),
-                           new ScaleFactor(10),
-                           new ScaleFactor(20),
-                           new ScaleFactor(50),
-                           new ScaleFactor(100),
-                           new ScaleFactor(250),
-                           new ScaleFactor(500),
-                           new ScaleFactor(1000)});
+    private JComboBox<ScaleFactor> factor = new JComboBox<ScaleFactor>(
+            new ScaleFactor[] { new ScaleFactor(1), 
+                                new ScaleFactor(2),
+                                new ScaleFactor(5),
+                                new ScaleFactor(10),
+                                new ScaleFactor(20),
+                                new ScaleFactor(50),
+                                new ScaleFactor(100),
+                                new ScaleFactor(250),
+                                new ScaleFactor(500),
+                                new ScaleFactor(1000)});
     
     private JLabel label = new JLabel("              ");
     

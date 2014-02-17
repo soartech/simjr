@@ -59,10 +59,10 @@ public class ConsolePanel extends DefaultSingleCDockable
 {
     private ServiceManager services;
     
-    private DefaultComboBoxModel consoleListModel = new DefaultComboBoxModel();
-    private JComboBox consoleList = new JComboBox(consoleListModel);
+    private DefaultComboBoxModel<ConsoleParticipant> consoleListModel = new DefaultComboBoxModel<ConsoleParticipant>();
+    private JComboBox<ConsoleParticipant> consoleList = new JComboBox<ConsoleParticipant>(consoleListModel);
     private LogWindow outputLog = new LogWindow();
-    private JComboBox commandBox = new JComboBox();
+    private JComboBox<String> commandBox = new JComboBox<String>();
     
     public ConsolePanel(final ServiceManager services)
     {

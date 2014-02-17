@@ -70,8 +70,8 @@ public class RouteEditor extends JPanel
 
     private AbstractPolygon route;
     
-    private DefaultListModel listModel = new DefaultListModel();
-    private JList list = new JList(listModel);
+    private DefaultListModel<String> listModel = new DefaultListModel<String>();
+    private JList<String> list = new JList<String>(listModel);
     private AbstractAction upAction = new AbstractAction("Move Up") {
 
         private static final long serialVersionUID = 3201009709921102514L;
@@ -184,7 +184,7 @@ public class RouteEditor extends JPanel
             return;
         }
         
-        Object temp = listModel.get(index);
+        String temp = listModel.get(index);
         listModel.set(index, listModel.get(index - 1));
         listModel.set(index - 1, temp);
         
@@ -202,7 +202,7 @@ public class RouteEditor extends JPanel
             return;
         }
         
-        Object temp = listModel.get(index);
+        String temp = listModel.get(index);
         listModel.set(index, listModel.get(index + 1));
         listModel.set(index + 1, temp);
         

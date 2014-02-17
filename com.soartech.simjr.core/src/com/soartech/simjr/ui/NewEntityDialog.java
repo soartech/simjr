@@ -67,8 +67,8 @@ public class NewEntityDialog extends JDialog
     public DamageStatus damage = DamageStatus.intact;
     
     private JTextField nameField = new JTextField(name);
-    private JComboBox forceField = new JComboBox(EntityConstants.ALL_FORCES);
-    private JComboBox damageField = new JComboBox(DamageStatus.values());
+    private JComboBox<String> forceField = new JComboBox<String>(EntityConstants.ALL_FORCES);
+    private JComboBox<DamageStatus> damageField = new JComboBox<DamageStatus>(DamageStatus.values());
     private JTextField headingField = new JTextField("" + Math.toDegrees(Angles.navRadiansToMathRadians(orientation)));
     
     public NewEntityDialog(ServiceManager services, JFrame parentFrame)
