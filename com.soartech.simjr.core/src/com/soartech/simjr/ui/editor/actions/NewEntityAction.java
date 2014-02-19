@@ -54,7 +54,6 @@ import com.soartech.simjr.util.MultiSelectDialog;
  */
 public class NewEntityAction extends AbstractEditorAction
 {
-    //private static final Logger logger = Logger.getLogger(NewEntityAction.class);
     private static final long serialVersionUID = 1L;
     
     protected Geodetic.Point initialPosition;
@@ -107,7 +106,6 @@ public class NewEntityAction extends AbstractEditorAction
         return super.getId() + "." + prototype;
     }
 
-
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
@@ -132,6 +130,7 @@ public class NewEntityAction extends AbstractEditorAction
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e)
     {
         final double originLat;

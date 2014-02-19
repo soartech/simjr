@@ -32,84 +32,73 @@
 package com.soartech.simjr.sim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.services.ServiceManager;
 
 /**
  * A helper class to provide a list of prototypes filtered by user properties.
- * 
- * TODO: Consider generalizing the filter concept, allowing users of the API to provide
- *       their own filters
  */
-public class EntityPrototypesFilter 
+public class FilterableEntityPrototypes 
 {
-    private static final Logger logger = Logger.getLogger(EntityPrototypesFilter.class);
-   
+    private final List<EntityPrototype> prototypes;
+    
+    public FilterableEntityPrototypes(List<EntityPrototype> prototypes)
+    {
+        this.prototypes = prototypes;
+    }
+    
+    public List<EntityPrototype> getPrototypes() { return Collections.unmodifiableList(prototypes); }
+    
     /**
      * Populates the default type model based on built-in filters and those specified via properties.
      */
-    public static List<EntityPrototype> getUserPrototypes(ServiceManager services)
+    public static FilterableEntityPrototypes getUserPrototypes(ServiceManager services)
     {
         final EntityPrototypeDatabase db = EntityPrototypeDatabase.findService(services);
-        final List<EntityPrototype> prototypes = db.getPrototypes();
+        final List<EntityPrototype> defaultPrototypes = db.getPrototypes();
         
-        applyPrototypeFilterDefault(prototypes);
-        applyPrototypeFilterEnabled(prototypes);
-        applyPrototypeFilterDisabled(prototypes);
+        FilterableEntityPrototypes filteredPrototypes = new FilterableEntityPrototypes(defaultPrototypes);
+        filteredPrototypes.excludeAbstract()
+                          .exclude("*.flyout.*")
+                          .include(loadFilters("simjr.editor.entitytypes.enabled"))
+                          .exclude(loadFilters("simjr.editor.entitytypes.disabled"))
+                          .sort();
         
-        Collections.sort(prototypes, new Comparator<EntityPrototype>() {
-            public int compare(EntityPrototype o1, EntityPrototype o2)
-            {
-                return o1.toString().compareTo(o2.toString());
-            }
-        });
-        
-        return prototypes;
+        return filteredPrototypes;
     }
     
     /**
-     * Filters abstract and flyout prototypes from the EntityPrototype list
-     * @param prototypes A list of prototypes to filter, will be modified
+     * Filters out all but prototypes matching the given filter string. 
+     * @param filter
+     * @return
      */
-    private static void applyPrototypeFilterDefault(List<EntityPrototype> prototypes) 
+    public FilterableEntityPrototypes include(String filter)
     {
-        // Filter out abstract prototypes and flyouts
-        final Iterator<EntityPrototype> it = prototypes.iterator();
-        while (it.hasNext())
-        {
-            final EntityPrototype p = it.next();
-            if (p.isAbstract() || p.hasSubcategory("flyout"))
-            {
-                it.remove();
-            }
-        }
+        return include(Arrays.asList(new String[] { filter }));
     }
     
     /**
-     * Filters out prototypes that do not match anything in the enabled list
-     * @param prototypes A list of prototypes to filter, will be modified
+     * Filters all prototypes not matching one of the given filter strings. 
+     * @param whitelist
+     * @return
      */
-    private static void applyPrototypeFilterEnabled(List<EntityPrototype> prototypes) 
+    public FilterableEntityPrototypes include(List<String> whitelist)
     {
-        List<String> enableFilters = loadFilters("simjr.editor.entitytypes.enabled");
-        logger.debug("Applying prototype enabled filter: " + enableFilters);
-
         final Iterator<EntityPrototype> filterIt = prototypes.iterator();
         while (filterIt.hasNext())
         {
             final EntityPrototype p = filterIt.next();
             final String prototypePath = p.getDomain() + "." + p.getCategory() + "." + p.getSubcategory();
             boolean enabled = false;
-            for(String enableFilter: enableFilters)
+            for(String inclusion: createRegexes(whitelist))
             {
-                if(prototypePath.matches(enableFilter)) {
+                if(prototypePath.matches(inclusion)) {
                     enabled = true;
                     break;
                 }
@@ -118,33 +107,78 @@ public class EntityPrototypesFilter
                 filterIt.remove();
             }
         }
+        return this;
     }
     
     /**
-     * Filters out prototypes that match anything in the disabled list
-     * @param prototypes A list of prototypes to filter, will be modified
+     * Filters any prototype matching the given filter.
+     * @param filter
+     * @return
      */
-    private static void applyPrototypeFilterDisabled(List<EntityPrototype> prototypes) 
+    public FilterableEntityPrototypes exclude(String filter) 
     {
-        List<String> disableFilters = loadFilters("simjr.editor.entitytypes.disabled");
-        logger.debug("Applying prototype enabled filter: " + disableFilters);
-        
+        return exclude(Arrays.asList(new String[] { filter }));
+    }
+    
+    /**
+     * Filters all the prototypes matching one of the filter strings. 
+     * @param blacklist
+     * @return
+     */
+    public FilterableEntityPrototypes exclude(List<String> blacklist) 
+    {
         final Iterator<EntityPrototype> filterIt = prototypes.iterator();
         while (filterIt.hasNext())
         {
             final EntityPrototype p = filterIt.next();
             final String prototypePath = p.getDomain() + "." + p.getCategory() + "." + p.getSubcategory();
             
-            for(String disableFilter: disableFilters)
+            for(String exclusion: createRegexes(blacklist))
             {
-                if(prototypePath.matches(disableFilter)) {
+                if(prototypePath.matches(exclusion)) { 
                     filterIt.remove();
                     break;
                 }
             }
         }
+        
+        return this;
     }
     
+    /**
+     * Excludes abstract entity prototypes.
+     * @return
+     */
+    public FilterableEntityPrototypes excludeAbstract()
+    {
+        final Iterator<EntityPrototype> it = prototypes.iterator();
+        while (it.hasNext())
+        {
+            final EntityPrototype p = it.next();
+            if (p.isAbstract()) {
+                it.remove();
+            }
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Sorts the prototype list in lexicographic order 
+     * @return
+     */
+    public FilterableEntityPrototypes sort()
+    {
+        Collections.sort(prototypes, new Comparator<EntityPrototype>() {
+            public int compare(EntityPrototype o1, EntityPrototype o2)
+            {
+                return o1.toString().compareTo(o2.toString());
+            }
+        });
+        
+        return this;
+    }
+   
     /**
      * Turns a human readable pattern of the form "foo.*.bar" into an appropriate regex, e.g. "foo\..*\.bar" 
      * @param pattern, e.g. "foo.*.bar"
@@ -153,6 +187,20 @@ public class EntityPrototypesFilter
     private static String createRegex(String pattern)
     {
         return pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
+    }
+    
+    /**
+     * See createRegex
+     * @param patterns
+     * @return
+     */
+    private static List<String> createRegexes(List<String> patterns)
+    {
+        List<String> regexes = new ArrayList<String>();
+        for(String pattern: patterns) {
+            regexes.add(createRegex(pattern));
+        }
+        return regexes;
     }
     
     /**
@@ -168,7 +216,7 @@ public class EntityPrototypesFilter
             final String[] filterArray = rawFilterList.split(",");
             for(String filter: filterArray)
             {
-                filters.add(createRegex(filter));
+                filters.add(filter);
             }
         }
         

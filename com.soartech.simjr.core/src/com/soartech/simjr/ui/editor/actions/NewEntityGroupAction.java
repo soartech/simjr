@@ -35,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
@@ -44,72 +45,61 @@ import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.EntityPrototype;
-import com.soartech.simjr.sim.EntityPrototypesFilter;
+import com.soartech.simjr.sim.FilterableEntityPrototypes;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
 import com.soartech.simjr.util.SingleSelectDialog;
 
 /**
- * @author ray
+ * Creates a group of entities in a diagonal. 
  */
-public class NewEntityGroupAction extends NewEntityAction
+public class NewEntityGroupAction extends AbstractEditorAction
 {
     private static final long serialVersionUID = 1L;
+    
+    private static final double SPREAD = 0.0005;
+    
+    private final List<EntityPrototype> prototypes = FilterableEntityPrototypes.getUserPrototypes(getApplication()).getPrototypes();
+    
+    protected Geodetic.Point initialPosition;
     
     /**
      * @param manager
      * @param label
      * @param icon
      */
-    public NewEntityGroupAction(ActionManager manager, String label, String prototype, String keyStroke)
+    public NewEntityGroupAction(ActionManager manager, String label, String keyStroke)
     {
-        super(manager, label, prototype, keyStroke);
+        super(manager, label);
+        
+        if(keyStroke != null) {
+            setAcceleratorKey(KeyStroke.getKeyStroke(keyStroke));
+        }
     }
 
-    public NewEntityGroupAction(ActionManager manager, String label, String prototype, Geodetic.Point position)
+    public NewEntityGroupAction(ActionManager manager, String label, Geodetic.Point position)
     {
-        super(manager, label, prototype, position);
+        super(manager, label);
     }
+    
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
+     */
+    @Override
+    public void update() { }
     
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e)
     {
-        final double spread = 0.0005;
-        double originLat;
-        double originLon;
-        if(initialPosition == null)
-        {
-            originLat = getModel().getTerrain().getOriginLatitude();
-            originLon = getModel().getTerrain().getOriginLongitude();
-        }
-        else
-        {
-            originLat = Math.toDegrees(initialPosition.latitude);
-            originLon = Math.toDegrees(initialPosition.longitude);
-        }
+        final Geodetic.Point location = getInitialPosition();
         
         final CompoundEdit compound = new CompoundEdit();
-        final List<EntityPrototype> prototypes = EntityPrototypesFilter.getUserPrototypes(getApplication());
         
         //Get the currently selected entity for setting default values
-        final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
-        EntityPrototype currentSelectedPrototype = null;
-        if(selected != null) {
-            for(EntityPrototype p: prototypes) {
-                if(p.getId() == selected.getPrototype()) {
-                    currentSelectedPrototype = p;
-                    break;
-                }
-            }
-        }
-        
-        //If we have a selected entity, start flight group offset
-        if(selected != null) {
-            originLat -= spread;
-            originLon -= spread;
-        }
+        EntityPrototype currentSelectedPrototype = getSelectedPrototype();
         
         //Request desired prototype from user 
         final Object selectedPrototype = SingleSelectDialog.select(getApplication().getFrame(), 
@@ -127,6 +117,7 @@ public class NewEntityGroupAction extends NewEntityAction
         }
         
         //Request name of flight group from user
+        final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
         final String flightGroupName = JOptionPane.showInputDialog(getApplication().getFrame(), 
                 "Enter name of flight group", 
                 selected != null ? selected.getName() : "viper");
@@ -134,13 +125,14 @@ public class NewEntityGroupAction extends NewEntityAction
             return;
         }
         
+        //Construct the edits
         final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
         final EntityElementList entities = getModel().getEntities();
         for(int i = 0; i < (Integer)flightGroupSize; i++) 
         {
             final NewEntityEdit edit = entities.addEntity((String)flightGroupName + (i + 1), prototypeId);
             compound.addEdit(edit);
-            final UndoableEdit locEdit = edit.getEntity().getLocation().setLocation(originLat - i*spread, originLon - i*spread, 0.0);
+            final UndoableEdit locEdit = edit.getEntity().getLocation().setLocation(location.latitude - i*SPREAD, location.longitude - i*SPREAD, 0.0);
             if(locEdit != null) {
                 compound.addEdit(locEdit);
             }
@@ -148,5 +140,53 @@ public class NewEntityGroupAction extends NewEntityAction
         
         compound.end();
         findService(UndoService.class).addEdit(compound);
+    }
+    
+    /**
+     * Gets the selected EntityElement, if any
+     * @return
+     */
+    protected EntityElement getSelectedEntity()
+    {
+        return Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
+    }
+    
+    /**
+     * Get the initial position for the created entities.
+     * @return
+     */
+    protected Geodetic.Point getInitialPosition() 
+    {
+        double lat = getModel().getTerrain().getOriginLatitude();
+        double lon = getModel().getTerrain().getOriginLongitude();
+        if(initialPosition != null)
+        {
+            lat = Math.toDegrees(initialPosition.latitude);
+            lon = Math.toDegrees(initialPosition.longitude);
+            
+            //If we have a selected entity, start flight group offset
+            if(getSelectedEntity() != null) {
+                lat -= SPREAD;
+                lon -= SPREAD;
+            }
+        }
+        return new Geodetic.Point(lat, lon, 0);
+    }
+    
+    /**
+     * Determine the EntityPrototype of the selected entity, if any.
+     * @return
+     */
+    protected EntityPrototype getSelectedPrototype()
+    {
+        EntityElement selected = getSelectedEntity();
+        if(selected != null) {
+            for(EntityPrototype p: prototypes) {
+                if(p.getId() == selected.getPrototype()) {
+                    return p;
+                }
+            }
+        }
+        return null;
     }
 }
