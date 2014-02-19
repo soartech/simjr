@@ -80,6 +80,8 @@ public class NewEntityGroupAction extends AbstractEditorAction
     public NewEntityGroupAction(ActionManager manager, String label, Geodetic.Point position)
     {
         super(manager, label);
+        
+        initialPosition = position;
     }
     
     /* (non-Javadoc)
