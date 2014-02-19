@@ -98,44 +98,29 @@ public class NewEntityGroupAction extends AbstractEditorAction
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        final Geodetic.Point location = getInitialPosition();
-        
-        logger.debug("Creating entity group at: " + location);
-        
-        final CompoundEdit compound = new CompoundEdit();
-        
-        //Get the currently selected entity for setting default values
-        EntityPrototype currentSelectedPrototype = getSelectedPrototype();
-        
-        //Request desired prototype from user
-        final List<EntityPrototype> prototypes = FilterableEntityPrototypes.getUserPrototypes(getApplication()).getPrototypes();
-        final Object selectedPrototype = SingleSelectDialog.select(getApplication().getFrame(), 
-                "Select entity prototype for new group", prototypes.toArray(),
-                currentSelectedPrototype != null ? currentSelectedPrototype : (!prototypes.isEmpty() ? prototypes.get(0) : null));
-        if(selectedPrototype == null || !(selectedPrototype instanceof EntityPrototype)) {
+        EntityPrototype selectedPrototype = promptUserForPrototype();
+        if(selectedPrototype == null) {
             return;
         }
         
-        //Request size of flight group from user
-        final Object flightGroupSize = SingleSelectDialog.select(getApplication().getFrame(), 
-                "Select size of flight group", new Object[] { 2, 3, 4, 5 }, 4);
-        if(flightGroupSize == null || !(flightGroupSize instanceof Integer)) {
+        final int flightGroupSize = promptUserForGroupSize();
+        if(flightGroupSize == 0) {
             return;
         }
         
-        //Request name of flight group from user
-        final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
-        final String flightGroupName = JOptionPane.showInputDialog(getApplication().getFrame(), 
-                "Enter name of flight group", 
-                selected != null ? selected.getName() : "viper");
+        String flightGroupName = promptUserForGroupName();
         if(flightGroupName == null) {
             return;
         }
         
+        final Geodetic.Point location = getInitialPosition();
+        logger.debug("Creating entity group at: " + location);
+        
         //Construct the edits
+        final CompoundEdit compound = new CompoundEdit();
         final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
         final EntityElementList entities = getModel().getEntities();
-        for(int i = 0; i < (Integer)flightGroupSize; i++) 
+        for(int i = 0; i < flightGroupSize; i++) 
         {
             final NewEntityEdit edit = entities.addEntity((String)flightGroupName + (i + 1), prototypeId);
             compound.addEdit(edit);
@@ -184,7 +169,7 @@ public class NewEntityGroupAction extends AbstractEditorAction
      * Determine the EntityPrototype of the selected entity, if any.
      * @return
      */
-    protected EntityPrototype getSelectedPrototype()
+    protected EntityPrototype getCurrentlySelectedPrototype()
     {
         final EntityPrototypeDatabase db = EntityPrototypeDatabase.findService(getApplication());
         final List<EntityPrototype> prototypes = db.getPrototypes();
@@ -198,4 +183,59 @@ public class NewEntityGroupAction extends AbstractEditorAction
         }
         return null;
     }
+    
+    /**
+     * Returns the list of prototypes available for the user to create. 
+     * @return
+     */
+    protected List<EntityPrototype> getAvailablePrototypes()
+    {
+        return FilterableEntityPrototypes.getUserPrototypes(getApplication()).getPrototypes();
+    }
+    
+    /**
+     * Prompts the user to select a prototype.
+     * @return
+     */
+    protected EntityPrototype promptUserForPrototype()
+    {
+        EntityPrototype currentSelectedPrototype = getCurrentlySelectedPrototype();
+        final List<EntityPrototype> prototypes = getAvailablePrototypes();
+        final Object selectedPrototype = SingleSelectDialog.select(getApplication().getFrame(), 
+                "Select entity prototype for new group", prototypes.toArray(),
+                currentSelectedPrototype != null ? currentSelectedPrototype : (!prototypes.isEmpty() ? prototypes.get(0) : null));
+        if(!(selectedPrototype instanceof EntityPrototype)) {
+            return null;
+        }
+        return (EntityPrototype) selectedPrototype;
+    }
+    
+    /**
+     * Prompts the user to select a entity group size.
+     */
+    protected int promptUserForGroupSize()
+    {
+        //Request size of flight group from user
+        final Object groupSize = SingleSelectDialog.select(getApplication().getFrame(), 
+                "Select size of group", new Object[] { 2, 3, 4, 5 }, 4);
+        if(groupSize == null || !(groupSize instanceof Integer)) {
+            return 0;
+        }
+        
+        return (Integer) groupSize;
+    }
+    
+    /**
+     * Prompt the user to enter an entity group name.
+     */
+    protected String promptUserForGroupName()
+    {
+        //Request name of flight group from user
+        final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
+        final String flightGroupName = JOptionPane.showInputDialog(getApplication().getFrame(), 
+                "Enter name of flight group", 
+                selected != null ? selected.getName() : "viper");
+        return flightGroupName;
+    }
+
 }

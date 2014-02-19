@@ -34,20 +34,16 @@ package com.soartech.simjr.ui.editor.actions;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
 import com.soartech.math.geotrans.Geodetic;
-import com.soartech.simjr.adaptables.Adaptables;
-import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.FilterableEntityPrototypes;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
-import com.soartech.simjr.util.SingleSelectDialog;
 
 /**
  * Creates a group of entities in a diagonal, limited to aircraft. 
@@ -77,42 +73,28 @@ public class NewFlightGroupAction extends NewEntityGroupAction
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        final Geodetic.Point location = getInitialPosition();
-        
-        final CompoundEdit compound = new CompoundEdit();
-        
-        //Get the currently selected entity for setting default values
-        EntityPrototype currentSelectedPrototype = getSelectedPrototype();
-        
-        //Request desired prototype from user 
-        final List<EntityPrototype> prototypes = FilterableEntityPrototypes.getUserPrototypes(getApplication()).include("air.*.*").getPrototypes();
-        final Object selectedPrototype = SingleSelectDialog.select(getApplication().getFrame(), 
-                "Select entity prototype for new group", prototypes.toArray(),
-                currentSelectedPrototype != null ? currentSelectedPrototype : (!prototypes.isEmpty() ? prototypes.get(0) : null));
-        if(selectedPrototype == null || !(selectedPrototype instanceof EntityPrototype)) {
+        EntityPrototype selectedPrototype = promptUserForPrototype();
+        if(selectedPrototype == null) {
             return;
         }
         
-        //Request size of flight group from user
-        final Object flightGroupSize = SingleSelectDialog.select(getApplication().getFrame(), 
-                "Select size of flight group", new Object[] { 2, 3, 4, 5 }, 4);
-        if(flightGroupSize == null || !(flightGroupSize instanceof Integer)) {
+        final int flightGroupSize = promptUserForGroupSize();
+        if(flightGroupSize == 0) {
             return;
         }
         
-        //Request name of flight group from user
-        final EntityElement selected = Adaptables.adapt(getSelectionManager().getSelectedObject(), EntityElement.class);
-        final String flightGroupName = JOptionPane.showInputDialog(getApplication().getFrame(), 
-                "Enter name of flight group", 
-                selected != null ? selected.getName() : "viper");
+        String flightGroupName = promptUserForGroupName();
         if(flightGroupName == null) {
             return;
         }
         
+        final Geodetic.Point location = getInitialPosition();
+        
         //Construct the edits
+        final CompoundEdit compound = new CompoundEdit();
         final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
         final EntityElementList entities = getModel().getEntities();
-        for(int i = 0; i < (Integer)flightGroupSize; i++) 
+        for(int i = 0; i < flightGroupSize; i++) 
         {
             final NewEntityEdit edit = entities.addEntity((String)flightGroupName + (i + 1), prototypeId);
             compound.addEdit(edit);
@@ -124,6 +106,15 @@ public class NewFlightGroupAction extends NewEntityGroupAction
         
         compound.end();
         findService(UndoService.class).addEdit(compound);
+    }
+    
+    /**
+     * Returns the list of prototypes available for the user to create. 
+     * @return
+     */
+    protected List<EntityPrototype> getAvailablePrototypes()
+    {
+        return FilterableEntityPrototypes.getUserPrototypes(getApplication()).include("air.*.*").getPrototypes();
     }
     
 }
