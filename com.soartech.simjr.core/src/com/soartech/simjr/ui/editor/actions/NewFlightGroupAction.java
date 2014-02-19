@@ -38,6 +38,7 @@ import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
 import com.soartech.math.geotrans.Geodetic;
+import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.EntityPrototype;
@@ -94,6 +95,9 @@ public class NewFlightGroupAction extends NewEntityGroupAction
         final CompoundEdit compound = new CompoundEdit();
         final String prototypeId = ((EntityPrototype)selectedPrototype).getId();
         final EntityElementList entities = getModel().getEntities();
+        
+        EntityElement leader = getSelectedEntity();
+        
         for(int i = 0; i < flightGroupSize; i++) 
         {
             final NewEntityEdit edit = entities.addEntity((String)flightGroupName + (i + 1), prototypeId);
@@ -101,6 +105,14 @@ public class NewFlightGroupAction extends NewEntityGroupAction
             final UndoableEdit locEdit = edit.getEntity().getLocation().setLocation(location.latitude - i*SPREAD, location.longitude - i*SPREAD, 0.0);
             if(locEdit != null) {
                 compound.addEdit(locEdit);
+            }
+            
+            if(i == 0 && leader == null) {
+                leader = edit.getEntity();
+            }
+            else if(leader != null) {
+                final UndoableEdit followEdit = edit.getEntity().getCapabilities().setFollowTarget(leader.getName());
+                compound.addEdit(followEdit);
             }
         }
         
