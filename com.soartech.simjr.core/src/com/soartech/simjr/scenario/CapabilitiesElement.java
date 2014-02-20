@@ -56,7 +56,7 @@ public class CapabilitiesElement
 {
     private static final Logger logger = Logger.getLogger(CapabilitiesElement.class);
     
-    public static final String CAPABILITIES = CapabilitiesElement.class.getCanonicalName() + ".capabilities";
+    public static final String CAPABILITIES_FOLLOW_TARGET = CapabilitiesElement.class.getCanonicalName() + ".followtarget";
     
     private final EntityElement entity;
     
@@ -146,7 +146,7 @@ public class CapabilitiesElement
         
         UndoableEdit edit = null;
         if(changed) {
-            model.fireChange(new ModelChangeEvent(this.entity.getModel(), this, CAPABILITIES));
+            model.fireChange(new ModelChangeEvent(this.entity.getModel(), this, CAPABILITIES_FOLLOW_TARGET));
             edit = new ChangeCapabilitiesEdit(oldFollowTarget, newFollowTarget);
         }
         return edit;
