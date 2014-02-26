@@ -109,7 +109,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         setMinimizable(true);
         setExternalizable(true);
         setMaximizable(true);
-        setTitleText("Map Panels");
+        setTitleText("Map Panel");
         setResizeLocked(true);
         setTitleIcon(SimulationImages.PVD);
         
