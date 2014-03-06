@@ -3,6 +3,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jReality.jar"/>
+	<classpathentry kind="lib" path="lib/josm-tested.jar" sourcepath="C:/Users/dunham/dev/openstreetmap/josm-svn"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry exported="true" kind="lib" path="lib/docking-frames-common-1.1.1.jar"/>
