@@ -129,16 +129,18 @@ public class PlanViewDisplay extends JPanel
     private boolean draggingEntity = false;
     
     private MapImage map;
+    private MapRenderer mapRenderer = new MapRenderer(this);
     
     private Entity lockEntity;
 
-    private CoordinatesPanel coordinates;
+    private CoordinatesPanel coordinatesPane;
     
     private final AppStateIndicator appStateIndicator;
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
     {
         setLayout(null);
+        //setLayout(new OverlayLayout(this));
         
         this.app = app;
         
@@ -169,17 +171,18 @@ public class PlanViewDisplay extends JPanel
         {
             setMapImage(toCopy.getMapImage());
         }
+        
         // Periodically redraw the screen rather than trying to only redraw
         // when something changes in the simulation
         repaintTimer = new Timer(200, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e)
-            {
-                if(!isAnimating())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if(!isAnimating()) {
                     repaint();
                 }
-            }});
+            }
+        });
+        
+        addCoordinatePane();
         
         repaintTimer.start();
     }
@@ -416,16 +419,14 @@ public class PlanViewDisplay extends JPanel
         }
         
         // First zoom in
-        while(desiredWidth < extents.getWidth() || 
-                desiredHeight < extents.getHeight())
+        while(desiredWidth < extents.getWidth() ||  desiredHeight < extents.getHeight())
         {
             controlMouseWheel(center, -1);
             extents = getViewExtentsInMeters();
         }
         
         // Now zoom back out
-        while(desiredWidth >= extents.getWidth() || 
-              desiredHeight >= extents.getHeight())
+        while(desiredWidth >= extents.getWidth() ||  desiredHeight >= extents.getHeight())
         {
             controlMouseWheel(center, 1);
             extents = getViewExtentsInMeters();
@@ -446,17 +447,16 @@ public class PlanViewDisplay extends JPanel
         controlMouseWheel(pointToZoomOn, amount);
     }
     
-    private void showCoordinates()
+    private void addCoordinatePane()
     {
-        if(this.coordinates != null)
-        {
+        if(this.coordinatesPane != null) {
             return;
         }
         
-        this.coordinates = new CoordinatesPanel();
-        this.coordinates.setActivePvd(this);
-        add(coordinates);
-        coordinates.setBounds(10, 10, 300, 20);
+        this.coordinatesPane = new CoordinatesPanel();
+        this.coordinatesPane.setActivePvd(this);
+        coordinatesPane.setBounds(10, 10, 300, 20);
+        add(coordinatesPane);
     }
     
     /* (non-Javadoc)
@@ -467,12 +467,11 @@ public class PlanViewDisplay extends JPanel
     {
         super.paintComponent(g);
         
-        if(appStateIndicator.getState() != ApplicationState.RUNNING)
-        {
+        if(appStateIndicator.getState() != ApplicationState.RUNNING) {
             return;
         }
         
-        showCoordinates();
+        //showCoordinates(); TODO: Why was this in here, rather than the constructor?
         
         // Briefly lock the sim to update entity shapes and stuff.
         double time = 0.0;
@@ -500,10 +499,8 @@ public class PlanViewDisplay extends JPanel
         
         // Now draw everything again. None of the following code should be
         // dependent on a sim lock.
-        if(map != null)
-        {
-            map.draw(g2d, transformer);
-        }
+        paintMap(g2d);
+        mapRenderer.paint(g2d);
         
         grid.draw(g2d);
         factory.setGraphics2D(g2dCopy, getWidth(), getHeight());
@@ -515,6 +512,15 @@ public class PlanViewDisplay extends JPanel
         //shapeSystem.displayDebugging(factory, transformer);
         
         g2dCopy.dispose();
+    }
+    
+    private void paintMap(Graphics2D g2d)
+    {
+        logger.debug("Painting map");
+        if(map != null)
+        {
+            map.draw(g2d, transformer);
+        }
     }
     
     private Entity getSelectedEntity()
@@ -702,6 +708,8 @@ public class PlanViewDisplay extends JPanel
         // reset the pan origin
         panOrigin.setLocation(e.getPoint());
         
+        logger.info("Center: " + transformer.getPanOffsetX() + "," + transformer.getPanOffsetY());
+        
         repaint();
     }
     
@@ -724,6 +732,9 @@ public class PlanViewDisplay extends JPanel
         // set the scale
         final double factor = Math.pow(.9, rotation);
         transformer.setScale(transformer.getScale() * factor);
+        logger.info("New zoom scale: " + transformer.getScale());
+        logger.info("Meters per pixel: " + transformer.screenToMeters(1));
+        logger.info("Center: " + transformer.getPanOffsetX() + "," + transformer.getPanOffsetY());
 
         // change offset so that the fixedPoint continues to be under the mouse
         // Note: treat the new screen position as the pan origin
