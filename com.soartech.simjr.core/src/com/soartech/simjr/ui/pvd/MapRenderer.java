@@ -285,7 +285,7 @@ public class MapRenderer implements TileLoaderListener
         Vector3 metersUpperLeft = transformer.screenToMeters(0, 0);
         Vector3 metersCenter = metersUpperLeft.add(new Vector3(renderTarget.getWidth()/2, renderTarget.getHeight()/2, 0));
         Geodetic.Point latLonCenter = renderTarget.getTerrain().toGeodetic(metersCenter);
-        Point center = new Point(tileSource.LonToX(latLonCenter.longitude, zoom), tileSource.LatToY(latLonCenter.latitude, zoom));
+        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoom), tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoom));
         logger.debug("Meters UL (offset): " + metersUpperLeft.x + "," + metersUpperLeft.y +  
                     " Meters center: " + metersCenter.x + "," + metersCenter.y +  
                     " Lat/Lon center: " + latLonCenter.latitude + "," + latLonCenter.longitude +  
