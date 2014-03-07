@@ -41,10 +41,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -59,6 +57,8 @@ import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource
 import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
+import com.soartech.math.Vector3;
+import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
 public class MapController extends JXPanel
@@ -82,11 +82,14 @@ public class MapController extends JXPanel
     private final JLabel simCenterLabel = new JLabel();
     private final JLabel simZoomLabel = new JLabel();
     private final JLabel simMppLabel = new JLabel();
-    private final JLabel mouseScreenCoords = new JLabel();
     
     private final JLabel osmZoomLabel = new JLabel();
     private final JLabel osmCenterLabel = new JLabel();
-    private final JLabel osmMouseCoords = new JLabel();
+    private final JLabel mouseOsmCoords = new JLabel();
+
+    private final JLabel mouseScreenCoords = new JLabel();
+    private final JLabel mouseLatlonCoords = new JLabel();
+    private final JLabel mouseMetersCoords = new JLabel();
     
     private MouseMotionListener mouseListener = new MouseMotionAdapter() {
         public void mouseMoved(MouseEvent e) {
@@ -161,10 +164,16 @@ public class MapController extends JXPanel
         add(osmCenterLabel, "wrap");
         
         add(new JLabel("OSM Mouse: "));
-        add(osmMouseCoords, "wrap");
+        add(mouseOsmCoords, "wrap");
         
         add(new JLabel("Mouse Screen:"));
         add(mouseScreenCoords, "wrap");
+        
+        add(new JLabel("Mouse Lat/Lon:"));
+        add(mouseLatlonCoords, "wrap");
+        
+        add(new JLabel("Mouse Meters:"));
+        add(mouseMetersCoords, "wrap");
         
         setAlpha(0.7f);
     }
@@ -192,6 +201,12 @@ public class MapController extends JXPanel
             Point p = pvd.getMousePosition();
             if(p != null) {
                 mouseScreenCoords.setText(p.x + "," + p.y);
+                Vector3 mouseMeters = pvd.getTransformer().screenToMeters(p.x, p.y);
+                mouseMetersCoords.setText(String.format("%8.2f, %8.2f", new Object[]{ mouseMeters.x, 
+                                                                                      mouseMeters.y }));
+                Geodetic.Point mouseLatlon = pvd.getTerrain().toGeodetic(mouseMeters); 
+                mouseLatlonCoords.setText(String.format("%8.6f, %8.6f", new Object[]{ Math.toDegrees(mouseLatlon.latitude), 
+                                                                                      Math.toDegrees(mouseLatlon.longitude) }));
             }
         }
         
@@ -199,7 +214,7 @@ public class MapController extends JXPanel
         {
             osmZoomLabel.setText(Integer.toString(mapRenderer.getZoom()));
             osmCenterLabel.setText(mapRenderer.getCenter().toString());
-            osmMouseCoords.setText("??");
+            mouseOsmCoords.setText("??");
         }
     }
 }
