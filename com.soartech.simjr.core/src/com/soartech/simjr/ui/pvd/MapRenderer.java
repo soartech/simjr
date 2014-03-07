@@ -31,8 +31,9 @@
  */
 package com.soartech.simjr.ui.pvd;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.gui.jmapviewer.AttributionSupport;
@@ -42,6 +43,7 @@ import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileController;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
@@ -52,7 +54,7 @@ import com.soartech.shapesystem.CoordinateTransformer;
 
 public class MapRenderer implements TileLoaderListener 
 {
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(MapRenderer.class);
     
@@ -86,6 +88,41 @@ public class MapRenderer implements TileLoaderListener
         
         this.renderTarget = renderTarget;
     }
+    
+    public int getZoom() { return this.zoom; }
+    
+    public void setZoom(int zoom) 
+    {
+        this.zoom = zoom;
+    }
+    
+    public void setTileSource(TileSource source)
+    {
+        if (tileSource.getMaxZoom() > MAX_ZOOM) {
+            throw new RuntimeException("Maximum zoom level too high");
+        }
+        if (tileSource.getMinZoom() < MIN_ZOOM) {
+            throw new RuntimeException("Minumim zoom level too low");
+        }
+        
+        //Coordinate position = getPosition();
+        this.tileSource = source;
+        tileController.setTileSource(tileSource);
+        //zoomSlider.setMinimum(tileSource.getMinZoom());
+        //zoomSlider.setMaximum(tileSource.getMaxZoom());
+        tileController.cancelOutstandingJobs();
+        if (zoom > tileSource.getMaxZoom()) {
+            setZoom(tileSource.getMaxZoom());
+        }
+        attribution.initialize(tileSource);
+        //setDisplayPosition(position, zoom);
+        renderTarget.repaint();
+    }
+    
+    public void setTileLoader(TileLoader loader)
+    {
+        tileController.setTileLoader(loader);
+    }
 
     @Override
     public void tileLoadingFinished(Tile tile, boolean success)
@@ -99,9 +136,13 @@ public class MapRenderer implements TileLoaderListener
         return tileController.getTileCache();
     }
     
-    public void paint(Graphics g)
+    public void paint(Graphics2D g)
     {
         Point center = getCenter();
+        
+        AffineTransform current = g.getTransform();
+        double scale = 1;
+        g.transform(AffineTransform.getScaleInstance(scale, scale));
         
         int iMove = 0;
 
@@ -194,12 +235,13 @@ public class MapRenderer implements TileLoaderListener
         // g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 
         // keep x-coordinates from growing without bound if scroll-wrap is enabled
-        /*
         if (scrollWrapEnabled) {
             center.x = center.x % mapSize;
         }
-        */
+        
+        g.setTransform(current);
 
+        //todo: this isn't working
         attribution.paintAttribution(g, renderTarget.getWidth(), renderTarget.getHeight(), 
                 getPosition(0, 0), getPosition(renderTarget.getWidth(), renderTarget.getHeight()), zoom, renderTarget);
     }
@@ -236,7 +278,7 @@ public class MapRenderer implements TileLoaderListener
         return new Coordinate(lat, lon);
     }
     
-    private Point getCenter()
+    public Point getCenter()
     {
         //this is by no means efficient
         CoordinateTransformer transformer = renderTarget.getTransformer();
@@ -244,7 +286,7 @@ public class MapRenderer implements TileLoaderListener
         Vector3 metersCenter = metersUpperLeft.add(new Vector3(renderTarget.getWidth()/2, renderTarget.getHeight()/2, 0));
         Geodetic.Point latLonCenter = renderTarget.getTerrain().toGeodetic(metersCenter);
         Point center = new Point(tileSource.LonToX(latLonCenter.longitude, zoom), tileSource.LatToY(latLonCenter.latitude, zoom));
-        logger.info("Meters UL (offset): " + metersUpperLeft.x + "," + metersUpperLeft.y +  
+        logger.debug("Meters UL (offset): " + metersUpperLeft.x + "," + metersUpperLeft.y +  
                     " Meters center: " + metersCenter.x + "," + metersCenter.y +  
                     " Lat/Lon center: " + latLonCenter.latitude + "," + latLonCenter.longitude +  
                     " OSM Center: " + center);

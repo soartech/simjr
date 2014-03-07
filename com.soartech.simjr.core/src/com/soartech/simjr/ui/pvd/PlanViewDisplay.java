@@ -128,8 +128,9 @@ public class PlanViewDisplay extends JPanel
     private Point lastDragPoint = new Point(0, 0);
     private boolean draggingEntity = false;
     
-    private MapImage map;
+    private MapImage mapBackgroundImage;
     private MapRenderer mapRenderer = new MapRenderer(this);
+    private MapController mapController = new MapController(transformer, mapRenderer);
     
     private Entity lockEntity;
 
@@ -183,6 +184,7 @@ public class PlanViewDisplay extends JPanel
         });
         
         addCoordinatePane();
+        addMapController();
         
         repaintTimer.start();
     }
@@ -250,12 +252,12 @@ public class PlanViewDisplay extends JPanel
     
     public void setMapImage(MapImage map)
     {
-        this.map = map;
+        this.mapBackgroundImage = map;
     }
     
     public MapImage getMapImage()
     {
-        return map;
+        return mapBackgroundImage;
     }
     
     public GridManager getGrid()
@@ -455,8 +457,15 @@ public class PlanViewDisplay extends JPanel
         
         this.coordinatesPane = new CoordinatesPanel();
         this.coordinatesPane.setActivePvd(this);
-        coordinatesPane.setBounds(10, 10, 300, 20);
+        coordinatesPane.setBounds(10, 45, 300, 20);
         add(coordinatesPane);
+    }
+    
+    private void addMapController()
+    {
+        this.mapController.setActivePvd(this);
+        mapController.setBounds(0, 10, mapController.getPreferredSize().width, mapController.getPreferredSize().height);
+        add(mapController);
     }
     
     /* (non-Javadoc)
@@ -470,8 +479,6 @@ public class PlanViewDisplay extends JPanel
         if(appStateIndicator.getState() != ApplicationState.RUNNING) {
             return;
         }
-        
-        //showCoordinates(); TODO: Why was this in here, rather than the constructor?
         
         // Briefly lock the sim to update entity shapes and stuff.
         double time = 0.0;
@@ -499,7 +506,7 @@ public class PlanViewDisplay extends JPanel
         
         // Now draw everything again. None of the following code should be
         // dependent on a sim lock.
-        paintMap(g2d);
+        paintMapBackground(g2d);
         mapRenderer.paint(g2d);
         
         grid.draw(g2d);
@@ -514,12 +521,10 @@ public class PlanViewDisplay extends JPanel
         g2dCopy.dispose();
     }
     
-    private void paintMap(Graphics2D g2d)
+    private void paintMapBackground(Graphics2D g2d)
     {
-        logger.debug("Painting map");
-        if(map != null)
-        {
-            map.draw(g2d, transformer);
+        if(mapBackgroundImage != null) {
+            mapBackgroundImage.draw(g2d, transformer);
         }
     }
     
@@ -579,7 +584,6 @@ public class PlanViewDisplay extends JPanel
         {
             // change mouse icon to grab icon
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            
             panOrigin.setLocation(e.getPoint());
         }
         
@@ -742,6 +746,15 @@ public class PlanViewDisplay extends JPanel
         final double newX = transformer.getPanOffsetX() + point.getX() - newScreenPosition.x;
         final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
+        
+        //hack
+        int mapZoom = mapRenderer.getZoom();
+        if(rotation > 0) { 
+            mapRenderer.setZoom(mapZoom-1); 
+        }
+        else if(rotation < 0) {
+            mapRenderer.setZoom(mapZoom+1);
+        }
         
         repaint();
     }
