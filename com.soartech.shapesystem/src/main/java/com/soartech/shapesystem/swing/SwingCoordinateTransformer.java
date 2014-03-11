@@ -47,7 +47,7 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     private final JComponent component;
     private double panOffsetRight = 0;
     private double panOffsetUp = 0;
-    private double scale = 1;
+    private double scale = 0.1;
     
     private double rotation = 0.0;
     public double getRotation()
