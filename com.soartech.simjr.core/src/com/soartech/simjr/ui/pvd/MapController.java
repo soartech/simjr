@@ -85,6 +85,7 @@ public class MapController extends JXPanel
     
     private final JLabel osmZoomLabel = new JLabel();
     private final JLabel osmCenterLabel = new JLabel();
+    private final JLabel osmMppLabel = new JLabel();
     private final JLabel mouseOsmCoords = new JLabel();
 
     private final JLabel mouseScreenCoords = new JLabel();
@@ -163,6 +164,9 @@ public class MapController extends JXPanel
         add(new JLabel("OSM Center:"));
         add(osmCenterLabel, "wrap");
         
+        add(new JLabel("OSM mpp:"));
+        add(osmMppLabel, "wrap");
+        
         add(new JLabel("OSM Mouse: "));
         add(mouseOsmCoords, "wrap");
         
@@ -200,7 +204,7 @@ public class MapController extends JXPanel
             simMppLabel.setText(Double.toString(transformer.screenToMeters(1)));
             Point p = pvd.getMousePosition();
             if(p != null) {
-                mouseScreenCoords.setText(p.x + "," + p.y);
+                mouseScreenCoords.setText(p.x + ", " + p.y);
                 Vector3 mouseMeters = pvd.getTransformer().screenToMeters(p.x, p.y);
                 mouseMetersCoords.setText(String.format("%8.2f, %8.2f", new Object[]{ mouseMeters.x, 
                                                                                       mouseMeters.y }));
@@ -214,6 +218,7 @@ public class MapController extends JXPanel
         {
             osmZoomLabel.setText(Integer.toString(mapRenderer.getZoom()));
             osmCenterLabel.setText(mapRenderer.getCenter().toString());
+            osmMppLabel.setText(Double.toString(mapRenderer.getMeterPerPixel()));
             mouseOsmCoords.setText("??");
         }
     }

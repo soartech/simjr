@@ -51,8 +51,11 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
+import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.ScalarUnit;
+import com.soartech.shapesystem.SimplePosition;
 
-public class MapRenderer implements TileLoaderListener 
+public class MapRenderer implements TileLoaderListener
 {
     //private static final long serialVersionUID = 1L;
 
@@ -73,7 +76,7 @@ public class MapRenderer implements TileLoaderListener
     private TileSource tileSource;
     
     //private Point center = new Point(0,0);
-    private int zoom = 1;
+    private int zoom = 5;
     
     private final PlanViewDisplay renderTarget;
     
@@ -140,9 +143,9 @@ public class MapRenderer implements TileLoaderListener
     {
         Point center = getCenter();
         
-        AffineTransform current = g.getTransform();
-        double scale = 1;
-        g.transform(AffineTransform.getScaleInstance(scale, scale));
+        //AffineTransform current = g.getTransform();
+        //double scale = getScaleFactor();
+        //g.transform(AffineTransform.getScaleInstance(scale, scale));
         
         int iMove = 0;
 
@@ -239,7 +242,7 @@ public class MapRenderer implements TileLoaderListener
             center.x = center.x % mapSize;
         }
         
-        g.setTransform(current);
+        //g.setTransform(current);
 
         //todo: this isn't working
         attribution.paintAttribution(g, renderTarget.getWidth(), renderTarget.getHeight(), 
@@ -264,6 +267,19 @@ public class MapRenderer implements TileLoaderListener
      * Converts the relative pixel coordinate (regarding the top left corner of
      * the displayed map) into a latitude / longitude coordinate
      *
+     * @param mapPoint
+     *            relative pixel coordinate regarding the top left corner of the
+     *            displayed map
+     * @return latitude / longitude
+     */
+    public Coordinate getPosition(Point mapPoint) {
+        return getPosition(mapPoint.x, mapPoint.y);
+    }
+    
+    /**
+     * Converts the relative pixel coordinate (regarding the top left corner of
+     * the displayed map) into a latitude / longitude coordinate
+     *
      * @param mapPointX
      * @param mapPointY
      * @return latitude / longitude
@@ -278,6 +294,27 @@ public class MapRenderer implements TileLoaderListener
         return new Coordinate(lat, lon);
     }
     
+    /**
+     * Gets the meter per pixel.
+     *
+     * @return the meter per pixel
+     * @author Jason Huntley
+     */
+    public double getMeterPerPixel() {
+        Point origin=new Point(5,5);
+        Point center=new Point(renderTarget.getWidth()/2, renderTarget.getHeight()/2);
+
+        double pDistance=center.distance(origin);
+
+        Coordinate originCoord=getPosition(origin);
+        Coordinate centerCoord=getPosition(center);
+
+        double mDistance = tileSource.getDistance(originCoord.getLat(), originCoord.getLon(),
+                centerCoord.getLat(), centerCoord.getLon());
+
+        return mDistance/pDistance;
+    }
+
     public Point getCenter()
     {
         //this is by no means efficient
@@ -285,11 +322,20 @@ public class MapRenderer implements TileLoaderListener
         Vector3 metersUpperLeft = transformer.screenToMeters(0, 0);
         Vector3 metersCenter = metersUpperLeft.add(new Vector3(renderTarget.getWidth()/2, renderTarget.getHeight()/2, 0));
         Geodetic.Point latLonCenter = renderTarget.getTerrain().toGeodetic(metersCenter);
-        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoom), tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoom));
+        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoom), 
+                                 tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoom));
         logger.debug("Meters UL (offset): " + metersUpperLeft.x + "," + metersUpperLeft.y +  
                     " Meters center: " + metersCenter.x + "," + metersCenter.y +  
                     " Lat/Lon center: " + latLonCenter.latitude + "," + latLonCenter.longitude +  
                     " OSM Center: " + center);
         return center;
     }
+    
+    /*
+    public double getScaleFactor()
+    {
+        double simMpp = renderTarget.getTransformer().scalarToPixels(Scalar.createMeter(1));
+        return getMeterPerPixel() / simMpp;
+    }
+    */
 }
