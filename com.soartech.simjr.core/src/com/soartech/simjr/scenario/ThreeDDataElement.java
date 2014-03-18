@@ -185,7 +185,7 @@ public class ThreeDDataElement
     {
         try
         {
-            model.getText(routeWidth, entity.getElement());
+            model.getText(xPath, entity.getElement());
         }
         catch(Exception unused)
         {
