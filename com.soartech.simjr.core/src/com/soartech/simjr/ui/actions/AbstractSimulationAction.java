@@ -47,6 +47,7 @@ public abstract class AbstractSimulationAction extends AbstractAction
     private static final long serialVersionUID = 2216173461956282248L;
     
     private ActionManager manager;
+    private String submenuId = "";
     
     public AbstractSimulationAction(String label)
     {
@@ -138,7 +139,12 @@ public abstract class AbstractSimulationAction extends AbstractAction
     
     public String getSubmenuId()
     {
-        return "";
+        return submenuId;
+    }
+    
+    public void setSubmenuId(String newSubmenuId)
+    {
+        this.submenuId = newSubmenuId;
     }
     
 }
