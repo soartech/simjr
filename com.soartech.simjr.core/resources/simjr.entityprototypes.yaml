@@ -385,18 +385,21 @@ prototypes:
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
         
 - &uh-60
     id: uh-60
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
     
 - &ch-47
     id: ch-47
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHC---"
+        average-speed: 58.1152
 
 ### Ships #####################################################################
 - &sea-vehicle
