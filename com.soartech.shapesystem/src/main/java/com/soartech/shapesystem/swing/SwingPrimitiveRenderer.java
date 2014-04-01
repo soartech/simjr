@@ -179,7 +179,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
      * @see com.soartech.shapesystem.PrimitiveRenderer#drawImage(com.soartech.shapesystem.SimplePosition, java.lang.String, double, double)
      */
     public void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width,
-            double height)
+            double height, float opacity)
     {
         Graphics2D g = factory.getGraphics2D();
 
@@ -204,7 +204,13 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         AffineTransform transform = new AffineTransform();
         transform.rotate(-rotation.inRadians(), center.x, center.y);
         transform.translate(topLeftX, topLeftY);
+
+        AffineTransform oldTransform = g.getTransform();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+        
         g.drawImage(image, transform, null);
+        
+        g.setTransform(oldTransform);
     }
 
     /* (non-Javadoc)

@@ -49,7 +49,7 @@ public interface PrimitiveRenderer
 
     void drawLine(SimplePosition start, SimplePosition end);
 
-    void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width, double height);
+    void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width, double height, float opacity);
     void drawImage(SimplePosition center, SimpleRotation rotation, String imageId);
 
     double getViewportWidth();

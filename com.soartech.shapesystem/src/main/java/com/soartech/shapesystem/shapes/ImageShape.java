@@ -31,6 +31,8 @@
  */
 package com.soartech.shapesystem.shapes;
 
+import java.awt.AlphaComposite;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +138,7 @@ public class ImageShape extends Shape
         center.x /= points.size();
         center.y /= points.size();
         
-        renderer.drawImage(center, angles.get(0), image, cachedWidth, cachedHeight);
+        renderer.drawImage(center, angles.get(0), image, cachedWidth, cachedHeight, this.getStyle().getOpacity());
     }
 
     /* (non-Javadoc)
