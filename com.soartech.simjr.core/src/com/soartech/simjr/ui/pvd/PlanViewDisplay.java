@@ -114,6 +114,9 @@ public class PlanViewDisplay extends JPanel
     private final SwingCoordinateTransformer transformer = new SwingCoordinateTransformer(this);
     private final SwingPrimitiveRendererFactory factory = new SwingPrimitiveRendererFactory(transformer);
     private final ShapeSystem shapeSystem = new ShapeSystem();
+    {
+        shapeSystem.displayErrorsInFrame(SimJrProps.get("simjr.pvd.displayErrors", true));
+    }
     private final TimedShapeManager timedShapes = new TimedShapeManager(shapeSystem);
     
     private EntityShapeManager shapeAdapter;
