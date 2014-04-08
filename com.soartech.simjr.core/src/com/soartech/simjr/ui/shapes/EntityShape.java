@@ -158,6 +158,27 @@ public class EntityShape implements EntityPropertyListener
     }
     
     /**
+     * Return the minimum distance between this shape's components and
+     * the point.
+     * 
+     * @param x The x screen coordinate
+     * @param y The y screen coordinate
+     */
+    public double minDistance(double x, double y)
+    {
+        double min = Double.MAX_VALUE;
+        for(Shape s : hitableShapes)
+        {
+            double d = s.distance(x, y);
+            if (d < min)
+            {
+                min = d;
+            }
+        }
+        return min;
+    }
+    
+    /**
      * Add a shape to be managed by this object. This is typically called by
      * sub-classes.
      * 

@@ -34,6 +34,9 @@ package com.soartech.shapesystem.shapes;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+import com.soartech.math.Polygon;
+import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Position;
 import com.soartech.shapesystem.PrimitiveRenderer;
@@ -116,6 +119,22 @@ public class Text extends Shape
     {
         return new ArrayList<String>();
     }
+    
+    /**
+     * Approximate the bounding box of this text shape.
+     */
+    private List<SimplePosition> getPoints()
+    {
+        // TODO: Get actual font information for bounding box size.
+        // This (incorrectly) assumes a fixed 5x5 character.
+        final List<SimplePosition> pts = Lists.newArrayList();
+        SimplePosition p = points.get(0);
+        pts.add(new SimplePosition(p.x, p.y));
+        pts.add(new SimplePosition(p.x + 5 * text.length(), p.y));
+        pts.add(new SimplePosition(p.x, p.y - 5));
+        pts.add(new SimplePosition(p.x, p.y));
+        return pts;
+    }
 
     /* (non-Javadoc)
      * @see com.soartech.shapesystem.Shape#hitTest(double, double, double)
@@ -127,11 +146,25 @@ public class Text extends Shape
         {
             return false;
         }
-        SimplePosition p = points.get(0);
-        
-        // TODO: Get actual font information for text hit testing
-        return x >= p.x && x <= (p.x + 5 * text.length()) && 
-               y >= (p.y - 5) && y <= p.y;
+        Polygon polygon = Util.createPlanarContextHull(getPoints());
+        // TODO: Use tolerance.
+        return polygon.contains(new Vector3(x, y, 0.0));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        Polygon polygon = Util.createPlanarContextHull(getPoints());
+        // TODO: Use tolerance.
+        return polygon.distance(new Vector3(x, y, 0.0));
     }
 
 }

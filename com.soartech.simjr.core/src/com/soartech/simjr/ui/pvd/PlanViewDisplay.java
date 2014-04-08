@@ -63,6 +63,7 @@ import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.shapesystem.swing.SwingPrimitiveRendererFactory;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.ApplicationStateService;
@@ -535,7 +536,7 @@ public class PlanViewDisplay extends JPanel
     
     private Entity getEntityAtScreenPoint(Point point)
     {
-        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), 15.0);
+        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0));
         return !entities.isEmpty() ? entities.get(0) : null;
     }
     

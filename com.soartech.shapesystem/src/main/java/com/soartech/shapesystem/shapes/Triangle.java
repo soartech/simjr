@@ -122,13 +122,23 @@ public class Triangle extends Shape
         {
             return false;
         }
-        List<Vector3> hullPoints = new ArrayList<Vector3>();
-        for(SimplePosition p : points)
-        {
-            hullPoints.add(new Vector3(p.x, p.y, 0.0));
-        }
-        Polygon p = Polygon.createConvexHull(hullPoints);
+        Polygon p = Util.createPlanarContextHull(points);
         return p.contains(new Vector3(x, y, 0.0));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        Polygon p = Util.createPlanarContextHull(points);
+        return p.distance(new Vector3(x, y, 0.0));
     }
 
 }

@@ -212,4 +212,15 @@ public class TrackingIcon extends Shape
         return info;
      }
 
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        // TODO: Implement distance checks along with hitTest.
+        return Double.MAX_VALUE;
+    }
+
 }

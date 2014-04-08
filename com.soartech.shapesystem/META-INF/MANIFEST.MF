@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.soartech.shapesystem,
  com.soartech.shapesystem.shapes,
  com.soartech.shapesystem.swing
-Import-Package: com.soartech.math
+Import-Package: com.google.common.collect,
+ com.soartech.math

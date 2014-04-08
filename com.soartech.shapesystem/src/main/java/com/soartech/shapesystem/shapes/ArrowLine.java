@@ -149,18 +149,26 @@ public class ArrowLine extends Shape
     @Override
     public boolean hitTest(double x, double y, double tolerance)
     {
+        return distance(x, y) <= tolerance;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
         if(!isVisible() || calculatedStart == null || calculatedEnd == null)
         {
-            return false;
+            return Double.MAX_VALUE;
         }
         
         Vector3 start = new Vector3(calculatedStart.x, calculatedStart.y, 0.0);
         Vector3 end = new Vector3(calculatedEnd.x, calculatedEnd.y, 0.0);
         Vector3 dir = end.subtract(start);
         
-        double d = LineSegmentDistance.toPoint(start, end, dir, new Vector3(x, y, 0.0));
-        
-        return d <= tolerance;
+        return LineSegmentDistance.toPoint(start, end, dir, new Vector3(x, y, 0.0));
     }
 
 }

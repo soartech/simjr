@@ -31,8 +31,6 @@
  */
 package com.soartech.shapesystem.shapes;
 
-import java.awt.AlphaComposite;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,16 +159,24 @@ public class ImageShape extends Shape
             return false;
         }
 
-        // Ripped from Box.Java and then modified
-        List<Vector3> hullPoints = new ArrayList<Vector3>();
-        for(SimplePosition p : points)
+        Polygon p = Util.createPlanarContextHull(points);
+        return p.contains(new Vector3(x, y, 0.0));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
         {
-            hullPoints.add(new Vector3(p.x, p.y, 0.0));
+            return Double.MAX_VALUE;
         }
-        Polygon p = Polygon.createConvexHull(hullPoints);
-        
-        boolean contains = p.contains(new Vector3(x, y, 0.0));
-        return contains;
+
+        Polygon p = Util.createPlanarContextHull(points);
+        return p.distance(new Vector3(x, y, 0.0));
     }
 
 }
