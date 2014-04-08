@@ -100,6 +100,11 @@ public abstract class AbstractSimulationAction extends AbstractAction
     {
         this.putValue(NAME, label);
     }
+    
+    public void setIcon(Icon icon)
+    {
+        putValue(SMALL_ICON, icon);
+    }
 
     public abstract void update();
     
