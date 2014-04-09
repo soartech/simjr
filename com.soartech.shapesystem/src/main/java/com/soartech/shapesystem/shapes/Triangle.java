@@ -122,7 +122,7 @@ public class Triangle extends Shape
         {
             return false;
         }
-        Polygon p = Util.createPlanarContextHull(points);
+        Polygon p = Util.createPlanarConvexHull(points);
         return p.contains(new Vector3(x, y, 0.0));
     }
 
@@ -137,7 +137,7 @@ public class Triangle extends Shape
         {
             return Double.MAX_VALUE;
         }
-        Polygon p = Util.createPlanarContextHull(points);
+        Polygon p = Util.createPlanarConvexHull(points);
         return p.distance(new Vector3(x, y, 0.0));
     }
 

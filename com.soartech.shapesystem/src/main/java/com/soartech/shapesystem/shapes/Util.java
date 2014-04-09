@@ -13,7 +13,7 @@ public class Util
      * Creates a {@link Polygon} that is the convex hull of the points
      * projected on the <code>z = 0.0</code> plane.
      */
-    protected static Polygon createPlanarContextHull(List<SimplePosition> points)
+    protected static Polygon createPlanarConvexHull(List<SimplePosition> points)
     {
         List<Vector3> hullPoints = Lists.newArrayList();
         for(SimplePosition p : points)

@@ -159,8 +159,8 @@ public class Box extends Shape
         {
             return false;
         }
-        Polygon p = Util.createPlanarContextHull(points);
-        return p.contains(new Vector3(x, y, 0.0));
+        Polygon p = Util.createPlanarConvexHull(points);
+        return p.distance(new Vector3(x, y, 0.0)) < tolerance;
     }
     
     /*
@@ -174,7 +174,7 @@ public class Box extends Shape
         {
             return Double.MAX_VALUE;
         }
-        Polygon p = Util.createPlanarContextHull(points);
+        Polygon p = Util.createPlanarConvexHull(points);
         return p.distance(new Vector3(x, y, 0.0));
     }
 

@@ -146,7 +146,7 @@ public class Text extends Shape
         {
             return false;
         }
-        Polygon polygon = Util.createPlanarContextHull(getPoints());
+        Polygon polygon = Util.createPlanarConvexHull(getPoints());
         // TODO: Use tolerance.
         return polygon.contains(new Vector3(x, y, 0.0));
     }
@@ -162,7 +162,7 @@ public class Text extends Shape
         {
             return Double.MAX_VALUE;
         }
-        Polygon polygon = Util.createPlanarContextHull(getPoints());
+        Polygon polygon = Util.createPlanarConvexHull(getPoints());
         // TODO: Use tolerance.
         return polygon.distance(new Vector3(x, y, 0.0));
     }
