@@ -82,9 +82,9 @@ public class EntityShape implements EntityPropertyListener
     public class LabelFrame 
     {
         public final static String MAIN_LABEL = "_mainLabel";
-        public Frame frame;
-        public Text label;
-        public String labelType;
+        public final Frame frame;
+        public final Text label;
+        public final String labelType;
         
         public LabelFrame(Frame frame, Text label, String labelType)
         {
@@ -150,6 +150,13 @@ public class EntityShape implements EntityPropertyListener
         for(Shape s : hitableShapes)
         {
             if(s.hitTest(x, y, tolerance))
+            {
+                return true;
+            }
+        }
+        for (LabelFrame lf : labels)
+        {
+            if (lf.label.hitTest(x, y, tolerance))
             {
                 return true;
             }
