@@ -33,8 +33,8 @@ package com.soartech.shapesystem.shapes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.collect.Lists;
 import com.soartech.math.Polygon;
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
@@ -54,6 +54,7 @@ public class Text extends Shape
 {
 
     private String text;
+    private final AtomicReference<List<SimplePosition>> currentBounds = new AtomicReference<List<SimplePosition>>();
 
     /**
      * @param name
@@ -108,7 +109,7 @@ public class Text extends Shape
     {
         PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
         
-        renderer.drawText(points.get(0), text);
+        currentBounds.set(renderer.drawText(points.get(0), text));
     }
 
     /* (non-Javadoc)
@@ -118,22 +119,6 @@ public class Text extends Shape
     protected List<String> getBaseReferences()
     {
         return new ArrayList<String>();
-    }
-    
-    /**
-     * Approximate the bounding box of this text shape.
-     */
-    private List<SimplePosition> getPoints()
-    {
-        // TODO: Get actual font information for bounding box size.
-        // This (incorrectly) assumes a fixed 5x5 character.
-        final List<SimplePosition> pts = Lists.newArrayList();
-        SimplePosition p = points.get(0);
-        pts.add(new SimplePosition(p.x, p.y));
-        pts.add(new SimplePosition(p.x + 5 * text.length(), p.y));
-        pts.add(new SimplePosition(p.x, p.y - 5));
-        pts.add(new SimplePosition(p.x, p.y));
-        return pts;
     }
 
     /* (non-Javadoc)
@@ -146,9 +131,8 @@ public class Text extends Shape
         {
             return false;
         }
-        Polygon polygon = Util.createPlanarConvexHull(getPoints());
-        // TODO: Use tolerance.
-        return polygon.contains(new Vector3(x, y, 0.0));
+        Polygon polygon = Util.createPlanarConvexHull(currentBounds.get());
+        return polygon.contains(new Vector3(x, y, 0.0)) || polygon.distance(new Vector3(x, y, 0.0)) < tolerance;
     }
 
     /*
@@ -162,8 +146,7 @@ public class Text extends Shape
         {
             return Double.MAX_VALUE;
         }
-        Polygon polygon = Util.createPlanarConvexHull(getPoints());
-        // TODO: Use tolerance.
+        Polygon polygon = Util.createPlanarConvexHull(currentBounds.get());
         return polygon.distance(new Vector3(x, y, 0.0));
     }
 
