@@ -341,8 +341,8 @@ public class EntityShapeManager
                         final EntityPrototype p2 = o2.getEntity().getPrototype();
                         return ComparisonChain.start()
                                 .compareTrueFirst(o1.hitTest(x, y, tolerance), o2.hitTest(x, y, tolerance))
-                                .compareFalseFirst(p1.hasSubcategory("route"), p2.hasSubcategory("route"))
                                 .compareFalseFirst(p1.hasSubcategory("area"), p2.hasSubcategory("area"))
+                                .compareFalseFirst(p1.hasSubcategory("route"), p2.hasSubcategory("route"))
                                 .compare(o1.minDistance(x, y), o2.minDistance(x, y))
                                 .result();
                     }
@@ -351,7 +351,7 @@ public class EntityShapeManager
         final List<Entity> ret = Lists.newArrayList();
         for (EntityShape es : pq)
         {
-            if (es.hitTest(x, y, tolerance) || es.minDistance(x, y) < SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0))
+            if (es.hitTest(x, y, tolerance) || es.minDistance(x, y) < tolerance)
             {
                 ret.add(es.getEntity());
             }
