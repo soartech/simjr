@@ -51,7 +51,7 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     /**
      * The entity to circle, or <code>null</code> if <code>centerPoint</code> is set
      */
-    private Entity centerEntity;
+    protected Entity centerEntity;
 
     /**
      * The point to circle, or <code>null</code> if <code>centerEntity</code> is set
