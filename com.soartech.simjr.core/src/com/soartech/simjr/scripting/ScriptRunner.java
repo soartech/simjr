@@ -167,7 +167,7 @@ public class ScriptRunner extends AbstractAdaptable implements SimulationService
      * 
      * <p>This method should only be called from scripts!
      * 
-     * @param script The script to run
+     * @param file The script to run
      * @return Result of execution
      * @throws Exception
      */

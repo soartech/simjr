@@ -422,7 +422,7 @@ public class Model
     /**
      * This sets whether or not ModelChangeEvent
      * events are propagated.
-     * @param Whether or not the model should respond
+     * @param respondToModelChanges Whether or not the model should respond
      * to OnModelChangeEvents.
      */
     public void setRespondToModelChanges(boolean respondToModelChanges)

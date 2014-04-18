@@ -275,8 +275,8 @@ public class Simulation extends AbstractAdaptable implements SimulationService
     /**
      * Looks up an entity by name, and assumes that the simulation lock is held.
      * 
-     * @param the name of the entity
-     * @return the entity with the corresponding name or null if none exists
+     * @param name The name of the entity
+     * @return The entity with the corresponding name or null if none exists
      */
     public Entity getEntityFast(String name)
     {

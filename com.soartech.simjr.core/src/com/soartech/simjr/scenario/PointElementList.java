@@ -71,7 +71,6 @@ public class PointElementList
     
     /**
      * @param model
-     * @param element
      * @param parent
      */
     public PointElementList(Model model, EntityElement parent)

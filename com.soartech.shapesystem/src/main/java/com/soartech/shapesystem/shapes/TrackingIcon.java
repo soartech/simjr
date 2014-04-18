@@ -55,11 +55,13 @@ public class TrackingIcon extends Shape
     private boolean alwaysShown;
 
     /**
+     * 
      * @param name
      * @param layer
      * @param pos
      * @param rot
-     * @param style
+     * @param image
+     * @param alwaysShown
      */
     public TrackingIcon(String name, String layer, Position pos, Rotation rot,
             String image, boolean alwaysShown)

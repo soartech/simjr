@@ -48,7 +48,9 @@ public class ShowGridAction extends AbstractSimulationAction
     private AbstractButton menu;
     
     /**
-     * @param label
+     * 
+     * @param actionManager
+     * @param menu
      */
     public ShowGridAction(ActionManager actionManager, AbstractButton menu)
     {

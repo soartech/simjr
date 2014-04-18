@@ -71,7 +71,7 @@ public class LocationElement implements ModelElement
     }
     
     /**
-     * @param model
+     * @param entity
      */
     public LocationElement(ModelElement entity)
     {

@@ -49,14 +49,14 @@ public interface Sensor extends Tickable
     /**
      * Returns the owning entity of the sensor.
      * 
-     * @return
+     * @return The entity.
      */
     public Entity getEntity();
 
     /**
      * Returns the name of the sensor type.
      * 
-     * @return
+     * @return The name.
      */
     public String getName();
 
@@ -68,7 +68,6 @@ public interface Sensor extends Tickable
     /**
      * Returns true if sensor is enable and false otherwise.
      * 
-     * @return
      */
     public boolean isEnabled();
     
@@ -84,7 +83,7 @@ public interface Sensor extends Tickable
     /**
      * Returns the detections as seen by the sensor. 
      * 
-     * @return
+     * @return List of Detections
      */
     public List<Detection> getDetections();
    

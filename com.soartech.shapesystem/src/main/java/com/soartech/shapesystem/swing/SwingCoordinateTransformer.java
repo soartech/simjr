@@ -121,7 +121,7 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     
     /**
      * @param pixels
-     * @return
+     * @return Distance covered by {@code pixels} in meters.
      */
     public double screenToMeters(double pixels)
     {

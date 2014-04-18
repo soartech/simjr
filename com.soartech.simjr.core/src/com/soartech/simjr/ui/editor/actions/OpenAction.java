@@ -54,8 +54,6 @@ public class OpenAction extends AbstractEditorAction
     
     /**
      * @param manager
-     * @param label
-     * @param icon
      */
     public OpenAction(ActionManager manager)
     {

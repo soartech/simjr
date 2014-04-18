@@ -40,7 +40,7 @@ public class ZoomInAction extends ZoomAction
     private static final long serialVersionUID = -195066264493268149L;
 
     /**
-     * @param app
+     * @param actionManager
      */
     public ZoomInAction(ActionManager actionManager)
     {

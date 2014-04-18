@@ -59,11 +59,12 @@ public class Line extends Shape
     private SimplePosition calculatedEnd;
 
     /**
+     * 
      * @param name
      * @param layer
-     * @param pos
-     * @param rot
      * @param style
+     * @param start
+     * @param end
      */
     public Line(String name, String layer, ShapeStyle style,
                 String start, String end)

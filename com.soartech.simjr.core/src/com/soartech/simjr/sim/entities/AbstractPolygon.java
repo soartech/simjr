@@ -99,7 +99,7 @@ public abstract class AbstractPolygon extends AbstractEntityCapability implement
     /**
      * Construct an empty polygon
      * 
-     * @param name The name of the polygon
+     * @param defaultName The name of the polygon
      */
     public AbstractPolygon(String defaultName)
     {

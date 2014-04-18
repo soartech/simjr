@@ -218,7 +218,7 @@ public class FileTools
      * 
      * @param targetFile
      * @param baseFile
-     * @return
+     * @return {@code targetFile} relative to {@code baseFile}
      */
     public static String getRelativePath(File targetFile, File baseFile)
     {

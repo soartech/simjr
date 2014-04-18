@@ -246,7 +246,7 @@ public class MapImage
     /**
      * Draw the map onto the given graphics context
      *
-     * @param g2d The graphics context
+     * @param g2dIn The graphics context
      * @param transformer The coordinate transformer
      */
     public void draw(Graphics2D g2dIn, CoordinateTransformer transformer)
