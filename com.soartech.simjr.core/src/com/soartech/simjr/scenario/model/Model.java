@@ -110,8 +110,8 @@ public class Model
     {
         this.doc = buildDefaultDocument();
         this.entities = EntityElementList.attach(this);
-
-        setDirty(false);
+        
+        setDirty(true);
         setFile(null);
 
         fireChange(new ModelChangeEvent(this, this, LOADED));
