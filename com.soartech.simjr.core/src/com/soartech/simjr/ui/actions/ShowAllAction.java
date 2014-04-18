@@ -47,7 +47,7 @@ public class ShowAllAction extends AbstractSimulationAction
     private static final long serialVersionUID = -423414432909853117L;
 
     /**
-     * @param app The owning application
+     * @param actionManager
      */
     public ShowAllAction(ActionManager actionManager)
     {

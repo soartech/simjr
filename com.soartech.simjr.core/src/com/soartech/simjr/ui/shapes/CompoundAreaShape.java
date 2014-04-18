@@ -71,7 +71,8 @@ public class CompoundAreaShape extends EntityShape implements EntityConstants
     private boolean updateShape = false;
     
     /**
-     * @param area
+     * 
+     * @param defaultCompoundPolygon
      * @param system
      */
     public CompoundAreaShape(DefaultCompoundPolygon defaultCompoundPolygon, ShapeSystem system)

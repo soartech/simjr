@@ -78,7 +78,7 @@ public class GroundController extends AbstractEntityCapability implements
     }
 
     /**
-     * @param desiredBearing The new desired bearing in radians
+     * @param desiredHeading The new desired bearing in radians
      */
     public void setDesiredHeading(double desiredHeading)
     {

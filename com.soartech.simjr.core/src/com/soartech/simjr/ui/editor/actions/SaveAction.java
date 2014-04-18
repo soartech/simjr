@@ -60,9 +60,9 @@ public class SaveAction extends AbstractEditorAction
     private boolean saveAs;
     
     /**
+     * 
      * @param manager
-     * @param label
-     * @param icon
+     * @param saveAs True if performing a "Save As...", false if performing a "Save".
      */
     public SaveAction(ActionManager manager, boolean saveAs)
     {

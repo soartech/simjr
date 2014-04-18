@@ -48,12 +48,12 @@ public class LineSegmentDistance
      * @param start The start of the line segment
      * @param end The end of the line segment
      * @param direction The <b>unnormalized</b> direction of the line segment, i.e.
-     *          {@param end} - {@param start}. This is for efficieny purposes
+     *          {@code end} - {@code start}. This is for efficiency purposes
      *          because this value can easily be cached to avoid frequent
      *          recalculation. If not set correctly, results are undefined.
      * @param point The point to test
-     * @return The minimum distance between {@param point} and the line segment
-     *      defined by {@param start} and {@param end}.
+     * @return The minimum distance between {@code point} and the line segment
+     *      defined by {@code start} and {@code end}.
      */
     public static double toPoint(Vector3 start, Vector3 end, Vector3 direction, Vector3 point)
     {       

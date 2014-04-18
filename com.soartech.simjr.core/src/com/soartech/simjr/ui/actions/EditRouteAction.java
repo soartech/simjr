@@ -50,8 +50,7 @@ public class EditRouteAction extends AbstractEditorAction
     private static final long serialVersionUID = -9047372417083601728L;
     
     /**
-     * @param label
-     * @param app
+     * @param actionManager
      */
     public EditRouteAction(ActionManager actionManager)
     {

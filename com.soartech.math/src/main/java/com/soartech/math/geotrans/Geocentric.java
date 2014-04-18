@@ -277,9 +277,9 @@ public class Geocentric extends GeoTransBase
      * 
      * @param lat radians
      * @param lon radians
-     * @param psi radians, rotation about z axis
-     * @param phi radians, rotation about y axis
-     * @param theta radians, rotation about x axis
+     * @param disPsi radians, rotation about z axis
+     * @param disPhi radians, rotation about y axis
+     * @param disTheta radians, rotation about x axis
      * @return (pitch,roll,yaw)
      */
     public static Vector3 toGeodeticAngle(double lat, double lon, double disPsi, double disPhi, double disTheta)
