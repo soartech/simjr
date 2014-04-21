@@ -468,15 +468,6 @@ public class EntityTools
         }
         return c;
     }
-    
-    public static boolean getThreeDSupported(Entity e)
-    {
-        Boolean ThreeDSupported = (Boolean)e.getProperty(EntityConstants.PROPERTY_3DData);
-        if(ThreeDSupported == null || ThreeDSupported == false)
-            return false;
-        else
-            return true;
-    }
 
     public static <T extends Sensor> T getSensorOfType(Entity entity, Class<T> sensorClass)
     {

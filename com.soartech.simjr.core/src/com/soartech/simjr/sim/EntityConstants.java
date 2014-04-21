@@ -79,7 +79,6 @@ public interface EntityConstants
     
     public static final String PROPERTY_MINALTITUDE = "min_altitude";
     public static final String PROPERTY_MAXALTITUDE = "max_altitude";
-    public static final String PROPERTY_3DData ="threeDData";
     
     
     public static final String PROPERTY_MAXSPEED = "limits.maxSpeed";

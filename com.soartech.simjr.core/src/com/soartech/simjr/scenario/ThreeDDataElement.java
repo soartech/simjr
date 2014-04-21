@@ -56,8 +56,7 @@ public class ThreeDDataElement
     {
         MIN_ALTITUDE("minAltitude", "0.0"), 
         MAX_ALTITUDE("maxAltitude", "500"), 
-        ROUTE_WIDTH("routeWidth", "100"),
-        VIEW_3D_SUPPORTED("view3DSupported", "true");
+        ROUTE_WIDTH("routeWidth", "100");
 
         public final String attributeName;
         public final String xPathStr;
@@ -74,7 +73,6 @@ public class ThreeDDataElement
     private final XPath minAltitude;
     private final XPath maxAltitude;
     private final XPath routeWidth;
-    private final XPath view3DSupported;
 
     public static Element buildDefault(Model model)
     {
@@ -82,7 +80,6 @@ public class ThreeDDataElement
         root.setAttribute(ModelData.MIN_ALTITUDE.attributeName, ModelData.MIN_ALTITUDE.defaultValue, Model.NAMESPACE);
         root.setAttribute(ModelData.MAX_ALTITUDE.attributeName, ModelData.MAX_ALTITUDE.defaultValue, Model.NAMESPACE);
         root.setAttribute(ModelData.ROUTE_WIDTH.attributeName, ModelData.ROUTE_WIDTH.defaultValue, Model.NAMESPACE);
-        root.setAttribute(ModelData.VIEW_3D_SUPPORTED.attributeName, ModelData.VIEW_3D_SUPPORTED.defaultValue, Model.NAMESPACE);
         return root;
     }
     
@@ -93,7 +90,6 @@ public class ThreeDDataElement
         this.minAltitude = this.model.newXPath(ModelData.MIN_ALTITUDE.xPathStr);
         this.maxAltitude = this.model.newXPath(ModelData.MAX_ALTITUDE.xPathStr);
         this.routeWidth = this.model.newXPath(ModelData.ROUTE_WIDTH.xPathStr);
-        this.view3DSupported = this.model.newXPath(ModelData.VIEW_3D_SUPPORTED.xPathStr);
     }
 
     public EntityElement getEntity()
@@ -110,16 +106,6 @@ public class ThreeDDataElement
             return new ThreeDEdit(xPath, oldValue.toString(), newValue.toString());
         }
         return null;
-    }
-    
-    public boolean get3dSupported()
-    {
-        return new ModelBooleanGetter(view3DSupported).get();
-    }
-
-    public UndoableEdit set3dSupported(final Boolean newSupported)
-    {
-        return setThreeDField(view3DSupported, get3dSupported(), newSupported);
     }
 
     public double getMinAltitude()

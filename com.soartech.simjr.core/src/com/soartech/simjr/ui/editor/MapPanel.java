@@ -380,7 +380,6 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
         simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
         simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
-        simEntity.setProperty(EntityConstants.PROPERTY_3DData, ee.getThreeDData().get3dSupported());
     }
     
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
@@ -440,7 +439,6 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getThreeDData().getMinAltitude());
         e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getThreeDData().getMaxAltitude());
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getThreeDData().getRouteWidth());
-        e.setProperty(EntityConstants.PROPERTY_3DData, source.getThreeDData().get3dSupported());
         e.setProperty(EntityConstants.PROPERTY_VISIBLE, true); //Always visible in editor
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);

@@ -92,7 +92,6 @@ public class EntityElement implements ModelElement
         root.setAttribute("force", "friendly", Model.NAMESPACE);
         
         Boolean defaultVisibility = true;
-        //EntityPrototype ep = model.getEntityPrototype(prototype);
         EntityPrototypeDatabase epd = new DefaultServiceManager().findService(EntityPrototypeDatabase.class);
         EntityPrototype ep = epd.getPrototype(prototype);
         
