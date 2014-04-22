@@ -338,14 +338,14 @@ public class View3DPanel extends JPanel implements ModelChangeListener, Simulati
         }
 
         // the prototype for an entity is changed entity's
-        else if (e.property.equals(EntityElement.PROTOTYPE))
+        else if (e.property.equals(EntityElement.ModelData.PROTOTYPE))
         {
             //updateConstruct(ee);
             //if the prototype is changed, just punt and rebuild the entire scene
             rebuildScene();
         }
         
-        else if (e.property.equals(EntityElement.NAME))
+        else if (e.property.equals(EntityElement.ModelData.NAME))
         {
             updateConstruct(ee);
         }

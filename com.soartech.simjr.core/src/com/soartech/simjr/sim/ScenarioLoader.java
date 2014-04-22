@@ -280,9 +280,9 @@ public class ScenarioLoader
         
         //3D data stuff
         entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make
-        entity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
-        entity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
-        entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
+        entity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getMinAltitude());
+        entity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getMaxAltitude());
+        entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getRouteWidth());
         
         //Capabilities
         if(ee.getCapabilities().getFollowTarget() != null) {

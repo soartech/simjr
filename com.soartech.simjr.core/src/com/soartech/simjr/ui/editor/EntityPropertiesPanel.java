@@ -245,9 +245,9 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             headingSpinner.setElement(entity.getOrientation());
             initScript.setScript(entity.getInitScript());
             visibleCheckBox.setSelected(entity.isVisible());
-            minimumAltitude.setValue(entity.getThreeDData().getMinAltitude());
-            maximumAltitude.setValue(entity.getThreeDData().getMaxAltitude());
-            width.setValue(entity.getThreeDData().getRouteWidth());
+            minimumAltitude.setValue(entity.getMinAltitude());
+            maximumAltitude.setValue(entity.getMaxAltitude());
+            width.setValue(entity.getRouteWidth());
         }
         else
         {
@@ -291,17 +291,20 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             return;
         }
         
-        if(e.property.equals(EntityElement.NAME)      || 
-           e.property.equals(EntityElement.PROTOTYPE) ||
-           e.property.equals(EntityElement.FORCE) ||
-           e.property.equals(EntityElement.VISIBLE) ||
-           e.property.equals(EntityElement.LABEL_VISIBLE))
+        if(e.property.equals(EntityElement.ModelData.NAME.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.PROTOTYPE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.FORCE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.VISIBLE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.LABEL_VISIBLE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.MIN_ALTITUDE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.MAX_ALTITUDE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.ROUTE_WIDTH.xPathStr) )
         {
             setEntity(entity); // force an update
         }
         
         //On type change, set visibility to type default, if it exists. 
-        if(e.property.equals(EntityElement.PROTOTYPE))
+        if(e.property.equals(EntityElement.ModelData.PROTOTYPE.xPathStr))
         {
             EntityPrototype entityPrototype = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype());
             Object prototypeVisibility = entityPrototype.getProperty(EntityConstants.PROPERTY_VISIBLE);
@@ -336,7 +339,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setMinAltitude(((Long)minimumAltitude.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setMinAltitude(((Long)minimumAltitude.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
         if(e.getSource().equals(maximumAltitude))
@@ -349,7 +352,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
         if(e.getSource().equals(width))
@@ -362,7 +365,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)width.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setRouteWidth(((Long)width.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
     }

@@ -230,14 +230,14 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             final EntityElement ee = ((OrientationElement) e.source).getEntity();
             updateSimEntityOrientation(ee);
         }
-        else if(e.property.equals(EntityElement.NAME) || e.property.equals(EntityElement.PROTOTYPE))
+        else if(e.property.equals(EntityElement.ModelData.NAME) || e.property.equals(EntityElement.ModelData.PROTOTYPE))
         {
             // :( We have to destroy and recreate the sim entity for a rename or type change
             destroySimEntityForRemovedEditorEntity((EntityElement) e.source);
             createSimEntityForNewEditorEntity((EntityElement) e.source);
             updateSimEntityPosition((EntityElement) e.source);
         }
-        else if(e.property.equals(EntityElement.FORCE))
+        else if(e.property.equals(EntityElement.ModelData.FORCE))
         {
             updateSimEntityForce((EntityElement) e.source);
         }
@@ -377,9 +377,9 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     private void updateSimEntityThreeDData(final EntityElement ee)
     {
         final Entity simEntity = getSimEntity(ee);
-        simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
-        simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
-        simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
+        simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getMinAltitude());
+        simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getMaxAltitude());
+        simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getRouteWidth());
     }
     
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
@@ -436,9 +436,9 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         e.setProperty(EntityConstants.PROPERTY_FORCE, source.getForce());
         e.setProperty(EDITOR_ENTITY_PROP, source);
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make routes stand out more in editor
-        e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getThreeDData().getMinAltitude());
-        e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getThreeDData().getMaxAltitude());
-        e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getThreeDData().getRouteWidth());
+        e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getMinAltitude());
+        e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getMaxAltitude());
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getRouteWidth());
         e.setProperty(EntityConstants.PROPERTY_VISIBLE, true); //Always visible in editor
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);
