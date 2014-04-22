@@ -47,17 +47,8 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     private final JComponent component;
     private double panOffsetRight = 0;
     private double panOffsetUp = 0;
-    private double scale = 0.1;
-    
+    private double scale = 0.01;
     private double rotation = 0.0;
-    public double getRotation()
-    {
-        return rotation;
-    }
-    public void setRotation(double newRotation)
-    {
-        this.rotation = newRotation;
-    }
     
     /**
      * @param component
@@ -65,6 +56,16 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     public SwingCoordinateTransformer(JComponent component)
     {
         this.component = component;
+    }
+    
+    public double getRotation()
+    {
+        return rotation;
+    }
+    
+    public void setRotation(double newRotation)
+    {
+        this.rotation = newRotation;
     }
 
     private double getMaxScale()
