@@ -15,7 +15,7 @@ Bundle-ClassPath: .,
  lib/jReality.jar,
  lib/docking-frames-common-1.1.1.jar,
  lib/docking-frames-core-1.1.1.jar,
- lib/josm-tested.jar
+ lib/josm-tested-r6950.jar
 Export-Package: .,
  bibliothek.extension.gui.dock,
  bibliothek.extension.gui.dock.preference,

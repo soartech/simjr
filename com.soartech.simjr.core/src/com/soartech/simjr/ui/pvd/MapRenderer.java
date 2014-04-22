@@ -33,7 +33,6 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.gui.jmapviewer.AttributionSupport;
@@ -51,9 +50,6 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
-import com.soartech.shapesystem.Scalar;
-import com.soartech.shapesystem.ScalarUnit;
-import com.soartech.shapesystem.SimplePosition;
 
 public class MapRenderer implements TileLoaderListener
 {
