@@ -33,6 +33,7 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.gui.jmapviewer.AttributionSupport;
@@ -50,11 +51,10 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
+import com.soartech.shapesystem.Scalar;
 
 public class MapRenderer implements TileLoaderListener
 {
-    //private static final long serialVersionUID = 1L;
-
     private static final Logger logger = Logger.getLogger(MapRenderer.class);
     
     //Vectors for clock-wise tile painting
@@ -72,7 +72,7 @@ public class MapRenderer implements TileLoaderListener
     private TileSource tileSource;
     
     //private Point center = new Point(0,0);
-    private int zoom = 5;
+    private int zoom = 10;
     
     private final PlanViewDisplay renderTarget;
     
@@ -92,6 +92,7 @@ public class MapRenderer implements TileLoaderListener
     
     public void setZoom(int zoom) 
     {
+        logger.info("Setting zoom level to: " + zoom);
         this.zoom = zoom;
     }
     
@@ -135,26 +136,28 @@ public class MapRenderer implements TileLoaderListener
         return tileController.getTileCache();
     }
     
+    public int getTileSize()
+    {
+        return tileSource.getTileSize();
+    }
+    
     public void paint(Graphics2D g)
     {
-        Point center = getCenter();
+        AffineTransform current = g.getTransform();
+        double scale = getScaleFactor();
+        g.transform(AffineTransform.getScaleInstance(scale, scale));
         
-        //AffineTransform current = g.getTransform();
-        //double scale = getScaleFactor();
-        //g.transform(AffineTransform.getScaleInstance(scale, scale));
-        
-        int iMove = 0;
+        Point center = getCenter();              // center pt in tile grid pixels
+        int tilesize = tileSource.getTileSize(); // size of each tile in pixels
+        int tilex = center.x / tilesize;         // center x in tile coords
+        int tiley = center.y / tilesize;         // center y in tile coords
+        int off_x = (center.x % tilesize);       // distance in px from center pt to left edge of tile
+        int off_y = (center.y % tilesize);       // distance in px from center pt to top edge of tile
 
-        int tilesize = tileSource.getTileSize();
-        int tilex = center.x / tilesize;
-        int tiley = center.y / tilesize;
-        int off_x = (center.x % tilesize);
-        int off_y = (center.y % tilesize);
-
-        int w2 = renderTarget.getWidth() / 2;
-        int h2 = renderTarget.getHeight() / 2;
-        int posx = w2 - off_x;
-        int posy = h2 - off_y;
+        int w2 = renderTarget.getWidth() / 2;    // half screen width
+        int h2 = renderTarget.getHeight() / 2;   // half screen height
+        int posx = w2 - off_x;                   // x coord in screen px of left edge of tile 
+        int posy = h2 - off_y;                   // y coord in screen px of upper edge of tile
 
         int diff_left = off_x;
         int diff_right = tilesize - off_x;
@@ -164,6 +167,7 @@ public class MapRenderer implements TileLoaderListener
         boolean start_left = diff_left < diff_right;
         boolean start_top = diff_top < diff_bottom;
 
+        int iMove = 0;
         if (start_top) {
             if (start_left) {
                 iMove = 2;
@@ -238,9 +242,8 @@ public class MapRenderer implements TileLoaderListener
             center.x = center.x % mapSize;
         }
         
-        //g.setTransform(current);
+        g.setTransform(current);
 
-        //todo: this isn't working
         attribution.paintAttribution(g, renderTarget.getWidth(), renderTarget.getHeight(), 
                 getPosition(0, 0), getPosition(renderTarget.getWidth(), renderTarget.getHeight()), zoom, renderTarget);
     }
@@ -296,7 +299,8 @@ public class MapRenderer implements TileLoaderListener
      * @return the meter per pixel
      * @author Jason Huntley
      */
-    public double getMeterPerPixel() {
+    public double getMeterPerPixel() 
+    {
         Point origin=new Point(5,5);
         Point center=new Point(renderTarget.getWidth()/2, renderTarget.getHeight()/2);
 
@@ -311,6 +315,10 @@ public class MapRenderer implements TileLoaderListener
         return mDistance/pDistance;
     }
 
+    /**
+     * Determines the center point of the screen in JOSM "pixelspace", pixel coordinates of the tile grid.
+     * @return
+     */
     public Point getCenter()
     {
         //this is by no means efficient
@@ -327,11 +335,10 @@ public class MapRenderer implements TileLoaderListener
         return center;
     }
     
-    /*
     public double getScaleFactor()
     {
         double simMpp = renderTarget.getTransformer().scalarToPixels(Scalar.createMeter(1));
-        return getMeterPerPixel() / simMpp;
+        //logger.info("scale factor: " + getMeterPerPixel() + " * " + simMpp + " = " + getMeterPerPixel() * simMpp);
+        return getMeterPerPixel() * simMpp;
     }
-    */
 }

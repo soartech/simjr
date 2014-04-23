@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.ui.pvd;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -86,7 +87,8 @@ public class MapController extends JXPanel
     private final JLabel osmZoomLabel = new JLabel();
     private final JLabel osmCenterLabel = new JLabel();
     private final JLabel osmMppLabel = new JLabel();
-    private final JLabel mouseOsmCoords = new JLabel();
+    private final JLabel mouseOsmPxCoords = new JLabel();
+    private final JLabel mouseOsmTileCoords = new JLabel();
 
     private final JLabel mouseScreenCoords = new JLabel();
     private final JLabel mouseLatlonCoords = new JLabel();
@@ -161,14 +163,17 @@ public class MapController extends JXPanel
         add(new JLabel("OSM Zoom:"));
         add(osmZoomLabel, "wrap");
         
-        add(new JLabel("OSM Center:"));
+        add(new JLabel("OSM Center (px):"));
         add(osmCenterLabel, "wrap");
         
         add(new JLabel("OSM mpp:"));
         add(osmMppLabel, "wrap");
         
-        add(new JLabel("OSM Mouse: "));
-        add(mouseOsmCoords, "wrap");
+        add(new JLabel("OSM Mouse (px): "));
+        add(mouseOsmPxCoords, "wrap");
+        
+        add(new JLabel("OSM Mouse (tile): "));
+        add(mouseOsmTileCoords, "wrap");
         
         add(new JLabel("Mouse Screen:"));
         add(mouseScreenCoords, "wrap");
@@ -179,7 +184,8 @@ public class MapController extends JXPanel
         add(new JLabel("Mouse Meters:"));
         add(mouseMetersCoords, "wrap");
         
-        setAlpha(0.7f);
+        setBackground(Color.WHITE);
+        //setAlpha(0.8f);
     }
     
     public void setActivePvd(PlanViewDisplay newPvd)
@@ -197,29 +203,31 @@ public class MapController extends JXPanel
     
     private void update()
     {
-        if(pvd != null)
+        if(pvd != null && mapRenderer != null && pvd.getMousePosition() != null)
         {
             simCenterLabel.setText(transformer.getPanOffsetX() + "," + transformer.getPanOffsetY());
             simZoomLabel.setText(Double.toString(transformer.getScale()));
             simMppLabel.setText(Double.toString(transformer.screenToMeters(1)));
-            Point p = pvd.getMousePosition();
-            if(p != null) {
-                mouseScreenCoords.setText(p.x + ", " + p.y);
-                Vector3 mouseMeters = pvd.getTransformer().screenToMeters(p.x, p.y);
-                mouseMetersCoords.setText(String.format("%8.2f, %8.2f", new Object[]{ mouseMeters.x, 
-                                                                                      mouseMeters.y }));
-                Geodetic.Point mouseLatlon = pvd.getTerrain().toGeodetic(mouseMeters); 
-                mouseLatlonCoords.setText(String.format("%8.6f, %8.6f", new Object[]{ Math.toDegrees(mouseLatlon.latitude), 
-                                                                                      Math.toDegrees(mouseLatlon.longitude) }));
-            }
-        }
-        
-        if(mapRenderer != null)
-        {
+            Point mousePtPx = pvd.getMousePosition();
+            
+            mouseScreenCoords.setText(mousePtPx.x + ", " + mousePtPx.y);
+            Vector3 mouseMeters = pvd.getTransformer().screenToMeters(mousePtPx.x, mousePtPx.y);
+            mouseMetersCoords.setText(String.format("%8.2f, %8.2f", new Object[]{ mouseMeters.x, 
+                                                                                  mouseMeters.y }));
+            Geodetic.Point mouseLatlon = pvd.getTerrain().toGeodetic(mouseMeters); 
+            mouseLatlonCoords.setText(String.format("%8.6f, %8.6f", new Object[]{ Math.toDegrees(mouseLatlon.latitude), 
+                                                                                  Math.toDegrees(mouseLatlon.longitude) }));
+            
+            Point osmCenterPx = mapRenderer.getCenter();
             osmZoomLabel.setText(Integer.toString(mapRenderer.getZoom()));
-            osmCenterLabel.setText(mapRenderer.getCenter().toString());
+            osmCenterLabel.setText(osmCenterPx.toString());
             osmMppLabel.setText(Double.toString(mapRenderer.getMeterPerPixel()));
-            mouseOsmCoords.setText("??");
+            
+            Point osmMousePx = new Point(osmCenterPx.x - pvd.getWidth()/2 + mousePtPx.x, osmCenterPx.y - pvd.getHeight()/2 + mousePtPx.y);
+            mouseOsmPxCoords.setText(osmMousePx.toString());
+            
+            int tileSize = mapRenderer.getTileSize();
+            mouseOsmTileCoords.setText(osmMousePx.x / tileSize + ", " + osmMousePx.y / tileSize);
         }
     }
 }

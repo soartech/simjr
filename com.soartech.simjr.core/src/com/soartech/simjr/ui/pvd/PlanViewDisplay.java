@@ -141,7 +141,6 @@ public class PlanViewDisplay extends JPanel
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
     {
         setLayout(null);
-        //setLayout(new OverlayLayout(this));
         
         this.app = app;
         
