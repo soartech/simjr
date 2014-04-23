@@ -64,8 +64,8 @@ public class TerrainElement implements ModelElement
         final Element root = model.newElement("terrain");
         
         final Element origin = model.newElement("origin");
-        origin.setAttribute("latitude", "0.0", Model.NAMESPACE);
-        origin.setAttribute("longitude", "0.0", Model.NAMESPACE);
+        origin.setAttribute("latitude", "42.0", Model.NAMESPACE);
+        origin.setAttribute("longitude", "-83.0", Model.NAMESPACE);
         origin.setAttribute("altitude", "0.0", Model.NAMESPACE);
         root.addContent(origin);
         
