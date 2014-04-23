@@ -348,8 +348,8 @@ public class MapRenderer implements TileLoaderListener
     
     public double getScaleFactor()
     {
-        double simMpp = renderTarget.getTransformer().scalarToPixels(Scalar.createMeter(1));
+        double simPpm = renderTarget.getTransformer().scalarToPixels(Scalar.createMeter(1));
         //logger.info("scale factor: " + getMeterPerPixel() + " * " + simMpp + " = " + getMeterPerPixel() * simMpp);
-        return getMeterPerPixel() * simMpp;
+        return getMeterPerPixel() * simPpm;
     }
 }
