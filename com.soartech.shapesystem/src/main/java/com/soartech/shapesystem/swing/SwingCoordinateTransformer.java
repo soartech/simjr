@@ -145,7 +145,6 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         mx = pt[0];
         my = pt[1];
         
-        
         return new Vector3(mx, my, 0.0);
     }
     

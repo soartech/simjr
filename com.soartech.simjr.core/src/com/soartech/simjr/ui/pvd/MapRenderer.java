@@ -154,19 +154,19 @@ public class MapRenderer implements TileLoaderListener
         int off_x = (center.x % tilesize);       // distance in px from center pt to left edge of tile
         int off_y = (center.y % tilesize);       // distance in px from center pt to top edge of tile
 
-        int w2 = renderTarget.getWidth() / 2;    // half screen width
-        int h2 = renderTarget.getHeight() / 2;   // half screen height
+        int w2 = (int) ((renderTarget.getWidth() / 2) / scale);  // half screen width
+        int h2 = (int) ((renderTarget.getHeight() / 2) / scale); // half screen height
         int posx = w2 - off_x;                   // x coord in screen px of left edge of tile 
         int posy = h2 - off_y;                   // y coord in screen px of upper edge of tile
 
-        int diff_left = off_x;
-        int diff_right = tilesize - off_x;
-        int diff_top = off_y;
-        int diff_bottom = tilesize - off_y;
+        int diff_left = off_x;                   // distance in px from center pt to left edge of tile
+        int diff_right = tilesize - off_x;       // distance in px from center pt to right edge of tile
+        int diff_top = off_y;                    // distance in px from center pt to top edge of tile
+        int diff_bottom = tilesize - off_y;      // distance in px from center pt to bottom edge of tile
 
+        //Determine an initial direction for rendering
         boolean start_left = diff_left < diff_right;
         boolean start_top = diff_top < diff_bottom;
-
         int iMove = 0;
         if (start_top) {
             if (start_left) {
@@ -180,51 +180,64 @@ public class MapRenderer implements TileLoaderListener
             } else {
                 iMove = 0;
             }
-        } // calculate the visibility borders
-        int x_min = -tilesize;
-        int y_min = -tilesize;
-        int x_max = renderTarget.getWidth();
-        int y_max = renderTarget.getHeight();
+        } 
+        
+        // calculate the visibility borders
+        //pretend the canvas is larger than it really is, as we may be skewed from scale
+        double x_min = -tilesize * scale; //TODO: What is correct, here?
+        double y_min = -tilesize * scale;
+        double x_max = renderTarget.getWidth() / scale; 
+        double y_max = renderTarget.getHeight() / scale;
 
         // calculate the length of the grid (number of squares per edge)
-        int gridLength = 1 << zoom;
+        //int gridLength = 1 << zoom;  Used for scroll wrap only
 
         // paint the tiles in a spiral, starting from center of the map
-        boolean painted = true;
+        boolean painting = true;
         int x = 0;
-        while (painted) {
-            painted = false;
-            for (int i = 0; i < 4; i++) {
-                if (i % 2 == 0) {
-                    x++;
-                }
-                for (int j = 0; j < x; j++) {
-                    if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) {
+        while (painting) 
+        {
+            painting = false;
+            for (int i = 0; i < 4; i++) 
+            { 
+                //when i = 0, 2 bump up x
+                if (i % 2 == 0) {  x++; }
+                
+                for (int j = 0; j < x; j++) 
+                {
+                    if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) 
+                    {
                         // tile is visible
                         Tile tile;
-                        if (scrollWrapEnabled) {
-                            // in case tilex is out of bounds, grab the tile to use for wrapping
-                            int tilexWrap = (((tilex % gridLength) + gridLength) % gridLength);
-                            tile = tileController.getTile(tilexWrap, tiley, zoom);
-                        } else {
+                        //if (scrollWrapEnabled) { TODO: Re-enable this later, if desired
+                        //    // in case tilex is out of bounds, grab the tile to use for wrapping
+                        //    int tilexWrap = (((tilex % gridLength) + gridLength) % gridLength);
+                        //    tile = tileController.getTile(tilexWrap, tiley, zoom);
+                        //} else {
                             tile = tileController.getTile(tilex, tiley, zoom);
-                        }
+                        //}
                         if (tile != null) {
                             tile.paint(g, posx, posy);
                             if (tileGridVisible) {
                                 g.drawRect(posx, posy, tilesize, tilesize);
                             }
                         }
-                        painted = true;
+                        painting = true;
                     }
+                    
+                    //Increment to the next tile
                     Point p = move[iMove];
                     posx += p.x * tilesize;
                     posy += p.y * tilesize;
                     tilex += p.x;
                     tiley += p.y;
-                }
+                    
+                }//end for j
+                
+                //change direction if necessary (spiral)
                 iMove = (iMove + 1) % move.length;
-            }
+                
+            }//end for i
         }
         // outer border of the map
         int mapSize = tilesize << zoom;
@@ -323,13 +336,11 @@ public class MapRenderer implements TileLoaderListener
     {
         //this is by no means efficient
         CoordinateTransformer transformer = renderTarget.getTransformer();
-        Vector3 metersUpperLeft = transformer.screenToMeters(0, 0);
-        Vector3 metersCenter = metersUpperLeft.add(new Vector3(renderTarget.getWidth()/2, renderTarget.getHeight()/2, 0));
+        Vector3 metersCenter = transformer.screenToMeters(renderTarget.getWidth()/2, renderTarget.getHeight()/2);
         Geodetic.Point latLonCenter = renderTarget.getTerrain().toGeodetic(metersCenter);
         Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoom), 
                                  tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoom));
-        logger.debug("Meters UL (offset): " + metersUpperLeft.x + "," + metersUpperLeft.y +  
-                    " Meters center: " + metersCenter.x + "," + metersCenter.y +  
+        logger.debug("Meters center: " + metersCenter.x + "," + metersCenter.y +  
                     " Lat/Lon center: " + latLonCenter.latitude + "," + latLonCenter.longitude +  
                     " OSM Center: " + center);
         return center;

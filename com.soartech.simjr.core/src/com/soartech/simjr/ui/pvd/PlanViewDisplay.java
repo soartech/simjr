@@ -746,13 +746,13 @@ public class PlanViewDisplay extends JPanel
         final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
         
-        //hack
+        //TODO: Accurate zoom here
         int mapZoom = mapRenderer.getZoom();
         if(rotation > 0) { 
-            mapRenderer.setZoom(mapZoom-1); 
+            //mapRenderer.setZoom(mapZoom-1); 
         }
         else if(rotation < 0) {
-            mapRenderer.setZoom(mapZoom+1);
+            //mapRenderer.setZoom(mapZoom+1);
         }
         
         repaint();
