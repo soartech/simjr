@@ -221,7 +221,7 @@ public class MapController extends JXPanel
     {
         if(pvd != null && mapRenderer != null && pvd.getMousePosition() != null)
         {
-            simCenterPxLabel.setText(String.format("%8.2f, %8.2f", new Object[] { transformer.getPanOffsetX(), transformer.getPanOffsetY() }));
+            simCenterPxLabel.setText(String.format("%8.2f, %8.2f", new Object[] { transformer.getPanOffsetX(), -transformer.getPanOffsetY() }));
             simZoomLabel.setText(Double.toString(transformer.getScale()));
             simMppLabel.setText(Double.toString(transformer.screenToMeters(1)));
             Point mousePtPx = pvd.getMousePosition();
@@ -248,10 +248,6 @@ public class MapController extends JXPanel
             
             Point.Double osmUpperLeft = new Point.Double(osmCenterPx.x - (pvd.getWidth()/2 / scale), osmCenterPx.y - (pvd.getHeight()/2) / scale);
             Point.Double osmMousePx = new Point.Double(osmUpperLeft.x + mousePtPx.x / scale, osmUpperLeft.y + mousePtPx.y / scale);
-            logger.info("Center: " + osmCenterPx.x + ", " + osmCenterPx.y + "  " + 
-                        "UpperLeft: " + osmUpperLeft.x + ", " + osmUpperLeft.y + "  " +
-                        "Mouse: " + osmMousePx.x + ", " + osmMousePx.y
-                        );
             mouseOsmPxCoords.setText(String.format("%8.2f, %8.2f", new Object[] { osmMousePx.x, osmMousePx.y }));
             
             double tileSize = mapRenderer.getTileSize();

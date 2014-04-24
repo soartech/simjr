@@ -184,8 +184,8 @@ public class MapRenderer implements TileLoaderListener
         
         // calculate the visibility borders
         //pretend the canvas is larger than it really is, as we may be skewed from scale
-        double x_min = -tilesize * scale; //TODO: What is correct, here?
-        double y_min = -tilesize * scale;
+        double x_min = -tilesize; 
+        double y_min = -tilesize;
         double x_max = renderTarget.getWidth() / scale; 
         double y_max = renderTarget.getHeight() / scale;
 
@@ -284,7 +284,8 @@ public class MapRenderer implements TileLoaderListener
      *            displayed map
      * @return latitude / longitude
      */
-    public Coordinate getPosition(Point mapPoint) {
+    public Coordinate getPosition(Point mapPoint) 
+    {
         return getPosition(mapPoint.x, mapPoint.y);
     }
     
