@@ -133,10 +133,10 @@ public class MapControlPanel extends JXPanel
             loaderSelector.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
-                    mapRenderer.setTileLoader((TileLoader)e.getItem());
+                    MapControlPanel.this.mapRenderer.setTileLoader((TileLoader)e.getItem());
                 }
             });
-            mapRenderer.setTileLoader((TileLoader)loaderSelector.getSelectedItem());
+            this.mapRenderer.setTileLoader((TileLoader)loaderSelector.getSelectedItem());
         }
         catch(IOException ioe) {
             logger.error("Unable to create loaders!", ioe);
@@ -145,7 +145,7 @@ public class MapControlPanel extends JXPanel
         sourceSelector.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                mapRenderer.setTileSource((TileSource)e.getItem());
+                MapControlPanel.this.mapRenderer.setTileSource((TileSource)e.getItem());
             }
         });
         
