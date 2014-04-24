@@ -104,6 +104,6 @@ public class MapTileControlPanel extends JXPanel
         configPanel.setAlpha(0.7f);
         add(configPanel, "span 2, wrap 30");
         
-        setAlpha(0.8f);
+        setAlpha(0.95f);
     }
 }
