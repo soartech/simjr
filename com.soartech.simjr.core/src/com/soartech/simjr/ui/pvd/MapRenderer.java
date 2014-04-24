@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.ui.pvd;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
@@ -71,9 +72,11 @@ public class MapRenderer implements TileLoaderListener
     private TileController tileController;
     private TileSource tileSource;
     
-    private int zoom = 10; //TODO: Initial zoom should be set by PVD
+    private int zoom = 10; 
     
     private final PlanViewDisplay pvd;
+    
+    private final float opacity = 0.75f; //TODO: Expose this via GUI or config
     
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
@@ -158,11 +161,15 @@ public class MapRenderer implements TileLoaderListener
         return tileSource.getTileSize();
     }
     
-    public void paint(Graphics2D g)
+    public void paint(Graphics2D g1)
     {
-        AffineTransform current = g.getTransform();
+        Graphics2D g = (Graphics2D) g1.create();
+        //AffineTransform current = g.getTransform();
         double scale = getScaleFactor();
         g.transform(AffineTransform.getScaleInstance(scale, scale));
+        
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
+        g.setComposite(ac);
         
         Point center = getCenter();              // center pt in tile grid pixels
         int tilesize = tileSource.getTileSize(); // size of each tile in pixels
@@ -283,9 +290,10 @@ public class MapRenderer implements TileLoaderListener
             center.x = center.x % mapSize;
         }
         
-        g.setTransform(current);
+        //g.setTransform(current);
+        g.dispose(); //TODO: In a finally block
 
-        attribution.paintAttribution(g, pvd.getWidth(), pvd.getHeight(), 
+        attribution.paintAttribution(g1, pvd.getWidth(), pvd.getHeight(), 
                 getPosition(0, 0), getPosition(pvd.getWidth(), pvd.getHeight()), zoom, pvd);
     }
     
