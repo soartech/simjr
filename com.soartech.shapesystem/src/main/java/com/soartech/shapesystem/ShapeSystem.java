@@ -51,6 +51,7 @@ public class ShapeSystem
     private boolean layersNeedSorting = false;
     private List<String> errors = new ArrayList<String>();
     private Map<String, Shape> shapeMap = new LinkedHashMap<String, Shape>();
+    private boolean displayRenderingErrors = true;
     
     public class Layer implements Comparable<Layer>
     {
@@ -206,7 +207,7 @@ public class ShapeSystem
     
     public void displayErrors(PrimitiveRendererFactory rendererFactory)
     {
-        if(errors.isEmpty())
+        if(!displayRenderingErrors || errors.isEmpty())
         {
             return;
         }
@@ -339,5 +340,14 @@ public class ShapeSystem
             }
         }
         return null;
+    }
+    
+    /**
+     * Control if rendering errors are displayed in-frame.
+     * (By default, this is enabled.)
+     */
+    public void displayErrorsInFrame(boolean displayRenderingErrors)
+    {
+        this.displayRenderingErrors = displayRenderingErrors;
     }
 }

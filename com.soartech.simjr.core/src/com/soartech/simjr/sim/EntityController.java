@@ -33,8 +33,7 @@ package com.soartech.simjr.sim;
 
 
 /**
- * Interface for an object that controls an entity. One controller may be
- * assigned to each entity by calling {@link Entity#setController(EntityController)}.
+ * Interface for an object that controls an entity.
  * 
  * <p>Note that this interface extends {@link Tickable} so the <code>tick()</code>
  * method will be called each time the entity is ticked.

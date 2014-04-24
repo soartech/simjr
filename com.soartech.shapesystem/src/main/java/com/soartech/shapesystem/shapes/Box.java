@@ -159,13 +159,23 @@ public class Box extends Shape
         {
             return false;
         }
-        List<Vector3> hullPoints = new ArrayList<Vector3>();
-        for(SimplePosition p : points)
+        Polygon p = Util.createPlanarConvexHull(points);
+        return p.contains(new Vector3(x, y, 0.0)) || p.distance(new Vector3(x, y, 0.0)) < tolerance;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
         {
-            hullPoints.add(new Vector3(p.x, p.y, 0.0));
+            return Double.MAX_VALUE;
         }
-        Polygon p = Polygon.createConvexHull(hullPoints);
-        return p.contains(new Vector3(x, y, 0.0));
+        Polygon p = Util.createPlanarConvexHull(points);
+        return p.distance(new Vector3(x, y, 0.0));
     }
 
 }

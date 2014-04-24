@@ -80,7 +80,6 @@ public class EntityPrototypeDatabase extends AbstractAdaptable implements Simula
      * Helper function to support scripting.
      * 
      * @param services
-     * @return
      */
     public static EntityPrototypeDatabase findService(ServiceManager services)
     {

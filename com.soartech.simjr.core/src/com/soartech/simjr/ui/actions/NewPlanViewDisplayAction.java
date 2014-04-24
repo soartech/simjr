@@ -46,7 +46,7 @@ public class NewPlanViewDisplayAction extends AbstractSimulationAction
     private PlanViewDisplay pvd;
     
     /**
-     * @param label
+     * @param actionManager
      */
     public NewPlanViewDisplayAction(ActionManager actionManager)
     {

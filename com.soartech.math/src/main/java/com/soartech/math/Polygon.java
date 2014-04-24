@@ -316,4 +316,22 @@ public class Polygon
         return asList(stack, minmax != minmin ? top + 1 : top);
     }
 
+    /**
+     * @return the distance from the center of this Polygon to the point <code>p</code>.
+     */
+    public double distance(Vector3 p)
+    {
+        Vector3 center = Vector3.ZERO;
+        final List<Vector3> pts = getPoints();
+        if (pts.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        for(Vector3 hullPoint : pts)
+        {
+            center = center.add(hullPoint);
+        }
+        center = center.multiply(1.0/pts.size());
+        return center.distance(p);
+    }
 }

@@ -50,7 +50,7 @@ public class ChangeScriptBlockEdit extends AbstractUndoableEdit
     
     /**
      * @param block
-     * @param newText
+     * @param oldText
      */
     public ChangeScriptBlockEdit(ScriptBlockElement block, String oldText)
     {

@@ -327,6 +327,13 @@ prototypes:
     properties:
         ms2525.template: "S%cGPEVCO--"
 
+- &semi
+    id: semi
+    parent: *ground-vehicle
+    category: semi
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+        
 - &car
     id: car
     parent: *ground-vehicle
@@ -385,18 +392,21 @@ prototypes:
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
         
 - &uh-60
     id: uh-60
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
     
 - &ch-47
     id: ch-47
     parent: *rwa
     properties:
         ms2525.template: "S%cAPMHC---"
+        average-speed: 58.1152
 
 ### Ships #####################################################################
 - &sea-vehicle
@@ -432,7 +442,7 @@ prototypes:
     parent: *sea-vehicle
     category: lcs
     properties:
-        ms2525.template: "S%cSPCLDD--"
+        ms2525.template: "S%cSPCLLL--"
 
 - &lpd
     id: lpd

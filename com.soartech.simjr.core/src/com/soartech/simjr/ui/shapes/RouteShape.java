@@ -333,6 +333,42 @@ public class RouteShape extends EntityShape implements EntityConstants
             
             return false;
         }
+
+        @Override
+        public double distance(double x, double y)
+        {
+            if(!isVisible())
+            {
+                return Double.MAX_VALUE;
+            }
+            
+            if(cachedPoints.size() < 2)
+            {
+                return Double.MAX_VALUE;
+            }
+            
+            SimplePosition last = null;
+            double min = Double.MAX_VALUE;
+            for(SimplePosition p : cachedPoints)
+            {
+                if(last != null)
+                {
+                    Vector3 start = new Vector3(last.x, last.y, 0.0);
+                    Vector3 end = new Vector3(p.x, p.y, 0.0);
+                    Vector3 dir = end.subtract(start);
+                    
+                    double d = LineSegmentDistance.toPoint(start, end, dir, new Vector3(x, y, 0.0));
+                    if(d < min)
+                    {
+                        min = d;
+                    }
+                }
+                
+                last = p;
+            }
+            
+            return min;
+        }
         
     }
 }

@@ -146,7 +146,7 @@ public class ImportOSMAction extends AbstractEditorAction
      * we create a waypoint entity and store its name.
      * 
      * @param nodeid
-     * @return
+     * @return Node with id of {@code nodeid}.
      */
     private Node getOrCreateNode(String nodeid)
     {

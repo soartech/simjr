@@ -51,7 +51,6 @@ public interface EntityPropertyAdapter
      * IllegalArgumentException if the new value is not valid.
      *
      * @param entity The entity the property is being set on
-     * @param property The name of the property
      * @param newValue The new value of the property, never null
      * @throws IllegalArgumentException if the property could not be set
      *      to the given value.

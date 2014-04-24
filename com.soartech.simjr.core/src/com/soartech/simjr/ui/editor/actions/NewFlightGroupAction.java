@@ -43,6 +43,7 @@ import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
 import com.soartech.simjr.sim.EntityPrototype;
 import com.soartech.simjr.sim.FilterableEntityPrototypes;
+import com.soartech.simjr.ui.NewFlightGroupDialog;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
 
@@ -74,18 +75,27 @@ public class NewFlightGroupAction extends NewEntityGroupAction
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        EntityPrototype selectedPrototype = promptUserForPrototype();
+        
+        NewFlightGroupDialog newFlightGroupForm = NewFlightGroupDialog.select(getApplication().getFrame(), 
+                getAvailablePrototypes(), null, new Integer[] { 2, 3, 4, 5 }, 4, "viper");
+        
+        if (newFlightGroupForm.getUserCancelled())
+        {
+            return;
+        }
+        
+        EntityPrototype selectedPrototype = newFlightGroupForm.getPrototype();
         if(selectedPrototype == null) {
             return;
         }
         
-        final int flightGroupSize = promptUserForGroupSize();
+        final int flightGroupSize = newFlightGroupForm.getGroupSize();
         if(flightGroupSize == 0) {
             return;
         }
         
-        String flightGroupName = promptUserForGroupName();
-        if(flightGroupName == null) {
+        String flightGroupName = newFlightGroupForm.getGroupName();
+        if(flightGroupName == null || flightGroupName.equals("")) {
             return;
         }
         

@@ -71,8 +71,8 @@ public class ScriptEditPanel extends JPanel implements ModelChangeListener
      
         if(rows > 0)
         {
-            area.setMinimumSize(new Dimension(1, rows * 15));
-            area.setPreferredSize(new Dimension(1, rows * 15));
+            area.setMinimumSize(new Dimension(100, rows * 15));
+            area.setPreferredSize(new Dimension(100, rows * 15));
         }
         add(new JScrollPane(area), BorderLayout.CENTER);
         

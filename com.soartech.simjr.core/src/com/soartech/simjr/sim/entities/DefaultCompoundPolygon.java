@@ -85,7 +85,7 @@ public class DefaultCompoundPolygon extends AbstractEntityCapability implements 
     /**
      * Construct an empty polygon
      * 
-     * @param name The name of the polygon
+     * @param defaultName The name of the polygon
      */
     public DefaultCompoundPolygon(String defaultName)
     {

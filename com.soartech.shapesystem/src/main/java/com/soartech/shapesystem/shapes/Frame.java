@@ -94,5 +94,15 @@ public class Frame extends Shape
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        return Double.MAX_VALUE;
+    }
+
 }
 

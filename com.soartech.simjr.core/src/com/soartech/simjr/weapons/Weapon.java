@@ -127,7 +127,6 @@ public abstract class Weapon
     
     /**
      * @param name
-     * @param type
      * @param count
      * @param maxCount
      */

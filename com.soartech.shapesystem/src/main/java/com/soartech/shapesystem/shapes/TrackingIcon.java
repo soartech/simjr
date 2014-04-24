@@ -55,11 +55,13 @@ public class TrackingIcon extends Shape
     private boolean alwaysShown;
 
     /**
+     * 
      * @param name
      * @param layer
      * @param pos
      * @param rot
-     * @param style
+     * @param image
+     * @param alwaysShown
      */
     public TrackingIcon(String name, String layer, Position pos, Rotation rot,
             String image, boolean alwaysShown)
@@ -211,5 +213,16 @@ public class TrackingIcon extends Shape
         
         return info;
      }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        // TODO: Implement distance checks along with hitTest.
+        return Double.MAX_VALUE;
+    }
 
 }

@@ -82,9 +82,9 @@ public class EntityShape implements EntityPropertyListener
     public class LabelFrame 
     {
         public final static String MAIN_LABEL = "_mainLabel";
-        public Frame frame;
-        public Text label;
-        public String labelType;
+        public final Frame frame;
+        public final Text label;
+        public final String labelType;
         
         public LabelFrame(Frame frame, Text label, String labelType)
         {
@@ -154,7 +154,35 @@ public class EntityShape implements EntityPropertyListener
                 return true;
             }
         }
+        for (LabelFrame lf : labels)
+        {
+            if (lf.label.hitTest(x, y, tolerance))
+            {
+                return true;
+            }
+        }
         return false;
+    }
+    
+    /**
+     * Return the minimum distance between this shape's components and
+     * the point.
+     * 
+     * @param x The x screen coordinate
+     * @param y The y screen coordinate
+     */
+    public double minDistance(double x, double y)
+    {
+        double min = Double.MAX_VALUE;
+        for(Shape s : hitableShapes)
+        {
+            double d = s.distance(x, y);
+            if (d < min)
+            {
+                min = d;
+            }
+        }
+        return min;
     }
     
     /**

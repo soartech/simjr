@@ -247,6 +247,11 @@ public class DefaultEntityShape extends EntityShape
         myBody = createBodyShape(name, new ShapeStyle());
     }
     
+    public ImageShape getBodyShape()
+    {
+        return myBody;
+    }
+    
     private void createShadow(String name)
     {
         ShapeStyle shadowStyle = new ShapeStyle();

@@ -57,6 +57,7 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.math.geotrans.Geodetic.Point;
 import com.soartech.shapesystem.SimplePosition;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
@@ -80,7 +81,7 @@ public class CreateGeometryAction extends AbstractEditorAction
     
     private static final int BUTTON_WIDTH = 75, BUTTON_HEIGHT = 25;
     private static final int LABEL_WIDTH = 225, LABEL_HEIGHT = 35;
-    private static final double SELECTION_TOLERANCE = 15.0;
+    private static final double SELECTION_TOLERANCE = SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0);
     
     private final Simulation sim;
     private final PlanViewDisplay pvd;

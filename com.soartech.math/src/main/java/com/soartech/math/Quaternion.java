@@ -63,13 +63,13 @@ public class Quaternion
      * Create a rotation quaternion that maps one vector onto another using the
      * smallest available rotation.
      * 
-     * <p>If {@param start} and {@param end} are colinear, then the rotation 
-     * will be about the axis normal to {@param start} and the X axis. If 
-     * {@param start} is colinear with the X axis then the axis normal to
-     * {@param start} and the Y axis is used.
+     * <p>If {@code start} and {@code end} are colinear, then the rotation 
+     * will be about the axis normal to {@code start} and the X axis. If 
+     * {@code start} is colinear with the X axis then the axis normal to
+     * {@code start} and the Y axis is used.
      * 
      * @param start Start vector
-     * @param end End vector that {@param start} is mapped to
+     * @param end End vector that {@code start} is mapped to
      * @return Rotation quaternion
      */
     public static Quaternion createMappingRotation(Vector3 start, Vector3 end)
@@ -146,7 +146,7 @@ public class Quaternion
      * Rotates a vector by the rotation that this quaternion represents.
      * 
      * <p>If v is zero, or if the quaternions {@link #w} component is nearly
-     * one, then {@param v} is simply returned because the rotation would 
+     * one, then {@code v} is simply returned because the rotation would 
      * have no affect.
      * 
      * @param v Input vector

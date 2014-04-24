@@ -51,7 +51,7 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     /**
      * The entity to circle, or <code>null</code> if <code>centerPoint</code> is set
      */
-    private Entity centerEntity;
+    protected Entity centerEntity;
 
     /**
      * The point to circle, or <code>null</code> if <code>centerEntity</code> is set
@@ -165,7 +165,12 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     {
         this.clockwise = cw;
     }
-
+    
+    protected Vector3 getCenterPoint()
+    {
+        return centerEntity != null ? centerEntity.getPosition() : centerPoint;
+    }
+    
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.EntityController#openDebugger()
      */
@@ -179,13 +184,12 @@ public class OrbitFlightController extends AbstractEntityCapability implements
     @Override
     public void tick(double dt)
     {
-        if(centerEntity == null && centerPoint == null)
+     // Figure out the point to orbit (entity or fixed point)
+        final Vector3 point = getCenterPoint();
+        if(point == null)
         {
             return;
         }
-
-        // Figure out the point to orbit (entity or fixed point)
-        final Vector3 point = centerEntity != null ? centerEntity.getPosition() : centerPoint;
 
         final Entity entity = getEntity();
         // Get the entity's flight controller so we can tell it where to go

@@ -101,8 +101,8 @@ public class Vector3
     /**
      * Linearly interpolate between two vectors
      * 
-     * @param v0 Start vector, returned when {@param u} == 0.
-     * @param v1 End vector, returned when {@param u} == 1.
+     * @param v0 Start vector, returned when {@code u} == 0.
+     * @param v1 End vector, returned when {@code u} == 1.
      * @param u The interpolation parameter
      * @return Interpolated vector.
      */
@@ -141,7 +141,7 @@ public class Vector3
      * 
      * @param i The index of the component to retrieve
      * @return The component at the desired index
-     * @throws IndexOutOfBoundsException if {@param i} is not 0, 1, or 2
+     * @throws IndexOutOfBoundsException if {@code i} is not 0, 1, or 2
      */
     public double get(int i)
     {

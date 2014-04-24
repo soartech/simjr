@@ -34,7 +34,7 @@ package com.soartech.simjr.adaptables;
 /**
  * Basic implementation of Adaptable interface. Sub-classes should first
  * check for any particular adapter types and then call the super 
- * implementation of {@link #getAdapter(Class, AdaptableContext)} which
+ * implementation of {@link Adaptable#getAdapter(Class)} which
  * will handle all "this instanceof" tests as well as forwarding the
  * request to the context.
  * 

@@ -228,12 +228,12 @@ public class EntityVelocityController extends JPanel implements EntityController
         
         //remove any existing entity controller capabilities form the entity
         oldControllers.clear();
-        EntityController ec = Adaptables.adapt(entity, EntityController.class);
+        EntityController ec = Adaptables.adapt(entity, EntityController.class, false);
         while(ec != null)
         {
             oldControllers.add(ec);
             entity.removeCapability(ec);
-            ec = Adaptables.adapt(entity, EntityController.class);
+            ec = Adaptables.adapt(entity, EntityController.class, false);
         }
     }
 

@@ -63,6 +63,7 @@ import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.SimplePosition;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.shapesystem.swing.SwingPrimitiveRendererFactory;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.ApplicationStateService;
@@ -111,6 +112,9 @@ public class PlanViewDisplay extends JPanel
     private final SwingCoordinateTransformer transformer = new SwingCoordinateTransformer(this);
     private final SwingPrimitiveRendererFactory factory = new SwingPrimitiveRendererFactory(transformer);
     private final ShapeSystem shapeSystem = new ShapeSystem();
+    {
+        shapeSystem.displayErrorsInFrame(SimJrProps.get("simjr.pvd.displayErrors", true));
+    }
     private final TimedShapeManager timedShapes = new TimedShapeManager(shapeSystem);
     
     private EntityShapeManager shapeAdapter;
@@ -136,6 +140,10 @@ public class PlanViewDisplay extends JPanel
     private CoordinatesPanel coordinatesPane;
     
     private final AppStateIndicator appStateIndicator;
+
+    private Cursor defaultCursor = Cursor.getDefaultCursor();
+
+    private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
     {
@@ -546,7 +554,7 @@ public class PlanViewDisplay extends JPanel
     
     private Entity getEntityAtScreenPoint(Point point)
     {
-        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), 15.0);
+        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0));
         return !entities.isEmpty() ? entities.get(0) : null;
     }
     
@@ -583,7 +591,7 @@ public class PlanViewDisplay extends JPanel
         if(!draggingEntity)
         {
             // change mouse icon to grab icon
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            setCursor(draggingCursor);
             panOrigin.setLocation(e.getPoint());
         }
         
@@ -598,7 +606,7 @@ public class PlanViewDisplay extends JPanel
         requestFocus();
         
         // restore the cursor to standard pointer
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        setCursor(defaultCursor);
         
         final SelectionManager sm = SelectionManager.findService(this.app);
         final List<Entity> selectedEntities = getSelectedEntities();
@@ -760,6 +768,39 @@ public class PlanViewDisplay extends JPanel
         repaint();
     }
 
+    /**
+     * Default cursor to use when not performing a user-specific operation
+     * (e.g., dragging the pvd.)
+     */
+    public void setCursorPreference(Cursor crossCursor)
+    {
+        this.defaultCursor = crossCursor;
+    }
+
+    /**
+     * @return the {@link Cursor} preferred when not dragging.
+     */
+    public Cursor getCursorPreference()
+    {
+        return this.defaultCursor;
+    }
+
+    /**
+     * The {@link Cursor} preferred when the user drags the PVD.
+     */
+    public void setDraggingCursor(Cursor cursor)
+    {
+        this.draggingCursor = cursor;
+    }
+
+    /**
+     * The {@link Cursor} preferred when the user drags the PVD.
+     */
+    public Cursor getDraggingCursor()
+    {
+        return draggingCursor;
+    }
+
     /* (non-Javadoc)
      * @see javax.swing.JComponent#getToolTipText(java.awt.event.MouseEvent)
      */
@@ -860,4 +901,5 @@ public class PlanViewDisplay extends JPanel
             PlanViewDisplay.this.controlMouseWheel(e.getPoint(), e.getWheelRotation());
         }
     }
+
 }

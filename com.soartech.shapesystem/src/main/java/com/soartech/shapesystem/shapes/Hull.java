@@ -144,16 +144,11 @@ public class Hull extends Shape
         return new ArrayList<String>(pointNames);
     }
 
-    /* (non-Javadoc)
-     * @see com.soartech.shapesystem.Shape#hitTest(double, double, double)
+    /**
+     * @return The {@link Polygon} associated with the {@link Hull}.
      */
-    @Override
-    public boolean hitTest(double x, double y, double tolerance)
+    private Polygon getPolygon()
     {
-        if(!isVisible() || points.isEmpty())
-        {
-            return false;
-        }
         List<Vector3> hullPoints = new ArrayList<Vector3>();
         for(SimplePosition p : points)
         {
@@ -165,7 +160,34 @@ public class Hull extends Shape
             p = Polygon.createConvexHull(hullPoints);
         else
             p = Polygon.createPolygon(hullPoints);
+        return p;
+    }
+
+    /* (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#hitTest(double, double, double)
+     */
+    @Override
+    public boolean hitTest(double x, double y, double tolerance)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return false;
+        }
         
-        return p.contains(new Vector3(x, y, 0.0));
+        return getPolygon().contains(new Vector3(x, y, 0.0));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        return getPolygon().distance(new Vector3(x, y, 0.0));
     }
 }
