@@ -102,9 +102,7 @@ public class PlanViewDisplay extends JPanel
     private boolean contextMenuEnabled = true;
     
     private SelectionManagerListener selectionListener = new SelectionManagerListener(){
-
-        public void selectionChanged(Object source)
-        {
+        public void selectionChanged(Object source) {
             appSelectionChanged(source);
         }};
         
@@ -130,7 +128,7 @@ public class PlanViewDisplay extends JPanel
     
     private MapImage mapBackgroundImage;
     private MapRenderer mapRenderer = new MapRenderer(this);
-    private MapController mapController = new MapController(transformer, mapRenderer);
+    private MapControlPanel mapControlPanel = new MapControlPanel(transformer, mapRenderer);
     
     private Entity lockEntity;
 
@@ -153,6 +151,8 @@ public class PlanViewDisplay extends JPanel
         this.detonationShapes = new DetonationShapeManager(sim, timedShapes);
         this.speechBubbles = new SpeechBubbleManager(sim, this.app.findService(RadioHistory.class), shapeAdapter);
         
+        mapRenderer.approximateScale(transformer.screenToMeters(1));
+        
         setToolTipText(""); // Enable tooltips
         setFocusable(true);
         setBackground(Color.WHITE);
@@ -162,13 +162,11 @@ public class PlanViewDisplay extends JPanel
         addMouseWheelListener(new MouseWheelHandler());
         
         final SelectionManager selectionService = SelectionManager.findService(this.app);
-        if(selectionService != null)
-        {
+        if(selectionService != null) {
             selectionService.addListener(selectionListener);
         }
         
-        if(toCopy != null)
-        {
+        if(toCopy != null) {
             setMapImage(toCopy.getMapImage());
         }
         
@@ -183,7 +181,7 @@ public class PlanViewDisplay extends JPanel
         });
         
         addCoordinatePane();
-        addMapController();
+        addMapControlPanel();
         
         repaintTimer.start();
     }
@@ -330,9 +328,8 @@ public class PlanViewDisplay extends JPanel
      */
     public void showPosition(Vector3 p, boolean repaint)
     {
-        // Note: This function transfers all coordinates to pixels, computes the
-        // difference between the current and desired location, and increases
-        // the pan-offset accordingly.
+        // Note: This function transfers all coordinates to pixels, computes the difference 
+        // between the current and desired location, and increases the pan-offset accordingly.
 
         // find the current location of (x,y) in meters
         SimplePosition currentPosition = transformer.metersToScreen(p.x, p.y);
@@ -346,8 +343,7 @@ public class PlanViewDisplay extends JPanel
         double offsetY = transformer.getPanOffsetY() + desiredY - currentPosition.y;
         transformer.setPanOffset(offsetX, offsetY);
 
-        if(repaint)
-        {
+        if(repaint) {
             repaint();
         }
     }
@@ -367,8 +363,7 @@ public class PlanViewDisplay extends JPanel
         synchronized(sim.getLock())
         {
             List<Entity> entities = sim.getEntitiesFast();
-            if(entities.isEmpty())
-            {
+            if(entities.isEmpty()) {
                 return;
             }
             
@@ -387,8 +382,7 @@ public class PlanViewDisplay extends JPanel
             }
         }
         
-        if(!visibleEntities)
-        {
+        if(!visibleEntities) {
             return;
         }
         
@@ -414,8 +408,7 @@ public class PlanViewDisplay extends JPanel
         Point center = new Point(getWidth() / 2, getHeight() / 2);
         Rectangle2D extents = getViewExtentsInMeters();
         
-        if(extents.isEmpty())
-        {
+        if(extents.isEmpty()) {
             return;
         }
         
@@ -460,11 +453,11 @@ public class PlanViewDisplay extends JPanel
         add(coordinatesPane);
     }
     
-    private void addMapController()
+    private void addMapControlPanel()
     {
-        this.mapController.setActivePvd(this);
-        mapController.setBounds(0, 10, mapController.getPreferredSize().width, mapController.getPreferredSize().height);
-        add(mapController);
+        this.mapControlPanel.setActivePvd(this);
+        mapControlPanel.setBounds(0, 10, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
+        add(mapControlPanel);
     }
     
     /* (non-Javadoc)
@@ -746,8 +739,9 @@ public class PlanViewDisplay extends JPanel
         final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
         
-        //TODO: Accurate zoom here
+        //TODO: Calculate closest approximate zoom level here
         int mapZoom = mapRenderer.getZoom();
+        mapRenderer.approximateScale(transformer.screenToMeters(1));
         if(rotation > 0) { 
             //mapRenderer.setZoom(mapZoom-1); 
         }

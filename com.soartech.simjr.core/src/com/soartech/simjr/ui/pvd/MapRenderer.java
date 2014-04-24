@@ -57,13 +57,13 @@ public class MapRenderer implements TileLoaderListener
 {
     private static final Logger logger = Logger.getLogger(MapRenderer.class);
     
-    //Vectors for clock-wise tile painting
+    //Vectors for clock-wise spiral tile painting
     protected static final Point[] move = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
     
     private static final int DOWNLOAD_THREAD_COUNT = 8;
     
     private static final boolean tileGridVisible = true;
-    private static final boolean scrollWrapEnabled = false;
+    private static final boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported
     
     public static final int MAX_ZOOM = 22;
     public static final int MIN_ZOOM = 0;
@@ -71,12 +71,11 @@ public class MapRenderer implements TileLoaderListener
     private TileController tileController;
     private TileSource tileSource;
     
-    //private Point center = new Point(0,0);
-    private int zoom = 10;
+    private int zoom = 10; //TODO: Initial zoom should be set by PVD
     
-    private final PlanViewDisplay renderTarget;
+    private final PlanViewDisplay pvd;
     
-    //Responsible for displaying correct map imagery attribution
+    //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
     
     public MapRenderer(PlanViewDisplay renderTarget)
@@ -85,7 +84,7 @@ public class MapRenderer implements TileLoaderListener
         tileSource = new OsmTileSource.Mapnik();
         tileController = new TileController(tileSource, new MemoryTileCache(), this);
         
-        this.renderTarget = renderTarget;
+        this.pvd = renderTarget;
     }
     
     public int getZoom() { return this.zoom; }
@@ -94,6 +93,28 @@ public class MapRenderer implements TileLoaderListener
     {
         logger.info("Setting zoom level to: " + zoom);
         this.zoom = zoom;
+    }
+    
+    /**
+     * Sets the map zoom level to the closest match to the given mpp.
+     * @param targetMpp meters per pixel to approximate
+     */
+    public void approximateScale(double targetMpp) 
+    {
+        logger.info("Approximating scale: " + targetMpp + " meters per pixels.");
+        
+        int targetZoom = tileSource.getMinZoom();
+        double currentTileMpp = getMetersPerPixel(targetZoom);
+        
+        while (currentTileMpp > targetMpp && targetZoom < tileSource.getMaxZoom()) 
+        {
+            logger.info("Zoom " + targetZoom + " is too high: " + currentTileMpp + " < " + targetMpp);
+            targetZoom++; //zoom in
+            currentTileMpp = getMetersPerPixel(targetZoom);
+        }
+        
+        logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
+        zoom = targetZoom;
     }
     
     public void setTileSource(TileSource source)
@@ -105,18 +126,14 @@ public class MapRenderer implements TileLoaderListener
             throw new RuntimeException("Minumim zoom level too low");
         }
         
-        //Coordinate position = getPosition();
         this.tileSource = source;
         tileController.setTileSource(tileSource);
-        //zoomSlider.setMinimum(tileSource.getMinZoom());
-        //zoomSlider.setMaximum(tileSource.getMaxZoom());
         tileController.cancelOutstandingJobs();
         if (zoom > tileSource.getMaxZoom()) {
             setZoom(tileSource.getMaxZoom());
         }
         attribution.initialize(tileSource);
-        //setDisplayPosition(position, zoom);
-        renderTarget.repaint();
+        pvd.repaint();
     }
     
     public void setTileLoader(TileLoader loader)
@@ -127,7 +144,7 @@ public class MapRenderer implements TileLoaderListener
     @Override
     public void tileLoadingFinished(Tile tile, boolean success)
     {
-        renderTarget.repaint();
+        pvd.repaint();
     }
 
     @Override
@@ -154,8 +171,8 @@ public class MapRenderer implements TileLoaderListener
         int off_x = (center.x % tilesize);       // distance in px from center pt to left edge of tile
         int off_y = (center.y % tilesize);       // distance in px from center pt to top edge of tile
 
-        int w2 = (int) ((renderTarget.getWidth() / 2) / scale);  // half screen width
-        int h2 = (int) ((renderTarget.getHeight() / 2) / scale); // half screen height
+        int w2 = (int) ((pvd.getWidth() / 2) / scale);  // half screen width
+        int h2 = (int) ((pvd.getHeight() / 2) / scale); // half screen height
         int posx = w2 - off_x;                   // x coord in screen px of left edge of tile 
         int posy = h2 - off_y;                   // y coord in screen px of upper edge of tile
 
@@ -186,14 +203,17 @@ public class MapRenderer implements TileLoaderListener
         //pretend the canvas is larger than it really is, as we may be skewed from scale
         double x_min = -tilesize; 
         double y_min = -tilesize;
-        double x_max = renderTarget.getWidth() / scale; 
-        double y_max = renderTarget.getHeight() / scale;
+        double x_max = pvd.getWidth() / scale; 
+        double y_max = pvd.getHeight() / scale;
+        
+        //logger.info("drawing tiles from: (" + x_min + " - " + x_max + ", " + y_min + " - " + y_max + ")");
 
         // calculate the length of the grid (number of squares per edge)
-        //int gridLength = 1 << zoom;  Used for scroll wrap only
+        int gridLength = 1 << zoom;  //Used for scroll wrap only
 
         // paint the tiles in a spiral, starting from center of the map
         boolean painting = true;
+        //int debugCount = 0;
         int x = 0;
         while (painting) 
         {
@@ -209,13 +229,13 @@ public class MapRenderer implements TileLoaderListener
                     {
                         // tile is visible
                         Tile tile;
-                        //if (scrollWrapEnabled) { TODO: Re-enable this later, if desired
-                        //    // in case tilex is out of bounds, grab the tile to use for wrapping
-                        //    int tilexWrap = (((tilex % gridLength) + gridLength) % gridLength);
-                        //    tile = tileController.getTile(tilexWrap, tiley, zoom);
-                        //} else {
+                        if (scrollWrapEnabled) { 
+                            // in case tilex is out of bounds, grab the tile to use for wrapping
+                            int tilexWrap = (((tilex % gridLength) + gridLength) % gridLength);
+                            tile = tileController.getTile(tilexWrap, tiley, zoom);
+                        } else {
                             tile = tileController.getTile(tilex, tiley, zoom);
-                        //}
+                        }
                         if (tile != null) {
                             tile.paint(g, posx, posy);
                             if (tileGridVisible) {
@@ -223,6 +243,11 @@ public class MapRenderer implements TileLoaderListener
                             }
                         }
                         painting = true;
+                        //debugCount++;
+                        //logger.info("Drawing tile (" + tilex + "," + tiley + ") at: " + posx + "," + posy);
+                    }
+                    else {
+                        //logger.info("Not drawing tile (" + tilex + "," + tiley + ") at: " + posx + "," + posy);
                     }
                     
                     //Increment to the next tile
@@ -239,11 +264,14 @@ public class MapRenderer implements TileLoaderListener
                 
             }//end for i
         }
+        
+        //logger.info("Drew: " + debugCount + " tiles\n");
+        
         // outer border of the map
         int mapSize = tilesize << zoom;
         if (scrollWrapEnabled) {
-            g.drawLine(0, h2 - center.y, renderTarget.getWidth(), h2 - center.y);
-            g.drawLine(0, h2 - center.y + mapSize, renderTarget.getWidth(), h2 - center.y + mapSize);
+            g.drawLine(0, h2 - center.y,(int) (pvd.getWidth() / scale), h2 - center.y);
+            g.drawLine(0, h2 - center.y + mapSize, (int) (pvd.getWidth() / scale), h2 - center.y + mapSize);
         } else {
             g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
         }
@@ -257,8 +285,8 @@ public class MapRenderer implements TileLoaderListener
         
         g.setTransform(current);
 
-        attribution.paintAttribution(g, renderTarget.getWidth(), renderTarget.getHeight(), 
-                getPosition(0, 0), getPosition(renderTarget.getWidth(), renderTarget.getHeight()), zoom, renderTarget);
+        attribution.paintAttribution(g, pvd.getWidth(), pvd.getHeight(), 
+                getPosition(0, 0), getPosition(pvd.getWidth(), pvd.getHeight()), zoom, pvd);
     }
     
     /**
@@ -279,14 +307,24 @@ public class MapRenderer implements TileLoaderListener
      * Converts the relative pixel coordinate (regarding the top left corner of
      * the displayed map) into a latitude / longitude coordinate
      *
-     * @param mapPoint
-     *            relative pixel coordinate regarding the top left corner of the
-     *            displayed map
+     * @param mapPoint relative pixel coordinate regarding the top left corner of the displayed map
      * @return latitude / longitude
      */
     public Coordinate getPosition(Point mapPoint) 
     {
-        return getPosition(mapPoint.x, mapPoint.y);
+        return getPosition(mapPoint, zoom);
+    }
+    
+    /**
+     * Converts the relative pixel coordinate (regarding the top left corner of
+     * the displayed map) into a latitude / longitude coordinate
+     *
+     * @param mapPoint relative pixel coordinate regarding the top left corner of the displayed map
+     * @return latitude / longitude
+     */
+    public Coordinate getPosition(Point mapPoint, int zoom) 
+    {
+        return getPosition(mapPoint.x, mapPoint.y, zoom);
     }
     
     /**
@@ -299,33 +337,55 @@ public class MapRenderer implements TileLoaderListener
      */
     public Coordinate getPosition(int mapPointX, int mapPointY) 
     {
-        Point center = getCenter();
-        int x = center.x + mapPointX - renderTarget.getWidth() / 2;
-        int y = center.y + mapPointY - renderTarget.getHeight() / 2;
-        double lon = tileSource.XToLon(x, zoom);
-        double lat = tileSource.YToLat(y, zoom);
+        return getPosition(mapPointX, mapPointY, zoom);
+    }
+    
+    /**
+     * Converts the relative pixel coordinate (regarding the top left corner of
+     * the displayed map) into a latitude / longitude coordinate
+     *
+     * @param mapPointX
+     * @param mapPointY
+     * @return latitude / longitude
+     */
+    public Coordinate getPosition(int mapPointX, int mapPointY, int targetZoom) 
+    {
+        Point center = getCenter(targetZoom);
+        int x = center.x + mapPointX - pvd.getWidth() / 2;
+        int y = center.y + mapPointY - pvd.getHeight() / 2;
+        double lon = tileSource.XToLon(x, targetZoom);
+        double lat = tileSource.YToLat(y, targetZoom);
         return new Coordinate(lat, lon);
     }
     
     /**
-     * Gets the meter per pixel.
+     * Calculates the meters per pixel for the current source, zoom, and pvd.
      *
-     * @return the meter per pixel
-     * @author Jason Huntley
+     * @return meters per pixel
      */
-    public double getMeterPerPixel() 
+    public double getMetersPerPixel() 
     {
-        Point origin=new Point(5,5);
-        Point center=new Point(renderTarget.getWidth()/2, renderTarget.getHeight()/2);
-
-        double pDistance=center.distance(origin);
-
-        Coordinate originCoord=getPosition(origin);
-        Coordinate centerCoord=getPosition(center);
-
+        return getMetersPerPixel(zoom);
+    }
+    
+    /**
+     * Calculates the meters per pixel for the current source and pvd, with the given zoom
+     * 
+     * @return meters per pixel
+     */
+    public double getMetersPerPixel(int zoomLevel)
+    {
+        //Measure pixel distance from 5,5 to center
+        Point origin = new Point(5,5);
+        Point center = new Point(pvd.getWidth()/2, pvd.getHeight()/2);
+        double pDistance = center.distance(origin);
+        
+        //Measure meters distance from 5,5 to center
+        Coordinate originCoord = getPosition(origin, zoomLevel);
+        Coordinate centerCoord = getPosition(center, zoomLevel);
         double mDistance = tileSource.getDistance(originCoord.getLat(), originCoord.getLon(),
-                centerCoord.getLat(), centerCoord.getLon());
-
+                                                  centerCoord.getLat(), centerCoord.getLon());
+        
         return mDistance/pDistance;
     }
 
@@ -335,22 +395,31 @@ public class MapRenderer implements TileLoaderListener
      */
     public Point getCenter()
     {
-        //this is by no means efficient
-        CoordinateTransformer transformer = renderTarget.getTransformer();
-        Vector3 metersCenter = transformer.screenToMeters(renderTarget.getWidth()/2, renderTarget.getHeight()/2);
-        Geodetic.Point latLonCenter = renderTarget.getTerrain().toGeodetic(metersCenter);
-        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoom), 
-                                 tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoom));
-        logger.debug("Meters center: " + metersCenter.x + "," + metersCenter.y +  
-                    " Lat/Lon center: " + latLonCenter.latitude + "," + latLonCenter.longitude +  
-                    " OSM Center: " + center);
+        return getCenter(zoom);
+    }
+    
+    /**
+     * Determines the center point of the screen in JOSM "pixelspace", pixel coordinates of the tile grid.
+     * @return
+     */
+    public Point getCenter(int zoomLevel)
+    {
+        //TODO: this is by no means efficient
+        CoordinateTransformer transformer = pvd.getTransformer();
+        Vector3 metersCenter = transformer.screenToMeters(pvd.getWidth()/2, pvd.getHeight()/2);
+        Geodetic.Point latLonCenter = pvd.getTerrain().toGeodetic(metersCenter);
+        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoomLevel), 
+                                 tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoomLevel));
         return center;
     }
     
+    /**
+     * Calculates the necessary scale factor to align tiles with the current PVD scale.
+     * @return tileMpp / pvdMpp
+     */
     public double getScaleFactor()
     {
-        double simPpm = renderTarget.getTransformer().scalarToPixels(Scalar.createMeter(1));
-        //logger.info("scale factor: " + getMeterPerPixel() + " * " + simMpp + " = " + getMeterPerPixel() * simMpp);
-        return getMeterPerPixel() * simPpm;
+        double simPpm = pvd.getTransformer().scalarToPixels(Scalar.createMeter(1));
+        return getMetersPerPixel() * simPpm;
     }
 }

@@ -62,10 +62,10 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
-public class MapController extends JXPanel
+public class MapControlPanel extends JXPanel
 {
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(MapController.class);
+    private static final Logger logger = Logger.getLogger(MapControlPanel.class);
 
     private final MapRenderer mapRenderer;
     private SwingCoordinateTransformer transformer;
@@ -116,7 +116,7 @@ public class MapController extends JXPanel
     };
     
         
-    public MapController(SwingCoordinateTransformer transformer, final MapRenderer mapRenderer)
+    public MapControlPanel(SwingCoordinateTransformer transformer, final MapRenderer mapRenderer)
     {
         super();
         
@@ -242,7 +242,7 @@ public class MapController extends JXPanel
             Point osmCenterPx = mapRenderer.getCenter();
             osmZoomLabel.setText(Integer.toString(mapRenderer.getZoom()));
             osmCenterLabel.setText(osmCenterPx.x + ", " + osmCenterPx.y);
-            osmMppLabel.setText(Double.toString(mapRenderer.getMeterPerPixel()));
+            osmMppLabel.setText(Double.toString(mapRenderer.getMetersPerPixel()));
             
             double scale = mapRenderer.getScaleFactor();
             
