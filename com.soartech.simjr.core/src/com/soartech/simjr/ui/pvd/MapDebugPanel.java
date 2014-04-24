@@ -31,72 +31,66 @@
  */
 package com.soartech.simjr.ui.pvd;
 
-import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.IOException;
 
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXPanel;
-import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
-import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 
-public class MapControlPanel extends JXPanel
+public class MapDebugPanel extends JXPanel
 {
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(MapControlPanel.class);
 
     private final MapRenderer mapRenderer;
     private SwingCoordinateTransformer transformer;
     private PlanViewDisplay pvd = null;
     
-    private final JComboBox<TileSource> sourceSelector = new JComboBox<TileSource>(new TileSource[] {
-            new OsmTileSource.Mapnik(),
-            new OsmTileSource.CycleMap(),
-            new BingAerialTileSource(),
-            new MapQuestOsmTileSource(),
-            new MapQuestOpenAerialTileSource()
-    });
-    private JComboBox<TileLoader> loaderSelector; 
+    private final JLabel simCenterPxLabel = new BoldJLabel();
+    private final JLabel simZoomLabel = new BoldJLabel();
+    private final JLabel simMppLabel = new BoldJLabel();
+    private final JLabel simMetersCenterLabel = new BoldJLabel();
+    private final JLabel simMetersUpperLeftLabel = new BoldJLabel();
     
-    private final JLabel simCenterPxLabel = new JLabel();
-    private final JLabel simZoomLabel = new JLabel();
-    private final JLabel simMppLabel = new JLabel();
-    private final JLabel simMetersCenterLabel = new JLabel();
-    private final JLabel simMetersUpperLeftLabel = new JLabel();
+    private final JLabel osmZoomLabel = new BoldJLabel();
+    private final JLabel osmCenterLabel = new BoldJLabel();
+    private final JLabel osmMppLabel = new BoldJLabel();
+    private final JLabel mouseOsmPxCoords = new BoldJLabel();
+    private final JLabel mouseOsmTileCoords = new BoldJLabel();
+    private final JLabel osmScaleFactorLabel = new BoldJLabel();
+    private final JLabel osmTileSizeLabel = new BoldJLabel();
     
-    private final JLabel osmZoomLabel = new JLabel();
-    private final JLabel osmCenterLabel = new JLabel();
-    private final JLabel osmMppLabel = new JLabel();
-    private final JLabel mouseOsmPxCoords = new JLabel();
-    private final JLabel mouseOsmTileCoords = new JLabel();
-    private final JLabel osmScaleFactorLabel = new JLabel();
-    private final JLabel osmTileSizeLabel = new JLabel();
+    private final JLabel mouseScreenCoords = new BoldJLabel();
+    private final JLabel mouseLatlonCoords = new BoldJLabel();
+    private final JLabel mouseMetersCoords = new BoldJLabel();
     
-    private final JLabel mouseScreenCoords = new JLabel();
-    private final JLabel mouseLatlonCoords = new JLabel();
-    private final JLabel mouseMetersCoords = new JLabel();
+    //TODO: White border would be more visible
+    private class BoldJLabel extends JLabel {
+        private static final long serialVersionUID = 1L;
+        public BoldJLabel() {
+            super();
+            bold();
+        }
+        public BoldJLabel(String text) {
+            super(text);
+            bold();
+        }
+        private void bold() {
+            setFont(getFont().deriveFont(Font.BOLD, 12));
+        }
+    }
     
     private MouseMotionListener mouseListener = new MouseMotionAdapter() {
         public void mouseMoved(MouseEvent e) {
@@ -116,7 +110,7 @@ public class MapControlPanel extends JXPanel
     };
     
         
-    public MapControlPanel(SwingCoordinateTransformer transformer, final MapRenderer mapRenderer)
+    public MapDebugPanel(SwingCoordinateTransformer transformer, final MapRenderer mapRenderer)
     {
         super();
         
@@ -125,83 +119,54 @@ public class MapControlPanel extends JXPanel
         this.mapRenderer = mapRenderer;
         this.transformer = transformer;
         
-        try {
-            loaderSelector = new JComboBox<TileLoader>(new TileLoader[] { 
-                    new OsmFileCacheTileLoader(mapRenderer),
-                    new OsmTileLoader(mapRenderer)
-            });
-            loaderSelector.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    MapControlPanel.this.mapRenderer.setTileLoader((TileLoader)e.getItem());
-                }
-            });
-            this.mapRenderer.setTileLoader((TileLoader)loaderSelector.getSelectedItem());
-        }
-        catch(IOException ioe) {
-            logger.error("Unable to create loaders!", ioe);
-        }
-        
-        sourceSelector.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                MapControlPanel.this.mapRenderer.setTileSource((TileSource)e.getItem());
-            }
-        });
-        
-        final JXPanel configPanel = new JXPanel();
-        configPanel.add(sourceSelector);
-        configPanel.add(loaderSelector);
-        configPanel.setAlpha(0.7f);
-        add(configPanel, "span 2, wrap 30");
-        
-        add(new JLabel("Sim Center (px):"));
+        add(new BoldJLabel("Sim Center (px):"));
         add(simCenterPxLabel, "wrap");
         
-        add(new JLabel("Sim Center (m):" ));
+        add(new BoldJLabel("Sim Center (m):" ));
         add(simMetersCenterLabel, "wrap");
         
-        add(new JLabel("Sim UL (m):" ));
+        add(new BoldJLabel("Sim UL (m):" ));
         add(simMetersUpperLeftLabel, "wrap");
         
-        add(new JLabel("Sim Zoom:" ));
+        add(new BoldJLabel("Sim Zoom:" ));
         add(simZoomLabel, "wrap");
         
-        add(new JLabel("Sim mpp:"));
+        add(new BoldJLabel("Sim mpp:"));
         add(simMppLabel, "wrap");
         
-        add(new JLabel("OSM Zoom:"));
+        add(new BoldJLabel("OSM Zoom:"));
         add(osmZoomLabel, "wrap");
         
-        add(new JLabel("OSM Center (px):"));
+        add(new BoldJLabel("OSM Center (px):"));
         add(osmCenterLabel, "wrap");
         
-        add(new JLabel("OSM mpp:"));
+        add(new BoldJLabel("OSM mpp:"));
         add(osmMppLabel, "wrap");
         
-        add(new JLabel("OSM Scale:"));
+        add(new BoldJLabel("OSM Scale:"));
         add(osmScaleFactorLabel, "wrap");
         
-        add(new JLabel("OSM Tile size:"));
+        add(new BoldJLabel("OSM Tile size:"));
         add(osmTileSizeLabel, "wrap");
         
-        add(new JLabel("OSM Mouse (px): "));
+        add(new BoldJLabel("OSM Mouse (px): "));
         add(mouseOsmPxCoords, "wrap");
         
-        add(new JLabel("OSM Mouse (tile): "));
+        add(new BoldJLabel("OSM Mouse (tile): "));
         add(mouseOsmTileCoords, "wrap");
         
-        add(new JLabel("Mouse Screen:"));
+        add(new BoldJLabel("Mouse Screen:"));
         add(mouseScreenCoords, "wrap");
         
-        add(new JLabel("Mouse Lat/Lon:"));
+        add(new BoldJLabel("Mouse Lat/Lon:"));
         add(mouseLatlonCoords, "wrap");
         
-        add(new JLabel("Mouse Meters:"));
+        add(new BoldJLabel("Mouse Meters:"));
         add(mouseMetersCoords, "wrap");
         
-        setBackground(Color.WHITE);
-        //setAlpha(0.8f);
+        setAlpha(0.9f);
+        
+        this.setPreferredSize(new Dimension(300, getPreferredSize().height));
     }
     
     public void setActivePvd(PlanViewDisplay newPvd)
@@ -219,12 +184,14 @@ public class MapControlPanel extends JXPanel
     
     private void update()
     {
-        if(pvd != null && mapRenderer != null && pvd.getMousePosition() != null)
+        if(pvd == null || mapRenderer == null) { return; }
+        
+        Point mousePtPx = pvd.getMousePosition();
+        if(mousePtPx != null)
         {
             simCenterPxLabel.setText(String.format("%8.2f, %8.2f", new Object[] { transformer.getPanOffsetX(), -transformer.getPanOffsetY() }));
             simZoomLabel.setText(Double.toString(transformer.getScale()));
             simMppLabel.setText(Double.toString(transformer.screenToMeters(1)));
-            Point mousePtPx = pvd.getMousePosition();
             
             Vector3 metersUpperLeft = transformer.screenToMeters(0, 0);
             Vector3 metersCenter = transformer.screenToMeters(pvd.getWidth()/2, pvd.getHeight()/2);

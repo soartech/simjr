@@ -128,7 +128,8 @@ public class PlanViewDisplay extends JPanel
     
     private MapImage mapBackgroundImage;
     private MapRenderer mapRenderer = new MapRenderer(this);
-    private MapControlPanel mapControlPanel = new MapControlPanel(transformer, mapRenderer);
+    private MapTileControlPanel mapControlPanel = new MapTileControlPanel(mapRenderer);
+    private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, mapRenderer);
     
     private Entity lockEntity;
 
@@ -182,6 +183,7 @@ public class PlanViewDisplay extends JPanel
         
         addCoordinatePane();
         addMapControlPanel();
+        addMapDebugPanel();
         
         repaintTimer.start();
     }
@@ -449,15 +451,21 @@ public class PlanViewDisplay extends JPanel
         
         this.coordinatesPane = new CoordinatesPanel();
         this.coordinatesPane.setActivePvd(this);
-        coordinatesPane.setBounds(10, 45, 300, 20);
+        coordinatesPane.setBounds(12, 45, 300, 20);
         add(coordinatesPane);
     }
     
     private void addMapControlPanel()
     {
-        this.mapControlPanel.setActivePvd(this);
         mapControlPanel.setBounds(0, 10, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
         add(mapControlPanel);
+    }
+    
+    private void addMapDebugPanel()
+    {
+        this.mapDebugPanel.setActivePvd(this);
+        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
+        add(mapDebugPanel);
     }
     
     /* (non-Javadoc)
