@@ -153,7 +153,7 @@ public class CoordinatesPanel extends JXPanel
             double lat = Math.toDegrees(gp.latitude);
             double lon = Math.toDegrees(gp.longitude);
             
-            return String.format("%8.3f, %8.3f", new Object[]{ lat, lon });
+            return String.format("%8.6f, %8.6f", new Object[]{ lat, lon });
         }
         
         public String toString()
