@@ -68,14 +68,16 @@ public class EntityElement implements ModelElement
         MAX_ALTITUDE("maxAltitude", "500"), 
         ROUTE_WIDTH("routeWidth", "100");
 
+        public final String attributeName;
         public final String xPathStr;
         public final String propertyName;
         public final String defaultValue;
 
-        private ModelData(String propertyName, String defaultValue)
+        private ModelData(String attributeName, String defaultValue)
         {
-            this.xPathStr = "@simjr:".concat(propertyName);
-            this.propertyName = propertyName;
+            this.attributeName = attributeName;
+            this.xPathStr = "@simjr:".concat(attributeName);
+            this.propertyName = EntityElement.class.getCanonicalName() + "." + attributeName;
             this.defaultValue = defaultValue;
         }
     }    
@@ -105,9 +107,9 @@ public class EntityElement implements ModelElement
     {
         Element root = model.newElement("entity");
         
-        root.setAttribute(ModelData.NAME.propertyName, name, Model.NAMESPACE);
-        root.setAttribute(ModelData.PROTOTYPE.propertyName, prototype, Model.NAMESPACE);
-        root.setAttribute(ModelData.FORCE.propertyName, "friendly", Model.NAMESPACE);
+        root.setAttribute(ModelData.NAME.attributeName, name, Model.NAMESPACE);
+        root.setAttribute(ModelData.PROTOTYPE.attributeName, prototype, Model.NAMESPACE);
+        root.setAttribute(ModelData.FORCE.attributeName, "friendly", Model.NAMESPACE);
         
         Boolean defaultVisibility = true;
         EntityPrototypeDatabase epd = new DefaultServiceManager().findService(EntityPrototypeDatabase.class);
@@ -120,12 +122,12 @@ public class EntityElement implements ModelElement
                 defaultVisibility = (Boolean)prototypeVisibility;
             }
         }
-        root.setAttribute(ModelData.VISIBLE.propertyName, defaultVisibility.toString(), Model.NAMESPACE);
-        root.setAttribute(ModelData.LABEL_VISIBLE.propertyName, defaultVisibility.toString(), Model.NAMESPACE);
+        root.setAttribute(ModelData.VISIBLE.attributeName, defaultVisibility.toString(), Model.NAMESPACE);
+        root.setAttribute(ModelData.LABEL_VISIBLE.attributeName, defaultVisibility.toString(), Model.NAMESPACE);
         
-        root.setAttribute(ModelData.MIN_ALTITUDE.propertyName, ModelData.MIN_ALTITUDE.defaultValue, Model.NAMESPACE);
-        root.setAttribute(ModelData.MAX_ALTITUDE.propertyName, ModelData.MAX_ALTITUDE.defaultValue, Model.NAMESPACE);
-        root.setAttribute(ModelData.ROUTE_WIDTH.propertyName, ModelData.ROUTE_WIDTH.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.MIN_ALTITUDE.attributeName, ModelData.MIN_ALTITUDE.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.MAX_ALTITUDE.attributeName, ModelData.MAX_ALTITUDE.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.ROUTE_WIDTH.attributeName, ModelData.ROUTE_WIDTH.defaultValue, Model.NAMESPACE);
         
         root.addContent(LocationElement.buildDefault(model));
         root.addContent(OrientationElement.buildDefault(model));
