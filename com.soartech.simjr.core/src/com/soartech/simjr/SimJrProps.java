@@ -312,6 +312,8 @@ public class SimJrProps
     
     /**
      * Load properties (defaults) from a url.
+     * 
+     * @param url The URL from which to load properties.
      */
     public static void loadPluginProperties(URL url)
     {
@@ -321,6 +323,8 @@ public class SimJrProps
     
     /**
      * Load user properties from a url.
+     *
+     * @param url The URL from which to load properties.
      */
     public static void loadPluginUserProperties(URL url)
     {

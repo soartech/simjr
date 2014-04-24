@@ -51,7 +51,7 @@ public class Adaptables
      * @param <T> The desired type
      * @param o The object to adapt. If not Adaptable, then a simple instanceof test
      *      is performed. May be null.
-     * @param klass The desired class. May not be null
+     * @param klass The desired class. May not be null.
      * @return An object of the desired type, or null.
      */
     public static <T> T adapt(Object o, Class<T> klass)
@@ -59,6 +59,19 @@ public class Adaptables
         return adapt(o, klass, true);
     }
     
+    /**
+     * Adapt an object to the given class. This is equivalent to o.getAdapter(klass)
+     * but o may be null or not adaptable and casting is handled automatically with 
+     * generics.
+     * 
+     * @param <T> The desired type
+     * @param o The object to adapt. If not Adaptable, then a simple instanceof test
+     *      is performed. May be null.
+     * @param klass The desired class. May not be null.
+     * @param recurse If true and o is Adaptable, the adapted object is returned.
+     *      otherwise, null is returned.
+     * @return An object of the desired type, or null.
+     */
     @SuppressWarnings("unchecked")
     public static <T> T adapt(Object o, Class<T> klass, boolean recurse)
     {
@@ -77,6 +90,17 @@ public class Adaptables
         return null;
     }
     
+    /**
+     * Adapt an object to the given class. This is equivalent to o.getAdapter(klass)
+     * but o may be null or not adaptable.  Return object is <b>NOT</b> casted.
+     * 
+     * @param o The object to adapt. If not Adaptable, then a simple instanceof test
+     *      is performed. May be null.
+     * @param klass The desired class. May not be null.
+     * @param recurse If true and o is Adaptable, the adapted object is returned.
+     *      otherwise, null is returned.
+     * @return An object of the desired type, or null.
+     */
     public static Object adaptUnchecked(Object o, Class<?> klass, boolean recurse)
     {
         if(o == null)
