@@ -89,7 +89,7 @@ public class CapabilitiesElement
                     }
                 }
                 //On entity rename, update
-                else if(EntityElement.NAME.equals(e.property)) 
+                else if(EntityElement.ModelData.NAME.propertyName.equals(e.property)) 
                 {
                     if(followTargetEntity == source) {
                         updateFollowTarget(source.getName());

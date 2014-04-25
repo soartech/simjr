@@ -57,12 +57,30 @@ import com.soartech.simjr.sim.EntityPrototypeDatabase;
  */
 public class EntityElement implements ModelElement
 {
-    private static final String NAME_XPATH = "@simjr:name";
-    public static final String NAME = EntityElement.class.getCanonicalName() + ".name";
-    public static final String PROTOTYPE = EntityElement.class.getCanonicalName() + ".prototype";
-    public static final String FORCE = EntityElement.class.getCanonicalName() + ".force";
-    public static final String VISIBLE = EntityElement.class.getCanonicalName() + ".visible";
-    public static final String LABEL_VISIBLE = EntityElement.class.getCanonicalName() + ".labelVisible";
+    public enum ModelData
+    {
+        NAME("name", ""),
+        PROTOTYPE("prototype", ""),
+        FORCE("force", ""),
+        VISIBLE("visible", ""),
+        LABEL_VISIBLE("labelVisible", ""),
+        MIN_ALTITUDE("minAltitude", "0.0"), 
+        MAX_ALTITUDE("maxAltitude", "500"), 
+        ROUTE_WIDTH("routeWidth", "100");
+
+        public final String attributeName;
+        public final String xPathStr;
+        public final String propertyName;
+        public final String defaultValue;
+
+        private ModelData(String attributeName, String defaultValue)
+        {
+            this.attributeName = attributeName;
+            this.xPathStr = "@simjr:".concat(attributeName);
+            this.propertyName = EntityElement.class.getCanonicalName() + "." + attributeName;
+            this.defaultValue = defaultValue;
+        }
+    }    
     
     private final Model model;
     private final Element element;
@@ -71,9 +89,11 @@ public class EntityElement implements ModelElement
     private final XPath forcePath;
     private final XPath visiblePath;
     private final XPath labelVisiblePath;
+    private final XPath minAltitudePath;
+    private final XPath maxAltitudePath;
+    private final XPath routeWidthPath;
     private final LocationElement location;
     private final OrientationElement orientation;
-    private final ThreeDDataElement threeDData;
     private final ScriptBlockElement initScript;
     private final PointElementList points;
     private final CapabilitiesElement capabilities;
@@ -87,12 +107,11 @@ public class EntityElement implements ModelElement
     {
         Element root = model.newElement("entity");
         
-        root.setAttribute("name", name, Model.NAMESPACE);
-        root.setAttribute("prototype", prototype, Model.NAMESPACE);
-        root.setAttribute("force", "friendly", Model.NAMESPACE);
+        root.setAttribute(ModelData.NAME.attributeName, name, Model.NAMESPACE);
+        root.setAttribute(ModelData.PROTOTYPE.attributeName, prototype, Model.NAMESPACE);
+        root.setAttribute(ModelData.FORCE.attributeName, "friendly", Model.NAMESPACE);
         
         Boolean defaultVisibility = true;
-        //EntityPrototype ep = model.getEntityPrototype(prototype);
         EntityPrototypeDatabase epd = new DefaultServiceManager().findService(EntityPrototypeDatabase.class);
         EntityPrototype ep = epd.getPrototype(prototype);
         
@@ -103,21 +122,24 @@ public class EntityElement implements ModelElement
                 defaultVisibility = (Boolean)prototypeVisibility;
             }
         }
-        root.setAttribute("visible", defaultVisibility.toString(), Model.NAMESPACE);
-        root.setAttribute("labelVisible", defaultVisibility.toString(), Model.NAMESPACE);
+        root.setAttribute(ModelData.VISIBLE.attributeName, defaultVisibility.toString(), Model.NAMESPACE);
+        root.setAttribute(ModelData.LABEL_VISIBLE.attributeName, defaultVisibility.toString(), Model.NAMESPACE);
+        
+        root.setAttribute(ModelData.MIN_ALTITUDE.attributeName, ModelData.MIN_ALTITUDE.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.MAX_ALTITUDE.attributeName, ModelData.MAX_ALTITUDE.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.ROUTE_WIDTH.attributeName, ModelData.ROUTE_WIDTH.defaultValue, Model.NAMESPACE);
         
         root.addContent(LocationElement.buildDefault(model));
         root.addContent(OrientationElement.buildDefault(model));
         root.addContent(ScriptBlockElement.buildDefault(model, "initScript", SimJrProps.get("simjr.editor.entityInitScript.default", "")));
         root.addContent(PointElementList.buildDefault(model));
-        root.addContent(ThreeDDataElement.buildDefault(model));
         root.addContent(CapabilitiesElement.buildDefault(model));
         return root;
     }
     
     public static void setName(Model model, Element element, String newName)
     {
-        model.setText(model.newXPath(NAME_XPATH), element, newName, null);
+        model.setText(model.newXPath(ModelData.NAME.xPathStr), element, newName, null);
     }
     
     /**
@@ -127,15 +149,17 @@ public class EntityElement implements ModelElement
     {
         this.model = model;
         this.element = element;
-        this.namePath = model.newXPath(NAME_XPATH);
-        this.prototypePath = model.newXPath("@simjr:prototype");
-        this.forcePath = model.newXPath("@simjr:force");
-        this.visiblePath = model.newXPath("@simjr:visible");
-        this.labelVisiblePath = model.newXPath("@simjr:labelVisible");
+        this.namePath = model.newXPath(ModelData.NAME.xPathStr);
+        this.prototypePath = model.newXPath(ModelData.PROTOTYPE.xPathStr);
+        this.forcePath = model.newXPath(ModelData.FORCE.xPathStr);
+        this.visiblePath = model.newXPath(ModelData.VISIBLE.xPathStr);
+        this.labelVisiblePath = model.newXPath(ModelData.LABEL_VISIBLE.xPathStr);
+        this.minAltitudePath = model.newXPath(ModelData.MIN_ALTITUDE.xPathStr);
+        this.maxAltitudePath = model.newXPath(ModelData.MAX_ALTITUDE.xPathStr);
+        this.routeWidthPath = model.newXPath(ModelData.ROUTE_WIDTH.xPathStr);
         
         this.location = new LocationElement(this);
         this.orientation = new OrientationElement(this);
-        this.threeDData = new ThreeDDataElement(this);
         this.initScript = ScriptBlockElement.attach(model, this.element, "initScript");
         this.points = PointElementList.attach(model, this);
         this.capabilities = new CapabilitiesElement(this);
@@ -174,7 +198,7 @@ public class EntityElement implements ModelElement
     public UndoableEdit setName(String name)
     {
         final String oldName = getName();
-        if(model.setText(namePath, element, name, new ModelChangeEvent(model, this, NAME)))
+        if(model.setText(namePath, element, name, new ModelChangeEvent(model, this, ModelData.NAME.propertyName)))
         {
             final CompoundEdit compound = new CompoundEdit();
             compound.addEdit(new SetNameEdit(oldName));
@@ -216,66 +240,38 @@ public class EntityElement implements ModelElement
     
     public UndoableEdit setPrototype(String prototype)
     {
-        final String oldProto = getPrototype();
-        if(model.setText(prototypePath, element, prototype, new ModelChangeEvent(model, this, PROTOTYPE)))
-        {
-            return new SetPrototypeEdit(oldProto);
-        }
-        return null;
+        return setProperty(ModelData.PROTOTYPE.propertyName, prototypePath, getPrototype(), prototype);
     }
     
     public String getForce()
     {
-        return model.getText(forcePath, element);
+        return new ModelStringGetter(forcePath).get();
     }
     
-    public UndoableEdit setForce(String force)
+    public UndoableEdit setForce(String newForce)
     {
-        final String oldForce = getForce();
-        if(model.setText(forcePath, element, force, new ModelChangeEvent(model, this, FORCE)))
-        {
-            return new SetForceEdit(oldForce);
-        }
-        return null;
+        return setProperty(ModelData.FORCE.propertyName, forcePath, getForce(), newForce);
     }
     
     public boolean isVisible()
     {
-        return Boolean.parseBoolean(model.getText(visiblePath, element));
+        return new ModelBooleanGetter(visiblePath).get();
     }
     
     public UndoableEdit setVisible(boolean visible)
     {
-        final boolean oldVisible = isVisible();
-        if(model.setText(visiblePath, element, Boolean.toString(visible), new ModelChangeEvent(model, this, VISIBLE)))
-        {
-            return new SetVisibleEdit(oldVisible);
-        }
-        return null;
+        return setProperty(ModelData.VISIBLE.propertyName, visiblePath, isVisible(), visible);
     }
     
     public boolean isLabelVisible()
     {
-        String labelVisText = model.getText(labelVisiblePath, element);
-        if ( labelVisText == null || labelVisText.isEmpty() ) 
-        {
-            // If the label visible attribute hasn't been specified then default to true
-            return true;
-        }
-        else 
-        {
-            return Boolean.parseBoolean(labelVisText);
-        }
+        // TODO: JCC - this used to default to true if the property didn't exist
+        return new ModelBooleanGetter(visiblePath).get();
     }
     
     public UndoableEdit setLabelVisible(boolean labelVisible)
     {
-        final boolean oldLabelVisible = isLabelVisible();
-        if (model.setText(labelVisiblePath, element, Boolean.toString(labelVisible), new ModelChangeEvent(model, this, LABEL_VISIBLE)))
-        {
-            return new SetLabelVisibleEdit(oldLabelVisible);
-        }
-        return null;
+        return setProperty(ModelData.LABEL_VISIBLE.propertyName, labelVisiblePath, isLabelVisible(), labelVisible);
     }
     
     public LocationElement getLocation()
@@ -288,11 +284,6 @@ public class EntityElement implements ModelElement
         return orientation;
     }
     
-    public ThreeDDataElement getThreeDData()
-    {
-        return threeDData;
-    }
-
     public ScriptBlockElement getInitScript()
     {
         return initScript;
@@ -332,114 +323,6 @@ public class EntityElement implements ModelElement
             super.undo();
             setName(oldName);
         }
-        
-    }
-    private class SetPrototypeEdit extends AbstractUndoableEdit
-    {
-        private static final long serialVersionUID = 3408336109329832867L;
-        private final String oldPrototype;
-        private final String newPrototype = getPrototype();
-        
-        public SetPrototypeEdit(String oldPrototype)
-        {
-            this.oldPrototype = oldPrototype;
-        }
-
-        @Override
-        public void redo() throws CannotRedoException
-        {
-            super.redo();
-            setPrototype(newPrototype);
-        }
-
-        @Override
-        public void undo() throws CannotUndoException
-        {
-            super.undo();
-            setPrototype(oldPrototype);
-        }
-        
-    }
-    
-    private class SetForceEdit extends AbstractUndoableEdit
-    {
-        private static final long serialVersionUID = 3408336109329832867L;
-        private final String oldForce;
-        private final String newForce = getForce();
-        
-        public SetForceEdit(String oldForce)
-        {
-            this.oldForce = oldForce;
-        }
-
-        @Override
-        public void redo() throws CannotRedoException
-        {
-            super.redo();
-            setForce(newForce);
-        }
-
-        @Override
-        public void undo() throws CannotUndoException
-        {
-            super.undo();
-            setForce(oldForce);
-        }
-        
-    }
-    
-    private class SetVisibleEdit extends AbstractUndoableEdit
-    {
-        private static final long serialVersionUID = 3408336109329832867L;
-        private final boolean oldVisible;
-        private final boolean newVisible = isVisible();
-        
-        public SetVisibleEdit(boolean oldForce)
-        {
-            this.oldVisible = oldForce;
-        }
-
-        @Override
-        public void redo() throws CannotRedoException
-        {
-            super.redo();
-            setVisible(newVisible);
-        }
-
-        @Override
-        public void undo() throws CannotUndoException
-        {
-            super.undo();
-            setVisible(oldVisible);
-        }
-        
-    }
-    
-    private class SetLabelVisibleEdit extends AbstractUndoableEdit
-    {
-        private static final long serialVersionUID = -1455000545836516785L;
-        private final boolean oldLabelVisible;
-        private final boolean newLabelVisible = isLabelVisible();
-        
-        public SetLabelVisibleEdit(boolean oldLabelVisible)
-        {
-            this.oldLabelVisible = oldLabelVisible;
-        }
-        
-        @Override
-        public void redo() throws CannotRedoException
-        {
-            super.redo();
-            setLabelVisible(newLabelVisible);
-        }
-        
-        @Override
-        public void undo() throws CannotRedoException
-        {
-           super.undo();
-           setLabelVisible(oldLabelVisible);
-        }
-        
     }
     
     /* (non-Javadoc)
@@ -450,6 +333,127 @@ public class EntityElement implements ModelElement
     {
         return getName() + " (" + getPrototype() + ")";
     }
+
+    public double getRouteWidth()
+    {
+        return new ModelLegacyDoubleGetter(routeWidthPath).get();
+    }
+
+    public UndoableEdit setRouteWidth(final Double newWidth)
+    {
+        return setProperty(ModelData.ROUTE_WIDTH.propertyName, routeWidthPath, getRouteWidth(), newWidth);
+    }
+
+    public double getMinAltitude()
+    {
+        return new ModelLegacyDoubleGetter(minAltitudePath).get();
+    }
+
+    public UndoableEdit setMinAltitude(final Double newMinAltitude)
+    {
+        return setProperty(ModelData.MIN_ALTITUDE.propertyName, minAltitudePath, getMinAltitude(), newMinAltitude);
+    }
+
+    public double getMaxAltitude()
+    {
+        return new ModelLegacyDoubleGetter(maxAltitudePath).get();
+    }
+
+    public UndoableEdit setMaxAltitude(final Double newMaxAltitude)
+    {
+        return setProperty(ModelData.MAX_ALTITUDE.propertyName, maxAltitudePath, getMaxAltitude(), newMaxAltitude);
+    }
     
+    private UndoableEdit setProperty(final String propertyName, final XPath xPath, final Object oldValue, final Object newValue)
+    {
+        if (model.setText(xPath, getElement(), newValue.toString(), null))
+        {
+            model.fireChange(new ModelChangeEvent(model, this, propertyName));
+            return new PropertyEdit(propertyName, xPath, oldValue.toString(), newValue.toString());
+        }
+        return null;
+    }
     
+    private class PropertyEdit extends AbstractUndoableEdit
+    {
+        private static final long serialVersionUID = -3199715918362623766L;
+        
+        private final XPath xPath;
+        private final String propertyName, oldValue, newValue;
+        
+        public PropertyEdit(String propertyName, XPath xPath, String oldValue, String newValue)
+        {
+            this.propertyName = propertyName;
+            this.xPath = xPath;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+        
+        @Override
+        public void redo()
+        {
+            super.redo();
+            model.setText(xPath, getElement(), newValue, null);
+            model.fireChange(new ModelChangeEvent(model, this, propertyName));
+        }
+        public void undo()
+        {
+            super.undo();
+            model.setText(xPath, getElement(), oldValue, null);
+            model.fireChange(new ModelChangeEvent(model, this, propertyName));
+        }
+    }
+    
+
+    private abstract class ModelPropertyGetter<T>
+    {
+        protected T value;
+
+        public ModelPropertyGetter(T value)
+        {
+            this.value = value;
+        }
+
+        public T get()
+        {
+            return value;
+        }
+    }
+    
+    private class ModelLegacyDoubleGetter extends ModelPropertyGetter<Double>
+    {
+        public ModelLegacyDoubleGetter(XPath pathToDoubleValue)
+        {
+            super(EntityElement.this.model.getDouble(
+                    pathToDoubleValue,
+                    EntityElement.this.getElement()));
+        }
+
+        @Override
+        public Double get()
+        {
+            // Workaround -If this is a legacy file, just report a value of 0;
+            return value.equals(Double.NaN) ? 0 : value;
+        }
+    }
+
+    private class ModelBooleanGetter extends ModelPropertyGetter<Boolean>
+    {
+        public ModelBooleanGetter(XPath pathToBooleanValue)
+        {
+            super(EntityElement.this.model.getBoolean(
+                    pathToBooleanValue,
+                    EntityElement.this.getElement()));
+        }
+    } 
+
+    private class ModelStringGetter extends ModelPropertyGetter<String>
+    {
+        public ModelStringGetter(XPath pathToStringValue)
+        {
+            super(EntityElement.this.model.getText(
+                    pathToStringValue,
+                    EntityElement.this.getElement()));
+        }
+    }    
 }

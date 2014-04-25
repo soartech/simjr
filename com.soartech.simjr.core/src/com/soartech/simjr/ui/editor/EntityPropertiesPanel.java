@@ -83,7 +83,6 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
     private final DefaultComboBoxModel<String> forceModel = new DefaultComboBoxModel<String>(EntityConstants.ALL_FORCES);
     private final JComboBox<String> forceCombo = new JComboBox<String>(forceModel);
     private final JCheckBox visibleCheckBox = new JCheckBox();
-    private final JCheckBox threeDCheckBox = new JCheckBox();
     private final HeadingSpinner headingSpinner;
     private final ScriptEditPanel initScript;
     
@@ -123,10 +122,6 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         width.setColumns(5);
         width.addKeyListener(this);
         add(width);
-        
-        add(new JLabel("3D Region"), "gap unrelated");
-        add(threeDCheckBox);
-        threeDCheckBox.addActionListener(this);
         
         add(new JLabel("Min Altitude"), "gap unrelated");
         minimumAltitude.setColumns(5);
@@ -213,11 +208,9 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         typeCombo.setEnabled(enabled);
         forceCombo.setEnabled(enabled);
         visibleCheckBox.setEnabled(enabled);
-        threeDCheckBox.setEnabled(enabled);
         boolean isArea= false;
         boolean isRoute = false;
         boolean isCylinder = false;
-        boolean is3DRegion = (entity != null && entity.getThreeDData().get3dSupported());
         
         width.setEnabled(false);
         minimumAltitude.setEnabled(false);
@@ -232,7 +225,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         }
 
 
-        if(entity != null && (isArea || isRoute || isCylinder) && is3DRegion)
+        if(entity != null && (isArea || isRoute || isCylinder))
         {
             minimumAltitude.setEnabled(enabled);
             maximumAltitude.setEnabled(enabled);
@@ -252,10 +245,9 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             headingSpinner.setElement(entity.getOrientation());
             initScript.setScript(entity.getInitScript());
             visibleCheckBox.setSelected(entity.isVisible());
-            threeDCheckBox.setSelected(is3DRegion);
-            minimumAltitude.setValue(entity.getThreeDData().getMinAltitude());
-            maximumAltitude.setValue(entity.getThreeDData().getMaxAltitude());
-            width.setValue(entity.getThreeDData().getRouteWidth());
+            minimumAltitude.setValue(entity.getMinAltitude());
+            maximumAltitude.setValue(entity.getMaxAltitude());
+            width.setValue(entity.getRouteWidth());
         }
         else
         {
@@ -299,17 +291,20 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             return;
         }
         
-        if(e.property.equals(EntityElement.NAME)      || 
-           e.property.equals(EntityElement.PROTOTYPE) ||
-           e.property.equals(EntityElement.FORCE) ||
-           e.property.equals(EntityElement.VISIBLE) ||
-           e.property.equals(EntityElement.LABEL_VISIBLE))
+        if(e.property.equals(EntityElement.ModelData.NAME.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.PROTOTYPE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.FORCE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.VISIBLE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.LABEL_VISIBLE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.MIN_ALTITUDE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.MAX_ALTITUDE.xPathStr) ||
+           e.property.equals(EntityElement.ModelData.ROUTE_WIDTH.xPathStr) )
         {
             setEntity(entity); // force an update
         }
         
         //On type change, set visibility to type default, if it exists. 
-        if(e.property.equals(EntityElement.PROTOTYPE))
+        if(e.property.equals(EntityElement.ModelData.PROTOTYPE.xPathStr))
         {
             EntityPrototype entityPrototype = services.findService(EntityPrototypeDatabase.class).getPrototype(entity.getPrototype());
             Object prototypeVisibility = entityPrototype.getProperty(EntityConstants.PROPERTY_VISIBLE);
@@ -325,12 +320,6 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
         {
             final UndoableEdit edit = entity.setVisible(visibleCheckBox.isSelected());
             services.findService(UndoService.class).addEdit(edit);
-        }
-        if(e.getSource().equals(threeDCheckBox))
-        {
-            final UndoableEdit edit = entity.getThreeDData().set3dSupported(threeDCheckBox.isSelected());
-            services.findService(UndoService.class).addEdit(edit);
-            setEntity(entity);
         }
     }
 
@@ -350,7 +339,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setMinAltitude(((Long)minimumAltitude.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setMinAltitude(((Long)minimumAltitude.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
         if(e.getSource().equals(maximumAltitude))
@@ -363,7 +352,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setMaxAltitude(((Long)maximumAltitude.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
         if(e.getSource().equals(width))
@@ -376,7 +365,7 @@ public class EntityPropertiesPanel extends DefaultSingleCDockable implements Mod
             {
                 return;
             }
-            final UndoableEdit edit = entity.getThreeDData().setRouteWidth(((Long)width.getValue()).doubleValue());
+            final UndoableEdit edit = entity.setRouteWidth(((Long)width.getValue()).doubleValue());
             services.findService(UndoService.class).addEdit(edit);
         }
     }

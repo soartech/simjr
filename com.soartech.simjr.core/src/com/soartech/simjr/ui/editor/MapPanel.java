@@ -57,7 +57,6 @@ import com.soartech.simjr.scenario.OrientationElement;
 import com.soartech.simjr.scenario.PointElementList;
 import com.soartech.simjr.scenario.TerrainElement;
 import com.soartech.simjr.scenario.TerrainImageElement;
-import com.soartech.simjr.scenario.ThreeDDataElement;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
@@ -230,16 +229,28 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             final EntityElement ee = ((OrientationElement) e.source).getEntity();
             updateSimEntityOrientation(ee);
         }
-        else if(e.property.equals(EntityElement.NAME) || e.property.equals(EntityElement.PROTOTYPE))
+        else if(e.property.equals(EntityElement.ModelData.NAME.propertyName) || e.property.equals(EntityElement.ModelData.PROTOTYPE.propertyName))
         {
             // :( We have to destroy and recreate the sim entity for a rename or type change
             destroySimEntityForRemovedEditorEntity((EntityElement) e.source);
             createSimEntityForNewEditorEntity((EntityElement) e.source);
             updateSimEntityPosition((EntityElement) e.source);
         }
-        else if(e.property.equals(EntityElement.FORCE))
+        else if(e.property.equals(EntityElement.ModelData.FORCE.propertyName))
         {
             updateSimEntityForce((EntityElement) e.source);
+        }
+        else if(e.property.equals(EntityElement.ModelData.MIN_ALTITUDE.propertyName))
+        {
+            updateSimEntityMinAltitude((EntityElement) e.source);
+        }
+        else if(e.property.equals(EntityElement.ModelData.MAX_ALTITUDE.propertyName))
+        {
+            updateSimEntityMaxAltitude((EntityElement) e.source);
+        }
+        else if(e.property.equals(EntityElement.ModelData.ROUTE_WIDTH.propertyName))
+        {
+            updateSimEntityRouteWidth((EntityElement) e.source);
         }
         else if(e.property.equals(TerrainElement.ORIGIN))
         {
@@ -265,11 +276,6 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         else if(TerrainImageElement.isProperty(e.property))
         {
             updateMapImage((TerrainImageElement) e.source, e.property);
-        }
-        else if(e.property.equals(ThreeDDataElement.THREEDDATA))
-        {
-            final EntityElement ee = ((ThreeDDataElement) e.source).getEntity();
-            updateSimEntityThreeDData(ee);
         }
     }
     
@@ -361,6 +367,24 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         final Entity simEntity = getSimEntity(ee);
         simEntity.setProperty(EntityConstants.PROPERTY_FORCE, ee.getForce());
     }
+    
+    private void updateSimEntityMinAltitude(final EntityElement ee)
+    {
+        final Entity simEntity = getSimEntity(ee);
+        simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getMinAltitude());
+    }
+    
+    private void updateSimEntityMaxAltitude(final EntityElement ee)
+    {
+        final Entity simEntity = getSimEntity(ee);
+        simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getMaxAltitude());
+    }
+    
+    private void updateSimEntityRouteWidth(final EntityElement ee)
+    {
+        final Entity simEntity = getSimEntity(ee);
+        simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getRouteWidth());
+    }
 
     private void updateSimEntityPosition(final EntityElement ee)
     {
@@ -372,15 +396,6 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     {
         final Entity simEntity = getSimEntity(ee);
         simEntity.setHeading(Angles.navRadiansToMathRadians(Math.toRadians(ee.getOrientation().getHeading())));
-    }
-    
-    private void updateSimEntityThreeDData(final EntityElement ee)
-    {
-        final Entity simEntity = getSimEntity(ee);
-        simEntity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getThreeDData().getMinAltitude());
-        simEntity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getThreeDData().getMaxAltitude());
-        simEntity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getThreeDData().getRouteWidth());
-        simEntity.setProperty(EntityConstants.PROPERTY_3DData, ee.getThreeDData().get3dSupported());
     }
     
     private void destroySimEntityForRemovedEditorEntity(EntityElement source)
@@ -437,10 +452,9 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         e.setProperty(EntityConstants.PROPERTY_FORCE, source.getForce());
         e.setProperty(EDITOR_ENTITY_PROP, source);
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_PIXELS, 5); // make routes stand out more in editor
-        e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getThreeDData().getMinAltitude());
-        e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getThreeDData().getMaxAltitude());
-        e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getThreeDData().getRouteWidth());
-        e.setProperty(EntityConstants.PROPERTY_3DData, source.getThreeDData().get3dSupported());
+        e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getMinAltitude());
+        e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getMaxAltitude());
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getRouteWidth());
         e.setProperty(EntityConstants.PROPERTY_VISIBLE, true); //Always visible in editor
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);

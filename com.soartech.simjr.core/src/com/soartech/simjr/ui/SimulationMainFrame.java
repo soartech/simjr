@@ -136,11 +136,9 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
 
     public static final String ENTITY_PROPERTIES_FRAME_KEY = "__entityProperties";
     public static final String CHEAT_SHEET_FRAME_KEY = "__cheatSheet";
-    public static final String VIEW3D_FRAME_KEY = "__view3D";
     public static final String ENTITIES_FRAME_KEY = "__entities";
     
     private final CLocation defaultPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
-    private final CLocation defaultView3DLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
     
     private final CLocation defaultEntityListLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
     private final CLocation defaultEntityPropertiesLocation = CLocation.base().normalRectangle(0.8, 0.5, 0.2, 0.5);
@@ -267,8 +265,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         addDockable(this.propertiesView = new EntityPropertiesView(services), defaultEntityPropertiesLocation, ENTITY_PROPERTIES_FRAME_KEY);
         addDockable(new RadioMessagePanel(services), defaultRadioMessagesLocation, RADIO_MESSAGES_FRAME_KEY);
         addDockable(new ConsolePanel(services), defaultConsoleLocation, CONSOLE_FRAME_KEY);
-        //Add the 3D display
-        addDockable(new view3DPanel(services), defaultView3DLocation, VIEW3D_FRAME_KEY);
         
         addDockable(services.findService(CheatSheetView.class), defaultCheatSheetLocation, CHEAT_SHEET_FRAME_KEY);
         
@@ -476,7 +472,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         singleDockables.get(ENTITY_PROPERTIES_FRAME_KEY).setLocation(defaultEntityPropertiesLocation);
         singleDockables.get(RADIO_MESSAGES_FRAME_KEY).setLocation(defaultRadioMessagesLocation);
         singleDockables.get(CONSOLE_FRAME_KEY).setLocation(defaultConsoleLocation);
-        singleDockables.get(VIEW3D_FRAME_KEY).setLocation(defaultView3DLocation);
         singleDockables.get(CHEAT_SHEET_FRAME_KEY).setLocation(defaultCheatSheetLocation);
         
         //reset the location of each pvd frame

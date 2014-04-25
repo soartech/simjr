@@ -63,7 +63,6 @@ import bibliothek.gui.dock.support.lookandfeel.LookAndFeelList;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelChangeListener;
-import com.soartech.simjr.ui.view3DPanel;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
@@ -88,14 +87,12 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
     public static final String MAP_FRAME_KEY ="__mapFrame";
     public static final String SCRIPTS_FRAME_KEY = "_scriptFrame";
     public static final String SOURCE_FRAME_KEY = "_sourceFrame";
-    public static final String VIEW3D_FRAME_KEY ="_view3DFrame";
     public static final String ENTITYPROPERTIES_FRAME_KEY ="_entityPropertyFrame";
     public static final String SCENARIOEDITOR_FRAME_KEY = "_scenarioPropertyFrame";
     
     private final CStackLocation defaultMAPLocation = CStackLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(0);
-    private final CStackLocation defaultView3DLocation = defaultMAPLocation.stack(1);
-    private final CStackLocation defaultScriptPanelLocation = defaultMAPLocation.stack(2);
-    private final CStackLocation defaultSourcePanelLocation  = defaultMAPLocation.stack(3);
+    private final CStackLocation defaultScriptPanelLocation = defaultMAPLocation.stack(1);
+    private final CStackLocation defaultSourcePanelLocation  = defaultMAPLocation.stack(2);
     private final CStackLocation defaultEntityPropertiesLocation= CStackLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
     private final CStackLocation defaultScenarioPropertiesLocation = defaultEntityPropertiesLocation.stack(1);
     //private final CStackLocation defaultSingleDockableLocation = defaultEntityPropertiesLocation.stack(2);
@@ -147,7 +144,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         
         addDockable(new ScriptsPanel(app), defaultScriptPanelLocation, SCRIPTS_FRAME_KEY);
         addDockable(new SourcePanel(app), defaultSourcePanelLocation, SOURCE_FRAME_KEY);
-        addDockable(new view3DPanel(app), defaultView3DLocation, VIEW3D_FRAME_KEY);
         
         
         addDockable(mapPanel, this.defaultMAPLocation, MAP_FRAME_KEY);
@@ -207,7 +203,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
 
         //reset the location of each single dockable
         singleDockables.get(MAP_FRAME_KEY).setLocation(defaultMAPLocation.getParent());
-        singleDockables.get(VIEW3D_FRAME_KEY).setLocation(defaultView3DLocation.getParent());
         singleDockables.get(SCRIPTS_FRAME_KEY).setLocation(defaultScriptPanelLocation.getParent());
         singleDockables.get(SOURCE_FRAME_KEY).setLocation(defaultSourcePanelLocation.getParent());
         
