@@ -29,7 +29,7 @@
  *
  * Created on Jun 14, 2007
  */
-package com.soartech.simjr.ui.pvd;
+package com.soartech.simjr.ui.pvd.imagery;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -53,10 +53,11 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
+import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 
-public class MapRenderer implements TileLoaderListener
+public class MapTileRenderer implements TileLoaderListener
 {
-    private static final Logger logger = Logger.getLogger(MapRenderer.class);
+    private static final Logger logger = Logger.getLogger(MapTileRenderer.class);
     
     //Vectors for clock-wise spiral tile painting
     protected static final Point[] move = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
@@ -81,7 +82,7 @@ public class MapRenderer implements TileLoaderListener
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
     
-    public MapRenderer(PlanViewDisplay renderTarget)
+    public MapTileRenderer(PlanViewDisplay renderTarget)
     {
         JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
         tileSource = new OsmTileSource.Mapnik();
@@ -100,6 +101,10 @@ public class MapRenderer implements TileLoaderListener
     
     /**
      * Sets the map zoom level to the closest match to the given mpp.
+     * 
+     * TODO: Could improve this algorithm by taking the closest scale, rather than 
+     * always one lower
+     * 
      * @param targetMpp meters per pixel to approximate
      */
     public void approximateScale(double targetMpp) 

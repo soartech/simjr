@@ -29,7 +29,7 @@
  *
  * Created on Jun 11, 2007
  */
-package com.soartech.simjr.ui.pvd;
+package com.soartech.simjr.ui.pvd.imagery;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -55,7 +55,7 @@ public class MapTileControlPanel extends JXPanel
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(MapTileControlPanel.class);
 
-    private final MapRenderer mapRenderer;
+    private final MapTileRenderer mapRenderer;
     
     private final JComboBox<TileSource> sourceSelector = new JComboBox<TileSource>(new TileSource[] {
             new OsmTileSource.Mapnik(),
@@ -66,7 +66,7 @@ public class MapTileControlPanel extends JXPanel
     });
     private JComboBox<TileLoader> loaderSelector; 
     
-    public MapTileControlPanel(final MapRenderer mapRenderer)
+    public MapTileControlPanel(final MapTileRenderer mapRenderer)
     {
         super();
         

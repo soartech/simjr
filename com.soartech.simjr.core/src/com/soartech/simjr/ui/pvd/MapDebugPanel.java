@@ -49,12 +49,17 @@ import org.jdesktop.swingx.JXPanel;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 
+/**
+ * Displays a large set of coordinate system information in a transparent
+ * panel on the map. 
+ */
 public class MapDebugPanel extends JXPanel
 {
     private static final long serialVersionUID = 1L;
 
-    private final MapRenderer mapRenderer;
+    private final MapTileRenderer mapRenderer;
     private SwingCoordinateTransformer transformer;
     private PlanViewDisplay pvd = null;
     
@@ -76,7 +81,7 @@ public class MapDebugPanel extends JXPanel
     private final JLabel mouseLatlonCoords = new BoldJLabel();
     private final JLabel mouseMetersCoords = new BoldJLabel();
     
-    //TODO: White border would be more visible
+    //TODO: White bordered text would be more visible
     private class BoldJLabel extends JLabel {
         private static final long serialVersionUID = 1L;
         public BoldJLabel() {
@@ -110,7 +115,7 @@ public class MapDebugPanel extends JXPanel
     };
     
         
-    public MapDebugPanel(SwingCoordinateTransformer transformer, final MapRenderer mapRenderer)
+    public MapDebugPanel(SwingCoordinateTransformer transformer, final MapTileRenderer mapRenderer)
     {
         super();
         

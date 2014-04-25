@@ -44,6 +44,7 @@ new Packages.com.soartech.simjr.ui.actions.RunAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.PauseAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.CenterViewOnEntityAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.AdjustMapOpacityAction(actionManager);
+new Packages.com.soartech.simjr.ui.actions.imagery.ShowMapImageryControlsAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.ShowAllAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.OpenDebuggerAction(actionManager);
 new Packages.com.soartech.simjr.ui.actions.AddDistanceToolAction(actionManager);

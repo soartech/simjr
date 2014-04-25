@@ -69,6 +69,7 @@ import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
 import com.soartech.simjr.ui.actions.ClearDistanceToolsAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
+import com.soartech.simjr.ui.actions.imagery.ShowMapImageryControlsAction;
 import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
 import com.soartech.simjr.ui.editor.actions.NewAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
@@ -282,6 +283,7 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));//am.getAction(AddDistanceToolAction.class.getCanonicalName()));
         piece1.add(createMenuItemFromAction(piece1, ClearDistanceToolsAction.class));//am.getAction(ClearDistanceToolsAction.class.getCanonicalName()));
         piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));//am.getAction(AdjustMapOpacityAction.class.getCanonicalName()));
+        piece1.add(createMenuItemFromAction(piece1, ShowMapImageryControlsAction.class));
         piece1.add(new JSeparator());
         
         //add the list of views to show/hide to the view menu

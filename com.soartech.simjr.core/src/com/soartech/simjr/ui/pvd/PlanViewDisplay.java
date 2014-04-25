@@ -79,6 +79,8 @@ import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
+import com.soartech.simjr.ui.pvd.imagery.MapTileControlPanel;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
 import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
@@ -131,9 +133,9 @@ public class PlanViewDisplay extends JPanel
     private boolean draggingEntity = false;
     
     private MapImage mapBackgroundImage;
-    private MapRenderer mapRenderer = new MapRenderer(this);
-    private MapTileControlPanel mapControlPanel = new MapTileControlPanel(mapRenderer);
-    private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, mapRenderer);
+    private MapTileRenderer tileRenderer = new MapTileRenderer(this);
+    private MapTileControlPanel mapControlPanel = new MapTileControlPanel(tileRenderer);
+    private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
     
     private Entity lockEntity;
 
@@ -160,7 +162,7 @@ public class PlanViewDisplay extends JPanel
         this.detonationShapes = new DetonationShapeManager(sim, timedShapes);
         this.speechBubbles = new SpeechBubbleManager(sim, this.app.findService(RadioHistory.class), shapeAdapter);
         
-        mapRenderer.approximateScale(transformer.screenToMeters(1));
+        tileRenderer.approximateScale(transformer.screenToMeters(1));
         
         setToolTipText(""); // Enable tooltips
         setFocusable(true);
@@ -255,6 +257,11 @@ public class PlanViewDisplay extends JPanel
     public CoordinateTransformer getTransformer()
     {
         return transformer;
+    }
+    
+    public MapTileRenderer getMapTileRenderer()
+    {
+        return this.tileRenderer;
     }
     
     public void setMapImage(MapImage map)
@@ -467,13 +474,19 @@ public class PlanViewDisplay extends JPanel
     {
         mapControlPanel.setBounds(0, 10, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
         add(mapControlPanel);
+        showMapImageryControlPanel(false);
+    }
+    
+    public void showMapImageryControlPanel(boolean show)
+    {
+        mapControlPanel.setVisible(show);
     }
     
     private void addMapDebugPanel()
     {
         this.mapDebugPanel.setActivePvd(this);
         mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        add(mapDebugPanel);
+        //add(mapDebugPanel);
     }
     
     /* (non-Javadoc)
@@ -515,7 +528,7 @@ public class PlanViewDisplay extends JPanel
         // Now draw everything again. None of the following code should be
         // dependent on a sim lock.
         paintMapBackground(g2d);
-        mapRenderer.paint(g2d);
+        tileRenderer.paint(g2d);
         
         grid.draw(g2d);
         factory.setGraphics2D(g2dCopy, getWidth(), getHeight());
@@ -756,8 +769,8 @@ public class PlanViewDisplay extends JPanel
         transformer.setPanOffset(newX, newY);
         
         //TODO: Calculate closest approximate zoom level here
-        int mapZoom = mapRenderer.getZoom();
-        mapRenderer.approximateScale(transformer.screenToMeters(1));
+        int mapZoom = tileRenderer.getZoom();
+        tileRenderer.approximateScale(transformer.screenToMeters(1));
         if(rotation > 0) { 
             //mapRenderer.setZoom(mapZoom-1); 
         }

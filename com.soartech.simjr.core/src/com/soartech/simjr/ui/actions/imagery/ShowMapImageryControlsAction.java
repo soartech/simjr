@@ -29,30 +29,27 @@
  *
  * Created on Oct 26, 2009
  */
-package com.soartech.simjr.ui.actions;
+package com.soartech.simjr.ui.actions.imagery;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JFrame;
-
-import com.soartech.simjr.ui.MapImageOpacityController;
-import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.pvd.MapImage;
+import com.soartech.simjr.ui.actions.AbstractSimulationAction;
+import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
  * @author ray
  */
-public class AdjustMapOpacityAction extends AbstractSimulationAction
+public class ShowMapImageryControlsAction extends AbstractSimulationAction
 {
-    private static final long serialVersionUID = -659487553362689218L;
+    private static final long serialVersionUID = 1L;
+    
+    private boolean shown = false; //assume defaults to off
 
-    public AdjustMapOpacityAction(ActionManager actionManager)
+    public ShowMapImageryControlsAction(ActionManager actionManager)
     {
-        super(actionManager, "Adjust map image opacity");
+        super(actionManager, "Map Imagery Controls");
     }
     
     /* (non-Javadoc)
@@ -62,8 +59,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
     public void update()
     {
         final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        setEnabled(prov != null && prov.getActivePlanViewDisplay() != null &&
-                  prov.getActivePlanViewDisplay().getMapImage() != null);
+        setEnabled(prov != null && prov.getActivePlanViewDisplay() != null);
     }
 
     /* (non-Javadoc)
@@ -72,24 +68,17 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
     public void actionPerformed(ActionEvent arg0)
     {
         final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov == null)
-        {
+        if(prov == null) {
             return;
         }
-        final PlanViewDisplay pvd = prov.getActivePlanViewDisplay();
-        if(pvd == null)
-        {
-            return;
-        }
-        final MapImage map = pvd.getMapImage();
-        if(map == null)
-        {
-            return;
-        }
-        final Rectangle rect = pvd.getBounds();
         
-        JFrame frame = getServices().findService(SimulationMainFrame.class);
-        MapImageOpacityController.showPopupEditor(frame, pvd, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
+        final PlanViewDisplay pvd = prov.getActivePlanViewDisplay();
+        if(pvd == null) {
+            return;
+        }
+        
+        shown = !shown;
+        pvd.showMapImageryControlPanel(shown);
     }
 
 }

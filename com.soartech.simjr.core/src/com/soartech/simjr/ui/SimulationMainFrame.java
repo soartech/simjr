@@ -118,6 +118,7 @@ import com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction;
 import com.soartech.simjr.ui.actions.UnloadContainerAction;
 import com.soartech.simjr.ui.actions.ZoomInAction;
 import com.soartech.simjr.ui.actions.ZoomOutAction;
+import com.soartech.simjr.ui.actions.imagery.ShowMapImageryControlsAction;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
 import com.soartech.simjr.ui.properties.EntityPropertiesView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -598,8 +599,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     {
         boolean first = nextPvdId == 0;
         
-        if(title == null)
-        {
+        if(title == null) {
             title = "PVD" + ++nextPvdId;
         }
         
@@ -619,7 +619,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         pf.title = title;
         
         //DF settings
-//        pf.setLayout(new BorderLayout());
         pf.setCloseable(true);
         pf.setMinimizable(false);
         pf.setExternalizable(false);
@@ -672,6 +671,17 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //add the action to the menu to create the component, 
         //then remove it from the menu and return it so it can be used
         JMenuItem item = piece.getMenu().add(am.getAction(klass.getCanonicalName()));
+        piece.getMenu().remove(item);
+        return item;
+    }
+    
+    private JMenuItem createCheckedMenuItemFromAction(FreeMenuPiece piece, Class<?> klass)
+    {
+        ActionManager am = services.findService(ActionManager.class);
+        //add the action to the menu to create the component, 
+        //then remove it from the menu and return it so it can be used
+        JCheckBoxMenuItem item = new JCheckBoxMenuItem(am.getAction(klass.getCanonicalName()));
+        piece.getMenu().add(item);
         piece.getMenu().remove(item);
         return item;
     }
@@ -740,6 +750,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         piece1.add(createMenuItemFromAction(piece1, ZoomOutAction.class));
         piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));
         piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));
+        piece1.add(createCheckedMenuItemFromAction(piece1, ShowMapImageryControlsAction.class));
         
         piece1.add(new JSeparator());
         piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));
