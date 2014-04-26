@@ -62,22 +62,21 @@ public class MapTileRenderer implements TileLoaderListener
     //Vectors for clock-wise spiral tile painting
     protected static final Point[] move = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
     
-    private static final int DOWNLOAD_THREAD_COUNT = 8;
-    
-    private static final boolean tileGridVisible = true;
-    private static final boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported
-    
     public static final int MAX_ZOOM = 22;
     public static final int MIN_ZOOM = 0;
+    private static final int DOWNLOAD_THREAD_COUNT = 8;
+    
+    private boolean tileGridVisible = true;
+    private boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported
     
     private TileController tileController;
     private TileSource tileSource;
     
     private int zoom = 10; 
     
-    private final PlanViewDisplay pvd;
-    
     private final float opacity = 0.75f; //TODO: Expose this via GUI or config
+    
+    private final PlanViewDisplay pvd;
     
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
@@ -87,7 +86,6 @@ public class MapTileRenderer implements TileLoaderListener
         JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
         tileSource = new OsmTileSource.Mapnik();
         tileController = new TileController(tileSource, new MemoryTileCache(), this);
-        
         this.pvd = renderTarget;
     }
     
@@ -123,6 +121,11 @@ public class MapTileRenderer implements TileLoaderListener
         
         logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
         zoom = targetZoom;
+    }
+    
+    public TileSource getTileSource() 
+    {
+        return tileSource;
     }
     
     public void setTileSource(TileSource source)
@@ -273,7 +276,6 @@ public class MapTileRenderer implements TileLoaderListener
                 
                 //change direction if necessary (spiral)
                 iMove = (iMove + 1) % move.length;
-                
             }//end for i
         }
         

@@ -118,7 +118,7 @@ import com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction;
 import com.soartech.simjr.ui.actions.UnloadContainerAction;
 import com.soartech.simjr.ui.actions.ZoomInAction;
 import com.soartech.simjr.ui.actions.ZoomOutAction;
-import com.soartech.simjr.ui.actions.imagery.ShowMapImageryControlsAction;
+import com.soartech.simjr.ui.actions.imagery.ImageryMenu;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
 import com.soartech.simjr.ui.properties.EntityPropertiesView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -209,7 +209,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
      */
     public SimulationMainFrame(ServiceManager serviceManager)
     {
-        
         this.services = serviceManager;
         this.services.addService(this);
         
@@ -232,34 +231,27 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //set the default look and feel
         LookAndFeelList lafList = LookAndFeelList.getDefaultList();
         int laf = SimJrProps.get("simjr.overrideLookAndFeel", -1);
-        if (laf < 0)
-        {
+        if (laf < 0) {
             lafList.setLookAndFeel(lafList.getSystem());
         }
-        else
-        {
+        else {
             lafList.setLookAndFeel(lafList.get(laf));
         }
 
         // Listen for window closing event so we can save dock layout before
         // the frame is dispose.
         this.addWindowListener(new WindowAdapter() {
-
-            public void windowClosing(WindowEvent arg0)
-            {
+            public void windowClosing(WindowEvent arg0) {
                 control.destroy();
-            }});
-
+            }
+        });
      
         //add factory that lets DF create multiple PVD frames
         pvdFactory = new PvdFactory();
         control.addMultipleDockableFactory("pvd", pvdFactory);
-        
       
         //create the first PVD
         createPvdFrame(null, false);
-        
-
         
         addDockable(new EntityListPanel(services), defaultEntityListLocation, ENTITIES_FRAME_KEY);
         addDockable(this.propertiesView = new EntityPropertiesView(services), defaultEntityPropertiesLocation, ENTITY_PROPERTIES_FRAME_KEY);
@@ -271,8 +263,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         resetDockingLayout();
         initMenus();
         initToolbar();
-        
-
     }
 
     private void addDockable(SingleCDockable dockable, CLocation location, String key)
@@ -319,8 +309,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     public void addFrame(String id, String title, Component c, Component nextTo)
     {
         //create a dockable to hold the component
-        DefaultSingleCDockable dockable = new DefaultSingleCDockable(id, title,
-                c);
+        DefaultSingleCDockable dockable = new DefaultSingleCDockable(id, title, c);
         dockable.setMinimizable(false);
         dockable.setCloseable(true);
         
@@ -625,7 +614,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         if(first)
         {
             pf.setCloseable(false);
-            
             activePvdFrame = pf;
         }
         
@@ -670,17 +658,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         return item;
     }
     
-    private JMenuItem createCheckedMenuItemFromAction(FreeMenuPiece piece, Class<?> klass)
-    {
-        ActionManager am = services.findService(ActionManager.class);
-        //add the action to the menu to create the component, 
-        //then remove it from the menu and return it so it can be used
-        JCheckBoxMenuItem item = new JCheckBoxMenuItem(am.getAction(klass.getCanonicalName()));
-        piece.getMenu().add(item);
-        piece.getMenu().remove(item);
-        return item;
-    }
-    
     private void initMenus()
     {
         ActionManager am = services.findService(ActionManager.class);
@@ -720,18 +697,16 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //create the help menu
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AbstractAction("About") {
-
             private static final long serialVersionUID = 486968928363337592L;
-
-            public void actionPerformed(ActionEvent arg0)
-            {
+            public void actionPerformed(ActionEvent arg0) {
                 AboutDialog.show(SimulationMainFrame.this);
-            } });
+            }
+        });
         bar.add(helpMenu);
         
         setJMenuBar(bar);
     }
-
+    
     /**
      * @param viewMenu
      */
@@ -745,7 +720,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         piece1.add(createMenuItemFromAction(piece1, ZoomOutAction.class));
         piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));
         piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));
-        piece1.add(createCheckedMenuItemFromAction(piece1, ShowMapImageryControlsAction.class));
+        
+        piece1.add(new ImageryMenu(am));
         
         piece1.add(new JSeparator());
         piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));
@@ -871,7 +847,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                 // The frames library relies on titles and modifying the title like this causes problems
                 // when loading layouts from files.
                 //activePvdFrame.setTitleText(activePvdFrame.title + " (active)");
-                
                 services.findService(ActionManager.class).updateActions();
             }
         }
@@ -881,55 +856,37 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         {
             //do nothing for now
         }
-        
     }
     
-    private class PlanViewDisplayMenu extends JMenu
-    {
+    private class PlanViewDisplayMenu extends JMenu {
         private static final long serialVersionUID = -7628240663942850385L;
 
         public PlanViewDisplayMenu()
         {
             super("PVDs");
-            
             addMenuListener(new MenuListener() {
-
-                public void menuCanceled(MenuEvent e)
-                {
-                }
-
-                public void menuDeselected(MenuEvent e)
-                {
-                }
-
-                public void menuSelected(MenuEvent e)
-                {
+                public void menuCanceled(MenuEvent e) { }
+                public void menuDeselected(MenuEvent e) { }
+                public void menuSelected(MenuEvent e) {
                     populate();
                 }});
         }
         
-        private void populate()
-        {
+        private void populate() {
             removeAll();
-            
-            for(final PvdFrame pf : pvds)
-            {
-                add(new AbstractAction("Show " + pf.title) {
+            for(final PvdFrame pf : pvds) {
+                add(new AbstractAction("Show " + pf.title) 
+                {
                     private static final long serialVersionUID = -4858584994300254664L;
-
-                    public void actionPerformed(ActionEvent arg0)
+                    public void actionPerformed(ActionEvent arg0) 
                     {
-                        for(PvdFrame frame : pvds)
-                        {
-                            if(frame.getTitleText().equals(pf.title))
-                            {
-                                if(!frame.isVisible())
-                                {
+                        for(PvdFrame frame : pvds) {
+                            if(frame.getTitleText().equals(pf.title)) {
+                                if(!frame.isVisible()) {
                                     control.addDockable("__" + frame.title, frame);
                                     frame.setVisible(true);
                                 }
-                                else
-                                {
+                                else {
                                     frame.toFront();
                                 }
                                 break;
@@ -937,7 +894,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
                         }
                     }
                 });
-                
             }
         }
     }
@@ -980,7 +936,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
             layout.setName(dockable.getTitleText());
             return layout;
         }
-        
     }
     
     /**

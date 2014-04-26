@@ -33,6 +33,8 @@ package com.soartech.simjr.ui.actions.imagery;
 
 import java.awt.event.ActionEvent;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -41,15 +43,16 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 /**
  * Shows / hides the map imagery control panel. 
  */
-public class ShowMapImageryControlsAction extends AbstractSimulationAction
+public class SetMapImageryProviderAction extends AbstractSimulationAction
 {
     private static final long serialVersionUID = 1L;
     
-    private boolean shown = false; //assume defaults to off
+    private final TileSource source;
 
-    public ShowMapImageryControlsAction(ActionManager actionManager)
+    public SetMapImageryProviderAction(ActionManager actionManager, TileSource source)
     {
-        super(actionManager, "Map Imagery Controls");
+        super(actionManager, source == null ? "None" : source.getName());
+        this.source = source;
     }
     
     private PlanViewDisplay getPvd() 
@@ -77,11 +80,9 @@ public class ShowMapImageryControlsAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        final PlanViewDisplay pvd = getPvd();
-        if(pvd != null) 
-        {
-            shown = !shown;
-            pvd.showMapImageryControlPanel(shown);
+        PlanViewDisplay pvd = getPvd();
+        if(pvd != null) {
+            pvd.getMapTileRenderer().setTileSource(source);
         }
     }
 

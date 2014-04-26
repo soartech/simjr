@@ -301,6 +301,37 @@ public class PlanViewDisplay extends JPanel
         ActionManager.update(app);
     }
 
+    private void addCoordinatePane()
+    {
+        if(this.coordinatesPane != null) {
+            return;
+        }
+        
+        this.coordinatesPane = new CoordinatesPanel();
+        this.coordinatesPane.setActivePvd(this);
+        coordinatesPane.setBounds(12, 10, 300, 20);
+        add(coordinatesPane);
+    }
+    
+    private void addMapControlPanel()
+    {
+        mapControlPanel.setBounds(0, 30, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
+        add(mapControlPanel);
+        showMapImageryControlPanel(false);
+    }
+    
+    public void showMapImageryControlPanel(boolean show)
+    {
+        mapControlPanel.setVisible(show);
+    }
+    
+    private void addMapDebugPanel()
+    {
+        this.mapDebugPanel.setActivePvd(this);
+        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
+        //add(mapDebugPanel);
+    }
+    
     /**
      * @return The current extents of the view in meters. Origin is at the
      *  <b>bottom</b> left. 
@@ -456,37 +487,6 @@ public class PlanViewDisplay extends JPanel
     public void zoom(int amount, Point pointToZoomOn)
     {
         controlMouseWheel(pointToZoomOn, amount);
-    }
-    
-    private void addCoordinatePane()
-    {
-        if(this.coordinatesPane != null) {
-            return;
-        }
-        
-        this.coordinatesPane = new CoordinatesPanel();
-        this.coordinatesPane.setActivePvd(this);
-        coordinatesPane.setBounds(12, 45, 300, 20);
-        add(coordinatesPane);
-    }
-    
-    private void addMapControlPanel()
-    {
-        mapControlPanel.setBounds(0, 10, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
-        add(mapControlPanel);
-        showMapImageryControlPanel(false);
-    }
-    
-    public void showMapImageryControlPanel(boolean show)
-    {
-        mapControlPanel.setVisible(show);
-    }
-    
-    private void addMapDebugPanel()
-    {
-        this.mapDebugPanel.setActivePvd(this);
-        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        //add(mapDebugPanel);
     }
     
     /* (non-Javadoc)
