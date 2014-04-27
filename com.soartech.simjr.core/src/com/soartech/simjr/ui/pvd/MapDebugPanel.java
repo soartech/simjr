@@ -189,7 +189,7 @@ public class MapDebugPanel extends JXPanel
     
     private void update()
     {
-        if(pvd == null || mapRenderer == null) { return; }
+        if(pvd == null || mapRenderer == null || mapRenderer.getTileSource() == null) { return; }
         
         Point mousePtPx = pvd.getMousePosition();
         if(mousePtPx != null)

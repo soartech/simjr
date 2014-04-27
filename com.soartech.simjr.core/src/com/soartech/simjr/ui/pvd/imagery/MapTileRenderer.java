@@ -66,7 +66,7 @@ public class MapTileRenderer implements TileLoaderListener
     public static final int MIN_ZOOM = 0;
     private static final int DOWNLOAD_THREAD_COUNT = 8;
     
-    private boolean tileGridVisible = true;
+    private boolean tileGridVisible = true; //TODO: Expose this 
     private boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported
     
     private TileController tileController;
@@ -79,12 +79,14 @@ public class MapTileRenderer implements TileLoaderListener
     private final PlanViewDisplay pvd;
     
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
+    //TODO: Fix bug that causes attribution to not show up for mapnik sometimes
     private AttributionSupport attribution = new AttributionSupport();
     
     public MapTileRenderer(PlanViewDisplay renderTarget)
     {
         JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
-        tileSource = new OsmTileSource.Mapnik();
+        tileSource = new OsmTileSource.Mapnik(); //TODO: Pull this value from properties
+        //TODO: Seems to be a bug where the source param is ignored in tilecontroller constructor
         tileController = new TileController(tileSource, new MemoryTileCache(), this);
         this.pvd = renderTarget;
     }
@@ -109,6 +111,8 @@ public class MapTileRenderer implements TileLoaderListener
     {
         logger.info("Approximating scale: " + targetMpp + " meters per pixels.");
         
+        if(tileSource == null) { return; }
+        
         int targetZoom = tileSource.getMinZoom();
         double currentTileMpp = getMetersPerPixel(targetZoom);
         
@@ -130,21 +134,24 @@ public class MapTileRenderer implements TileLoaderListener
     
     public void setTileSource(TileSource source)
     {
-        if (tileSource.getMaxZoom() > MAX_ZOOM) {
-            throw new RuntimeException("Maximum zoom level too high");
-        }
-        if (tileSource.getMinZoom() < MIN_ZOOM) {
-            throw new RuntimeException("Minumim zoom level too low");
-        }
-        
         this.tileSource = source;
-        tileController.setTileSource(tileSource);
         tileController.cancelOutstandingJobs();
-        if (zoom > tileSource.getMaxZoom()) {
-            setZoom(tileSource.getMaxZoom());
+        
+        if(source != null) { 
+            if (tileSource.getMaxZoom() > MAX_ZOOM) {
+                throw new RuntimeException("Maximum zoom level too high");
+            }
+            if (tileSource.getMinZoom() < MIN_ZOOM) {
+                throw new RuntimeException("Minumim zoom level too low");
+            }
+            
+            tileController.setTileSource(tileSource);
+            if (zoom > tileSource.getMaxZoom()) {
+                setZoom(tileSource.getMaxZoom());
+            }
+            attribution.initialize(tileSource);
+            pvd.repaint();
         }
-        attribution.initialize(tileSource);
-        pvd.repaint();
     }
     
     public void setTileLoader(TileLoader loader)
@@ -166,11 +173,13 @@ public class MapTileRenderer implements TileLoaderListener
     
     public int getTileSize()
     {
-        return tileSource.getTileSize();
+        return tileSource != null ? tileSource.getTileSize() : -1;
     }
     
     public void paint(Graphics2D g1)
     {
+        if(tileSource == null) { return; }
+        
         Graphics2D g = (Graphics2D) g1.create();
         //AffineTransform current = g.getTransform();
         double scale = getScaleFactor();
@@ -215,7 +224,6 @@ public class MapTileRenderer implements TileLoaderListener
         } 
         
         // calculate the visibility borders
-        //pretend the canvas is larger than it really is, as we may be skewed from scale
         double x_min = -tilesize; 
         double y_min = -tilesize;
         double x_max = pvd.getWidth() / scale; 
@@ -312,6 +320,8 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public Coordinate getPosition() 
     {
+        if(tileSource == null) { return null; }
+        
         Point center = getCenter();
         double lon = tileSource.XToLon(center.x, zoom);
         double lat = tileSource.YToLat(center.y, zoom);
@@ -365,6 +375,8 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public Coordinate getPosition(int mapPointX, int mapPointY, int targetZoom) 
     {
+        if(tileSource == null) { return null; }
+        
         Point center = getCenter(targetZoom);
         int x = center.x + mapPointX - pvd.getWidth() / 2;
         int y = center.y + mapPointY - pvd.getHeight() / 2;
@@ -390,6 +402,8 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public double getMetersPerPixel(int zoomLevel)
     {
+        if(tileSource == null) { return -1; }
+        
         //Measure pixel distance from 5,5 to center
         Point origin = new Point(5,5);
         Point center = new Point(pvd.getWidth()/2, pvd.getHeight()/2);
@@ -419,6 +433,8 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public Point getCenter(int zoomLevel)
     {
+        if(tileSource == null) { return null; }
+        
         //TODO: this is by no means efficient
         CoordinateTransformer transformer = pvd.getTransformer();
         Vector3 metersCenter = transformer.screenToMeters(pvd.getWidth()/2, pvd.getHeight()/2);
