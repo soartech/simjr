@@ -58,7 +58,8 @@ public class ImageryMenu extends JMenu
                 if(activePvd != null) {
                     setSelectedSource(activePvd.getMapTileRenderer().getTileSource());
                 }
-            }});
+            }
+        });
     }
     
     private PlanViewDisplay getPvd() 

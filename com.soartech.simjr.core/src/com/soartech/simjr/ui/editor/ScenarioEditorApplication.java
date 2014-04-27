@@ -65,7 +65,6 @@ import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
 import com.soartech.simjr.ui.actions.ClearDistanceToolsAction;
 import com.soartech.simjr.ui.actions.EditRouteAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
-import com.soartech.simjr.ui.actions.imagery.ShowMapImageryControlsAction;
 import com.soartech.simjr.ui.editor.actions.CloneEntityAction;
 import com.soartech.simjr.ui.editor.actions.DeleteEntityAction;
 import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
@@ -200,7 +199,6 @@ public class ScenarioEditorApplication extends DefaultServiceManager implements 
         new EditRouteAction(actionManager);
         new RunAction(actionManager);
         new AdjustMapOpacityAction(actionManager);
-        new ShowMapImageryControlsAction(actionManager);
     }
     
     /* (non-Javadoc)
