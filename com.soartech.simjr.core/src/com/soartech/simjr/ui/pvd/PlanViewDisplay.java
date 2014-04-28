@@ -144,7 +144,6 @@ public class PlanViewDisplay extends JPanel
     private final AppStateIndicator appStateIndicator;
 
     private Cursor defaultCursor = Cursor.getDefaultCursor();
-
     private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
@@ -152,7 +151,6 @@ public class PlanViewDisplay extends JPanel
         setLayout(null);
         
         this.app = app;
-        
         this.appStateIndicator = new AppStateIndicator(this.app.findService(ApplicationStateService.class), this);
         
         this.sim = this.app.findService(Simulation.class);
@@ -192,7 +190,7 @@ public class PlanViewDisplay extends JPanel
         });
         
         addCoordinatePane();
-        addMapControlPanel();
+        addMapOpacityController();
         if(SimJrProps.get("simjr.map.imagery.debug", false)) { 
             addMapDebugPanel();
         }
@@ -315,7 +313,7 @@ public class PlanViewDisplay extends JPanel
         add(coordinatesPane);
     }
     
-    private void addMapControlPanel()
+    private void addMapOpacityController()
     {
         mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
         add(mapOpacityController);
@@ -735,8 +733,6 @@ public class PlanViewDisplay extends JPanel
         // reset the pan origin
         panOrigin.setLocation(e.getPoint());
         
-        logger.info("Center: " + transformer.getPanOffsetX() + "," + transformer.getPanOffsetY());
-        
         repaint();
     }
     
@@ -759,9 +755,6 @@ public class PlanViewDisplay extends JPanel
         // set the scale
         final double factor = Math.pow(.9, rotation);
         transformer.setScale(transformer.getScale() * factor);
-        logger.info("New zoom scale: " + transformer.getScale());
-        logger.info("Meters per pixel: " + transformer.screenToMeters(1));
-        logger.info("Center: " + transformer.getPanOffsetX() + "," + transformer.getPanOffsetY());
 
         // change offset so that the fixedPoint continues to be under the mouse
         // Note: treat the new screen position as the pan origin

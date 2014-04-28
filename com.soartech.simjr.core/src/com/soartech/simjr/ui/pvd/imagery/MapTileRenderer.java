@@ -35,6 +35,8 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -79,15 +81,28 @@ public class MapTileRenderer implements TileLoaderListener
     private TileSource tileSource;
     
     private int zoom = 10; 
-    
     private float opacity = (float) SimJrProps.get("simjr.map.imagery.opacity", 0.75);
+    
+    //Responsible for displaying correct map imagery attribution (copyright notice, etc)
+    private AttributionSupport attribution = new AttributionSupport();
     
     private final PlanViewDisplay pvd;
     
-    //Responsible for displaying correct map imagery attribution (copyright notice, etc)
-    //TODO: Fix bug that causes attribution to not show up for mapnik sometimes
-    private AttributionSupport attribution = new AttributionSupport();
+    //Notify listeners when the tile source changes
+    public interface TileSourceListener { public void onTileSourceChanged(TileSource ts); }
+    private final List<TileSourceListener> tileSourceListeners = new ArrayList<TileSourceListener>();
+    public boolean addTileSourceListener(TileSourceListener l)    { return tileSourceListeners.add(l); }
+    public boolean removeTileSourceListener(TileSourceListener l) { return tileSourceListeners.remove(l); }
+    private void notifyTileSourceListeners(TileSource s) {
+        for(TileSourceListener l: tileSourceListeners) {
+            l.onTileSourceChanged(s);
+        }
+    }
     
+    /**
+     * Creates a MapTileRenderer that renders tiles on the given PVD.
+     * @param renderTarget
+     */
     public MapTileRenderer(PlanViewDisplay renderTarget)
     {
         this.pvd = renderTarget;
@@ -133,7 +148,6 @@ public class MapTileRenderer implements TileLoaderListener
         }
         return source;
     }
-
     
     /**
      * Sets the map zoom level to the closest match to the given mpp.
@@ -188,6 +202,8 @@ public class MapTileRenderer implements TileLoaderListener
             attribution.initialize(tileSource);
             pvd.repaint();
         }
+        
+        notifyTileSourceListeners(tileSource);
     }
     
     public void setTileLoader(TileLoader loader)

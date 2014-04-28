@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -69,6 +70,7 @@ public class ImageryMenu extends JMenu
         add(sourcesMenu);
         add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
         add(tileGridMenuItem);
+        add(new JMenuItem(new ShowMapDownloaderAction(am)));
     }
     
     private PlanViewDisplay getPvd() 
