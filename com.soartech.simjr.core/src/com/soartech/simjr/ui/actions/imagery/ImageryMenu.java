@@ -17,7 +17,11 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 
+/**
+ * Menu group for configurig various options of the map tile imagery renderer.
+ */
 public class ImageryMenu extends JMenu
 {
     private static final long serialVersionUID = 1L;
@@ -47,20 +51,24 @@ public class ImageryMenu extends JMenu
             sourcesMenu.add(menuItem);
         }
         
-        sourcesMenu.addMenuListener(new MenuListener() {
+        final JCheckBoxMenuItem tileGridMenuItem = new JCheckBoxMenuItem(new SetTileGridVisibilityAction(am));
+        
+        addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent e) { }
             public void menuDeselected(MenuEvent e) { }
             public void menuSelected(MenuEvent e) {
                 PlanViewDisplay activePvd = getPvd();
-                if(activePvd != null) {
+                if(activePvd != null && activePvd.getMapTileRenderer() != null) {
+                    MapTileRenderer tileRenderer = activePvd.getMapTileRenderer();
                     setSelectedSource(activePvd.getMapTileRenderer().getTileSource());
+                    tileGridMenuItem.setSelected(tileRenderer.getTileGridVisible());
                 }
             }
         });
         
         add(sourcesMenu);
         add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
-        add(new JCheckBoxMenuItem(new SetTileGridVisibilityAction(am)));
+        add(tileGridMenuItem);
     }
     
     private PlanViewDisplay getPvd() 

@@ -193,7 +193,9 @@ public class PlanViewDisplay extends JPanel
         
         addCoordinatePane();
         addMapControlPanel();
-        addMapDebugPanel();
+        if(SimJrProps.get("simjr.map.imagery.debug", false)) { 
+            addMapDebugPanel();
+        }
         
         repaintTimer.start();
     }
@@ -329,7 +331,7 @@ public class PlanViewDisplay extends JPanel
     {
         this.mapDebugPanel.setActivePvd(this);
         mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        //add(mapDebugPanel);
+        add(mapDebugPanel);
     }
     
     /**

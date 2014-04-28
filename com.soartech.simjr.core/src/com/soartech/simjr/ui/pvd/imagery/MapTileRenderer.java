@@ -53,6 +53,7 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
+import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 
 public class MapTileRenderer implements TileLoaderListener
@@ -66,7 +67,7 @@ public class MapTileRenderer implements TileLoaderListener
     public static final int MIN_ZOOM = 0;
     private static final int DOWNLOAD_THREAD_COUNT = 8;
     
-    private boolean tileGridVisible = false; 
+    private boolean tileGridVisible = SimJrProps.get("simjr.map.imagery.grid", false); 
     private final boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported in SimJr
     
     private TileController tileController;
@@ -74,7 +75,7 @@ public class MapTileRenderer implements TileLoaderListener
     
     private int zoom = 10; 
     
-    private float opacity = 0.75f; //TODO: Expose this via GUI or config
+    private float opacity = (float) SimJrProps.get("simjr.map.imagery.opacity", 0.75);
     
     private final PlanViewDisplay pvd;
     
