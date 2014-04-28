@@ -69,7 +69,8 @@ public class ShowMapOpacityControllerAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        setEnabled(getPvd() != null);
+        PlanViewDisplay pvd = getPvd();
+        setEnabled(pvd != null && pvd.getMapTileRenderer() != null && pvd.getMapTileRenderer().getTileSource() != null);
     }
 
     /* (non-Javadoc)

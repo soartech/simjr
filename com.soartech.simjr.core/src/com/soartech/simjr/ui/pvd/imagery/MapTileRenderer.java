@@ -66,8 +66,8 @@ public class MapTileRenderer implements TileLoaderListener
     public static final int MIN_ZOOM = 0;
     private static final int DOWNLOAD_THREAD_COUNT = 8;
     
-    private boolean tileGridVisible = true; //TODO: Expose this 
-    private boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported
+    private boolean tileGridVisible = false; 
+    private final boolean scrollWrapEnabled = false; //TODO: Determine if this should be supported in SimJr
     
     private TileController tileController;
     private TileSource tileSource;
@@ -92,12 +92,13 @@ public class MapTileRenderer implements TileLoaderListener
     }
     
     public int getZoom() { return this.zoom; }
+    public void setZoom(int zoom)  { this.zoom = zoom; }
     
-    public void setZoom(int zoom) 
-    {
-        logger.info("Setting zoom level to: " + zoom);
-        this.zoom = zoom;
-    }
+    public float getOpacity() { return opacity; }
+    public void setOpacity(float opacity) { this.opacity = opacity; }
+    
+    public boolean getTileGridVisible() { return tileGridVisible; }
+    public void setTileGridVisible(boolean show) { this.tileGridVisible = show; }
     
     /**
      * Sets the map zoom level to the closest match to the given mpp.
@@ -175,10 +176,6 @@ public class MapTileRenderer implements TileLoaderListener
     {
         return tileSource != null ? tileSource.getTileSize() : -1;
     }
-    
-    public float getOpacity() { return opacity; }
-    
-    public void setOpacity(float opacity) { this.opacity = opacity; }
     
     public void paint(Graphics2D g1)
     {
