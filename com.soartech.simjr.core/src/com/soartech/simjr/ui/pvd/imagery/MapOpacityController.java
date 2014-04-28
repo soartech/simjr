@@ -35,8 +35,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.jdesktop.swingx.JXPanel;
 
 public class MapOpacityController extends JXPanel
@@ -45,13 +43,11 @@ public class MapOpacityController extends JXPanel
 
     private final MapTileRenderer mapRenderer;
     
-    private JSlider opacitySlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
+    private final JSlider opacitySlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
     
     public MapOpacityController(final MapTileRenderer mapRenderer)
     {
         super();
-        
-        setLayout(new MigLayout("gapy 0", "[]5[]", ""));
         
         this.mapRenderer = mapRenderer;
         
@@ -60,14 +56,11 @@ public class MapOpacityController extends JXPanel
         opacitySlider.setPaintTicks(true);
         opacitySlider.setPaintLabels(true);
         opacitySlider.setValue((int) (mapRenderer.getOpacity() * 100));
-        opacitySlider.addChangeListener(new ChangeListener()
-        {
+        opacitySlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                //if (!source.getValueIsAdjusting()) {
-                    int opacity = (int)source.getValue();
-                    MapOpacityController.this.mapRenderer.setOpacity(opacity/100.0f);
-                //}
+                int opacity = (int)source.getValue();
+                MapOpacityController.this.mapRenderer.setOpacity(opacity/100.0f);
             }
         });
         add(opacitySlider);
