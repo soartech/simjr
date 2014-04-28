@@ -74,7 +74,7 @@ public class MapTileRenderer implements TileLoaderListener
     
     private int zoom = 10; 
     
-    private final float opacity = 0.75f; //TODO: Expose this via GUI or config
+    private float opacity = 0.75f; //TODO: Expose this via GUI or config
     
     private final PlanViewDisplay pvd;
     
@@ -175,6 +175,10 @@ public class MapTileRenderer implements TileLoaderListener
     {
         return tileSource != null ? tileSource.getTileSize() : -1;
     }
+    
+    public float getOpacity() { return opacity; }
+    
+    public void setOpacity(float opacity) { this.opacity = opacity; }
     
     public void paint(Graphics2D g1)
     {

@@ -79,7 +79,7 @@ import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.imagery.MapTileControlPanel;
+import com.soartech.simjr.ui.pvd.imagery.MapOpacityController;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
 import com.soartech.simjr.ui.shapes.EntityShape;
@@ -134,7 +134,7 @@ public class PlanViewDisplay extends JPanel
     
     private MapImage mapBackgroundImage;
     private MapTileRenderer tileRenderer = new MapTileRenderer(this);
-    private MapTileControlPanel mapControlPanel = new MapTileControlPanel(tileRenderer);
+    private MapOpacityController mapOpacityController = new MapOpacityController(tileRenderer);
     private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
     
     private Entity lockEntity;
@@ -315,14 +315,14 @@ public class PlanViewDisplay extends JPanel
     
     private void addMapControlPanel()
     {
-        mapControlPanel.setBounds(0, 30, mapControlPanel.getPreferredSize().width, mapControlPanel.getPreferredSize().height);
-        add(mapControlPanel);
-        showMapImageryControlPanel(false);
+        mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
+        add(mapOpacityController);
+        showMapOpacityController(false);
     }
     
-    public void showMapImageryControlPanel(boolean show)
+    public void showMapOpacityController(boolean show)
     {
-        mapControlPanel.setVisible(show);
+        mapOpacityController.setVisible(show);
     }
     
     private void addMapDebugPanel()
@@ -767,16 +767,9 @@ public class PlanViewDisplay extends JPanel
         final double newX = transformer.getPanOffsetX() + point.getX() - newScreenPosition.x;
         final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
-        
-        //TODO: Calculate closest approximate zoom level here
-        int mapZoom = tileRenderer.getZoom();
+
+        //Scale tiles appropriately
         tileRenderer.approximateScale(transformer.screenToMeters(1));
-        if(rotation > 0) { 
-            //mapRenderer.setZoom(mapZoom-1); 
-        }
-        else if(rotation < 0) {
-            //mapRenderer.setZoom(mapZoom+1);
-        }
         
         repaint();
     }

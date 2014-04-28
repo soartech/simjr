@@ -40,15 +40,12 @@ public class ImageryMenu extends JMenu
         
         this.am = actionManager;
         
-        add(new JCheckBoxMenuItem(new ShowMapImageryControlsAction(am)));
-        
         JMenu sourcesMenu = new JMenu("Source");
         for(TileSource s: tileSources) {
             JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new SetMapImageryProviderAction(am, s)); 
             sourceMenuMap.put(s, menuItem);
             sourcesMenu.add(menuItem);
         }
-        add(sourcesMenu);
         
         sourcesMenu.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent e) { }
@@ -60,6 +57,9 @@ public class ImageryMenu extends JMenu
                 }
             }
         });
+        
+        add(sourcesMenu);
+        add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
     }
     
     private PlanViewDisplay getPvd() 
