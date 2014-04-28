@@ -35,6 +35,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.gui.jmapviewer.AttributionSupport;
@@ -47,8 +48,12 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
+import com.google.common.collect.ImmutableMap;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
@@ -85,11 +90,13 @@ public class MapTileRenderer implements TileLoaderListener
     
     public MapTileRenderer(PlanViewDisplay renderTarget)
     {
-        JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
-        tileSource = new OsmTileSource.Mapnik(); //TODO: Pull this value from properties
-        //TODO: Seems to be a bug where the source param is ignored in tilecontroller constructor
-        tileController = new TileController(tileSource, new MemoryTileCache(), this);
         this.pvd = renderTarget;
+        
+        JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
+        tileSource = getTileSource(SimJrProps.get("simjr.map.imagery.source", "mapnik")); //TODO: Pull this value from properties
+        tileController = new TileController(tileSource, new MemoryTileCache(), this);
+        //TODO: Seems to be a bug where the source param is ignored in tilecontroller constructor, reset it here
+        setTileSource(tileSource); //initializes attribution
     }
     
     public int getZoom() { return this.zoom; }
@@ -100,6 +107,33 @@ public class MapTileRenderer implements TileLoaderListener
     
     public boolean getTileGridVisible() { return tileGridVisible; }
     public void setTileGridVisible(boolean show) { this.tileGridVisible = show; }
+    
+    private static TileSource getTileSource(String sourceName)
+    {
+        //#Mapnik, Cyclemap, Bing Aerial Maps, MapQuest-OSM, MapQuest Open Aerial
+        final Map<String, Class<? extends TileSource>> sourceMap = ImmutableMap.<String, Class<? extends TileSource>>builder()
+                .put("mapnik", OsmTileSource.Mapnik.class)
+                .put("cyclemap", OsmTileSource.CycleMap.class)
+                .put("bing aerial maps", BingAerialTileSource.class)
+                .put("mapquest-osm", MapQuestOsmTileSource.class)
+                .put("mapquest open aerial", MapQuestOpenAerialTileSource.class)
+                .build();
+        TileSource source = null;
+        Class<? extends TileSource> sourceClass = sourceMap.get(sourceName.toLowerCase()); 
+        if(sourceClass != null) {
+            try {
+                source = sourceClass.newInstance();
+            }
+            catch (InstantiationException e) {
+                logger.error("Unable to create tile source from: " + sourceName, e);
+            }
+            catch (IllegalAccessException e) {
+                logger.error("Unable to create tile source from: " + sourceName, e);
+            }
+        }
+        return source;
+    }
+
     
     /**
      * Sets the map zoom level to the closest match to the given mpp.
