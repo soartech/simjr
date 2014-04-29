@@ -33,7 +33,6 @@ package com.soartech.simjr.ui.pvd.imagery;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -197,6 +196,33 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         labels.put(new Integer(currentZoom), new JLabel("<html><b>" + currentZoom + "*</b></html>"));
         zoomSlider.setLabelTable(labels);
         zoomSlider.repaint();
+    }
+    
+    //TODO: On PVD drag, zoom, slider change
+    private void updateCaptureStats()
+    {
+        logger.info("Updating capture stats.");
+        
+        //TODO: Determine all visible tiles
+        //  Calculate lat/lon for corners
+        //  Get tile X/Y min/max range for each active zoom level
+        //  Sum total tile number
+        //TODO: Estimate a download size based on number of tiles
+        
+        //TODO: Consider displaying num tiles per zoom level on slider
+    }
+    
+    /**
+     * TODO: Consider displaying progress bar, definitely run in background thread
+     * TODO: Consider a cancel button to stop download
+     */
+    private void downloadTiles()
+    {
+        //TODO: Download tiles
+        //For each zoom level
+        //  Determine visible tiles
+        //  For each visible tile
+        //    download it, save it and metadata to encoded file name
     }
 
     @Override
