@@ -60,6 +60,7 @@ import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
+import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 
@@ -169,6 +170,7 @@ public class MapTileRenderer implements TileLoaderListener
      * 
      * TODO: Could improve this algorithm by taking the closest scale, rather than 
      * always one lower
+     * TODO: Do we ever want to approximate a scale other than the PVD's current mpp?
      * 
      * @param targetMpp meters per pixel to approximate
      */
@@ -190,6 +192,15 @@ public class MapTileRenderer implements TileLoaderListener
         
         logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
         setZoom(targetZoom);
+    }
+    
+    /**
+     * Approximates the scale to the current pvd scale. 
+     */
+    public void approximateScale()
+    {
+        //Don't like the cast here. 
+        approximateScale(((SwingCoordinateTransformer)pvd.getTransformer()).screenToMeters(1));
     }
     
     public TileSource getTileSource() 
@@ -215,6 +226,7 @@ public class MapTileRenderer implements TileLoaderListener
                 setZoom(tileSource.getMaxZoom());
             }
             attribution.initialize(tileSource);
+            
             pvd.repaint();
         }
         

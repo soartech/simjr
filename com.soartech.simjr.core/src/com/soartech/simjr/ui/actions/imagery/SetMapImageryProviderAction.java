@@ -83,6 +83,7 @@ public class SetMapImageryProviderAction extends AbstractSimulationAction
         PlanViewDisplay pvd = getPvd();
         if(pvd != null) {
             pvd.getMapTileRenderer().setTileSource(source);
+            pvd.getMapTileRenderer().approximateScale();
         }
     }
 
