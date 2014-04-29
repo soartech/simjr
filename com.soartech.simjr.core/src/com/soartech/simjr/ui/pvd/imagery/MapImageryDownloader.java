@@ -43,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -71,14 +72,14 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private static final long serialVersionUID = 1L;
     private static Logger logger = Logger.getLogger(MapImageryDownloader.class);
     
-    private static final int WIDTH = 125, HEIGHT = 375;
+    private static final long AVG_TILE_SIZE_BYTES = 50000;
 
     private final PlanViewDisplay pvd;
     private final MapTileRenderer mapRenderer;
     
     private RangeSlider zoomSlider;
     private final JButton downloadButton = new JButton("Download");
-    private final JButton doneButton = new JButton("X");
+    private final JButton doneButton = new JButton("Cancel");
     
     /**
      * UI for capturing map imagery
@@ -127,8 +128,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             }
         });
         
-        add(downloadButton);
-        add(doneButton, "wrap");
+        add(downloadButton, "wrap 0, align right, growx");
+        add(doneButton, "wrap, align right, growx");
         
         JPanel zoomPanel = new JPanel();
         zoomPanel.setLayout(new BoxLayout(zoomPanel, BoxLayout.Y_AXIS));
@@ -138,6 +139,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         zoomPanel.add(zoomSlider);
         zoomPanel.setPreferredSize(new Dimension(50, 325));
         add(zoomPanel, "span, align right");
+        
+        //setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setAlpha(0.95f);
         
         pvd.addComponentListener(resizeListener);
@@ -185,7 +188,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     
     private void updateGuiPosition()
     {
-        this.setBounds(pvd.getWidth() - WIDTH - 10, 10, WIDTH, HEIGHT);
+        this.setBounds(pvd.getWidth() - getPreferredSize().width - 10, 10, getPreferredSize().width, getPreferredSize().height);
         pvd.repaint();
         pvd.revalidate();
     }
@@ -268,9 +271,27 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         logger.info("Total tiles: " + totalTiles);
         
+        downloadButton.setText("<html><b>DOWNLOAD</b><br><i>" + 
+                NumberFormat.getIntegerInstance().format(totalTiles) + " tiles<br>(~" + 
+                readableFileSize(totalTiles * AVG_TILE_SIZE_BYTES, false) + ")</i></html>");
+        
         //TODO: Estimate a download size based on number of tiles
         
         //TODO: Consider displaying num tiles per zoom level on slider
+    }
+    
+    /**
+     * Converts a file size into a human readable format.
+     * @param size
+     * @return
+     */
+    private static String readableFileSize(long bytes, boolean si) 
+    {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
     
     /**
