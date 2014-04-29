@@ -66,9 +66,11 @@ public class NewEntityAction extends AbstractEditorAction
     }
     
     /**
+     * 
      * @param manager
      * @param label
-     * @param icon
+     * @param prototype
+     * @param keyStroke
      */
     public NewEntityAction(ActionManager manager, String label, String prototype, String keyStroke)
     {

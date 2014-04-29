@@ -62,7 +62,7 @@ public class OrientationElement
     }
     
     /**
-     * @param model
+     * @param entity
      */
     public OrientationElement(EntityElement entity)
     {

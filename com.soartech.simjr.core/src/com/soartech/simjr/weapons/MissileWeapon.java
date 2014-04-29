@@ -45,7 +45,6 @@ public class MissileWeapon extends AbstractFlyoutWeapon
     
     /**
      * @param name
-     * @param type
      * @param count
      * @param maxCount
      */

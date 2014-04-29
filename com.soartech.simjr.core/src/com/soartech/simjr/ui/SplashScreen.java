@@ -60,8 +60,6 @@ import com.soartech.simjr.ProgressMonitor;
  * The main screen takes about 6.0 seconds to load, so use of a splash screen
  * cuts down the initial display delay by about 55 percent.
  * 
- * @used.By {@link stocksmonitor.Launcher}
- * @to.do Can the performance be improved to 1.0 second?
  * @author <a href="http://www.javapractices.com/">javapractices.com</a>
  */
 public final class SplashScreen extends Frame implements ProgressMonitor

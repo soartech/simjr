@@ -42,7 +42,7 @@ public class ModelChangeEvent
     
     /**
      * @param model
-     * @param object
+     * @param source
      * @param property
      */
     public ModelChangeEvent(Model model, Object source, String property)

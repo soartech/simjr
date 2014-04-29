@@ -48,8 +48,6 @@ public class NewAction extends AbstractEditorAction
     
     /**
      * @param manager
-     * @param label
-     * @param icon
      */
     public NewAction(ActionManager manager)
     {

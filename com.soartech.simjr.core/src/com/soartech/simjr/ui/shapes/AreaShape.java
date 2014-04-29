@@ -111,8 +111,10 @@ public class AreaShape extends EntityShape implements EntityConstants
     private boolean updateHull = false;
     
     /**
-     * @param area
+     * 
+     * @param polygon
      * @param system
+     * @param convex
      */
     public AreaShape(AbstractPolygon polygon, ShapeSystem system, boolean convex)
     {

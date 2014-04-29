@@ -53,7 +53,7 @@ public class LockViewToEntityAction extends AbstractSimulationAction
     private AbstractButton button;
     
     /**
-     * @param app
+     * @param actionManager
      * @param button
      */
     public LockViewToEntityAction(ActionManager actionManager, AbstractButton button)

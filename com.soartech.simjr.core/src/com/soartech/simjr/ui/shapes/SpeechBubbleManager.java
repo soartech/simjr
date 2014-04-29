@@ -73,8 +73,10 @@ public class SpeechBubbleManager
     private RadioListener radioListener = new RadioListener();
     
     /**
+     * 
      * @param sim
-     * @param timeShapes
+     * @param history
+     * @param shapes
      */
     public SpeechBubbleManager(Simulation sim, RadioHistory history, EntityShapeManager shapes)
     {

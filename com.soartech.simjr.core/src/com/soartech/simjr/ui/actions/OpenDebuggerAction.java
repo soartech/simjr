@@ -45,7 +45,7 @@ public class OpenDebuggerAction extends AbstractSimulationAction
     private static final long serialVersionUID = -5146613629827414174L;
     
     /**
-     * @param label
+     * @param actionManager
      */
     public OpenDebuggerAction(ActionManager actionManager)
     {

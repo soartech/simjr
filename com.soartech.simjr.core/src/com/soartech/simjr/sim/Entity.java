@@ -115,7 +115,7 @@ public interface Entity extends Adaptable
     /**
      * Set the yaw (rotation around Z of the entity in radians).
      * 
-     * @deprecated Replaced by {@link #setHeading()}
+     * @deprecated Replaced by {@link #setHeading(double)}
      * @param radians Angle in radians (MATH radians)
      */
     @Deprecated
@@ -245,7 +245,7 @@ public interface Entity extends Adaptable
      * method will be called each time the entity is ticked.
      * 
      * @param capability the capability to add
-     * @throw IllegalStateException if capability is already attached to an entity
+     * @throws IllegalStateException if capability is already attached to an entity
      */
     void addCapability(EntityCapability capability);
     

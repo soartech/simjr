@@ -47,7 +47,7 @@ public interface FlightController extends EntityController
     void setDesiredSpeed(double speed);
     
     /**
-     * @param desiredBearing The new desired heading in radians
+     * @param desiredHeading The new desired heading in radians
      */
     void setDesiredHeading(double desiredHeading);
     

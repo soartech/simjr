@@ -75,7 +75,7 @@ public class RadioMessagePanel extends DefaultSingleCDockable
     private JScrollPane tableScrollPane;
     
     /**
-     * @param app
+     * @param services
      */
     public RadioMessagePanel(ServiceManager services)
     {
