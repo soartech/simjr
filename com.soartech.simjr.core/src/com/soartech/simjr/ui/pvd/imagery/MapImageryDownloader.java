@@ -33,12 +33,14 @@ package com.soartech.simjr.ui.pvd.imagery;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Hashtable;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,6 +68,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private final PlanViewDisplay pvd;
     
     private RangeSlider zoomSlider;
+    private final JLabel captureStats = new JLabel();
     private final JButton downloadButton = new JButton("Download");
     private final JButton doneButton = new JButton("X");
     
@@ -119,10 +122,13 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         add(doneButton, "wrap");
         
         JPanel zoomPanel = new JPanel();
-        zoomPanel.add(new JLabel("Zoom Depth"));
+        zoomPanel.setLayout(new BoxLayout(zoomPanel, BoxLayout.Y_AXIS));
+        JLabel label = new JLabel("Zoom Depth");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        zoomPanel.add(label);
         zoomPanel.add(zoomSlider);
         zoomPanel.setPreferredSize(new Dimension(50, 325));
-        add(zoomPanel, "span");
+        add(zoomPanel, "span, align right");
         
         pvd.addComponentListener(resizeListener);
         mapRenderer.addTileSourceListener(this);
