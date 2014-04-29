@@ -99,6 +99,17 @@ public class MapTileRenderer implements TileLoaderListener
         }
     }
     
+    //Notify listeners when the tile zoom level changes
+    public interface TileZoomListener { public void onTileZoomChanged(int zoom); }
+    private final List<TileZoomListener> tileZoomListeners = new ArrayList<TileZoomListener>();
+    public boolean addTileZoomListener(TileZoomListener l)    { return tileZoomListeners.add(l); }
+    public boolean removeTileZoomListener(TileZoomListener l) { return tileZoomListeners.remove(l); }
+    private void notifyTileZoomListeners(int zoom) {
+        for(TileZoomListener l: tileZoomListeners) {
+            l.onTileZoomChanged(zoom);
+        }
+    }    
+    
     /**
      * Creates a MapTileRenderer that renders tiles on the given PVD.
      * @param renderTarget
@@ -115,7 +126,11 @@ public class MapTileRenderer implements TileLoaderListener
     }
     
     public int getZoom() { return this.zoom; }
-    public void setZoom(int zoom)  { this.zoom = zoom; }
+    public void setZoom(int zoom)  {
+        this.zoom = zoom;
+        notifyTileZoomListeners(zoom);
+        
+    }
     
     public float getOpacity() { return opacity; }
     public void setOpacity(float opacity) { this.opacity = opacity; }

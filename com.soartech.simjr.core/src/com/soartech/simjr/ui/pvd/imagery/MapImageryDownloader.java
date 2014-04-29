@@ -62,7 +62,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
 
     private final PlanViewDisplay pvd;
     
-    private JSlider zoomSlider;
+    private RangeSlider zoomSlider;
     private final JButton downloadButton = new JButton("Download");
     private final JButton doneButton = new JButton("X");
     
@@ -82,16 +82,17 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
         setLayout(new MigLayout("gapx 0"));
         
         MapTileRenderer mapRenderer = pvd.getMapTileRenderer();
-        zoomSlider = new JSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
+        //zoomSlider = new JSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
+        zoomSlider = new RangeSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
         zoomSlider.setPreferredSize(new Dimension(50, 300));
         zoomSlider.setMajorTickSpacing(1);
         zoomSlider.setPaintTicks(true);
         zoomSlider.setPaintLabels(true);
         zoomSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                JSlider source = (JSlider)e.getSource();
+                RangeSlider source = (RangeSlider)e.getSource();
                 if (!source.getValueIsAdjusting()) {
-                    logger.info("zoom: " + source.getValue());
+                    logger.info("zoom: " + source.getValue() + " - " + source.getUpperValue());
                     //int opacity = (int)source.getValue();
                     //MapImageryDownloader.this.mapRenderer.setOpacity(opacity/100.0f);
                 }
