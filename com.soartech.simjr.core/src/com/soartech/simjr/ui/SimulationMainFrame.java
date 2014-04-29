@@ -677,6 +677,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         //create the views menu
         initViewsMenu(bar, am);
         
+        bar.add(new ImageryMenu(am));
+        
         //create the simulation menu
         JMenu simMenu = new JMenu("Simulation");
         addAction(simMenu, RunAction.class);
@@ -720,8 +722,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         piece1.add(createMenuItemFromAction(piece1, ZoomOutAction.class));
         piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));
         piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));
-        
-        piece1.add(new ImageryMenu(am));
         
         piece1.add(new JSeparator());
         piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));

@@ -278,7 +278,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));
         piece1.add(createMenuItemFromAction(piece1, ClearDistanceToolsAction.class));
         piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));
-        piece1.add(new ImageryMenu(am));
         piece1.add(new JSeparator());
         
         //add the list of views to show/hide to the view menu
@@ -307,6 +306,8 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         view.add(submenuPiece3);
 
         bar.add(view.getMenu());
+        
+        bar.add(new ImageryMenu(am));
         
         final JMenu insert = new JMenu("Insert");
         insert.add(new NewEntityAction(am, "New Entity", "any", "ctrl E"));
