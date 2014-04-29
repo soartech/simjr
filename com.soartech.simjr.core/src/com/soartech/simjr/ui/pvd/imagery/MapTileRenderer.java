@@ -189,7 +189,7 @@ public class MapTileRenderer implements TileLoaderListener
         }
         
         logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
-        zoom = targetZoom;
+        setZoom(targetZoom);
     }
     
     public TileSource getTileSource() 

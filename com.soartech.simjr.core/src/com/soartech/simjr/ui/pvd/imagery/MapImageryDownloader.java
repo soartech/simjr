@@ -31,11 +31,13 @@
  */
 package com.soartech.simjr.ui.pvd.imagery;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Hashtable;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -52,8 +54,9 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileSourceListener;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileZoomListener;
 
-public class MapImageryDownloader extends JXPanel implements TileSourceListener
+public class MapImageryDownloader extends JXPanel implements TileSourceListener, TileZoomListener
 {
     private static final long serialVersionUID = 1L;
     private static Logger logger = Logger.getLogger(MapImageryDownloader.class);
@@ -82,7 +85,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
         setLayout(new MigLayout("gapx 0"));
         
         MapTileRenderer mapRenderer = pvd.getMapTileRenderer();
-        //zoomSlider = new JSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
         zoomSlider = new RangeSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
         zoomSlider.setPreferredSize(new Dimension(50, 300));
         zoomSlider.setMajorTickSpacing(1);
@@ -93,12 +95,11 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
                 RangeSlider source = (RangeSlider)e.getSource();
                 if (!source.getValueIsAdjusting()) {
                     logger.info("zoom: " + source.getValue() + " - " + source.getUpperValue());
-                    //int opacity = (int)source.getValue();
-                    //MapImageryDownloader.this.mapRenderer.setOpacity(opacity/100.0f);
                 }
             }
         });
-        updateZoomSlider(mapRenderer.getTileSource());
+        updateZoomSliderSource(mapRenderer.getTileSource());
+        updateCurrentZoom(mapRenderer.getZoom());
         
         downloadButton.addActionListener(new ActionListener() {
             @Override
@@ -125,6 +126,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
         
         pvd.addComponentListener(resizeListener);
         mapRenderer.addTileSourceListener(this);
+        mapRenderer.addTileZoomListener(this);
 
         setAlpha(0.95f);
         
@@ -166,7 +168,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
         logger.info("TODO: Capture currently viewable area imagery");
     }
     
-    private void updateZoomSlider(TileSource ts)
+    private void updateZoomSliderSource(TileSource ts)
     {
         if(ts == null) {
             zoomSlider.setEnabled(false);
@@ -180,10 +182,26 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener
             zoomSlider.setMaximum(ts.getMaxZoom());
         }
     }
+    
+    private void updateCurrentZoom(int currentZoom)
+    {
+        logger.info("Setting current zoom: " + currentZoom);
+        @SuppressWarnings("unchecked")
+        Hashtable<Integer, Component> labels = zoomSlider.createStandardLabels(1);
+        labels.put(new Integer(currentZoom), new JLabel("<html><b>" + currentZoom + "*</b></html>"));
+        zoomSlider.setLabelTable(labels);
+        zoomSlider.repaint();
+    }
 
     @Override
     public void onTileSourceChanged(TileSource ts)
     {
-        updateZoomSlider(ts);
+        updateZoomSliderSource(ts);
+    }
+
+    @Override
+    public void onTileZoomChanged(int zoom)
+    {
+        updateCurrentZoom(zoom);
     }
 }
