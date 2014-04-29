@@ -255,17 +255,16 @@ public class MapTileRenderer implements TileLoaderListener
         return tileSource != null ? tileSource.getTileSize() : -1;
     }
     
-    public void paint(Graphics2D g1)
+    public void paint(Graphics2D g)
     {
         if(tileSource == null) { return; }
         
-        Graphics2D g = (Graphics2D) g1.create();
-        //AffineTransform current = g.getTransform();
+        Graphics2D gScaled = (Graphics2D) g.create();
         double scale = getScaleFactor();
-        g.transform(AffineTransform.getScaleInstance(scale, scale));
+        gScaled.transform(AffineTransform.getScaleInstance(scale, scale));
         
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
-        g.setComposite(ac);
+        gScaled.setComposite(ac);
         
         Point center = getCenter();              // center pt in tile grid pixels
         int tilesize = tileSource.getTileSize(); // size of each tile in pixels
@@ -339,9 +338,9 @@ public class MapTileRenderer implements TileLoaderListener
                             tile = tileController.getTile(tilex, tiley, zoom);
                         }
                         if (tile != null) {
-                            tile.paint(g, posx, posy);
+                            tile.paint(gScaled, posx, posy);
                             if (tileGridVisible) {
-                                g.drawRect(posx, posy, tilesize, tilesize);
+                                gScaled.drawRect(posx, posy, tilesize, tilesize);
                             }
                         }
                         painting = true;
@@ -371,10 +370,10 @@ public class MapTileRenderer implements TileLoaderListener
         // outer border of the map
         int mapSize = tilesize << zoom;
         if (scrollWrapEnabled) {
-            g.drawLine(0, h2 - center.y,(int) (pvd.getWidth() / scale), h2 - center.y);
-            g.drawLine(0, h2 - center.y + mapSize, (int) (pvd.getWidth() / scale), h2 - center.y + mapSize);
+            gScaled.drawLine(0, h2 - center.y,(int) (pvd.getWidth() / scale), h2 - center.y);
+            gScaled.drawLine(0, h2 - center.y + mapSize, (int) (pvd.getWidth() / scale), h2 - center.y + mapSize);
         } else {
-            g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
+            gScaled.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
         }
 
         // g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
@@ -384,10 +383,9 @@ public class MapTileRenderer implements TileLoaderListener
             center.x = center.x % mapSize;
         }
         
-        //g.setTransform(current);
-        g.dispose(); //TODO: In a finally block
+        gScaled.dispose(); //TODO: In a finally block
 
-        attribution.paintAttribution(g1, pvd.getWidth(), pvd.getHeight(), 
+        attribution.paintAttribution(g, pvd.getWidth(), pvd.getHeight(), 
                 getPosition(0, 0), getPosition(pvd.getWidth(), pvd.getHeight()), zoom, pvd);
     }
     
@@ -516,9 +514,15 @@ public class MapTileRenderer implements TileLoaderListener
         
         //TODO: this is by no means efficient
         CoordinateTransformer transformer = pvd.getTransformer();
+        
+        //Get meters coordinate of center
         Vector3 metersCenter = transformer.screenToMeters(pvd.getWidth()/2, pvd.getHeight()/2);
+        
+        //Convert to lat/lon TODO: This seems like it might have issues far from origin
         Geodetic.Point latLonCenter = pvd.getTerrain().toGeodetic(metersCenter);
-        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoomLevel), 
+        
+        //Translate that lat/lon into tile coords
+        Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoomLevel),
                                  tileSource.LatToY(Math.toDegrees(latLonCenter.latitude), zoomLevel));
         return center;
     }
@@ -529,7 +533,24 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public double getScaleFactor()
     {
+        return getScaleFactor(zoom);
+    }
+    
+    public double getScaleFactor(int zoomLevel)
+    {
         double simPpm = pvd.getTransformer().scalarToPixels(Scalar.createMeter(1));
-        return getMetersPerPixel() * simPpm;
+        return getMetersPerPixel(zoomLevel) * simPpm;
+    }
+    
+    public Point getTileCoordinates(Point screenCoordsPx, int zoomLevel)
+    {
+        if(tileSource == null) { return null; }
+        
+        Point osmCenterPx = getCenter(zoomLevel);
+        double scale = getScaleFactor(zoomLevel);
+        Point.Double osmUpperLeftPx = new Point.Double(osmCenterPx.x - (pvd.getWidth()/2 / scale), osmCenterPx.y - (pvd.getHeight()/2) / scale);
+        Point.Double osmMousePx =   new Point.Double(osmUpperLeftPx.x + screenCoordsPx.x / scale, osmUpperLeftPx.y + screenCoordsPx.y / scale);
+        double tileSize = getTileSize();
+        return new Point((int) (osmMousePx.x / tileSize), (int) (osmMousePx.y / tileSize));
     }
 }

@@ -33,17 +33,26 @@ package com.soartech.simjr.ui.pvd.imagery;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -65,9 +74,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private static final int WIDTH = 125, HEIGHT = 375;
 
     private final PlanViewDisplay pvd;
+    private final MapTileRenderer mapRenderer;
     
     private RangeSlider zoomSlider;
-    private final JLabel captureStats = new JLabel();
     private final JButton downloadButton = new JButton("Download");
     private final JButton doneButton = new JButton("X");
     
@@ -83,10 +92,10 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         super();
         
         this.pvd = pvd;
+        this.mapRenderer = pvd.getMapTileRenderer();
         
         setLayout(new MigLayout("gapx 0"));
         
-        MapTileRenderer mapRenderer = pvd.getMapTileRenderer();
         zoomSlider = new RangeSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
         zoomSlider.setPreferredSize(new Dimension(50, 300));
         zoomSlider.setMajorTickSpacing(1);
@@ -97,6 +106,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                 RangeSlider source = (RangeSlider)e.getSource();
                 if (!source.getValueIsAdjusting()) {
                     logger.info("zoom: " + source.getValue() + " - " + source.getUpperValue());
+                    updateTileInformation();
                 }
             }
         });
@@ -128,15 +138,18 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         zoomPanel.add(zoomSlider);
         zoomPanel.setPreferredSize(new Dimension(50, 325));
         add(zoomPanel, "span, align right");
+        setAlpha(0.95f);
         
         pvd.addComponentListener(resizeListener);
+        pvd.addMouseWheelListener(pvdMouseWheelListener);
+        pvd.addMouseMotionListener(pvdMouseMotionAdapter);
+        
         mapRenderer.addTileSourceListener(this);
         mapRenderer.addTileZoomListener(this);
-
-        setAlpha(0.95f);
         
         pvd.add(this);
         updateGuiPosition();
+        updateTileInformation();
     }
     
     //Keep the controls in the correct position
@@ -144,6 +157,29 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         public void componentResized(ComponentEvent evt) {
             logger.info("Updating GUI position");
             updateGuiPosition();
+            updateTileInformation();
+        }
+    };
+    
+    //Maintains the current set of visible tiles
+    private MouseMotionAdapter pvdMouseMotionAdapter = new MouseMotionAdapter() {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if(SwingUtilities.isLeftMouseButton(e)) {
+                if (!pvd.isDraggingEntity()) {
+                    logger.info("PVD panning");
+                    updateTileInformation();
+                }
+            }
+        }
+    }; 
+
+    //Maintains the current set of visible tiles
+    private MouseWheelListener pvdMouseWheelListener = new MouseWheelListener() {
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            logger.info("PVD mouse wheeled");
+            updateTileInformation();
         }
     };
     
@@ -162,15 +198,27 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         logger.info("MapImageryDownloader complete");
         pvd.remove(this);
         pvd.removeComponentListener(resizeListener);
+        pvd.removeMouseMotionListener(pvdMouseMotionAdapter);
+        pvd.removeMouseWheelListener(pvdMouseWheelListener);
+        
+        mapRenderer.removeTileSourceListener(this);
+        mapRenderer.removeTileZoomListener(this);
+        
         pvd.repaint();
     }
     
     /**
      * Called to initialize download of tile imagery.
+     * TODO: Consider displaying progress bar, definitely run in background thread
+     * TODO: Consider a cancel button to stop download
      */
     private void download()
     {
-        logger.info("TODO: Capture currently viewable area imagery");
+        //TODO: Download tiles
+        //For each zoom level
+        //  Determine visible tiles
+        //  For each visible tile
+        //    download it, save it and metadata to encoded file name
     }
     
     private void updateZoomSliderSource(TileSource ts)
@@ -198,33 +246,66 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         zoomSlider.repaint();
     }
     
-    //TODO: On PVD drag, zoom, slider change
-    private void updateCaptureStats()
+    /**
+     * Updates the download button with the current tile information.
+     * 
+     * TODO: On another thread?
+     */
+    private void updateTileInformation()
     {
-        logger.info("Updating capture stats.");
+        logger.info("Updating tile info");
         
-        //TODO: Determine all visible tiles
-        //  Calculate lat/lon for corners
-        //  Get tile X/Y min/max range for each active zoom level
-        //  Sum total tile number
+        Map<Integer, Rectangle> visibleRegions = getVisibleTileRegions();
+        
+        int totalTiles = 0;
+        for(Map.Entry<Integer, Rectangle> entry: visibleRegions.entrySet())
+        {
+            Rectangle region = entry.getValue();
+            int tiles = region.width * region.height;
+            logger.info("zoom: " + entry.getKey() + " -> " + tiles + " tiles ("  + region + ")");
+            totalTiles += tiles;
+        }
+        
+        logger.info("Total tiles: " + totalTiles);
+        
         //TODO: Estimate a download size based on number of tiles
         
         //TODO: Consider displaying num tiles per zoom level on slider
     }
     
     /**
-     * TODO: Consider displaying progress bar, definitely run in background thread
-     * TODO: Consider a cancel button to stop download
+     * Calculates the visible tile regions in tile coordinates per zoom level
      */
-    private void downloadTiles()
+    private Map<Integer, Rectangle> getVisibleTileRegions()
     {
-        //TODO: Download tiles
-        //For each zoom level
-        //  Determine visible tiles
-        //  For each visible tile
-        //    download it, save it and metadata to encoded file name
+        Map<Integer, Rectangle> visibleRegions = new HashMap<Integer, Rectangle>();
+        
+        if(mapRenderer.getTileSource() == null) { return visibleRegions; }
+        
+        int minZoom = zoomSlider.getValue();
+        int maxZoom = zoomSlider.getUpperValue();
+        
+        for(int z = minZoom; z <= maxZoom; z++) 
+        {
+            logger.info("Calculating tiles at zoom level: " + z);
+            
+            Point ul = mapRenderer.getTileCoordinates(new Point(0, 0), z);
+            Point ur = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), 0), z);
+            Point lr = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), pvd.getHeight()), z);
+            Point ll = mapRenderer.getTileCoordinates(new Point(0, pvd.getHeight()), z);
+            
+            int tileMinX = Math.min(ul.x, ll.x);
+            int tileMinY = Math.min(ul.y, ur.y);
+            int tileMaxX = Math.min(ur.x, lr.x);
+            int tileMaxY = Math.min(lr.y, ll.y);
+            
+            Rectangle visibleRegion = new Rectangle(tileMinX, tileMinY, 1 + tileMaxX - tileMinX, 1 + tileMaxY - tileMinY);
+            visibleRegions.put(new Integer(z), visibleRegion);
+        }
+        
+        return visibleRegions;
     }
-
+    
     @Override
     public void onTileSourceChanged(TileSource ts)
     {
