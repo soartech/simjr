@@ -37,7 +37,8 @@ public class TrackWhileScan extends RadarMode
     @Override
     public RadarDegreeBound getAzimuthBounds()
     {
-        return RadarDegreeBound.NoBounds();
+        //return RadarDegreeBound.NoBounds();
+        return new RadarDegreeBound(60.0);
     }
 
     @Override
