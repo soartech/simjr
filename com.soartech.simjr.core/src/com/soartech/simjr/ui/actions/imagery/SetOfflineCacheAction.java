@@ -32,14 +32,12 @@
 package com.soartech.simjr.ui.actions.imagery;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.prefs.Preferences;
 
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
+import javax.swing.JFileChooser;
+
+import org.apache.log4j.Logger;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
@@ -47,41 +45,18 @@ import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
- * Sets the tile source for map imagery.
+ * Sets and enables the offline cache directory.
  */
-public class SetMapImageryProviderAction extends AbstractSimulationAction
+public class SetOfflineCacheAction extends AbstractSimulationAction
 {
     private static final long serialVersionUID = 1L;
+    private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
+    private static final Logger logger = Logger.getLogger(SetOfflineCacheAction.class);
     
-    public static List<SetMapImageryProviderAction> getAvailableProviderActions(ActionManager am) 
+    public SetOfflineCacheAction(ActionManager actionManager)
     {
-        List<SetMapImageryProviderAction> actions = new ArrayList<SetMapImageryProviderAction>();
-        
-        TileSource[] tileSources = new TileSource[] { 
-                null,
-                new OsmTileSource.Mapnik(),
-                new OsmTileSource.CycleMap(),
-                new BingAerialTileSource(),
-                new MapQuestOsmTileSource(),
-                new MapQuestOpenAerialTileSource()
-        };
-        
-        for(TileSource source: tileSources) {
-            actions.add(new SetMapImageryProviderAction(am, source));
-        }
-        
-        return actions;
+        super(actionManager, "Set Offline Cache");
     }
-    
-    private final TileSource source;
-
-    public SetMapImageryProviderAction(ActionManager actionManager, TileSource source)
-    {
-        super(actionManager, source == null ? "None" : source.getName());
-        this.source = source;
-    }
-    
-    public TileSource getSource() { return source; }
     
     private PlanViewDisplay getPvd() 
     {
@@ -110,8 +85,18 @@ public class SetMapImageryProviderAction extends AbstractSimulationAction
     {
         PlanViewDisplay pvd = getPvd();
         if(pvd != null) {
-            pvd.getMapTileRenderer().setTileSource(source);
-            pvd.getMapTileRenderer().approximateScale();
+            pvd.getMapTileRenderer();
+            
+            Preferences prefs = Preferences.userRoot().node(getClass().getName());
+            final JFileChooser fc = new JFileChooser(prefs.get(LAST_USED_FOLDER, new File(".").getAbsolutePath()));
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if(fc.showOpenDialog(pvd) == JFileChooser.APPROVE_OPTION) {
+                final File destDir = fc.getSelectedFile();
+                logger.info("User selected: " + destDir);
+                prefs.put(LAST_USED_FOLDER, destDir.getAbsolutePath());
+                
+                //TODO: Set offline directory to the maptilerenderer
+            }
         }
     }
 

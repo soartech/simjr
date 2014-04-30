@@ -10,10 +10,6 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -27,14 +23,8 @@ public class ImageryMenu extends JMenu
 {
     private static final long serialVersionUID = 1L;
     
-    TileSource[] tileSources = new TileSource[] { 
-            null,
-            new OsmTileSource.Mapnik(),
-            new OsmTileSource.CycleMap(),
-            new BingAerialTileSource(),
-            new MapQuestOsmTileSource(),
-            new MapQuestOpenAerialTileSource()
-    };
+    //Necessary for checking the currently enabled source
+    //TODO: Push this behavior into the SetMapImageProviderAction and have it be pushed rather than pulled
     Map<TileSource, JCheckBoxMenuItem> sourceMenuMap = new HashMap<TileSource, JCheckBoxMenuItem>();
     
     private final ActionManager am;
@@ -46,13 +36,17 @@ public class ImageryMenu extends JMenu
         this.am = actionManager;
         
         JMenu sourcesMenu = new JMenu("Source");
-        for(TileSource s: tileSources) {
-            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new SetMapImageryProviderAction(am, s)); 
-            sourceMenuMap.put(s, menuItem);
+        for(SetMapImageryProviderAction action: SetMapImageryProviderAction.getAvailableProviderActions(am)) {
+            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(action); 
+            sourceMenuMap.put(action.getSource(), menuItem);
             sourcesMenu.add(menuItem);
         }
         
         final JCheckBoxMenuItem tileGridMenuItem = new JCheckBoxMenuItem(new SetTileGridVisibilityAction(am));
+        
+        JMenu offlineMenu = new JMenu("Offline");
+        offlineMenu.add(new JMenuItem(new SetOfflineCacheAction(am)));
+        //offlineMenu.add(new JMenuItem(new SetOfflineCacheAction(am)));
         
         addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent e) { }
@@ -61,13 +55,14 @@ public class ImageryMenu extends JMenu
                 PlanViewDisplay activePvd = getPvd();
                 if(activePvd != null && activePvd.getMapTileRenderer() != null) {
                     MapTileRenderer tileRenderer = activePvd.getMapTileRenderer();
-                    setSelectedSource(activePvd.getMapTileRenderer().getTileSource());
+                    setSelectedSource(tileRenderer.getTileSource());
                     tileGridMenuItem.setSelected(tileRenderer.getTileGridVisible());
                 }
             }
         });
         
         add(sourcesMenu);
+        add(offlineMenu);
         add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
         add(tileGridMenuItem);
         add(new JMenuItem(new ShowMapDownloaderAction(am)));
@@ -84,7 +79,7 @@ public class ImageryMenu extends JMenu
         }
     }
 
-    public void setSelectedSource(TileSource selectedSource)
+    private void setSelectedSource(TileSource selectedSource)
     {
         for(Map.Entry<TileSource, JCheckBoxMenuItem> entry: sourceMenuMap.entrySet()) {
             TileSource s = entry.getKey();
