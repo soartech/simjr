@@ -43,13 +43,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.prefs.Preferences;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -61,6 +68,11 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXPanel;
+import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
+import org.openstreetmap.gui.jmapviewer.Tile;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -72,14 +84,47 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private static final long serialVersionUID = 1L;
     private static Logger logger = Logger.getLogger(MapImageryDownloader.class);
     
-    private static final long AVG_TILE_SIZE_BYTES = 50000;
+    private static final long AVG_TILE_SIZE_BYTES = 45000;
+    private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 
     private final PlanViewDisplay pvd;
     private final MapTileRenderer mapRenderer;
     
+    private ScheduledThreadPoolExecutor scheduler;
+    private final static int MAX_TILE_DOWNLOADS_PER_SECOND = 10;
+    
     private RangeSlider zoomSlider;
     private final JButton downloadButton = new JButton("Download");
-    private final JButton doneButton = new JButton("Cancel");
+    private final JButton cancelButton = new JButton("Cancel");
+    
+    private final ActionListener cancelButtonClose = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            onComplete();
+        }
+    };
+    
+    private final ActionListener cancelButtonStop = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            scheduler.shutdownNow();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        scheduler.awaitTermination(10, TimeUnit.SECONDS);
+                    }
+                    catch (InterruptedException e) {
+                        logger.warn(e);
+                    }
+                    finally {
+                        onDownloadCompleted();
+                    }
+                }
+            });
+            
+        }
+    };
     
     /**
      * UI for capturing map imagery
@@ -107,29 +152,24 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                 RangeSlider source = (RangeSlider)e.getSource();
                 if (!source.getValueIsAdjusting()) {
                     logger.info("zoom: " + source.getValue() + " - " + source.getUpperValue());
-                    updateTileInformation();
+                    updateDownloadButton();
                 }
             }
         });
-        updateZoomSliderSource(mapRenderer.getTileSource());
-        updateCurrentZoom(mapRenderer.getZoom());
+        onTileSourceChanged(mapRenderer.getTileSource());
+        onTileZoomChanged(mapRenderer.getZoom());
         
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                download();
+                onDownload();
             }
         });
         
-        doneButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onComplete();
-            }
-        });
+        onDownloadCompleted(); // Setup buttons
         
         add(downloadButton, "wrap 0, align right, growx");
-        add(doneButton, "wrap, align right, growx");
+        add(cancelButton, "wrap, align right, growx");
         
         JPanel zoomPanel = new JPanel();
         zoomPanel.setLayout(new BoxLayout(zoomPanel, BoxLayout.Y_AXIS));
@@ -152,7 +192,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         pvd.add(this);
         updateGuiPosition();
-        updateTileInformation();
+        updateDownloadButton();
     }
     
     //Keep the controls in the correct position
@@ -160,7 +200,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         public void componentResized(ComponentEvent evt) {
             logger.info("Updating GUI position");
             updateGuiPosition();
-            updateTileInformation();
+            updateDownloadButton();
         }
     };
     
@@ -171,7 +211,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             if(SwingUtilities.isLeftMouseButton(e)) {
                 if (!pvd.isDraggingEntity()) {
                     logger.info("PVD panning");
-                    updateTileInformation();
+                    updateDownloadButton();
                 }
             }
         }
@@ -182,7 +222,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             logger.info("PVD mouse wheeled");
-            updateTileInformation();
+            updateDownloadButton();
         }
     };
     
@@ -215,46 +255,26 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
      * TODO: Consider displaying progress bar, definitely run in background thread
      * TODO: Consider a cancel button to stop download
      */
-    private void download()
+    private void onDownload()
     {
-        //TODO: Download tiles
-        //For each zoom level
-        //  Determine visible tiles
-        //  For each visible tile
-        //    download it, save it and metadata to encoded file name
-    }
-    
-    private void updateZoomSliderSource(TileSource ts)
-    {
-        if(ts == null) {
-            zoomSlider.setEnabled(false);
-            downloadButton.setEnabled(false);
-        }
-        else {
-            zoomSlider.setEnabled(true);
-            downloadButton.setEnabled(true);
+        Preferences prefs = Preferences.userRoot().node(getClass().getName());
+        final JFileChooser fc = new JFileChooser(prefs.get(LAST_USED_FOLDER, new File(".").getAbsolutePath()));
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if(fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            final File destDir = fc.getSelectedFile();
+            logger.info("User selected: " + destDir);
+            prefs.put(LAST_USED_FOLDER, destDir.getAbsolutePath());
             
-            zoomSlider.setMinimum(ts.getMinZoom());
-            zoomSlider.setMaximum(ts.getMaxZoom());
+            Map<Integer, Rectangle> regions = getVisibleTileRegions();
+            scheduleTileDownloads(destDir, regions);
         }
-    }
-    
-    private void updateCurrentZoom(int currentZoom)
-    {
-        logger.info("Setting current zoom: " + currentZoom);
-        @SuppressWarnings("unchecked")
-        Hashtable<Integer, Component> labels = zoomSlider.createStandardLabels(1);
-        labels.put(new Integer(currentZoom), new JLabel("<html><b>" + currentZoom + "*</b></html>"));
-        zoomSlider.setLabelTable(labels);
-        zoomSlider.repaint();
     }
     
     /**
      * Updates the download button with the current tile information.
-     * 
      * TODO: On another thread?
      */
-    private void updateTileInformation()
+    private void updateDownloadButton()
     {
         logger.info("Updating tile info");
         
@@ -275,8 +295,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                 NumberFormat.getIntegerInstance().format(totalTiles) + " tiles<br>(~" + 
                 readableFileSize(totalTiles * AVG_TILE_SIZE_BYTES, false) + ")</i></html>");
         
-        //TODO: Estimate a download size based on number of tiles
-        
         //TODO: Consider displaying num tiles per zoom level on slider
     }
     
@@ -292,6 +310,30 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+    
+    private void onDownloadStarted()
+    {
+        downloadButton.setEnabled(false);
+        downloadButton.setText("<html><b>DOWNLOADING..</b><br><i>Initializing..</i></html>");
+        
+        cancelButton.removeActionListener(cancelButtonClose);
+        cancelButton.addActionListener(cancelButtonStop);
+        cancelButton.setText("Cancel");
+        
+        updateGuiPosition();
+    }
+    
+    private void onDownloadCompleted()
+    {
+        cancelButton.removeActionListener(cancelButtonStop);
+        cancelButton.addActionListener(cancelButtonClose);
+        cancelButton.setText("Close");
+        
+        downloadButton.setEnabled(true);
+        updateDownloadButton();
+        
+        updateGuiPosition();
     }
     
     /**
@@ -327,15 +369,90 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         return visibleRegions;
     }
     
+    private int getTotalTileCount(Map<Integer, Rectangle> regions)
+    {
+        int t = 0;
+        for(Rectangle r: regions.values()) { t += r.height * r.width; }
+        return t;
+    }
+    
+    private void scheduleTileDownloads(File destinationDir, Map<Integer, Rectangle> regions) 
+    {
+        final int totalTiles = getTotalTileCount(regions);
+        final OsmFileCacheTileLoader tileLoader;
+        
+        try {
+            tileLoader = new OsmFileCacheTileLoader(new TileLoaderListener() {
+                private AtomicInteger count = new AtomicInteger(0);
+                @Override
+                public void tileLoadingFinished(final Tile tile, final boolean success) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override public void run() {
+                            //TODO: What to do when success == false?
+                            int currentCount = count.incrementAndGet();
+                            logger.info("Tile: " + tile + " loaded: " + success + " " + currentCount + "/" + totalTiles);
+                            if(currentCount == totalTiles) {
+                                onDownloadCompleted();
+                            }
+                            else {
+                                double percent =  (double)currentCount / totalTiles;
+                                downloadButton.setText("<html><b>DOWNLOADING..</b><br>" + 
+                                        "<i>" + NumberFormat.getPercentInstance().format(percent) +"</i></html>");
+                                logger.info("Percent done: " + percent);
+                            }
+                        }
+                    });
+                }
+                @Override public TileCache getTileCache() { return null; } //TODO: Can this be utilized?
+            }, destinationDir);
+        }
+        catch (IOException e) {
+            logger.error("Unable to create tile loader!", e);
+            return;
+        }
+        
+        scheduler = new ScheduledThreadPoolExecutor(4);
+        onDownloadStarted();
+        
+        for(Map.Entry<Integer, Rectangle> entry: regions.entrySet()) {
+            int zoom = entry.getKey();
+            Rectangle region = entry.getValue();
+            for(int x = region.x; x < region.x + region.width; x++) {
+                for(int y = region.y; y < region.y + region.height; y++) {
+                    Tile tile = new Tile(mapRenderer.getTileSource(), x, y, zoom);
+                    logger.info("Creating tile job for tile: " + tile);
+                    TileJob job = tileLoader.createTileLoaderJob(tile);
+                    int delay = scheduler.getQueue().size() / MAX_TILE_DOWNLOADS_PER_SECOND;
+                    scheduler.schedule(job, delay, TimeUnit.SECONDS);
+                }
+            }
+        }
+    }
+    
     @Override
     public void onTileSourceChanged(TileSource ts)
     {
-        updateZoomSliderSource(ts);
+        if(ts == null) {
+            zoomSlider.setEnabled(false);
+            downloadButton.setEnabled(false);
+        }
+        else {
+            zoomSlider.setEnabled(true);
+            downloadButton.setEnabled(true);
+            
+            zoomSlider.setMinimum(ts.getMinZoom());
+            zoomSlider.setMaximum(ts.getMaxZoom());
+        }
     }
 
     @Override
     public void onTileZoomChanged(int zoom)
     {
-        updateCurrentZoom(zoom);
+        logger.info("Setting current zoom: " + zoom);
+        @SuppressWarnings("unchecked")
+        Hashtable<Integer, Component> labels = zoomSlider.createStandardLabels(1);
+        labels.put(new Integer(zoom), new JLabel("<html><b>" + zoom + "*</b></html>"));
+        zoomSlider.setLabelTable(labels);
+        zoomSlider.repaint();
     }
 }
