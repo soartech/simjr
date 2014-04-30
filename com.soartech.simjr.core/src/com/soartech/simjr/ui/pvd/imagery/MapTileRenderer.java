@@ -233,6 +233,7 @@ public class MapTileRenderer implements TileLoaderListener
         notifyTileSourceListeners(tileSource);
     }
     
+    //TODO: Unused, necessary?
     public void setTileLoader(TileLoader loader)
     {
         tileController.setTileLoader(loader);

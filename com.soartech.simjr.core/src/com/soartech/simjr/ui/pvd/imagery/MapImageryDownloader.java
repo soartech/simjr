@@ -390,7 +390,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                         @Override public void run() {
                             //TODO: What to do when success == false?
                             int currentCount = count.incrementAndGet();
-                            logger.info("Tile: " + tile + " loaded: " + success + " " + currentCount + "/" + totalTiles);
                             if(currentCount == totalTiles) {
                                 onDownloadCompleted();
                             }
@@ -398,7 +397,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                                 double percent =  (double)currentCount / totalTiles;
                                 downloadButton.setText("<html><b>DOWNLOADING..</b><br>" + 
                                         "<i>" + NumberFormat.getPercentInstance().format(percent) +"</i></html>");
-                                logger.info("Percent done: " + percent);
                             }
                         }
                     });
@@ -448,7 +446,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     @Override
     public void onTileZoomChanged(int zoom)
     {
-        logger.info("Setting current zoom: " + zoom);
         @SuppressWarnings("unchecked")
         Hashtable<Integer, Component> labels = zoomSlider.createStandardLabels(1);
         labels.put(new Integer(zoom), new JLabel("<html><b>" + zoom + "*</b></html>"));
