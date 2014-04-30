@@ -35,6 +35,8 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +126,24 @@ public class MapTileRenderer implements TileLoaderListener
         tileController = new TileController(tileSource, new MemoryTileCache(), this);
         //TODO: Seems to be a bug where the source param is ignored in tilecontroller constructor, reset it here
         setTileSource(tileSource); //initializes attribution
+        
+        String offlineDir = SimJrProps.get("simjr.map.imagery.offline");
+        if(offlineDir != null) {
+            logger.info("Using offline tile loader from directory: " + offlineDir);
+            File dir = new File(offlineDir);
+            if(dir.exists() && dir.isDirectory() && dir.canRead()) {
+                try {
+                    TileLoader loader = new OfflineTileLoader(this, dir);
+                    setTileLoader(loader);
+                }
+                catch(IOException e) {
+                    logger.error("Unable to create tile loader from directory: " + offlineDir, e);
+                }
+            }
+            else {
+                logger.error("Unable to read from directory: " + offlineDir);
+            }
+        }
     }
     
     public int getZoom() { return this.zoom; }
@@ -176,7 +196,7 @@ public class MapTileRenderer implements TileLoaderListener
      */
     public void approximateScale(double targetMpp) 
     {
-        logger.info("Approximating scale: " + targetMpp + " meters per pixels.");
+        //logger.info("Approximating scale: " + targetMpp + " meters per pixels.");
         
         if(tileSource == null) { return; }
         
@@ -185,12 +205,12 @@ public class MapTileRenderer implements TileLoaderListener
         
         while (currentTileMpp > targetMpp && targetZoom < tileSource.getMaxZoom()) 
         {
-            logger.info("Zoom " + targetZoom + " is too high: " + currentTileMpp + " < " + targetMpp);
+            //logger.info("Zoom " + targetZoom + " is too high: " + currentTileMpp + " < " + targetMpp);
             targetZoom++; //zoom in
             currentTileMpp = getMetersPerPixel(targetZoom);
         }
         
-        logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
+        //logger.info("Zoom: " + targetZoom + " at " + currentTileMpp + " is closest to: " + targetMpp);
         setZoom(targetZoom);
     }
     
