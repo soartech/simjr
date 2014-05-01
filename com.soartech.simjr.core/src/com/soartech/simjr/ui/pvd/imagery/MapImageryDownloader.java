@@ -92,6 +92,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     
     private ScheduledThreadPoolExecutor scheduler;
     private final static int MAX_TILE_DOWNLOADS_PER_SECOND = 10;
+    private final static int THREAD_POOL_SIZE = 4;
     
     private RangeSlider zoomSlider;
     private final JButton downloadButton = new JButton("Download");
@@ -177,7 +178,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         zoomPanel.setPreferredSize(new Dimension(50, 325));
         add(zoomPanel, "span, align right");
         
-        //setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setAlpha(0.95f);
         
         pvd.addComponentListener(resizeListener);
@@ -396,7 +396,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             return;
         }
         
-        scheduler = new ScheduledThreadPoolExecutor(4);
+        scheduler = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE);
         onDownloadStarted();
         
         for(Map.Entry<Integer, Rectangle> entry: regions.entrySet()) {
