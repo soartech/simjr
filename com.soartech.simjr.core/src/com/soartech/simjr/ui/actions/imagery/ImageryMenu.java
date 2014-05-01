@@ -44,8 +44,8 @@ public class ImageryMenu extends JMenu
         
         final JCheckBoxMenuItem tileGridMenuItem = new JCheckBoxMenuItem(new SetTileGridVisibilityAction(am));
         
-        JMenu offlineMenu = new JMenu("Offline");
-        offlineMenu.add(new JMenuItem(new SetOfflineCacheAction(am)));
+        //JMenu offlineMenu = new JMenu("Offline");
+        //offlineMenu.add(new JMenuItem(new SetOfflineCacheAction(am)));
         //offlineMenu.add(new JMenuItem(new SetOfflineCacheAction(am)));
         
         addMenuListener(new MenuListener() {
@@ -62,7 +62,7 @@ public class ImageryMenu extends JMenu
         });
         
         add(sourcesMenu);
-        add(offlineMenu);
+        //add(offlineMenu);
         add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
         add(tileGridMenuItem);
         add(new JMenuItem(new ShowMapDownloaderAction(am)));

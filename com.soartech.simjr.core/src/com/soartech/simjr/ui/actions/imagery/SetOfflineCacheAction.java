@@ -55,7 +55,7 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
     
     public SetOfflineCacheAction(ActionManager actionManager)
     {
-        super(actionManager, "Set Offline Cache");
+        super(actionManager, "Set Offline Cache...");
     }
     
     private PlanViewDisplay getPvd() 
@@ -95,7 +95,7 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
                 logger.info("User selected: " + destDir);
                 prefs.put(LAST_USED_FOLDER, destDir.getAbsolutePath());
                 
-                //TODO: Set offline directory to the maptilerenderer
+                //TODO: Create a new offline tile loader, set it in the maptilerenderer
             }
         }
     }
