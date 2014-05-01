@@ -44,7 +44,6 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         public OfflineFileLoadJob(Tile tile) 
         {
             super(tile);
-            logger.info("Creating OfflineFileLoadJob for tile: " + tile);
         }
 
         /**
@@ -53,33 +52,31 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         @Override
         public void run() 
         {
-            //Get the parent class tile obj, it's not visible
+            //Get the parent class tile obj, it's not visible to subclasses
             Tile tile = getTile();
             
-            logger.info("Executing OfflineFileLoadJob for tile: " + tile);
-            
-            //Set tile as loading if it hasn't loaded already or failed
+            //Skip this tile if it's already successfully loaded or is currently loading
             synchronized (tile) {
-                if ((tile.isLoaded() && !tile.hasError()) || tile.isLoading()) {
+                if ( tile.isLoaded() || tile.hasError() || tile.isLoading()) {
                     return;
                 }
+                //Otherwise set it as loading
                 tile.initLoading();
             }
             
-            //Test loading it from file, if succeeds, done
+            //Attempt to load it from file, and it if succeeded, we're done
             tileCacheDir = getSourceCacheDir(tile.getSource());
-            if (loadTileFromFile()) {
-                logger.info("Loaded " + tile);
-                return;
+            
+            boolean loaded = loadTileFromFile();
+            if (loaded) {
+                tile.setLoaded(true);
+                listener.tileLoadingFinished(tile, true);
             }
-            
-            logger.info("Unable to load " + tile);
-            
-            //Otherwise, it's not in our cache, that's an error on tile load
-            //TODO: Is this good enough?
-            tile.setError("Tile not found in offline cache!");
-            
-            //TODO: Also set tile's error image to something unique?
+            else {
+                tile.setLoaded(false);
+                tile.setError("Tile not found in offline cache!");
+                //TODO: Also set tile's error image to something unique?
+            }
         }
 
         /**
@@ -91,7 +88,6 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
             //Get the parent class tile obj, it's not visible
             Tile tile = getTile();
             
-            //If there's no file, or can't read it, can't load it
             File tileFile = getTileFile();
             if (!tileFile.exists() || !tileFile.canRead()) {
                 return false;
@@ -126,34 +122,12 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
                         fin.close();
                     }
                 }
-
-                //Now set file to loaded and painted (we don't care about age here)
-                //fileAge = tileFile.lastModified();
-                //boolean oldTile = System.currentTimeMillis() - fileAge > maxCacheFileAge;
-                //if (!oldTile) {
-                    tile.setLoaded(true);
-                    listener.tileLoadingFinished(tile, true);
-                    return true;
-                //}
-                //listener.tileLoadingFinished(tile, true);
-                //fileTilePainted = true;
+                
+                return true;
             } 
-            
-            
             catch (Exception e) 
             {
-                //Seems unnecessary.. we don't want to ever delete files from cache
-                /* 
-                try {
-                    if (fin != null) {
-                        fin.close();
-                        tileFile.delete();
-                    }
-                } 
-                catch (Exception e1) {
-                }
-                */
-                logger.info("Exception loading tile: " + tile, e);
+                logger.error("Exception loading tile: " + tile, e);
                 tileFile = null;
             }
             
@@ -161,6 +135,7 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         }
         
         /**
+         * Straight copy from OsmFileCacheTileLoader.FileLoadJob
          * Must override this to call our loadOldETagFromFile
          */
         @Override
@@ -187,6 +162,7 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         }
         
         /**
+         * Straight copy from OsmFileCacheTileLoader.FileLoadJob
          * Must override this to access tileCacheDir
          */
         @Override
@@ -197,6 +173,7 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         }
 
         /**
+         * Straight copy from OsmFileCacheTileLoader.FileLoadJob
          * Must override this to access tileCacheDir
          */
         @Override
@@ -208,7 +185,8 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         
         /**
          *  Load backward-compatiblity .etag file and if it exists move it to new .tags file
-         *  
+         * 
+         * Straight copy from OsmFileCacheTileLoader.FileLoadJob
          * Must override this to access tileCacheDir
          */
         private void loadOldETagfromFile() 
@@ -242,7 +220,9 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         return new OfflineFileLoadJob(tile);
     }
     
-    //TODO: override this to avoid creating new dir?
+    /**
+     * Override this to avoid creating new dir 
+     */
     @Override
     protected File getSourceCacheDir(TileSource source) {
         File dir = sourceCacheDirMap.get(source); //TODO: Maybe bug in parent class, this map is never written to?
@@ -255,7 +235,9 @@ public class OfflineTileLoader extends OsmFileCacheTileLoader
         return dir;
     }
 
-    //TODO: override this to avoid creating new dir?
+    /**
+     * Override this to avoid creating new dir
+     */
     @Override
     public void setTileCacheDir(String tileCacheDir) {
         File dir = new File(tileCacheDir);
