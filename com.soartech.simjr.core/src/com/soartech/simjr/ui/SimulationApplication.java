@@ -109,7 +109,7 @@ public class SimulationApplication extends DefaultServiceManager
         catch (Throwable e)
         {
             logger.error("Application initialization failure: " + e.getMessage());
-            logger.debug("stack trace", e);
+            logger.error("stack trace", e);
             try
             {
                 shutdownServices();
