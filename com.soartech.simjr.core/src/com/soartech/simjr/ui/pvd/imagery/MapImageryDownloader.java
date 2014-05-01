@@ -139,7 +139,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         setLayout(new MigLayout("gapx 0"));
         
-        zoomSlider = new RangeSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, mapRenderer.getZoom());
+        zoomSlider = new RangeSlider(JSlider.VERTICAL, MapTileRenderer.MIN_ZOOM, MapTileRenderer.MAX_ZOOM, 0);
+        zoomSlider.setUpperValue(mapRenderer.getZoom());
         zoomSlider.setPreferredSize(new Dimension(50, 300));
         zoomSlider.setMajorTickSpacing(1);
         zoomSlider.setPaintTicks(true);
