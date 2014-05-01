@@ -122,14 +122,11 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
                     }
                 }
             });
-            
         }
     };
     
     /**
      * UI for capturing map imagery
-     * 
-     * TODO: Update zoom slider on zoom, tile source change
      * 
      * @param mapRenderer
      */
@@ -151,7 +148,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             public void stateChanged(ChangeEvent e) {
                 RangeSlider source = (RangeSlider)e.getSource();
                 if (!source.getValueIsAdjusting()) {
-                    logger.info("zoom: " + source.getValue() + " - " + source.getUpperValue());
                     updateDownloadButton();
                 }
             }
@@ -198,7 +194,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     //Keep the controls in the correct position
     private ComponentAdapter resizeListener = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
-            logger.info("Updating GUI position");
             updateGuiPosition();
             updateDownloadButton();
         }
@@ -210,7 +205,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         public void mouseDragged(MouseEvent e) {
             if(SwingUtilities.isLeftMouseButton(e)) {
                 if (!pvd.isDraggingEntity()) {
-                    logger.info("PVD panning");
                     updateDownloadButton();
                 }
             }
@@ -221,7 +215,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private MouseWheelListener pvdMouseWheelListener = new MouseWheelListener() {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            logger.info("PVD mouse wheeled");
             updateDownloadButton();
         }
     };
@@ -276,8 +269,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
      */
     private void updateDownloadButton()
     {
-        logger.info("Updating tile info");
-        
         Map<Integer, Rectangle> visibleRegions = getVisibleTileRegions();
         
         int totalTiles = 0;
@@ -285,11 +276,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         {
             Rectangle region = entry.getValue();
             int tiles = region.width * region.height;
-            logger.info("zoom: " + entry.getKey() + " -> " + tiles + " tiles ("  + region + ")");
             totalTiles += tiles;
         }
-        
-        logger.info("Total tiles: " + totalTiles);
         
         downloadButton.setText("<html><b>DOWNLOAD</b><br><i>" + 
                 NumberFormat.getIntegerInstance().format(totalTiles) + " tiles<br>(~" + 
@@ -350,8 +338,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         for(int z = minZoom; z <= maxZoom; z++) 
         {
-            logger.info("Calculating tiles at zoom level: " + z);
-            
             Point ul = mapRenderer.getTileCoordinates(new Point(0, 0), z);
             Point ur = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), 0), z);
             Point lr = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), pvd.getHeight()), z);
@@ -418,7 +404,6 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             for(int x = region.x; x < region.x + region.width; x++) {
                 for(int y = region.y; y < region.y + region.height; y++) {
                     Tile tile = new Tile(mapRenderer.getTileSource(), x, y, zoom);
-                    logger.info("Creating tile job for tile: " + tile);
                     TileJob job = tileLoader.createTileLoaderJob(tile);
                     int delay = scheduler.getQueue().size() / MAX_TILE_DOWNLOADS_PER_SECOND;
                     scheduler.schedule(job, delay, TimeUnit.SECONDS);
