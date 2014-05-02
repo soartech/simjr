@@ -11,7 +11,7 @@ public class RadarDegreeBound
     }
 
     public static RadarDegreeBound NoBounds() {
-        return new RadarDegreeBound(360.0);
+        return new RadarDegreeBound(180.0);
     }
 
     /**
