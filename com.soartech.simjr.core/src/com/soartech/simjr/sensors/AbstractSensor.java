@@ -36,7 +36,9 @@ import java.util.List;
 import com.soartech.simjr.sim.Entity;
 
 /**
- * Abstract sensor implementation for new Sensor interface @see com.soartech.simjr.sensor.Senor.
+ * Abstract sensor implementation for new Sensor interface.
+ * 
+ * @see com.soartech.simjr.sensors.Sensor
  * 
  * @author rdf
  */
