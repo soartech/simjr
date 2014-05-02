@@ -163,6 +163,10 @@ public class EntityShapeManager
         shapeSystem.getLayer(EntityConstants.LAYER_LABELS).setZorder(80);
     }
     
+    /**
+     * Assumes that the sim lock is held when this called.
+     * 
+     */
     public void update()
     {
         synchronized(removedEntities)
