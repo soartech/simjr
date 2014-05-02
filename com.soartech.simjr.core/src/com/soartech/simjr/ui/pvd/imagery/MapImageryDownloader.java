@@ -164,7 +164,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
             }
         });
         
-        onDownloadCompleted(); // Setup buttons
+        onDownloadCompleted(); // Setup buttons, mouse listeners, resize listeners
         
         add(downloadButton, "wrap 0, align right, growx");
         add(cancelButton, "wrap, align right, growx");
@@ -180,12 +180,10 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         setAlpha(0.95f);
         
-        pvd.addComponentListener(resizeListener);
-        pvd.addMouseWheelListener(pvdMouseWheelListener);
-        pvd.addMouseMotionListener(pvdMouseMotionAdapter);
-        
         mapRenderer.addTileSourceListener(this);
         mapRenderer.addTileZoomListener(this);
+        
+        pvd.addComponentListener(resizeListenerPositioner);
         
         pvd.add(this);
         updateGuiPosition();
@@ -193,9 +191,15 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     }
     
     //Keep the controls in the correct position
-    private ComponentAdapter resizeListener = new ComponentAdapter() {
+    private ComponentAdapter resizeListenerPositioner = new ComponentAdapter() {
         public void componentResized(ComponentEvent evt) {
             updateGuiPosition();
+        }
+    };
+    
+    //Keep the controls in the correct position
+    private ComponentAdapter resizeListenerDownloadUpdater = new ComponentAdapter() {
+        public void componentResized(ComponentEvent evt) {
             updateDownloadButton();
         }
     };
@@ -234,7 +238,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     {
         logger.info("MapImageryDownloader complete");
         pvd.remove(this);
-        pvd.removeComponentListener(resizeListener);
+        pvd.removeComponentListener(resizeListenerDownloadUpdater);
+        pvd.removeComponentListener(resizeListenerPositioner);
         pvd.removeMouseMotionListener(pvdMouseMotionAdapter);
         pvd.removeMouseWheelListener(pvdMouseWheelListener);
         
@@ -310,6 +315,10 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         cancelButton.addActionListener(cancelButtonStop);
         cancelButton.setText("Cancel");
         
+        pvd.removeMouseMotionListener(pvdMouseMotionAdapter);
+        pvd.removeMouseWheelListener(pvdMouseWheelListener);
+        pvd.removeComponentListener(resizeListenerDownloadUpdater);
+        
         updateGuiPosition();
     }
     
@@ -321,6 +330,10 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         
         downloadButton.setEnabled(true);
         updateDownloadButton();
+        
+        pvd.addMouseMotionListener(pvdMouseMotionAdapter);
+        pvd.addMouseWheelListener(pvdMouseWheelListener);
+        pvd.addComponentListener(resizeListenerDownloadUpdater);
         
         updateGuiPosition();
     }
