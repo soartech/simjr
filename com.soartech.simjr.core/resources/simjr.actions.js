@@ -37,31 +37,33 @@ runner.subTask("Installing default actions ...");
 logger.info("Installing default actions from simjr.actions.js")
 var actionManager = Packages.com.soartech.simjr.ui.actions.ActionManager.findService(services);
 
-new Packages.com.soartech.simjr.ui.actions.LoadScenarioAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ExportScenarioAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ExitAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.RunAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.PauseAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.CenterViewOnEntityAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.AdjustMapOpacityAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ShowAllAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.OpenDebuggerAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.AddDistanceToolAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ClearDistanceToolsAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.NewPlanViewDisplayAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ZoomInAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ZoomOutAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.RestoreDefaultLayoutAction(actionManager);
+var actionsPkg = Packages.com.soartech.simjr.ui.actions;
 
-new Packages.com.soartech.simjr.ui.actions.LoadDockingLayoutAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.SaveDockingLayoutAction(actionManager);
+new actionsPkg.LoadScenarioAction(actionManager);
+new actionsPkg.ExportScenarioAction(actionManager);
+new actionsPkg.ExitAction(actionManager);
+new actionsPkg.RunAction(actionManager);
+new actionsPkg.PauseAction(actionManager);
+new actionsPkg.CenterViewOnEntityAction(actionManager);
+new actionsPkg.AdjustMapOpacityAction(actionManager);
+new actionsPkg.ShowAllAction(actionManager);
+new actionsPkg.OpenDebuggerAction(actionManager);
+new actionsPkg.AddDistanceToolAction(actionManager);
+new actionsPkg.ClearDistanceToolsAction(actionManager);
+new actionsPkg.NewPlanViewDisplayAction(actionManager);
+new actionsPkg.ZoomInAction(actionManager);
+new actionsPkg.ZoomOutAction(actionManager);
+new actionsPkg.RestoreDefaultLayoutAction(actionManager);
+
+new actionsPkg.LoadDockingLayoutAction(actionManager);
+new actionsPkg.SaveDockingLayoutAction(actionManager);
    
-new Packages.com.soartech.simjr.ui.actions.LoadContainerAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.UnloadContainerAction(actionManager);
+new actionsPkg.LoadContainerAction(actionManager);
+new actionsPkg.UnloadContainerAction(actionManager);
    
-new Packages.com.soartech.simjr.ui.actions.CreateManualControllerAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ShowHideEntityAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.AddToPolygonAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.RemoveFromPolygonAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.EditRouteAction(actionManager);
-new Packages.com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction(actionManager);
+new actionsPkg.CreateManualControllerAction(actionManager);
+new actionsPkg.ShowHideEntityAction(actionManager);
+new actionsPkg.AddToPolygonAction(actionManager);
+new actionsPkg.RemoveFromPolygonAction(actionManager);
+new actionsPkg.EditRouteAction(actionManager);
+new actionsPkg.ToggleCategoryLabelsAction(actionManager);

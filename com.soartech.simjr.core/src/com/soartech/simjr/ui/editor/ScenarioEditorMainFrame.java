@@ -68,6 +68,7 @@ import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
 import com.soartech.simjr.ui.actions.ClearDistanceToolsAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
+import com.soartech.simjr.ui.actions.imagery.ImageryMenu;
 import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
 import com.soartech.simjr.ui.editor.actions.NewAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
@@ -273,10 +274,10 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         //add components to the piece, then add pieces to the viewMenuRoot
         FreeMenuPiece piece1 = new FreeMenuPiece();
         view.add(piece1);
-        piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));//(am.getAction(ShowAllAction.class.getCanonicalName()));
-        piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));//am.getAction(AddDistanceToolAction.class.getCanonicalName()));
-        piece1.add(createMenuItemFromAction(piece1, ClearDistanceToolsAction.class));//am.getAction(ClearDistanceToolsAction.class.getCanonicalName()));
-        piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));//am.getAction(AdjustMapOpacityAction.class.getCanonicalName()));
+        piece1.add(createMenuItemFromAction(piece1, ShowAllAction.class));
+        piece1.add(createMenuItemFromAction(piece1, AddDistanceToolAction.class));
+        piece1.add(createMenuItemFromAction(piece1, ClearDistanceToolsAction.class));
+        piece1.add(createMenuItemFromAction(piece1, AdjustMapOpacityAction.class));
         piece1.add(new JSeparator());
         
         //add the list of views to show/hide to the view menu
@@ -305,6 +306,8 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         view.add(submenuPiece3);
 
         bar.add(view.getMenu());
+        
+        bar.add(new ImageryMenu(am));
         
         final JMenu insert = new JMenu("Insert");
         insert.add(new NewEntityAction(am, "New Entity", "any", "ctrl E"));

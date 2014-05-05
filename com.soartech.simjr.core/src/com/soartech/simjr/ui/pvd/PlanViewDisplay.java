@@ -79,6 +79,8 @@ import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.actions.ActionManager;
+import com.soartech.simjr.ui.pvd.imagery.MapOpacityController;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
 import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
@@ -103,9 +105,7 @@ public class PlanViewDisplay extends JPanel
     private boolean contextMenuEnabled = true;
     
     private SelectionManagerListener selectionListener = new SelectionManagerListener(){
-
-        public void selectionChanged(Object source)
-        {
+        public void selectionChanged(Object source) {
             appSelectionChanged(source);
         }};
         
@@ -132,16 +132,18 @@ public class PlanViewDisplay extends JPanel
     private Point lastDragPoint = new Point(0, 0);
     private boolean draggingEntity = false;
     
-    private MapImage map;
+    private MapImage mapBackgroundImage;
+    private MapTileRenderer tileRenderer = new MapTileRenderer(this);
+    private MapOpacityController mapOpacityController = new MapOpacityController(tileRenderer);
+    private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
     
     private Entity lockEntity;
 
-    private CoordinatesPanel coordinates;
+    private CoordinatesPanel coordinatesPane;
     
     private final AppStateIndicator appStateIndicator;
 
     private Cursor defaultCursor = Cursor.getDefaultCursor();
-
     private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
@@ -149,7 +151,6 @@ public class PlanViewDisplay extends JPanel
         setLayout(null);
         
         this.app = app;
-        
         this.appStateIndicator = new AppStateIndicator(this.app.findService(ApplicationStateService.class), this);
         
         this.sim = this.app.findService(Simulation.class);
@@ -158,6 +159,8 @@ public class PlanViewDisplay extends JPanel
         this.distanceTools = new DistanceToolManager(app, shapeSystem);
         this.detonationShapes = new DetonationShapeManager(sim, timedShapes);
         this.speechBubbles = new SpeechBubbleManager(sim, this.app.findService(RadioHistory.class), shapeAdapter);
+        
+        tileRenderer.approximateScale(transformer.screenToMeters(1));
         
         setToolTipText(""); // Enable tooltips
         setFocusable(true);
@@ -168,26 +171,29 @@ public class PlanViewDisplay extends JPanel
         addMouseWheelListener(new MouseWheelHandler());
         
         final SelectionManager selectionService = SelectionManager.findService(this.app);
-        if(selectionService != null)
-        {
+        if(selectionService != null) {
             selectionService.addListener(selectionListener);
         }
         
-        if(toCopy != null)
-        {
+        if(toCopy != null) {
             setMapImage(toCopy.getMapImage());
         }
+        
         // Periodically redraw the screen rather than trying to only redraw
         // when something changes in the simulation
         repaintTimer = new Timer(200, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e)
-            {
-                if(!isAnimating())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if(!isAnimating()) {
                     repaint();
                 }
-            }});
+            }
+        });
+        
+        addCoordinatePane();
+        addMapOpacityController();
+        if(SimJrProps.get("simjr.map.imagery.debug", false)) { 
+            addMapDebugPanel();
+        }
         
         repaintTimer.start();
     }
@@ -253,14 +259,19 @@ public class PlanViewDisplay extends JPanel
         return transformer;
     }
     
+    public MapTileRenderer getMapTileRenderer()
+    {
+        return this.tileRenderer;
+    }
+    
     public void setMapImage(MapImage map)
     {
-        this.map = map;
+        this.mapBackgroundImage = map;
     }
     
     public MapImage getMapImage()
     {
-        return map;
+        return mapBackgroundImage;
     }
     
     public GridManager getGrid()
@@ -290,6 +301,37 @@ public class PlanViewDisplay extends JPanel
         ActionManager.update(app);
     }
 
+    private void addCoordinatePane()
+    {
+        if(this.coordinatesPane != null) {
+            return;
+        }
+        
+        this.coordinatesPane = new CoordinatesPanel();
+        this.coordinatesPane.setActivePvd(this);
+        coordinatesPane.setBounds(12, 10, 300, 20);
+        add(coordinatesPane);
+    }
+    
+    private void addMapOpacityController()
+    {
+        mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
+        add(mapOpacityController);
+        showMapOpacityController(false);
+    }
+    
+    public void showMapOpacityController(boolean show)
+    {
+        mapOpacityController.setVisible(show);
+    }
+    
+    private void addMapDebugPanel()
+    {
+        this.mapDebugPanel.setActivePvd(this);
+        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
+        add(mapDebugPanel);
+    }
+    
     /**
      * @return The current extents of the view in meters. Origin is at the
      *  <b>bottom</b> left. 
@@ -334,9 +376,8 @@ public class PlanViewDisplay extends JPanel
      */
     public void showPosition(Vector3 p, boolean repaint)
     {
-        // Note: This function transfers all coordinates to pixels, computes the
-        // difference between the current and desired location, and increases
-        // the pan-offset accordingly.
+        // Note: This function transfers all coordinates to pixels, computes the difference 
+        // between the current and desired location, and increases the pan-offset accordingly.
 
         // find the current location of (x,y) in meters
         SimplePosition currentPosition = transformer.metersToScreen(p.x, p.y);
@@ -350,8 +391,7 @@ public class PlanViewDisplay extends JPanel
         double offsetY = transformer.getPanOffsetY() + desiredY - currentPosition.y;
         transformer.setPanOffset(offsetX, offsetY);
 
-        if(repaint)
-        {
+        if(repaint) {
             repaint();
         }
     }
@@ -371,8 +411,7 @@ public class PlanViewDisplay extends JPanel
         synchronized(sim.getLock())
         {
             List<Entity> entities = sim.getEntitiesFast();
-            if(entities.isEmpty())
-            {
+            if(entities.isEmpty()) {
                 return;
             }
             
@@ -391,8 +430,7 @@ public class PlanViewDisplay extends JPanel
             }
         }
         
-        if(!visibleEntities)
-        {
+        if(!visibleEntities) {
             return;
         }
         
@@ -418,22 +456,19 @@ public class PlanViewDisplay extends JPanel
         Point center = new Point(getWidth() / 2, getHeight() / 2);
         Rectangle2D extents = getViewExtentsInMeters();
         
-        if(extents.isEmpty())
-        {
+        if(extents.isEmpty()) {
             return;
         }
         
         // First zoom in
-        while(desiredWidth < extents.getWidth() || 
-                desiredHeight < extents.getHeight())
+        while(desiredWidth < extents.getWidth() ||  desiredHeight < extents.getHeight())
         {
             controlMouseWheel(center, -1);
             extents = getViewExtentsInMeters();
         }
         
         // Now zoom back out
-        while(desiredWidth >= extents.getWidth() || 
-              desiredHeight >= extents.getHeight())
+        while(desiredWidth >= extents.getWidth() ||  desiredHeight >= extents.getHeight())
         {
             controlMouseWheel(center, 1);
             extents = getViewExtentsInMeters();
@@ -454,19 +489,6 @@ public class PlanViewDisplay extends JPanel
         controlMouseWheel(pointToZoomOn, amount);
     }
     
-    private void showCoordinates()
-    {
-        if(this.coordinates != null)
-        {
-            return;
-        }
-        
-        this.coordinates = new CoordinatesPanel();
-        this.coordinates.setActivePvd(this);
-        add(coordinates);
-        coordinates.setBounds(10, 10, 300, 20);
-    }
-    
     /* (non-Javadoc)
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
@@ -475,12 +497,9 @@ public class PlanViewDisplay extends JPanel
     {
         super.paintComponent(g);
         
-        if(appStateIndicator.getState() != ApplicationState.RUNNING)
-        {
+        if(appStateIndicator.getState() != ApplicationState.RUNNING) {
             return;
         }
-        
-        showCoordinates();
         
         // Briefly lock the sim to update entity shapes and stuff.
         double time = 0.0;
@@ -508,10 +527,8 @@ public class PlanViewDisplay extends JPanel
         
         // Now draw everything again. None of the following code should be
         // dependent on a sim lock.
-        if(map != null)
-        {
-            map.draw(g2d, transformer);
-        }
+        paintMapBackground(g2d);
+        tileRenderer.paint(g2d);
         
         grid.draw(g2d);
         factory.setGraphics2D(g2dCopy, getWidth(), getHeight());
@@ -523,6 +540,13 @@ public class PlanViewDisplay extends JPanel
         //shapeSystem.displayDebugging(factory, transformer);
         
         g2dCopy.dispose();
+    }
+    
+    private void paintMapBackground(Graphics2D g2d)
+    {
+        if(mapBackgroundImage != null) {
+            mapBackgroundImage.draw(g2d, transformer);
+        }
     }
     
     private Entity getSelectedEntity()
@@ -581,7 +605,6 @@ public class PlanViewDisplay extends JPanel
         {
             // change mouse icon to grab icon
             setCursor(draggingCursor);
-            
             panOrigin.setLocation(e.getPoint());
         }
         
@@ -739,6 +762,9 @@ public class PlanViewDisplay extends JPanel
         final double newX = transformer.getPanOffsetX() + point.getX() - newScreenPosition.x;
         final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
+
+        //Scale tiles appropriately
+        tileRenderer.approximateScale(transformer.screenToMeters(1));
         
         repaint();
     }

@@ -38,15 +38,46 @@ import com.soartech.math.Vector3;
  */
 public interface CoordinateTransformer
 {
+    /**
+     * Converts the given scalar (Meters, Pixels) into pixels.
+     * @param x
+     * @return
+     */
     double scalarToPixels(Scalar x);
 
+    /**
+     * Convert the given meters coordinates to screen coordinates.
+     * @param x
+     * @param y
+     * @return
+     */
     SimplePosition metersToScreen(double x, double y);
     
+    /**
+     * Convert a Y coordinate in meters to a Y screen coordinate.
+     * @param y
+     * @return
+     */
     double metersYToScreen(double y);
 
+    /**
+     * Convert an X coordinate in meters to a X screen coordinate.
+     * @param x
+     * @return
+     */
     double metersXToScreen(double x);
 
+    /**
+     * TODO: Document me
+     * @return
+     */
     boolean supportsSingleWorldCoordinates();
 
+    /**
+     * Convert the given screen coordinates to meters.
+     * @param x
+     * @param y
+     * @return
+     */
     public Vector3 screenToMeters(double x, double y);
 }

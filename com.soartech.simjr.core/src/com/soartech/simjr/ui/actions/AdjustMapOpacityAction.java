@@ -52,7 +52,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
 
     public AdjustMapOpacityAction(ActionManager actionManager)
     {
-        super(actionManager, "Adjust map opacity");
+        super(actionManager, "Adjust map image opacity");
     }
     
     /* (non-Javadoc)
