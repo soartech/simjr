@@ -71,4 +71,12 @@ public class Building extends Container
     {
         return height;
     }
+    
+    public void removeAt(AbstractEntity entity, Vector3 location)
+    {
+        if(containedEntities.remove(entity))
+        {
+            containerCapability.remove(entity, location);
+        }
+    }
 }
