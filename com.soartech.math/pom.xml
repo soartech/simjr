@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.soartech</groupId>
+	<artifactId>simjr-math</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>SimJr Math</name>
+	
+	<repositories>
+        <repository>
+            <id>soartech-public</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/groups/public/
+            </url>
+        </repository>
+        <repository>
+            <id>soartech-thirdparty</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/thirdparty/
+            </url>
+        </repository>
+        <repository>
+            <id>soartech-releases</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/releases/
+            </url>
+        </repository>
+        <repository>
+            <id>soartech-snapshots</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/
+            </url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
+    
+	<distributionManagement>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>soartech-internal-snapshots</id>
+			<name>SoarTech Internal Snapshots</name>
+			<url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+			<layout>default</layout>
+		</snapshotRepository>
+		
+		<repository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>soartech-releases</id>
+			<name>SoarTech Releases</name>
+			<url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
+</project>
