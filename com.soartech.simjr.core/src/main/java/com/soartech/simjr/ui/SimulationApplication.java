@@ -34,7 +34,10 @@ package com.soartech.simjr.ui;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +52,10 @@ import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.DefaultApplicationStateService;
 import com.soartech.simjr.scripting.ScriptRunner;
 import com.soartech.simjr.services.DefaultServiceManager;
+import com.soartech.simjr.services.ServiceManager;
+import com.soartech.simjr.services.ServiceProvider;
+import com.soartech.simjr.services.ServiceProviderLocator;
+import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.sim.ScenarioLoader;
 import com.soartech.simjr.sim.SimpleTerrain;
 import com.soartech.simjr.sim.Simulation;
@@ -83,6 +90,7 @@ public class SimulationApplication extends DefaultServiceManager
     
     public SimulationApplication()
     {
+        
     }
 
     public void initialize(ProgressMonitor progress, String[] args)
@@ -106,6 +114,7 @@ public class SimulationApplication extends DefaultServiceManager
             loadScenario(progress, args);
             
             completeInitialization(mainFrame);
+            loadPluginServices(ServiceProviderLocator.getProviders()); 
         }
         catch (Throwable e)
         {
@@ -123,6 +132,70 @@ public class SimulationApplication extends DefaultServiceManager
         finally
         {
             appState.setState(ApplicationState.RUNNING);
+        }
+    }
+
+
+    private void loadPluginServices(Collection<ServiceProvider> providers)
+    {
+        for (ServiceProvider p : providers)
+        {
+            Collection<String> servicePaths = p.getServicePaths();
+            for (String servicePath : servicePaths)
+            {
+                try
+                {
+                    // use reflection to get a class from the name
+                    Class<?> clazz = Class.forName(servicePath);
+
+                    // get the constructor for that class with the given
+                    // parameters
+                    Constructor<?> constructor = clazz
+                            .getConstructor(ServiceManager.class);
+
+                    // instantiate the class with the constructor
+                    SimulationService ss = (SimulationService) constructor
+                            .newInstance(this);
+
+                    // add the newly instantiated service to the simulation and
+                    // start it
+                    addService(ss);
+                    ss.start(null);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (NoSuchMethodException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (SecurityException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (InstantiationException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IllegalArgumentException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (SimulationException e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 
