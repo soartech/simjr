@@ -350,7 +350,7 @@ public class Model
     {
         try
         {
-            return xpath.valueOf(context != null ? context : doc).equalsIgnoreCase("true");
+            return !xpath.valueOf(context != null ? context : doc).equalsIgnoreCase("false");
         }
         catch (JDOMException e)
         {
