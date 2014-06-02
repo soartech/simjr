@@ -2,6 +2,7 @@ package com.soartech.simjr.sensors;
 
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
+import com.soartech.simjr.sim.entities.Group;
 import com.soartech.simjr.sim.entities.Person;
 import com.soartech.simjr.sim.entities.Vehicle;
 
@@ -30,6 +31,6 @@ public class EntityFilter
             return false;
         }
         
-        return entity instanceof Person || entity instanceof Vehicle;
+        return entity instanceof Person || entity instanceof Vehicle || entity instanceof Group;
     }
 }

@@ -49,7 +49,7 @@ public class Building extends Container
         Object pointProp = this.getProperty(EntityConstants.PROPERTY_POINTS);
         if(pointProp instanceof List)
         {
-            List l = (List)pointProp;
+            List<?> l = (List<?>)pointProp;
             for(Object entityName : l)
             {//get the entity belonging to the point, and get it's position
                 Entity e = this.getSimulation().getEntity(entityName.toString());
@@ -70,5 +70,13 @@ public class Building extends Container
     public double getHeight()
     {
         return height;
+    }
+    
+    public void removeAt(AbstractEntity entity, Vector3 location)
+    {
+        if(containedEntities.remove(entity))
+        {
+            containerCapability.remove(entity, location);
+        }
     }
 }
