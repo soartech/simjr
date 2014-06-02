@@ -65,6 +65,7 @@ public interface EntityConstants
     public static final String PROPERTY_ROLL = "roll";
     public static final String PROPERTY_WEB_DISABLE_ONCLICK = "web.selection.allow";
     public static final String PROPERTY_APPEARANCE = "appearance";
+    public static final String PROPERTY_VULNERABILITY = "vulnerability"; // values from entities.Vulnerability class
     public static final String PROPERTY_STATUS = "status";
     /**
      * @see LazyMgrsProperty

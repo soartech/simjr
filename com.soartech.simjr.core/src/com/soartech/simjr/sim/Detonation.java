@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 
 import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.entities.DamageStatus;
+import com.soartech.simjr.sim.entities.Vulnerability;
 import com.soartech.simjr.weapons.Weapon;
 
 /**
@@ -113,7 +114,11 @@ public class Detonation
         {
             // Just hit the exact target they were firing at
             logger.info("Weapon '" + weapon.getName() + "' hit target '" + target.getName() + "'");
-            target.setProperty(EntityConstants.PROPERTY_DAMAGE, DamageStatus.destroyed);
+            if (target.getProperty(EntityConstants.PROPERTY_VULNERABILITY) == Vulnerability.invulnerable) {
+                logger.info("No damage change because target '" + target.getName() + "' has invulnerability");
+            } else {
+                target.setProperty(EntityConstants.PROPERTY_DAMAGE, DamageStatus.destroyed);
+            }
             
             damagedEntities.add(target);
         }
