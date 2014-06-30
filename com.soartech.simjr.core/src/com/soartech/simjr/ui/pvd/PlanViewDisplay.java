@@ -261,6 +261,9 @@ public class PlanViewDisplay extends JPanel
     }
 
     /**
+     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
+     * entity is always in the center).
+     * 
      * @return the lockEntity
      */
     public Entity getLockEntity()
@@ -269,6 +272,9 @@ public class PlanViewDisplay extends JPanel
     }
 
     /**
+     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
+     * entity is always in the center).
+     * 
      * @param lockEntity the lockEntity to set
      */
     public void setLockEntity(Entity lockEntity)
