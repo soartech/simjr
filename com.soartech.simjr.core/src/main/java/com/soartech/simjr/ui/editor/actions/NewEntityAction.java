@@ -40,11 +40,14 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
+import org.openstreetmap.josm.gui.mappaint.xml.Prototype;
+
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;
 import com.soartech.simjr.scenario.EntityElementList;
 import com.soartech.simjr.scenario.edits.NewEntityEdit;
+import com.soartech.simjr.sim.EntityPrototypeDatabase;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
 import com.soartech.simjr.util.MultiSelectDialog;
@@ -187,7 +190,23 @@ public class NewEntityAction extends AbstractEditorAction
         }
         else
         {
-            final NewEntityEdit edit = entities.addEntity(prototype, prototype);
+            // Get the next available default name from the prototype's list of default names
+            String entityDefaultName = prototype;
+            Object defaultNames = EntityPrototypeDatabase.findService(getServices()).getPrototype(prototype).getProperty("name.defaults");
+            if (null != defaultNames && defaultNames instanceof List<?> && ((List<?>)defaultNames).size() > 0)
+            {
+                List<String> defaultNamesList = (List<String>)defaultNames;
+                for (String defaultNameIter : defaultNamesList)
+                {
+                    if (null == entities.getEntity(defaultNameIter))
+                    {
+                        entityDefaultName = defaultNameIter;
+                        break;
+                    }
+                }
+            }
+            
+            final NewEntityEdit edit = entities.addEntity(entityDefaultName, prototype);
             newEntity = edit;
             compound.addEdit(edit);
             
