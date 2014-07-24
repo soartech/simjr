@@ -35,16 +35,15 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
-
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.BingAerialTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.MapQuestOpenAerialTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.MapQuestOsmTileSource;
 
 /**
  * Sets the tile source for map imagery.

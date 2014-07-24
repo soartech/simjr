@@ -40,8 +40,6 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
-import org.openstreetmap.josm.gui.mappaint.xml.Prototype;
-
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.scenario.EntityElement;

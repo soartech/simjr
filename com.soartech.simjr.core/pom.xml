@@ -144,11 +144,11 @@
 			<version>1.0.0</version>
 			<type>pom</type>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>josm.openstreetmap.de</groupId>
 			<artifactId>josm</artifactId>
 			<version>6950</version>
-		</dependency>
+		</dependency> -->
 	</dependencies>
      
         

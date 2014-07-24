@@ -9,12 +9,12 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-
-import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
+//import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import com.soartech.simjr.ui.actions.ActionManager;
 
 /**
  * Menu group for configurig various options of the map tile imagery renderer.

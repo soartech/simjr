@@ -66,19 +66,19 @@ import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jdesktop.swingx.JXPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdesktop.swingx.JXPanel;
-import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileSourceListener;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileZoomListener;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmFileCacheTileLoader;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmFileCacheTileLoader.TileJob;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Tile;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileCache;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileLoaderListener;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
 
 public class MapImageryDownloader extends JXPanel implements TileSourceListener, TileZoomListener
 {

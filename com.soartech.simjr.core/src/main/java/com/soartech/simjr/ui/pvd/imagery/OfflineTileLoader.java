@@ -11,11 +11,11 @@ import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmFileCacheTileLoader;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Tile;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileLoaderListener;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
 
 /**
  * TileLoader that extends the file cache to ignore age, and treats missing tile errors differently.

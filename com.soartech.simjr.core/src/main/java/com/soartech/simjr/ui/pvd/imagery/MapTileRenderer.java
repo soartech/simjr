@@ -43,20 +43,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.openstreetmap.gui.jmapviewer.AttributionSupport;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.JobDispatcher;
-import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.TileController;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import com.google.common.collect.ImmutableMap;
 import com.soartech.math.Vector3;
@@ -66,6 +52,20 @@ import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.AttributionSupport;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Coordinate;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.JobDispatcher;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.MemoryTileCache;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Tile;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileCache;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileController;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileLoader;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileLoaderListener;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.BingAerialTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.MapQuestOpenAerialTileSource;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.MapQuestOsmTileSource;
 
 public class MapTileRenderer implements TileLoaderListener
 {
