@@ -529,7 +529,9 @@ public class PlanViewDisplay extends JPanel
         // Now draw everything again. None of the following code should be
         // dependent on a sim lock.
         paintMapBackground(g2d);
-        tileRenderer.paint(g2d);
+        
+        //TODO: Reenable when reimplementd
+        //tileRenderer.paint(g2d);
         
         grid.draw(g2d);
         factory.setGraphics2D(g2dCopy, getWidth(), getHeight());

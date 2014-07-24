@@ -66,6 +66,9 @@ public class ImageryMenu extends JMenu
         add(new JCheckBoxMenuItem(new ShowMapOpacityControllerAction(am)));
         add(tileGridMenuItem);
         add(new JMenuItem(new ShowMapDownloaderAction(am)));
+        
+        //TODO: Re-enable when reimplemented
+        this.setEnabled(false);
     }
     
     private PlanViewDisplay getPvd() 
