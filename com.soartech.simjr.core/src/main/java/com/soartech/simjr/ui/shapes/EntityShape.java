@@ -108,7 +108,7 @@ public class EntityShape implements EntityPropertyListener
     /**
      * Constructor
      * 
-     * @param entity The enitty represented by the shape
+     * @param entity The entity represented by the shape
      * @param system The shape system
      */
     public EntityShape(Entity entity, ShapeSystem system)
@@ -187,7 +187,7 @@ public class EntityShape implements EntityPropertyListener
     
     /**
      * Add a shape to be managed by this object. This is typically called by
-     * sub-classes.
+     * sub-classes.  Shapes added with addShape are not hitable.
      * 
      * @param shape The shape.
      */
@@ -202,6 +202,11 @@ public class EntityShape implements EntityPropertyListener
         }
     }
     
+    /**
+     * Add a Shape to the set of Shapes that are tested by hitTest().
+     * 
+     * @param shape Shape to be added to this EntityShape.
+     */
     public void addHitableShape(Shape shape)
     {
         hitableShapes.add(shape);
@@ -209,7 +214,7 @@ public class EntityShape implements EntityPropertyListener
     }
     
     /**
-     * Remove a shape previously added with addShape().
+     * Remove a shape previously added with addShape() or addHitableShape().
      * 
      * @param shape The shape to remove
      */
@@ -241,6 +246,11 @@ public class EntityShape implements EntityPropertyListener
         return bodyFrame;
     }
     
+    /**
+     * Return the frame of the shadow of the EntityShape.
+     * 
+     * @return The Frame of this EntityShape's shadow.
+     */
     public Frame getShadowFrame()
     {
         if(shadowFrame == null)

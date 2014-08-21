@@ -120,6 +120,7 @@ public class SimulationApplication extends DefaultServiceManager
         {
             logger.error("Application initialization failure: " + e.getMessage());
             logger.error("stack trace", e);
+
             try
             {
                 shutdownServices();

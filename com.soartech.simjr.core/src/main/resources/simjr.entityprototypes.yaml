@@ -596,3 +596,20 @@ prototypes:
 - &ugv
     id: ugv
     parent: *ground-vehicle
+    
+### Groups ##################################################################
+- &group
+    id: group
+    parent: *ground
+    category: humans
+    factory: !class com.soartech.simjr.sim.entities.Group
+    properties:
+        ms2525.template: "O%cPP------"
+    
+- &building
+    id: building
+    parent: *polygon
+    category: area
+    factory: !class com.soartech.simjr.sim.entities.Building
+    properties:
+        polygon.closed: true

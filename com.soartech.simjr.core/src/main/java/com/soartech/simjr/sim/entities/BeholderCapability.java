@@ -6,6 +6,17 @@ import com.soartech.simjr.sim.AbstractEntityCapability;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 
+/**
+ * An EntityCapability that allows for checking if a location is within the
+ * visible range of the entity associated with this capability. The visible
+ * range used is the value of the property defined by
+ * {@link EntityConstants#PROPERTY_BEHOLDER_RANGE} (defaults to 1000 m). The visible
+ * angle (field of view) used is the value of the property defined by
+ * {@link EntityConstants.PROPERTY_BEHOLDER_ARC} (defaults to 2*PI).
+ * 
+ * @see EntityConstants
+ * 
+ */
 public class BeholderCapability extends AbstractEntityCapability
 {
     private double visibleRange = 1000.0;

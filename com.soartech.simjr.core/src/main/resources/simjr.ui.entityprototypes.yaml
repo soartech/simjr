@@ -180,3 +180,16 @@ prototypes:
     id: atc-adam-cell
     properties:
         shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []
+### Groups ##################################################################
+- &group
+    id: group
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.GroupContainerShape$Factory []
+        category: Humans
+        
+- &building
+    id: building
+    properties:
+        shape.label.displayIfParent: false
+        shape: !!com.soartech.simjr.ui.shapes.BuildingShape$Factory []
+        category: Areas

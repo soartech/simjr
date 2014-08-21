@@ -112,7 +112,7 @@ public class Simulation extends AbstractAdaptable implements SimulationService
      * 
      * @param terrain the terrain to use
      * @param startThread if true, a {@link SimulationThread} is also created and started.
-     *  If false, no thread is created and the called must manually {@link #tick(double)}
+     *  If false, no thread is created and the caller must manually {@link #tick(double)}
      *  the sim.
      */
     public Simulation(Terrain terrain, boolean startThread)
