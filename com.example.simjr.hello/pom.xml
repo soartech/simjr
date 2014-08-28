@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.soartech</groupId>
+  <artifactId>simjr-hello</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <repositories>
+		<repository>
+			<id>soartech-public</id>
+			<url>
+                https://nexus.soartech.com:8443/nexus/content/groups/public/
+            </url>
+		</repository>
+		<repository>
+			<id>soartech-thirdparty</id>
+			<url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/thirdparty/
+            </url>
+		</repository>
+		<repository>
+			<id>soartech-releases</id>
+			<url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/releases/
+            </url>
+		</repository>
+		<repository>
+			<id>soartech-snapshots</id>
+			<url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/
+            </url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.soartech</groupId>
+  		<artifactId>simjr-core</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.soartech</groupId>
+  		<artifactId>simjr-web</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+  
+  
+</project>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
+  <simjr:metadata>
+    <simjr:name>Hello World Example Scenario</simjr:name>
+    <simjr:description />
+  </simjr:metadata>
+  <simjr:terrain>
+    <simjr:origin simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+  </simjr:terrain>
+  <simjr:entities>
+    <simjr:entity simjr:name="a" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="-9.948064240746172E-5" simjr:longitude="-0.002111040916725611" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="b" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="3.7079148512782114E-4" simjr:longitude="0.002802743685012859" simjr:altitude="1.862645149230957E-9" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    <simjr:entity simjr:name="a-b" simjr:prototype="route" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="a" />
+        <simjr:point simjr:name="b" />
+      </simjr:points>
+    </simjr:entity>
+    <simjr:entity simjr:name="truck" simjr:prototype="truck" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="-6.873208023510767E-4" simjr:longitude="-0.0012845908560756728" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);
+
+simjr.entities.capabilities.add(self,
+		new Packages.com.example.simjr.hello.HelloWorldBehavior(),  
+		{
+			radioHistory: Packages.com.soartech.simjr.radios.RadioHistory.findService(services)
+		});
+simjr.entities.capabilities.add(self,
+		new Packages.com.soartech.simjr.controllers.RouteFollower(),  
+		{
+			route: "a-b"
+		});</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+  </simjr:entities>
+  <simjr:preLoadScript simjr:type="text/javascript">// Commonly used imports and scripts
+importPackage(Packages.com.soartech.simjr.controllers);
+importPackage(Packages.com.soartech.simjr.web);
+requireScript("ui");
+requireScript("terrain");
+requireScript("polygons");
+requireScript("weapons");
+
+// Set up commonly used services
+// configureSoar();
+// configureVista();
+// var ss = configureSoarSpeak("simjr.helosoar.sagis.grammar.nuance", "Dragon34", "34");
+// if(ss != null) ss.tts("*", "66");</simjr:preLoadScript>
+  <simjr:postLoadScript simjr:type="text/javascript">// createCheatSheet(); // load cheatsheet.html
+getActivePlanViewDisplay().showAll();</simjr:postLoadScript>
+</simjr:scenario>
+
