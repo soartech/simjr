@@ -1,6 +1,3 @@
-This is a Git clone of the Sim Jr project hosted on Google Code.
+Sim Jr is a java application which uses maven as a package manager.
 
-https://code.google.com/p/simjr/
-
-Sim Jr is a set of OSGi plugins. As such, Sim Jr must be developed in Eclipse.
-
+See here for more details: https://confluence.soartech.com/display/irad/Sim+Jr+Mavenization
