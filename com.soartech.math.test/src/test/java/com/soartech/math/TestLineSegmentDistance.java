@@ -31,10 +31,13 @@
  */
 package com.soartech.math;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestLineSegmentDistance extends TestCase
+import static org.junit.Assert.*;
+
+public class TestLineSegmentDistance
 {
+    @Test
     public void testDistanceToPoint()
     {
         Vector3 start = new Vector3(1, 1, 0);
@@ -45,6 +48,7 @@ public class TestLineSegmentDistance extends TestCase
         assertEquals(.45, d, 1e-6);
     }
     
+    @Test
     public void testSimpleDistance()
     {
         Vector3 aStart = new Vector3(-1, 0, 1);
@@ -53,9 +57,10 @@ public class TestLineSegmentDistance extends TestCase
         Vector3 bEnd = new Vector3(0, 1, -1);
         
         double d = LineSegmentDistance.calculate(aStart, aEnd, bStart, bEnd);
-        assertEquals(2.0, d);
+        assertEquals(2.0, d, 0.0001);
     }
     
+    @Test
     public void testParallelSegments()
     {
         Vector3 aStart = new Vector3(0, 1, 2);
@@ -64,9 +69,10 @@ public class TestLineSegmentDistance extends TestCase
         Vector3 bEnd = new Vector3(0, 1, -1);
         
         double d = LineSegmentDistance.calculate(aStart, aEnd, bStart, bEnd);
-        assertEquals(3.0, d);
+        assertEquals(3.0, d, 0.0001);
     }
     
+    @Test
     public void testColinearSegments()
     {
         Vector3 aStart = new Vector3(0, -2, -1);
@@ -75,9 +81,10 @@ public class TestLineSegmentDistance extends TestCase
         Vector3 bEnd = new Vector3(0, 1, -1);
         
         double d = LineSegmentDistance.calculate(aStart, aEnd, bStart, bEnd);
-        assertEquals(0.0, d);
+        assertEquals(0.0, d, 0.0001);
     }
     
+    @Test
     public void testIntersectingSegments()
     {
         Vector3 aStart = new Vector3(-2, -2, -2);
@@ -89,6 +96,7 @@ public class TestLineSegmentDistance extends TestCase
         assertEquals(0.0, d, 1e-06);
     }
     
+    @Test
     public void testEndpointsClosest()
     {
         Vector3 aStart = new Vector3(-5, 0, 0);
@@ -100,6 +108,7 @@ public class TestLineSegmentDistance extends TestCase
         assertEquals(aEnd.distance(bStart), d, 1e-06);        
     }
     
+    @Test
     public void testEndpointClosest()
     {
         Vector3 aStart = new Vector3(-1, 0, 0);

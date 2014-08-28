@@ -35,10 +35,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestPolygon extends TestCase
+import static org.junit.Assert.*;
+
+public class TestPolygon
 {
+    @Test
     public void testCreateConvexHull()
     {
         Vector3 a = new Vector3(1, 1, 0);
@@ -57,6 +60,7 @@ public class TestPolygon extends TestCase
         
     }
     
+    @Test
     public void testCreateMoreComplicatedConvexHull()
     {
         List<Vector3> points = new ArrayList<Vector3>();
@@ -82,6 +86,7 @@ public class TestPolygon extends TestCase
         
     }
     
+    @Test
     public void testCreateFromGenerateConvexHull()
     {
         Vector3 a = new Vector3(1, 1, 0);
@@ -91,6 +96,7 @@ public class TestPolygon extends TestCase
         assertTrue(p.getPoints().contains(a));
     }
     
+    @Test
     public void testCreateFromLineSegment()
     {
         Vector3 a = new Vector3(1, 1, 0);
@@ -103,6 +109,7 @@ public class TestPolygon extends TestCase
         
     }
     
+    @Test
     public void testContains()
     {
         Vector3 a = new Vector3(1, 1, 0);

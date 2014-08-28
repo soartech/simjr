@@ -31,18 +31,23 @@
  */
 package com.soartech.math;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class AnglesTest extends TestCase
+import static org.junit.Assert.*;
+
+public class AnglesTest
 {
 
+    @Test
     public void testMathRadiansToNavRadians()
     {
+        
         assertEquals(0.0, Angles.mathRadiansToNavRadians(Math.PI / 2.0), 0.0001);
         assertEquals(-Math.PI / 2, Angles.mathRadiansToNavRadians(Math.PI), 0.0001);
         assertEquals(Math.PI / 2, Angles.mathRadiansToNavRadians(0), 0.0001);
     }
 
+    @Test
     public void testNavRadiansToMathRadians()
     {
         assertEquals(Math.PI / 2.0, Angles.navRadiansToMathRadians(0.0), 0.0001);

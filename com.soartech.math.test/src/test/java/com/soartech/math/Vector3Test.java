@@ -31,10 +31,13 @@
  */
 package com.soartech.math;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class Vector3Test extends TestCase
+import static org.junit.Assert.*;
+
+public class Vector3Test
 {
+    @Test
     public void testProjectVectorOnPlane()
     {
         Vector3 normal = Vector3.Z_UNIT;
@@ -54,6 +57,7 @@ public class Vector3Test extends TestCase
         
     }
     
+    @Test
     public void testParseVector()
     {
         assertEquals(Vector3.ZERO, Vector3.parseVector("(0 ,0, 0)  "));

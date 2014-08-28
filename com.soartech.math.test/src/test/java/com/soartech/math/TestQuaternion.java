@@ -31,16 +31,14 @@
  */
 package com.soartech.math;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestQuaternion extends TestCase
+import static org.junit.Assert.*;
+
+public class TestQuaternion
 {
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-    }
-
+    @Test
     public void testIdentity()
     {
         Vector3 vector = new Vector3(1.0, 2.0, 3.0);
@@ -49,6 +47,7 @@ public class TestQuaternion extends TestCase
                     vector.epsilonEquals(rotated));
     }
     
+    @Test
     public void testRotatingDegenerateVectorIsNoop()
     {
         Vector3 rotated = Quaternion.IDENTITY.rotate(Vector3.ZERO);
@@ -56,6 +55,7 @@ public class TestQuaternion extends TestCase
         assertEquals(Vector3.ZERO, rotated);
     }
     
+    @Test
     public void testRotatingByIdentityRotationIsNoop()
     {
         Quaternion identity = Quaternion.createRotation(0.0, Vector3.X_UNIT);
@@ -69,6 +69,7 @@ public class TestQuaternion extends TestCase
     /*
      * Test method for 'com.soartech.spatr.math.Quaternion.getVector()'
      */
+    @Test
     public void testGetVector()
     {
         Quaternion q = new Quaternion(1.0, new Vector3(2.0, 3.0, 4.0));
@@ -80,6 +81,7 @@ public class TestQuaternion extends TestCase
     /*
      * Test method for 'com.soartech.spatr.math.Quaternion.rotate(Vector3)'
      */
+    @Test
     public void testRotate()
     {
         Quaternion q = Quaternion.createRotation(Math.PI / 2, Vector3.X_UNIT);
@@ -91,6 +93,7 @@ public class TestQuaternion extends TestCase
         assertTrue(Vector3.Z_UNIT.epsilonEquals(rotatedY));
     }
 
+    @Test
     public void testCreateMappingRotation()
     {
         verifyMappingRotation(Vector3.X_UNIT, Vector3.X_UNIT);

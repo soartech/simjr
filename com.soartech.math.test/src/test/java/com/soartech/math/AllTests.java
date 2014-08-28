@@ -31,8 +31,9 @@
  */
 package com.soartech.math;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 import com.soartech.math.geotrans.TestGeocentric;
 import com.soartech.math.geotrans.TestLocalCartesian;
@@ -43,24 +44,19 @@ import com.soartech.math.geotrans.TestUniversalTransverseMercator;
  * Test suite for this plugin. Add all test classes here so they'll be included
  * when the com.soartech.simjr.test master test suite is run.
  * 
- * @author ray
+ * @author ray, koss
  */
-public class AllTests
-{
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(
-            Vector3Test.class,
-            AnglesTest.class,
-            TestLineSegmentDistance.class,
-            TestPolygon.class,
-            TestQuaternion.class,
-            
-            TestGeocentric.class,
-            TestLocalCartesian.class,
-            TestMgrs.class,
-            TestUniversalTransverseMercator.class);
-        suite.setName(AllTests.class.getName());
-        return suite;
-    }
-}
+@RunWith(Suite.class)
+@SuiteClasses({
+    Vector3Test.class,
+    AnglesTest.class,
+    TestLineSegmentDistance.class,
+    TestPolygon.class,
+    TestQuaternion.class,
+    TestGeocentric.class,
+    TestLocalCartesian.class,
+    TestMgrs.class,
+    TestUniversalTransverseMercator.class
+})
+
+public class AllTests{}
