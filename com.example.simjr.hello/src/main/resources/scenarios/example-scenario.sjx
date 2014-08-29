@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
   <simjr:metadata>
-    <simjr:name>Hello World Example Scenario</simjr:name>
+    <simjr:name>Example Scenario with Custom Shapes</simjr:name>
     <simjr:description />
   </simjr:metadata>
   <simjr:terrain>
@@ -44,14 +44,14 @@ logger.info("Created entity " + self.name);</simjr:initScript>
       </simjr:location>
       <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
       <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
-logger.info("Created entity " + self.name);
+    logger.info("Created entity " + self.name);
 
-simjr.entities.capabilities.add(self,
+    simjr.entities.capabilities.add(self,
 		new Packages.com.example.simjr.hello.HelloWorldBehavior(),  
 		{
 			radioHistory: Packages.com.soartech.simjr.radios.RadioHistory.findService(services)
 		});
-simjr.entities.capabilities.add(self,
+    simjr.entities.capabilities.add(self,
 		new Packages.com.soartech.simjr.controllers.RouteFollower(),  
 		{
 			route: "a-b"
@@ -99,26 +99,40 @@ simjr.entities.capabilities.add(self,
       <simjr:points />
     </simjr:entity>
     
-    
   </simjr:entities>
-  <simjr:preLoadScript simjr:type="text/javascript">// Commonly used imports and scripts
-importPackage(Packages.com.soartech.simjr.controllers);
-importPackage(Packages.com.soartech.simjr.web);
-requireScript("ui");
-requireScript("terrain");
-requireScript("polygons");
-requireScript("weapons");
+  
+  <simjr:preLoadScript simjr:type="text/javascript">
+  
+    // Commonly used imports and scripts
+    importPackage(Packages.com.soartech.simjr.controllers);
+    importPackage(Packages.com.soartech.simjr.web);
+    requireScript("ui");
+    requireScript("terrain");
+    requireScript("polygons");
+    requireScript("weapons");
 
-// Initialize Example
-requireScript("example");
-initExample(services);
+    // Set up any necessary services using methods in the the example common.js script
+    //
+    // NOTE: This only needs to be done in the scenario file here if there isn't a 
+    //       ServiceProvider implemented for the service. 
+    //      
+    //       In the case of the ExampleShapeManager there is already one implemented
+    //       as the class ShapeManagerServiceProvider. It is mapped using Java SPI
+    //       in the META-INF/services folder.
+    //
+    //       While the above Java SPI approach is preferred, this is still included here 
+    //       as an example of another way to do it. This way is better than Java SPI if the 
+    //       scenario needs to load when Sim Jr starts.
+    //
+    requireScript("example");
+    initExampleServices(services);
+    
+  </simjr:preLoadScript>
 
-// Set up commonly used services
-// configureSoar();
-// configureVista();
-// var ss = configureSoarSpeak("simjr.helosoar.sagis.grammar.nuance", "Dragon34", "34");
-// if(ss != null) ss.tts("*", "66");</simjr:preLoadScript>
-  <simjr:postLoadScript simjr:type="text/javascript">// createCheatSheet(); // load cheatsheet.html
-getActivePlanViewDisplay().showAll();</simjr:postLoadScript>
+  <simjr:postLoadScript simjr:type="text/javascript">
+    // createCheatSheet(); // load cheatsheet.html
+    getActivePlanViewDisplay().showAll();
+  </simjr:postLoadScript>
+  
 </simjr:scenario>
 

@@ -13,6 +13,7 @@ import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
+import com.soartech.simjr.services.ConstructOnDemand;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.sim.EntityPrototypeDatabase;
@@ -24,6 +25,7 @@ import com.soartech.simjr.sim.Simulation;
  * @author aron
  *
  */
+@ConstructOnDemand
 public class ExampleShapeManager extends AbstractAdaptable implements SimulationService
 {
     // Constants
@@ -34,7 +36,11 @@ public class ExampleShapeManager extends AbstractAdaptable implements Simulation
     private Simulation simulation;
     
     /**
-     * Helper function to support scripting.
+     * Helper function to support scripting. 
+     * 
+     * Call this instead of the constructor, as it will instantiate the class only if necessary.
+     * 
+     * The @ConstructOnDemand annotation is required for this functionality as noted by findService().
      * 
      * @param services
      * @return

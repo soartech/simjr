@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
   <simjr:metadata>
-    <simjr:name>Hello World Example Scenario</simjr:name>
+    <simjr:name>Simple Scenario</simjr:name>
     <simjr:description />
   </simjr:metadata>
   <simjr:terrain>
