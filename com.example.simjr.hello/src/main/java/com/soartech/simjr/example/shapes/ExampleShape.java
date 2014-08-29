@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.simjr.shapes;
+package com.soartech.simjr.example.shapes;
 
 
 import java.awt.Color;

@@ -11,7 +11,7 @@ prototypes:
 - &example-custom-shape
     id: example-custom-shape
     properties:
-        shape: !!com.example.simjr.shapes.ExampleShape$Factory []
+        shape: !!com.soartech.simjr.example.shapes.ExampleShape$Factory []
 
 - &example-existing-image
     id: example-existing-image

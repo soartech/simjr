@@ -1,4 +1,4 @@
-importPackage(Packages.com.example.simjr.shapes)
+importPackage(Packages.com.soartech.simjr.example.shapes)
 
 /**
  * Creates the various services used by the example plugin and registers them with

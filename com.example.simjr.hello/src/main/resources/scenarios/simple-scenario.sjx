@@ -47,7 +47,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
 logger.info("Created entity " + self.name);
 
 simjr.entities.capabilities.add(self,
-		new Packages.com.example.simjr.hello.HelloWorldBehavior(),  
+		new Packages.com.soartech.simjr.example.HelloWorldBehavior(),  
 		{
 			radioHistory: Packages.com.soartech.simjr.radios.RadioHistory.findService(services)
 		});

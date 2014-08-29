@@ -49,7 +49,7 @@ requireScript("hello");
         x:         -100,     // start at point A
         capabilities: [
             new Packages.com.soartech.simjr.controllers.RouteFollower(),
-            [new Packages.com.example.simjr.hello.HelloWorldBehavior(),  {
+            [new Packages.com.soartech.simjr.example.HelloWorldBehavior(),  {
             	radioHistory: Packages.com.soartech.simjr.radios.RadioHistory.findService(services)
             }]
         ],

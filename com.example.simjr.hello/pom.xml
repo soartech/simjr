@@ -3,7 +3,7 @@
   
     <!-- project identification -->
     <groupId>com.soartech</groupId>
-    <artifactId>simjr-hello</artifactId>
+    <artifactId>simjr-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     

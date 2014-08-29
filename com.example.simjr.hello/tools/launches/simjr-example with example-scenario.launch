@@ -10,6 +10,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.soartech.simjr.ui.SimulationApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="${workspace_loc:simjr-hello}/src/main/resources/scenarios/example-scenario.sjx"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="simjr-hello"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="simjr-example"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

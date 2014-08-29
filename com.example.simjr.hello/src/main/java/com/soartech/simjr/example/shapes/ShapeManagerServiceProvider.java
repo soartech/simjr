@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.simjr.shapes;
+package com.soartech.simjr.example.shapes;
 
 
 import com.soartech.simjr.services.PluginServiceProvider;
@@ -13,6 +13,6 @@ import com.soartech.simjr.services.PluginServiceProvider;
 public class ShapeManagerServiceProvider extends PluginServiceProvider
 {
     {
-        add("shapemanager", "com.example.simjr.shapes.ExampleShapeManager");
+        add("shapemanager", "com.soartech.simjr.example.shapes.ExampleShapeManager");
     }
 }

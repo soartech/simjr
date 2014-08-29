@@ -30,7 +30,7 @@
  * 
  * Created on Jun 11, 2010
  */
-package com.example.simjr.hello;
+package com.soartech.simjr.example;
 
 import com.soartech.simjr.radios.RadioHistory;
 import com.soartech.simjr.radios.RadioMessage;
