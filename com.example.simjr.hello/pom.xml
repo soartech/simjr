@@ -1,49 +1,177 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.soartech</groupId>
-  <artifactId>simjr-hello</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <repositories>
-		<repository>
-			<id>soartech-public</id>
-			<url>
+  
+    <!-- project identification -->
+    <groupId>com.soartech</groupId>
+    <artifactId>simjr-hello</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    
+    <!-- extra info -->
+    <organization>
+        <name>Soar Technology, Inc</name>
+        <url>http://www.soartech.com</url>
+    </organization>
+
+    <!-- repositories that will be searched when downloading dependencies -->
+    <repositories>
+        <repository>
+            <id>soartech-public</id>
+            <url>
                 https://nexus.soartech.com:8443/nexus/content/groups/public/
             </url>
-		</repository>
-		<repository>
-			<id>soartech-thirdparty</id>
-			<url>
+        </repository>
+        <repository>
+            <id>soartech-thirdparty</id>
+            <url>
                 https://nexus.soartech.com:8443/nexus/content/repositories/thirdparty/
             </url>
-		</repository>
-		<repository>
-			<id>soartech-releases</id>
-			<url>
+        </repository>
+        <repository>
+            <id>soartech-releases</id>
+            <url>
                 https://nexus.soartech.com:8443/nexus/content/repositories/releases/
             </url>
-		</repository>
-		<repository>
-			<id>soartech-snapshots</id>
-			<url>
+        </repository>
+        <repository>
+            <id>soartech-snapshots</id>
+            <url>
                 https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/
             </url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-  <dependencies>
-  	<dependency>
-  		<groupId>com.soartech</groupId>
-  		<artifactId>simjr-core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.soartech</groupId>
-  		<artifactId>simjr-web</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
+    <!-- when the deploy goal is invoked, distribute to these servers  -->
+    <distributionManagement>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-internal-snapshots</id>
+            <name>SoarTech Snapshots</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-releases</id>
+            <name>SoarTech Releases</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+      </distributionManagement>
+
+    <!-- list of dependencies, including other simjr modules -->
+    <dependencies>
+        <dependency>
+	        <groupId>com.soartech</groupId>
+	        <artifactId>simjr-core</artifactId>
+	        <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+	        <groupId>com.soartech</groupId>
+	        <artifactId>simjr-web</artifactId>
+	        <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+        
+    <build>
+        <plugins>
+            <!-- copy the scenarios into the resources directory -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                  <execution>
+                    <id>copy-resources</id>
+                    <!-- here the phase you need -->
+                    <phase>validate</phase>
+                    <goals>
+                      <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                      <outputDirectory>src/main/resources/scenarios</outputDirectory>
+                      <resources>          
+                        <resource>
+                          <directory>scenarios</directory>
+                          <filtering>true</filtering>
+                        </resource>
+                      </resources>              
+                    </configuration>            
+                  </execution>
+                </executions>
+            </plugin>
+            
+            <!-- compile a java source (our project) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            
+            <!-- build a jar using the jar plugin 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../lib/</classpathPrefix>
+                            <mainClass>com.soartech.simjr.ui.SimulationApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin> -->
+            
+            <!-- build a jar with the dependencies copied in -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptors>
+                                <!-- use our custom jar assembly descriptor, more details in that file -->
+                                <descriptor>src/main/resources/assemble/hello-jar.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <!-- set the main class to invoke when the jar is run -->
+                                    <mainClass>com.soartech.simjr.ui.SimulationApplication</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>make-zip</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptors>
+                                <!-- use our custom zip assembly descriptor, more details in that file -->
+                                <descriptor>src/main/resources/assemble/hello-zip.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> 
+            
+        </plugins>
+    </build>
   
   
 </project>
