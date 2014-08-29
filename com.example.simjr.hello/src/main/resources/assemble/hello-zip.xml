@@ -1,0 +1,45 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  
+  <!-- 
+       This file and its usage derived from here:
+       http://maven.40175.n5.nabble.com/assembly-plugin-jar-with-dependencies-how-to-refer-to-artifact-name-later-td5779948.html
+  -->
+  
+  <id>zip</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <!-- copy the scenarios directory into the zip -->
+    <fileSet> 
+      <directory>${project.basedir}/scenarios</directory> 
+      <outputDirectory>/scenarios</outputDirectory> 
+    </fileSet>
+    <!-- copy the run.bat file into the zip -->
+    <fileSet> 
+      <directory>${project.basedir}/src/main/resources</directory> 
+      <outputDirectory>/</outputDirectory> 
+      <includes> 
+        <include>run.bat</include> 
+      </includes> 
+    </fileSet>
+    <!-- copy the README.txt file into the zip -->
+    <fileSet> 
+      <directory>${project.basedir}/src/main/resources</directory> 
+      <outputDirectory>/</outputDirectory> 
+      <includes> 
+        <include>README.txt</include> 
+      </includes> 
+    </fileSet>
+    <!-- copy the newly built executable jar into the zip file --> 
+    <fileSet>
+      <directory>${project.build.directory}</directory> 
+      <outputDirectory>/</outputDirectory> 
+      <includes> 
+        <include>*-jar-with-dependencies.jar</include> 
+      </includes> 
+    </fileSet> 
+  </fileSets>
+</assembly>
