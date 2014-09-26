@@ -12,5 +12,6 @@
         <module>com.soartech.math.test</module>
         <module>com.soartech.shapesystem</module>
         <module>com.soartech.simjr.web</module>
+        <module>com.soartech.simjr.example</module>
     </modules>
 </project>

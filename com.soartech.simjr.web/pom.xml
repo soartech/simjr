@@ -34,7 +34,7 @@
   	<dependency>
   		<groupId>com.soartech</groupId>
   		<artifactId>simjr-core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<version>0.0.2-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>com.google.code.gson</groupId>
