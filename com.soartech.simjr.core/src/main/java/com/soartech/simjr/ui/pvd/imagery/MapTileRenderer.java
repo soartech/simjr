@@ -52,6 +52,7 @@ import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.SimJrProps;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.AttributionSupport;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Coordinate;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.JobDispatcher;
@@ -90,7 +91,7 @@ public class MapTileRenderer implements TileLoaderListener
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
     
-    private final PlanViewDisplay pvd;
+    private final PvdView pvd;
     
     //Notify listeners when the tile source changes
     public interface TileSourceListener { public void onTileSourceChanged(TileSource ts); }
@@ -118,7 +119,7 @@ public class MapTileRenderer implements TileLoaderListener
      * Creates a MapTileRenderer that renders tiles on the given PVD.
      * @param renderTarget
      */
-    public MapTileRenderer(PlanViewDisplay renderTarget)
+    public MapTileRenderer(PvdView renderTarget)
     {
         this.pvd = renderTarget;
         

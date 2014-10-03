@@ -53,7 +53,7 @@ public class CoordinatesPanel extends JXPanel
 {
     private static final long serialVersionUID = -8184639289927366228L;
 
-    private PlanViewDisplay pvd = null;
+    private PvdView pvd = null;
     private JComboBox<Object> combo = new JComboBox<Object>(new Object[] { new LatLon(), new Mgrs(), new Meters() });
     private JLabel label = new JLabel("");
     private MouseMotionListener mouseListener = new MouseMotionAdapter() {
@@ -93,7 +93,7 @@ public class CoordinatesPanel extends JXPanel
         setAlpha(0.7f);
     }
     
-    public void setActivePvd(PlanViewDisplay newPvd)
+    public void setActivePvd(PvdView newPvd)
     {
         if(pvd != null)
         {

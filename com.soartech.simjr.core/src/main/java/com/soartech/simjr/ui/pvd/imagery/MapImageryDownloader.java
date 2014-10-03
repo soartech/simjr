@@ -71,6 +71,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileSourceListener;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileZoomListener;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmFileCacheTileLoader;
@@ -88,7 +89,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private static final long AVG_TILE_SIZE_BYTES = 45000;
     private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 
-    private final PlanViewDisplay pvd;
+    private final PvdView pvd;
     private final MapTileRenderer mapRenderer;
     
     private ScheduledThreadPoolExecutor scheduler;
@@ -132,7 +133,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
      * 
      * @param mapRenderer
      */
-    public MapImageryDownloader(final PlanViewDisplay pvd)
+    public MapImageryDownloader(final PvdView pvd)
     {
         super();
         

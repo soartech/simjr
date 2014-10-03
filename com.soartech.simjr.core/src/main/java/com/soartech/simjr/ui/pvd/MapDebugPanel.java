@@ -61,7 +61,7 @@ public class MapDebugPanel extends JXPanel
 
     private final MapTileRenderer mapRenderer;
     private SwingCoordinateTransformer transformer;
-    private PlanViewDisplay pvd = null;
+    private PvdView pvd = null;
     
     private final JLabel simCenterPxLabel = new BoldJLabel();
     private final JLabel simZoomLabel = new BoldJLabel();
@@ -174,7 +174,7 @@ public class MapDebugPanel extends JXPanel
         this.setPreferredSize(new Dimension(300, getPreferredSize().height));
     }
     
-    public void setActivePvd(PlanViewDisplay newPvd)
+    public void setActivePvd(PvdView newPvd)
     {
         if(pvd != null) {
             pvd.removeMouseMotionListener(mouseListener);
