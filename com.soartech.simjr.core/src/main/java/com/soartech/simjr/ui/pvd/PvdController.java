@@ -33,9 +33,10 @@ import com.soartech.simjr.ui.actions.ActionManager;
  */
 public class PvdController
 {
-    private PlanViewDisplay view;
     private Simulation sim;
     private ServiceManager app;
+
+    private PvdView view;
     
     private ObjectContextMenu contextMenu;
     private Point contextMenuPoint;
@@ -54,7 +55,7 @@ public class PvdController
         // nothing until view is attached
     }
 
-    void attachToView(PlanViewDisplay view, Simulation sim, ServiceManager app)
+    void attachToView(PvdView view, Simulation sim, ServiceManager app)
     {
         this.view = view;
         this.sim = sim;
@@ -134,7 +135,7 @@ public class PvdController
         }
         
         final Entity entityUnderCursor = view.getEntityAtScreenPoint(e.getPoint());
-        final List<Entity> selectedEntities = view.getSelectedEntities();
+        final List<Entity> selectedEntities = PlanViewDisplay.getSelectedEntities(this.app);
         
         if(SwingUtilities.isRightMouseButton(e) || !selectedEntities.contains(entityUnderCursor))
         {
@@ -171,7 +172,7 @@ public class PvdController
         view.setCursor(getCursorPreference());
         
         final SelectionManager sm = SelectionManager.findService(this.app);
-        final List<Entity> selectedEntities = view.getSelectedEntities();
+        final List<Entity> selectedEntities = PlanViewDisplay.getSelectedEntities(app);
         final Entity entityUnderCursor = view.getEntityAtScreenPoint(e.getPoint());
         
         if (SwingUtilities.isRightMouseButton(e) && contextMenuEnabled)
@@ -207,7 +208,7 @@ public class PvdController
     {
         assert draggingEntity;
         
-        final Entity entity = view.getSelectedEntity();
+        final Entity entity = PlanViewDisplay.getSelectedEntity(app);
         if(entity == null)
         {
             return;
