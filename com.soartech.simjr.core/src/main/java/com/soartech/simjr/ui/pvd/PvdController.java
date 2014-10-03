@@ -1,0 +1,381 @@
+package com.soartech.simjr.ui.pvd;
+
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
+
+import com.soartech.math.Vector3;
+import com.soartech.math.geotrans.Geodetic;
+import com.soartech.simjr.adaptables.Adaptables;
+import com.soartech.simjr.services.ServiceManager;
+import com.soartech.simjr.sim.Entity;
+import com.soartech.simjr.sim.EntityConstants;
+import com.soartech.simjr.sim.Simulation;
+import com.soartech.simjr.sim.entities.AbstractPolygon;
+import com.soartech.simjr.ui.ObjectContextMenu;
+import com.soartech.simjr.ui.SelectionManager;
+import com.soartech.simjr.ui.SimulationMainFrame;
+import com.soartech.simjr.ui.actions.ActionManager;
+
+/**
+ * 
+ * @author mjquist
+ *
+ */
+public class PvdController
+{
+    private PlanViewDisplay view;
+    private Simulation sim;
+    private ServiceManager app;
+    
+    private ObjectContextMenu contextMenu;
+    private Point contextMenuPoint;
+    private boolean contextMenuEnabled = true;
+
+    private Point lastDragPoint = new Point(0, 0);
+    private Point panOrigin = new Point();
+    private boolean draggingEntity = false;
+    private Cursor defaultCursor = Cursor.getDefaultCursor();
+    private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+
+    private Entity lockEntity; // CONTROLLER
+
+    public PvdController()
+    {
+        // nothing until view is attached
+    }
+
+    void attachToView(PlanViewDisplay view, Simulation sim, ServiceManager app)
+    {
+        this.view = view;
+        this.sim = sim;
+        this.app = app;
+        
+        this.contextMenu = new ObjectContextMenu(app);
+
+        view.addMouseListener(new MouseHandler());
+        view.addMouseMotionListener(new MouseMotionHandler());
+        view.addMouseWheelListener(new MouseWheelHandler());
+    }
+    
+    /**
+     * @return the currently installed context menu
+     */
+    public ObjectContextMenu getContextMenu()
+    {
+        return contextMenu;
+    }
+    
+    public Point getContextMenuPoint()
+    {
+        return contextMenuPoint;
+    }
+
+    /**
+     * @param contextMenu the new context menu
+     */
+    public void setContextMenu(ObjectContextMenu contextMenu)
+    {
+        if (contextMenu == null)
+        {
+            throw new NullPointerException("Context menu cannot be null");
+        }
+        this.contextMenu = contextMenu;
+    }
+    
+    public void setContextMenuEnabled(boolean enabled)
+    {
+        this.contextMenuEnabled = enabled;
+    }
+
+
+    /**
+     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
+     * entity is always in the center).
+     * 
+     * @return the lockEntity
+     */
+    public Entity getLockEntity()
+    {
+        return lockEntity;
+    }
+
+    /**
+     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
+     * entity is always in the center).
+     * 
+     * @param lockEntity the lockEntity to set
+     */
+    public void setLockEntity(Entity lockEntity)
+    {
+        this.lockEntity = lockEntity;
+        ActionManager.update(app);
+    }
+
+    private void mouseMoved(MouseEvent e)
+    {
+        view.highlightEntity(view.getEntityAtScreenPoint(e.getPoint()));
+    }
+    
+    private void mousePressed(MouseEvent e)
+    {
+        if (e.isControlDown())
+        {
+            return;
+        }
+        
+        final Entity entityUnderCursor = view.getEntityAtScreenPoint(e.getPoint());
+        final List<Entity> selectedEntities = view.getSelectedEntities();
+        
+        if(SwingUtilities.isRightMouseButton(e) || !selectedEntities.contains(entityUnderCursor))
+        {
+            SelectionManager sm = SelectionManager.findService(this.app);
+            sm.setSelection(this, entityUnderCursor);
+        }
+
+        if(SwingUtilities.isRightMouseButton(e))
+        {
+            return;
+        }
+        
+        draggingEntity = entityUnderCursor != null;
+        lastDragPoint.setLocation(e.getPoint());
+        
+        if (!draggingEntity)
+        {
+            // change mouse icon to grab icon
+            view.setCursor(getDraggingCursor());
+            panOrigin.setLocation(e.getPoint());
+        }
+        
+        view.repaint();
+    }
+    
+    /**
+     * Restores the cursor following a drag/pan operation.
+     */
+    private void mouseReleased(MouseEvent e)
+    {
+        view.requestFocus();
+        
+        // restore the cursor to standard pointer
+        view.setCursor(getCursorPreference());
+        
+        final SelectionManager sm = SelectionManager.findService(this.app);
+        final List<Entity> selectedEntities = view.getSelectedEntities();
+        final Entity entityUnderCursor = view.getEntityAtScreenPoint(e.getPoint());
+        
+        if (SwingUtilities.isRightMouseButton(e) && contextMenuEnabled)
+        {
+            contextMenuPoint = e.getPoint();
+            contextMenu.show(view, e.getX(), e.getY());
+        }
+        else if (!e.isControlDown() && selectedEntities.size() > 1)
+        {
+            // Multi-selection management is done on mouse release.
+            sm.setSelection(this, entityUnderCursor);
+        }
+        else if (e.isControlDown())
+        {
+            // Multi-selection management is done on mouse release.
+            // Ctrl-click adds/removes an entity from the selection
+            final List<Object> newSel = new ArrayList<Object>(sm.getSelection());
+            if(!newSel.remove(entityUnderCursor))
+            {
+                newSel.add(0, entityUnderCursor);
+            }
+            sm.setSelection(this, newSel);
+        }
+        
+        draggingEntity = false;
+        
+        view.repaint();
+        
+        dragFinished();
+    }
+    
+    private void dragEntity(MouseEvent e)
+    {
+        assert draggingEntity;
+        
+        final Entity entity = view.getSelectedEntity();
+        if(entity == null)
+        {
+            return;
+        }
+        
+        final Boolean locked = (Boolean) entity.getProperty(EntityConstants.PROPERTY_LOCKED);
+        if(locked != null && locked.booleanValue())
+        {
+            return;
+        }
+        
+        final Point screenDelta = new Point(e.getX() - lastDragPoint.x, e.getY() - lastDragPoint.y);
+        final Vector3 delta = view.getDisplacementInMeters(screenDelta);
+        lastDragPoint.setLocation(e.getPoint());
+
+        synchronized(sim.getLock())
+        {
+            // If it's a polygon (route, area, etc) move all the points together
+            final List<Entity> points;
+            final AbstractPolygon polygon = Adaptables.adapt(entity, AbstractPolygon.class);
+            if(polygon != null)
+            {
+                points = polygon.getPoints();
+            }
+            else
+            {
+                points = Arrays.asList(entity);
+            }
+            
+            for(Entity p : points)
+            {
+                moveEntityPreservingAltitude(p, delta);
+            }
+            
+            // Update the properties display while we're dragging
+            // TODO: This is a hack.
+            final SimulationMainFrame mainFrame = SimulationMainFrame.findService(app);
+            if(mainFrame != null)
+            {
+                mainFrame.getPropertiesView().refreshModel();
+            }
+        }
+        
+        // Don't wait for the timer. This makes the UI a little snappier
+        view.repaint();
+    }
+
+    private void moveEntityPreservingAltitude(Entity p, final Vector3 delta)
+    {
+        // Preserve altitude. z is *not* altitude
+        final Geodetic.Point oldLla = sim.getTerrain().toGeodetic(p.getPosition());
+        final Vector3 newPosition = p.getPosition().add(delta);
+        final Geodetic.Point newLla = sim.getTerrain().toGeodetic(newPosition);
+        newLla.altitude = oldLla.altitude;
+        p.setPosition(sim.getTerrain().fromGeodetic(newLla));
+        
+        // Update calculated properties if the sim isn't running
+        if(sim.isPaused())
+        {
+            p.updateProperties();
+        }
+    }
+    
+    private void dragPan(MouseEvent e)
+    {
+        Point screenDelta = new Point();
+        screenDelta.setLocation(e.getPoint().x - panOrigin.getX(), e.getPoint().y - panOrigin.getY());
+        
+        view.pan(screenDelta);
+        
+        // reset the pan origin
+        panOrigin.setLocation(e.getPoint());
+    }
+    
+    public boolean isDraggingEntity()
+    {
+        return draggingEntity;
+    }
+    
+    protected void dragFinished() { }
+
+    /**
+     * Default cursor to use when not performing a user-specific operation
+     * (e.g., dragging the pvd.)
+     */
+    public void setCursorPreference(Cursor cursor)
+    {
+        this.defaultCursor = cursor;
+    }
+
+    /**
+     * @return the {@link Cursor} preferred when not dragging.
+     */
+    public Cursor getCursorPreference()
+    {
+        return this.defaultCursor;
+    }
+
+    /**
+     * The {@link Cursor} preferred when the user drags the PVD.
+     */
+    public void setDraggingCursor(Cursor cursor)
+    {
+        this.draggingCursor = cursor;
+    }
+
+    /**
+     * @return the {@link Cursor} preferred when the user drags the PVD.
+     */
+    public Cursor getDraggingCursor()
+    {
+        return draggingCursor;
+    }
+
+    private class MouseHandler extends MouseAdapter
+    {
+        /* (non-Javadoc)
+         * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+         */
+        @Override
+        public void mousePressed(MouseEvent e)
+        {
+            PvdController.this.mousePressed(e);
+        }
+        
+        public void mouseReleased(MouseEvent e)
+        {
+            PvdController.this.mouseReleased(e);
+        }
+    }
+    
+    private class MouseMotionHandler extends MouseMotionAdapter
+    {
+
+        /* (non-Javadoc)
+         * @see java.awt.event.MouseMotionAdapter#mouseDragged(java.awt.event.MouseEvent)
+         */
+        @Override
+        public void mouseDragged(MouseEvent e)
+        {
+            if(SwingUtilities.isLeftMouseButton(e))
+            {
+                if (draggingEntity)
+                {
+                    PvdController.this.dragEntity(e);
+                }
+                else
+                {
+                    PvdController.this.dragPan(e);
+                }
+            }
+        }
+
+        /* (non-Javadoc)
+         * @see java.awt.event.MouseMotionAdapter#mouseMoved(java.awt.event.MouseEvent)
+         */
+        @Override
+        public void mouseMoved(MouseEvent e)
+        {
+            PvdController.this.mouseMoved(e);
+        }
+    }
+    
+    private class MouseWheelHandler implements MouseWheelListener
+    {
+        public void mouseWheelMoved(MouseWheelEvent e) 
+        {
+            view.zoomRelativeToPoint(e.getPoint(), e.getWheelRotation());
+        }
+    }
+}

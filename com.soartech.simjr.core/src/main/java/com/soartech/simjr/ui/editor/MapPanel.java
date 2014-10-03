@@ -82,6 +82,7 @@ import com.soartech.simjr.ui.editor.actions.SetTerrainImageAction;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdController;
 
 /**
  * @author ray
@@ -114,17 +115,14 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         
         this.app = app;
         this.sim = app.findService(Simulation.class);
-        this.pvd = new PlanViewDisplay(app, null) {
-
-            private static final long serialVersionUID = 2647338467484833244L;
-
+        this.pvd = new PlanViewDisplay(app, null, new PvdController() {
             @Override
             protected void dragFinished()
             {
                 super.dragFinished();
                 updateEditorEntityPositionsAfterDrag();
             }
-        };
+        });
         
         this.pvd.setContextMenu(new ObjectContextMenu(app) {
 

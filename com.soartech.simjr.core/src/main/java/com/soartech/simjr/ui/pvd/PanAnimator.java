@@ -61,7 +61,7 @@ public class PanAnimator
 
             public void actionPerformed(ActionEvent e)
             {
-                animate();
+                animate(true);
             }});
     }
     
@@ -70,7 +70,7 @@ public class PanAnimator
         return animationTimer.isRunning();
     }
     
-    private void animate()
+    private void animate(boolean doRepaint)
     {
         transformer.setPanOffset(transformer.getPanOffsetX() + animationPanDx, 
                                  transformer.getPanOffsetY() + animationPanDy);
@@ -81,9 +81,50 @@ public class PanAnimator
             animationTimer.stop();
         }
         
-        transformer.getComponent().repaint();
+        if (doRepaint)
+        {
+            transformer.getComponent().repaint();
+        }
     }
     
+    /**
+     * Move position p instantly to the center of the screen.  Repaint
+     * the component only if doRepaint is true.
+     * 
+     * @param p The point to move to the center, in meters.
+     * @param doRepaint Whether to repaint after the move.
+     */
+    public void jumpToPosition(Vector3 p, boolean doRepaint)
+    {
+        if(isAnimating())
+        {
+            animationTimer.stop();
+        }
+        
+        // find the current location of (x,y) in meters
+        SimplePosition currentPosition = transformer.metersToScreen(p.x, p.y);
+
+        // find the position of the center of the screen
+        double desiredX = transformer.getSize().getWidth() / 2;
+        double desiredY = transformer.getSize().getHeight() / 2;
+
+        // add the difference to the current offset to create the new offset
+        double offsetX = desiredX - currentPosition.x;
+        double offsetY = desiredY - currentPosition.y;
+        
+        animationSteps = 1;
+        animationPanDx = offsetX;
+        animationPanDy = offsetY;
+        
+        animate(doRepaint);
+    }
+    
+    /**
+     * Move position p gradually to the center of the screen, repainting
+     * the component along the way.
+     * 
+     * @param p The point to move to the center, in meters.
+     */
     public void panToPosition(Vector3 p)
     {
         if(isAnimating())
@@ -114,5 +155,4 @@ public class PanAnimator
             animationTimer.start();
         }
     }
-
 }

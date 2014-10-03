@@ -32,26 +32,18 @@
 package com.soartech.simjr.ui.pvd;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.slf4j.Logger;
@@ -74,12 +66,9 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.Terrain;
-import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.ui.ObjectContextMenu;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
-import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.imagery.MapOpacityController;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
@@ -101,79 +90,67 @@ public class PlanViewDisplay extends JPanel
 
     private ServiceManager app;
     private Simulation sim;
-    private Point contextMenuPoint;
-    private ObjectContextMenu contextMenu;
-    private boolean contextMenuEnabled = true;
-    
-    private SelectionManagerListener selectionListener = new SelectionManagerListener(){
-        public void selectionChanged(Object source) {
-            appSelectionChanged(source);
-        }};
-        
-    private Timer repaintTimer;
-    
     private final SwingCoordinateTransformer transformer = new SwingCoordinateTransformer(this);
     private final SwingPrimitiveRendererFactory factory = new SwingPrimitiveRendererFactory(transformer);
-    private final ShapeSystem shapeSystem = new ShapeSystem();
-    {
-        shapeSystem.displayErrorsInFrame(SimJrProps.get("simjr.pvd.displayErrors", true));
-    }
-    private final TimedShapeManager timedShapes = new TimedShapeManager(shapeSystem);
-    
-    private EntityShapeManager shapeAdapter;
-    private DistanceToolManager distanceTools;
-    private DetonationShapeManager detonationShapes;
-    private SpeechBubbleManager speechBubbles;
-    private final GridManager grid = new GridManager(transformer);
-    
+
+    private final ShapeSystem shapeSystem;
+    private final TimedShapeManager timedShapes;
     private final PanAnimator panAnimator = new PanAnimator(transformer);
-    
-    private Point panOrigin = new Point();
-    
-    private Point lastDragPoint = new Point(0, 0);
-    private boolean draggingEntity = false;
-    
-    private MapImage mapBackgroundImage;
-    private MapTileRenderer tileRenderer = new MapTileRenderer(this);
-    private MapOpacityController mapOpacityController = new MapOpacityController(tileRenderer);
-    private MapDebugPanel mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
-    
-    private Entity lockEntity;
 
-    private CoordinatesPanel coordinatesPane;
+    private SelectionManagerListener selectionListener;
+    private Timer repaintTimer; // VIEW
+    private EntityShapeManager shapeAdapter; // VIEW
+    private DistanceToolManager distanceTools; // VIEW
+    private DetonationShapeManager detonationShapes; // VIEW
+    private SpeechBubbleManager speechBubbles; // VIEW
+    private final GridManager grid = new GridManager(transformer); // VIEW
     
-    private final AppStateIndicator appStateIndicator;
-
-    private Cursor defaultCursor = Cursor.getDefaultCursor();
-    private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    private MapImage mapBackgroundImage; // VIEW
+    private MapTileRenderer tileRenderer; // VIEW
+    private final MapOpacityController mapOpacityController; // VIEW
+    private MapDebugPanel mapDebugPanel; // VIEW
+    private final CoordinatesPanel coordinatesPanel; // VIEW
+    private final AppStateIndicator appStateIndicator; // VIEW
+    
+    private final PvdController controller;
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
+    {
+        this(app, toCopy, null);
+    }
+    
+    public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy, PvdController controller)
     {
         setLayout(null);
         
         this.app = app;
         this.appStateIndicator = new AppStateIndicator(this.app.findService(ApplicationStateService.class), this);
         
+        this.shapeSystem = new ShapeSystem();
+        this.shapeSystem.displayErrorsInFrame(SimJrProps.get("simjr.pvd.displayErrors", true));
+        
+        this.timedShapes = new TimedShapeManager(shapeSystem);
+
         this.sim = this.app.findService(Simulation.class);
-        this.contextMenu = new ObjectContextMenu(this.app);
         this.shapeAdapter = new EntityShapeManager(sim, shapeSystem, factory);
         this.distanceTools = new DistanceToolManager(app, shapeSystem);
         this.detonationShapes = new DetonationShapeManager(sim, timedShapes);
         this.speechBubbles = new SpeechBubbleManager(sim, this.app.findService(RadioHistory.class), shapeAdapter);
         
-        tileRenderer.approximateScale(transformer.screenToMeters(1));
-        
         setToolTipText(""); // Enable tooltips
         setFocusable(true);
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLoweredBevelBorder());
-        addMouseListener(new MouseHandler());
-        addMouseMotionListener(new MouseMotionHandler());
-        addMouseWheelListener(new MouseWheelHandler());
         
-        final SelectionManager selectionService = SelectionManager.findService(this.app);
-        if(selectionService != null) {
-            selectionService.addListener(selectionListener);
+        this.selectionListener = new SelectionManagerListener() {
+            public void selectionChanged(Object source) {
+                shapeAdapter.updateSelection(getSelectedEntities());
+                repaint();
+            }
+        };
+        final SelectionManager sm = SelectionManager.findService(this.app);
+        if(sm != null) {
+            sm.addListener(selectionListener);
         }
         
         if(toCopy != null) {
@@ -184,19 +161,40 @@ public class PlanViewDisplay extends JPanel
         // when something changes in the simulation
         repaintTimer = new Timer(200, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(!isAnimating()) {
+                if(!panAnimator.isAnimating()) {
                     repaint();
                 }
             }
         });
         
-        addCoordinatePane();
+        this.tileRenderer = new MapTileRenderer(this);
+        this.tileRenderer.approximateScale(transformer.screenToMeters(1));
+
+        this.coordinatesPanel = new CoordinatesPanel();
+        addCoordinatesPanel();
+        
+        this.mapOpacityController = new MapOpacityController(tileRenderer);
         addMapOpacityController();
+
         if(SimJrProps.get("simjr.map.imagery.debug", false)) { 
+            this.mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
             addMapDebugPanel();
+        } else {
+            this.mapDebugPanel = null;
         }
         
         repaintTimer.start();
+        
+        if (controller == null)
+        {
+            this.controller = new PvdController();
+        }
+        else
+        {
+            this.controller = controller;
+        }
+        
+        this.controller.attachToView(this, this.sim, this.app);
     }
 
     public void dispose()
@@ -209,6 +207,64 @@ public class PlanViewDisplay extends JPanel
         speechBubbles.dispose();
         detonationShapes.dispose();
     }
+
+    public Point getContextMenuPoint()
+    {
+        return controller.getContextMenuPoint();
+    }
+    
+    public void setContextMenu(ObjectContextMenu contextMenu)
+    {
+        controller.setContextMenu(contextMenu);
+    }
+    
+    public void setContextMenuEnabled(boolean enabled)
+    {
+        controller.setContextMenuEnabled(enabled);
+    }
+    
+    public boolean isDraggingEntity()
+    {
+        return controller.isDraggingEntity();
+    }
+    
+    public Entity getLockEntity()
+    {
+        return controller.getLockEntity();
+    }
+    
+    public void setLockEntity(Entity lockEntity)
+    {
+        controller.setLockEntity(lockEntity);
+    }
+    
+    /**
+     * @param point
+     * @return The first entity under the given screen point (within some tolerance), or
+     * <code>null</code> if there are no entities nearby.
+     */
+    public Entity getEntityAtScreenPoint(Point point)
+    {
+        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0));
+        return !entities.isEmpty() ? entities.get(0) : null;
+    }
+
+    /**
+     * @return A list of all the entities that are selected.
+     */
+    public List<Entity> getSelectedEntities()
+    {
+        return Adaptables.adaptCollection(SelectionManager.findService(app).getSelection(), Entity.class);
+    }
+    
+    /**
+     * @return The first selected entity, or <code>null</code> if no entities are selected.
+     */
+    public Entity getSelectedEntity()
+    {
+        final List<Entity> selection = getSelectedEntities();
+        return !selection.isEmpty() ? selection.get(0) : null;
+    }
     
     public EntityShapeManager getShapeAdapter()
     {
@@ -220,36 +276,6 @@ public class PlanViewDisplay extends JPanel
         return shapeSystem;
     }
     
-    /**
-     * @return the currently installed context menu
-     */
-    public ObjectContextMenu getContextMenu()
-    {
-        return contextMenu;
-    }
-    
-    public Point getContextMenuPoint()
-    {
-        return contextMenuPoint;
-    }
-
-    /**
-     * @param contextMenu the new context menu
-     */
-    public void setContextMenu(ObjectContextMenu contextMenu)
-    {
-        if(contextMenu == null)
-        {
-            throw new NullPointerException("Context menu cannot be null");
-        }
-        this.contextMenu = contextMenu;
-    }
-    
-    public void setContextMenuEnabled(boolean enabled)
-    {
-        this.contextMenuEnabled = enabled;
-    }
-
     public Terrain getTerrain()
     {
         return sim.getTerrain();
@@ -262,7 +288,7 @@ public class PlanViewDisplay extends JPanel
     
     public MapTileRenderer getMapTileRenderer()
     {
-        return this.tileRenderer;
+        return tileRenderer;
     }
     
     public void setMapImage(MapImage map)
@@ -285,39 +311,71 @@ public class PlanViewDisplay extends JPanel
         return distanceTools;
     }
 
-    /**
-     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
-     * entity is always in the center).
-     * 
-     * @return the lockEntity
-     */
-    public Entity getLockEntity()
+    public void highlightEntity(Entity e)
     {
-        return lockEntity;
+        shapeAdapter.highlightEntity(e);
+        repaint();
     }
-
+    
     /**
-     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
-     * entity is always in the center).
+     * Translate the view by the specified amount.
      * 
-     * @param lockEntity the lockEntity to set
+     * @param delta The desired translation, in pixels.
      */
-    public void setLockEntity(Entity lockEntity)
+    public void pan(Point screenDelta)
     {
-        this.lockEntity = lockEntity;
-        ActionManager.update(app);
-    }
-
-    private void addCoordinatePane()
-    {
-        if(this.coordinatesPane != null) {
-            return;
-        }
+        double offsetX = transformer.getPanOffsetX() + screenDelta.getX();
+        double offsetY = transformer.getPanOffsetY() + screenDelta.getY();
+        transformer.setPanOffset(offsetX, offsetY);
         
-        this.coordinatesPane = new CoordinatesPanel();
-        this.coordinatesPane.setActivePvd(this);
-        coordinatesPane.setBounds(12, 10, 300, 20);
-        add(coordinatesPane);
+        repaint();
+    }
+    
+    /**
+     * Zoom in or out while keeping the specified point fixed on the screen.
+     * 
+     * @param pt The point to keep fixed while zooming, in screen coordinates.
+     * @param amount The amount to zoom.  Positive values zoom out; negative
+     * values zoom in.  Each unit of zoom is about +/-10%.
+     */
+    public void zoomRelativeToPoint(Point pt, int amount)
+    {
+        // capture fixedPoint which is under mouse cursor
+        final Vector3 fixedPoint = transformer.screenToMeters(pt.getX(), pt.getY());
+
+        // set the scale
+        final double factor = Math.pow(0.9, amount);
+        transformer.setScale(transformer.getScale() * factor);
+
+        // change offset so that the fixedPoint continues to be under the mouse
+        // Note: treat the new screen position as the pan origin
+        final SimplePosition newScreenPosition = transformer.metersToScreen(fixedPoint.x, fixedPoint.y);
+        final double newX = transformer.getPanOffsetX() + pt.getX() - newScreenPosition.x;
+        final double newY = transformer.getPanOffsetY() + pt.getY() - newScreenPosition.y;
+        transformer.setPanOffset(newX, newY);
+
+        //Scale tiles appropriately
+        tileRenderer.approximateScale(transformer.screenToMeters(1));
+        
+        repaint();
+    }
+
+    /**
+     * Zoom in or out while keeping the center of the view fixed.
+     * 
+     * @param amount The amount to zoom.  Positive values zoom out; negative
+     * values zoom in.  Each unit of zoom is about +/-10%.
+     */
+    public void zoom(int amount)
+    {
+        zoomRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), amount);
+    }
+
+    private void addCoordinatesPanel()
+    {
+        coordinatesPanel.setActivePvd(this);
+        coordinatesPanel.setBounds(12, 10, 300, 20);
+        add(coordinatesPanel);
     }
     
     private void addMapOpacityController()
@@ -326,17 +384,30 @@ public class PlanViewDisplay extends JPanel
         add(mapOpacityController);
         showMapOpacityController(false);
     }
+
+    private void addMapDebugPanel()
+    {
+        mapDebugPanel.setActivePvd(this);
+        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
+        add(mapDebugPanel);
+    }
     
     public void showMapOpacityController(boolean show)
     {
         mapOpacityController.setVisible(show);
     }
     
-    private void addMapDebugPanel()
+    /**
+     * @param screenDelta The screen vector, in pixels
+     * @return The displacement vector, in meters, corresponding to the given screen
+     * vector.
+     */
+    public Vector3 getDisplacementInMeters(Point screenDelta)
     {
-        this.mapDebugPanel.setActivePvd(this);
-        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        add(mapDebugPanel);
+        return new Vector3(
+                transformer.screenToMeters(screenDelta.getX()),
+                -transformer.screenToMeters(screenDelta.getY()), // Y down
+                 0.0); // Preserve altitude
     }
     
     /**
@@ -365,42 +436,25 @@ public class PlanViewDisplay extends JPanel
         return sim.getTerrain().fromGeodetic(lla);
     }
     
-    private boolean isAnimating()
-    {
-        return panAnimator.isAnimating();
-    }
-    
+    /**
+     * Pan so that the given position is shown in the center of the display.
+     * 
+     * @param p The position to show, in meters.
+     */
     public void showPosition(Vector3 p)
     {
         panAnimator.panToPosition(p);
     }
-    
+
     /**
-     * Force the given position to be shown in the center of the display
+     * Force the given position to be shown in the center of the display immediately.
      * 
-     * @param p The position to show in meters
-     * @param repaint If true, a repaint is forced.
+     * @param p The position to show, in meters.
+     * @param doRepaint If true, a repaint is forced.
      */
-    public void showPosition(Vector3 p, boolean repaint)
+    private void jumpToPosition(Vector3 p, boolean doRepaint)
     {
-        // Note: This function transfers all coordinates to pixels, computes the difference 
-        // between the current and desired location, and increases the pan-offset accordingly.
-
-        // find the current location of (x,y) in meters
-        SimplePosition currentPosition = transformer.metersToScreen(p.x, p.y);
-
-        // find the position of the center of the screen
-        double desiredX = getWidth() / 2;
-        double desiredY = getHeight() / 2;
-
-        // add the difference to the current offset to create the new offset
-        double offsetX = transformer.getPanOffsetX() + desiredX - currentPosition.x;
-        double offsetY = transformer.getPanOffsetY() + desiredY - currentPosition.y;
-        transformer.setPanOffset(offsetX, offsetY);
-
-        if(repaint) {
-            repaint();
-        }
+        panAnimator.jumpToPosition(p, doRepaint);
     }
     
     /**
@@ -455,7 +509,7 @@ public class PlanViewDisplay extends JPanel
         double centerX = (maxX + minX) / 2.0;
         double centerY = (maxY + minY) / 2.0;
         
-        showPosition(new Vector3(centerX, centerY, 0.0), false);
+        jumpToPosition(new Vector3(centerX, centerY, 0.0), false);
         
         double desiredWidth = maxX - minX;
         double desiredHeight = maxY - minY;
@@ -470,30 +524,20 @@ public class PlanViewDisplay extends JPanel
         // First zoom in
         while(desiredWidth < extents.getWidth() ||  desiredHeight < extents.getHeight())
         {
-            controlMouseWheel(center, -1);
+            zoomRelativeToPoint(center, -1);
             extents = getViewExtentsInMeters();
         }
         
         // Now zoom back out
         while(desiredWidth >= extents.getWidth() ||  desiredHeight >= extents.getHeight())
         {
-            controlMouseWheel(center, 1);
+            zoomRelativeToPoint(center, 1);
             extents = getViewExtentsInMeters();
         }
         
         // one more for good measure. Otherwise we may end up with entities right
         // on the edge of the screen.
-        controlMouseWheel(center, 1);
-    }
-    
-    public void zoom(int amount)
-    {
-        controlMouseWheel(new Point(getWidth() / 2, getHeight() / 2), amount);
-    }
-
-    public void zoom(int amount, Point pointToZoomOn)
-    {
-        controlMouseWheel(pointToZoomOn, amount);
+        zoomRelativeToPoint(center, 1);
     }
     
     /* (non-Javadoc)
@@ -512,11 +556,12 @@ public class PlanViewDisplay extends JPanel
         double time = 0.0;
         synchronized (sim.getLock())
         {
+            Entity lockEntity = controller.getLockEntity();
             if(lockEntity != null)
             {
                 Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
                 transformer.setRotation(-lockEntity.getHeading() + Math.PI/2);
-                showPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
+                jumpToPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
             }
             time = sim.getTime();
             shapeAdapter.update();
@@ -556,259 +601,6 @@ public class PlanViewDisplay extends JPanel
         if(mapBackgroundImage != null) {
             mapBackgroundImage.draw(g2d, transformer);
         }
-    }
-    
-    private Entity getSelectedEntity()
-    {
-        return Adaptables.adapt(SelectionManager.findService(this.app).getSelectedObject(), Entity.class);
-    }
-    
-    private List<Entity> getSelectedEntities()
-    {
-        return Adaptables.adaptCollection(SelectionManager.findService(app).getSelection(), Entity.class);
-    }
-    
-    private void appSelectionChanged(Object source)
-    {
-        shapeAdapter.updateSelection(getSelectedEntities());
-        repaint();
-    }
-    
-    private Entity getEntityAtScreenPoint(Point point)
-    {
-        final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0));
-        return !entities.isEmpty() ? entities.get(0) : null;
-    }
-    
-    private void mouseMoved(MouseEvent e)
-    {
-        shapeAdapter.highlightEntity(getEntityAtScreenPoint(e.getPoint()));
-        repaint();
-    }
-    
-    private void mousePressed(MouseEvent e)
-    {
-        if(e.isControlDown())
-        {
-            return;
-        }
-        
-        final Entity entityUnderCursor = getEntityAtScreenPoint(e.getPoint());
-        final SelectionManager sm = SelectionManager.findService(this.app);
-        final List<Entity> selectedEntities = getSelectedEntities();
-        
-        if(SwingUtilities.isRightMouseButton(e) || !selectedEntities.contains(entityUnderCursor))
-        {
-            sm.setSelection(this, entityUnderCursor);
-        }
-        
-        if(SwingUtilities.isRightMouseButton(e))
-        {
-            return;
-        }
-        
-        draggingEntity = entityUnderCursor != null;
-        lastDragPoint.setLocation(e.getPoint());
-        
-        if(!draggingEntity)
-        {
-            // change mouse icon to grab icon
-            setCursor(draggingCursor);
-            panOrigin.setLocation(e.getPoint());
-        }
-        
-        repaint();
-    }
-    
-    /**
-     * Restores the cursor following a drag/pan operation.
-     */
-    private void mouseReleased(MouseEvent e)
-    {
-        requestFocus();
-        
-        // restore the cursor to standard pointer
-        setCursor(defaultCursor);
-        
-        final SelectionManager sm = SelectionManager.findService(this.app);
-        final List<Entity> selectedEntities = getSelectedEntities();
-        final Entity entityUnderCursor = getEntityAtScreenPoint(e.getPoint());
-        
-        if(SwingUtilities.isRightMouseButton(e) && contextMenuEnabled)
-        {
-            contextMenuPoint = e.getPoint();
-            contextMenu.show(this, e.getX(), e.getY());
-        }
-        else if(!e.isControlDown() && selectedEntities.size() > 1)
-        {
-            // Multi-selection management is done on mouse release.
-            sm.setSelection(this, entityUnderCursor);
-        }
-        else if(e.isControlDown())
-        {
-            // Multi-selection management is done on mouse release.
-            // Ctrl-click adds/removes an entity from the selection
-            final List<Object> newSel = new ArrayList<Object>(sm.getSelection());
-            if(!newSel.remove(entityUnderCursor))
-            {
-                newSel.add(0, entityUnderCursor);
-            }
-            sm.setSelection(this, newSel);
-        }
-        
-        draggingEntity = false;
-        
-        repaint();
-        
-        dragFinished();
-    }
-    
-    private void dragEntity(MouseEvent e)
-    {
-        assert draggingEntity;
-        
-        final Entity entity = getSelectedEntity();
-        if(entity == null)
-        {
-            return;
-        }
-        
-        final Boolean locked = (Boolean) entity.getProperty(EntityConstants.PROPERTY_LOCKED);
-        if(locked != null && locked.booleanValue())
-        {
-            return;
-        }
-        
-        final Point screenDelta = new Point(e.getX() - lastDragPoint.x, e.getY() - lastDragPoint.y);
-        lastDragPoint.setLocation(e.getPoint());
-        final Vector3 delta = new Vector3(transformer.screenToMeters(screenDelta.getX()),
-                                         -transformer.screenToMeters(screenDelta.getY()), // Y down
-                                          0.0); // Preserve altitude
-        synchronized(sim.getLock())
-        {
-            // If it's a polygon (route, area, etc) move all the points together
-            final List<Entity> points;
-            final AbstractPolygon polygon = Adaptables.adapt(entity, AbstractPolygon.class);
-            if(polygon != null)
-            {
-                points = polygon.getPoints();
-            }
-            else
-            {
-                points = Arrays.asList(entity);
-            }
-            
-            for(Entity p : points)
-            {
-                moveEntityPreservingAltitude(p, delta);
-            }
-            
-            // Update the properties display while we're dragging
-            // TODO: This is a hack.
-            final SimulationMainFrame mainFrame = SimulationMainFrame.findService(app);
-            if(mainFrame != null)
-            {
-                mainFrame.getPropertiesView().refreshModel();
-            }
-        }
-        
-        // Don't wait for the timer. This makes the UI a little snappier
-        repaint();
-    }
-
-    private void moveEntityPreservingAltitude(Entity p, final Vector3 delta)
-    {
-        // Preserve altitude. z is *not* altitude
-        final Geodetic.Point oldLla = sim.getTerrain().toGeodetic(p.getPosition());
-        final Vector3 newPosition = p.getPosition().add(delta);
-        final Geodetic.Point newLla = sim.getTerrain().toGeodetic(newPosition);
-        newLla.altitude = oldLla.altitude;
-        p.setPosition(sim.getTerrain().fromGeodetic(newLla));
-        
-        // Update calculated properties if the sim isn't running
-        if(sim.isPaused())
-        {
-            p.updateProperties();
-        }
-    }
-    
-    private void dragPan(MouseEvent e)
-    {
-        // modify the pan to account for changes in position of the mouse while dragging
-        double offsetX = transformer.getPanOffsetX() + e.getPoint().x - panOrigin.getX();
-        double offsetY = transformer.getPanOffsetY() + e.getPoint().y - panOrigin.getY();
-        transformer.setPanOffset(offsetX, offsetY);
-
-        // reset the pan origin
-        panOrigin.setLocation(e.getPoint());
-        
-        repaint();
-    }
-    
-    public boolean isDraggingEntity()
-    {
-        return draggingEntity;
-    }
-    
-    protected void dragFinished() { }
-
-    /**
-     * Zooms in or out based on mouse wheel rotation, but retains the mouse
-     * point under the cursor.
-     */
-    private void controlMouseWheel(Point point, int rotation) 
-    {
-        // capture fixedPoint which is under mouse cursor
-        final Vector3 fixedPoint = transformer.screenToMeters(point.getX(), point.getY());
-
-        // set the scale
-        final double factor = Math.pow(.9, rotation);
-        transformer.setScale(transformer.getScale() * factor);
-
-        // change offset so that the fixedPoint continues to be under the mouse
-        // Note: treat the new screen position as the pan origin
-        final SimplePosition newScreenPosition = transformer.metersToScreen(fixedPoint.x, fixedPoint.y);
-        final double newX = transformer.getPanOffsetX() + point.getX() - newScreenPosition.x;
-        final double newY = transformer.getPanOffsetY() + point.getY() - newScreenPosition.y;
-        transformer.setPanOffset(newX, newY);
-
-        //Scale tiles appropriately
-        tileRenderer.approximateScale(transformer.screenToMeters(1));
-        
-        repaint();
-    }
-
-    /**
-     * Default cursor to use when not performing a user-specific operation
-     * (e.g., dragging the pvd.)
-     */
-    public void setCursorPreference(Cursor crossCursor)
-    {
-        this.defaultCursor = crossCursor;
-    }
-
-    /**
-     * @return the {@link Cursor} preferred when not dragging.
-     */
-    public Cursor getCursorPreference()
-    {
-        return this.defaultCursor;
-    }
-
-    /**
-     * The {@link Cursor} preferred when the user drags the PVD.
-     */
-    public void setDraggingCursor(Cursor cursor)
-    {
-        this.draggingCursor = cursor;
-    }
-
-    /**
-     * The {@link Cursor} preferred when the user drags the PVD.
-     */
-    public Cursor getDraggingCursor()
-    {
-        return draggingCursor;
     }
 
     /* (non-Javadoc)
@@ -854,62 +646,4 @@ public class PlanViewDisplay extends JPanel
         
         return s;
     }
-
-    private class MouseHandler extends MouseAdapter
-    {
-        /* (non-Javadoc)
-         * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
-         */
-        @Override
-        public void mousePressed(MouseEvent e)
-        {
-            PlanViewDisplay.this.mousePressed(e);
-        }
-        
-        public void mouseReleased(MouseEvent e)
-        {
-            PlanViewDisplay.this.mouseReleased(e);
-        }
-    }
-    
-    private class MouseMotionHandler extends MouseMotionAdapter
-    {
-
-        /* (non-Javadoc)
-         * @see java.awt.event.MouseMotionAdapter#mouseDragged(java.awt.event.MouseEvent)
-         */
-        @Override
-        public void mouseDragged(MouseEvent e)
-        {
-            if(SwingUtilities.isLeftMouseButton(e))
-            {
-                if (draggingEntity)
-                {
-                    PlanViewDisplay.this.dragEntity(e);
-                }
-                else
-                {
-                    PlanViewDisplay.this.dragPan(e);
-                }
-            }
-        }
-
-        /* (non-Javadoc)
-         * @see java.awt.event.MouseMotionAdapter#mouseMoved(java.awt.event.MouseEvent)
-         */
-        @Override
-        public void mouseMoved(MouseEvent e)
-        {
-            PlanViewDisplay.this.mouseMoved(e);
-        }
-    }
-    
-    private class MouseWheelHandler implements MouseWheelListener
-    {
-        public void mouseWheelMoved(MouseWheelEvent e) 
-        {
-            PlanViewDisplay.this.controlMouseWheel(e.getPoint(), e.getWheelRotation());
-        }
-    }
-
 }
