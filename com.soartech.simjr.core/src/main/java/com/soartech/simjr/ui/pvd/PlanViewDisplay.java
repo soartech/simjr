@@ -41,11 +41,9 @@ import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Entity;
-import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.ObjectContextMenu;
 import com.soartech.simjr.ui.SelectionManager;
-import com.soartech.simjr.ui.shapes.EntityShape;
 
 /**
  * @author ray
@@ -69,6 +67,12 @@ public class PlanViewDisplay
     {
         this.app = app;
         this.sim = this.app.findService(Simulation.class);
+        this.view = new PvdView(app, sim);
+        
+        if (toCopy != null)
+        {
+            view.setMapImage(toCopy.getView().getMapImage());
+        }
         
         if (controller == null)
         {
@@ -78,28 +82,7 @@ public class PlanViewDisplay
         {
             this.controller = controller;
         }
-        
-        this.view = new PvdView(app, sim, new Runnable() {
-            public void run() {
-                // Align the view with the locked entity, if any, just before a redraw.
-                synchronized (sim.getLock())
-                {
-                    Entity lockEntity = PlanViewDisplay.this.controller.getLockEntity();
-                    if (lockEntity != null)
-                    {
-                        Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
-                        view.getTransformer().setRotation(-lockEntity.getHeading() + Math.PI/2);
-                        view.jumpToPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
-                    }
-                }
-            }
-        });
-        
-        if (toCopy != null)
-        {
-            view.setMapImage(toCopy.getView().getMapImage());
-        }
-        
+
         this.controller.attachToView(this.view, this.sim, this.app);
     }
 
@@ -143,12 +126,12 @@ public class PlanViewDisplay
     
     public Entity getLockEntity()
     {
-        return controller.getLockEntity();
+        return view.getLockEntity();
     }
     
     public void setLockEntity(Entity lockEntity)
     {
-        controller.setLockEntity(lockEntity);
+        view.setLockEntity(lockEntity);
     }
     
     /**

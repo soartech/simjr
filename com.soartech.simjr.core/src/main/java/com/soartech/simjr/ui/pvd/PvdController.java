@@ -1,6 +1,5 @@
 package com.soartech.simjr.ui.pvd;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,7 +23,6 @@ import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.ui.ObjectContextMenu;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.actions.ActionManager;
 
 /**
  * 
@@ -45,8 +43,6 @@ public class PvdController
     private Point lastDragPoint = new Point(0, 0);
     private Point panOrigin = new Point();
     
-    private Entity lockEntity; // CONTROLLER
-
     public PvdController()
     {
         // nothing until view is attached
@@ -93,30 +89,6 @@ public class PvdController
     public void setContextMenuEnabled(boolean enabled)
     {
         this.contextMenuEnabled = enabled;
-    }
-
-
-    /**
-     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
-     * entity is always in the center).
-     * 
-     * @return the lockEntity
-     */
-    public Entity getLockEntity()
-    {
-        return lockEntity;
-    }
-
-    /**
-     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
-     * entity is always in the center).
-     * 
-     * @param lockEntity the lockEntity to set
-     */
-    public void setLockEntity(Entity lockEntity)
-    {
-        this.lockEntity = lockEntity;
-        ActionManager.update(app);
     }
 
     private void mouseMoved(MouseEvent e)

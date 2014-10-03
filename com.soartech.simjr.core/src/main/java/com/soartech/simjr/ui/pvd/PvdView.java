@@ -33,9 +33,11 @@ import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.Terrain;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
+import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.imagery.MapOpacityController;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
+import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
 import com.soartech.simjr.ui.shapes.SpeechBubbleManager;
 import com.soartech.simjr.ui.shapes.TimedShapeManager;
@@ -57,7 +59,6 @@ public class PvdView extends JPanel
     private final ShapeSystem shapeSystem;
     private final TimedShapeManager timedShapes;
     private final PanAnimator panAnimator = new PanAnimator(transformer);
-    private final Runnable beforeRepaint;
     
     private SelectionManagerListener selectionListener;
     private Timer repaintTimer;
@@ -78,13 +79,14 @@ public class PvdView extends JPanel
     private Cursor defaultCursor = Cursor.getDefaultCursor();
     private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 
-    public PvdView(final ServiceManager app, final Simulation sim, final Runnable beforeRepaint)
+    private Entity lockEntity;
+
+    public PvdView(final ServiceManager app, final Simulation sim)
     {
         setLayout(null);
 
         this.app = app;
         this.sim = sim;
-        this.beforeRepaint = beforeRepaint;
         
         this.appStateIndicator = new AppStateIndicator(this.app.findService(ApplicationStateService.class), this);
 
@@ -165,6 +167,30 @@ public class PvdView extends JPanel
         return draggingEntity;
     }
     
+
+    /**
+     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
+     * entity is always in the center).
+     * 
+     * @return the lockEntity
+     */
+    public Entity getLockEntity()
+    {
+        return lockEntity;
+    }
+
+    /**
+     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
+     * entity is always in the center).
+     * 
+     * @param lockEntity the lockEntity to set
+     */
+    public void setLockEntity(Entity lockEntity)
+    {
+        this.lockEntity = lockEntity;
+        ActionManager.update(app);
+    }
+
     /**
      * @param point
      * @return The first entity under the given screen point (within some tolerance), or
@@ -464,15 +490,17 @@ public class PvdView extends JPanel
             return;
         }
         
-        if (this.beforeRepaint != null)
-        {
-            this.beforeRepaint.run();
-        }
-        
         // Briefly lock the sim to update entity shapes and stuff.
         double time = 0.0;
         synchronized (sim.getLock())
         {
+            if (lockEntity != null)
+            {
+                Double agl = (Double) lockEntity.getProperty(EntityConstants.PROPERTY_AGL);
+                transformer.setRotation(-lockEntity.getHeading() + Math.PI/2);
+                jumpToPosition(EntityShape.adjustPositionForShadow(lockEntity.getPosition(), agl), false);
+            }
+            
             time = sim.getTime();
             shapeAdapter.update();
             detonationShapes.update();
