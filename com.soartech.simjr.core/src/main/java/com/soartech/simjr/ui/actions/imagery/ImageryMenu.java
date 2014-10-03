@@ -9,12 +9,13 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
-import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
 //import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import com.soartech.simjr.ui.actions.ActionManager;
+import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
+import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
+import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
 
 /**
  * Menu group for configurig various options of the map tile imagery renderer.
@@ -52,7 +53,7 @@ public class ImageryMenu extends JMenu
             public void menuCanceled(MenuEvent e) { }
             public void menuDeselected(MenuEvent e) { }
             public void menuSelected(MenuEvent e) {
-                PlanViewDisplay activePvd = getPvd();
+                PvdView activePvd = getPvd();
                 if(activePvd != null && activePvd.getMapTileRenderer() != null) {
                     MapTileRenderer tileRenderer = activePvd.getMapTileRenderer();
                     setSelectedSource(tileRenderer.getTileSource());
@@ -71,11 +72,12 @@ public class ImageryMenu extends JMenu
         this.setEnabled(false);
     }
     
-    private PlanViewDisplay getPvd() 
+    private PvdView getPvd() 
     {
         final PlanViewDisplayProvider prov = am.getServices().findService(PlanViewDisplayProvider.class);
         if(prov != null) { 
-            return prov.getActivePlanViewDisplay();
+            PlanViewDisplay pvd = prov.getActivePlanViewDisplay();
+            return (pvd != null) ? pvd.getView() : null;
         }
         else {
             return null;

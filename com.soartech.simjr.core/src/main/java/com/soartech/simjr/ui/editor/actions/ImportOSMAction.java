@@ -226,7 +226,7 @@ public class ImportOSMAction extends AbstractEditorAction
         final PlanViewDisplayProvider pvdPro = findService(PlanViewDisplayProvider.class);
         if(pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
         {
-            pvdPro.getActivePlanViewDisplay().showAll();
+            pvdPro.getActivePlanViewDisplay().getView().showAll();
         }
     }
 

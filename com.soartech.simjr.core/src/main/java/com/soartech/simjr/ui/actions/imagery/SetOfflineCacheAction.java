@@ -44,6 +44,7 @@ import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Sets and enables the offline cache directory.
@@ -59,24 +60,13 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
         super(actionManager, "Set Offline Cache...");
     }
     
-    private PlanViewDisplay getPvd() 
-    {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov != null) { 
-            return prov.getActivePlanViewDisplay();
-        }
-        else {
-            return null;
-        }
-    }
-    
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        setEnabled(getPvd() != null);
+        setEnabled(getPvdView() != null);
     }
 
     /* (non-Javadoc)
@@ -84,7 +74,7 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         if(pvd != null) {
             pvd.getMapTileRenderer();
             

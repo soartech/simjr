@@ -94,7 +94,8 @@ public class ScenarioExporter
         {
             return;
         }
-        final MapImage map = pvdPro.getActivePlanViewDisplay().getMapImage();
+        
+        final MapImage map = pvdPro.getActivePlanViewDisplay().getView().getMapImage();
         if(map == null)
         {
             return;

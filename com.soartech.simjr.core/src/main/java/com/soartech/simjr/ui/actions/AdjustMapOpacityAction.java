@@ -42,6 +42,7 @@ import com.soartech.simjr.ui.SimulationMainFrame;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -61,9 +62,8 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        setEnabled(prov != null && prov.getActivePlanViewDisplay() != null &&
-                  prov.getActivePlanViewDisplay().getMapImage() != null);
+        final PvdView pvd = getPvdView();
+        setEnabled(pvd != null && pvd.getMapImage() != null);
     }
 
     /* (non-Javadoc)
@@ -71,18 +71,13 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov == null)
-        {
-            return;
-        }
-        final PlanViewDisplay pvd = prov.getActivePlanViewDisplay();
-        if(pvd == null)
+        final PvdView pvd = getPvdView();
+        if (pvd == null)
         {
             return;
         }
         final MapImage map = pvd.getMapImage();
-        if(map == null)
+        if (map == null)
         {
             return;
         }
@@ -91,5 +86,4 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
         JFrame frame = getServices().findService(SimulationMainFrame.class);
         MapImageOpacityController.showPopupEditor(frame, pvd, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
     }
-
 }

@@ -42,8 +42,8 @@ import javax.swing.KeyStroke;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -114,7 +114,7 @@ public class AddDistanceToolAction extends AbstractSimulationAction
         
         Collections.sort(entities, EntityTools.NAME_COMPARATOR);
         
-        final PlanViewDisplay pvd = pvdPro.getActivePlanViewDisplay();
+        final PvdView pvd = pvdPro.getActivePlanViewDisplay().getView();
         if(pvd == null)
         {
             return;

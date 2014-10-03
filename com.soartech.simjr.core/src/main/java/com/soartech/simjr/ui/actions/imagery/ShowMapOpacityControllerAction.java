@@ -35,8 +35,7 @@ import java.awt.event.ActionEvent;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Shows / hides the map imagery control panel. 
@@ -52,24 +51,13 @@ public class ShowMapOpacityControllerAction extends AbstractSimulationAction
         super(actionManager, "Set Map Opacity");
     }
     
-    private PlanViewDisplay getPvd() 
-    {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov != null) { 
-            return prov.getActivePlanViewDisplay();
-        }
-        else {
-            return null;
-        }
-    }
-    
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getMapTileRenderer() != null && pvd.getMapTileRenderer().getTileSource() != null);
     }
 
@@ -78,7 +66,7 @@ public class ShowMapOpacityControllerAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        final PlanViewDisplay pvd = getPvd();
+        final PvdView pvd = getPvdView();
         if(pvd != null) 
         {
             shown = !shown;

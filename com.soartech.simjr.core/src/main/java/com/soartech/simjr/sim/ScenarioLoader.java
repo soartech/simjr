@@ -176,7 +176,7 @@ public class ScenarioLoader
         if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
         {
         	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
-            pvdPro.getActivePlanViewDisplay().setMapImage(image);
+            pvdPro.getActivePlanViewDisplay().getView().setMapImage(image);
         }
         
         BufferedImage terrainImage = detailedTerrain.getTerrainImage();
@@ -189,7 +189,7 @@ public class ScenarioLoader
         
         if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
         {
-            MapImage mi = pvdPro.getActivePlanViewDisplay().getMapImage();
+            MapImage mi = pvdPro.getActivePlanViewDisplay().getView().getMapImage();
             mi.setCenterMeters(1, origin);
             mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
             mi.setImage(1, terrainImage);
