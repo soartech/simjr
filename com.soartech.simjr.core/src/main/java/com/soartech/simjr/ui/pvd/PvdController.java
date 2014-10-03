@@ -44,10 +44,7 @@ public class PvdController
 
     private Point lastDragPoint = new Point(0, 0);
     private Point panOrigin = new Point();
-    private boolean draggingEntity = false;
-    private Cursor defaultCursor = Cursor.getDefaultCursor();
-    private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-
+    
     private Entity lockEntity; // CONTROLLER
 
     public PvdController()
@@ -148,13 +145,11 @@ public class PvdController
             return;
         }
         
-        draggingEntity = entityUnderCursor != null;
+        view.setIsDraggingEntity(entityUnderCursor != null);
         lastDragPoint.setLocation(e.getPoint());
         
-        if (!draggingEntity)
+        if (!view.isDraggingEntity())
         {
-            // change mouse icon to grab icon
-            view.setCursor(getDraggingCursor());
             panOrigin.setLocation(e.getPoint());
         }
         
@@ -167,9 +162,6 @@ public class PvdController
     private void mouseReleased(MouseEvent e)
     {
         view.requestFocus();
-        
-        // restore the cursor to standard pointer
-        view.setCursor(getCursorPreference());
         
         final SelectionManager sm = SelectionManager.findService(this.app);
         final List<Entity> selectedEntities = PlanViewDisplay.getSelectedEntities(app);
@@ -197,8 +189,8 @@ public class PvdController
             sm.setSelection(this, newSel);
         }
         
-        draggingEntity = false;
-        
+        view.setIsDraggingEntity(false);
+
         view.repaint();
         
         dragFinished();
@@ -206,7 +198,7 @@ public class PvdController
     
     private void dragEntity(MouseEvent e)
     {
-        assert draggingEntity;
+        assert view.isDraggingEntity();
         
         final Entity entity = PlanViewDisplay.getSelectedEntity(app);
         if(entity == null)
@@ -283,45 +275,7 @@ public class PvdController
         panOrigin.setLocation(e.getPoint());
     }
     
-    public boolean isDraggingEntity()
-    {
-        return draggingEntity;
-    }
-    
     protected void dragFinished() { }
-
-    /**
-     * Default cursor to use when not performing a user-specific operation
-     * (e.g., dragging the pvd.)
-     */
-    public void setCursorPreference(Cursor cursor)
-    {
-        this.defaultCursor = cursor;
-    }
-
-    /**
-     * @return the {@link Cursor} preferred when not dragging.
-     */
-    public Cursor getCursorPreference()
-    {
-        return this.defaultCursor;
-    }
-
-    /**
-     * The {@link Cursor} preferred when the user drags the PVD.
-     */
-    public void setDraggingCursor(Cursor cursor)
-    {
-        this.draggingCursor = cursor;
-    }
-
-    /**
-     * @return the {@link Cursor} preferred when the user drags the PVD.
-     */
-    public Cursor getDraggingCursor()
-    {
-        return draggingCursor;
-    }
 
     private class MouseHandler extends MouseAdapter
     {
@@ -351,7 +305,7 @@ public class PvdController
         {
             if(SwingUtilities.isLeftMouseButton(e))
             {
-                if (draggingEntity)
+                if (view.isDraggingEntity())
                 {
                     PvdController.this.dragEntity(e);
                 }

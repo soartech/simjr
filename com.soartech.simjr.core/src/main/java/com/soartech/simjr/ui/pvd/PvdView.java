@@ -1,6 +1,7 @@
 package com.soartech.simjr.ui.pvd;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -72,6 +73,10 @@ public class PvdView extends JPanel
     private MapDebugPanel mapDebugPanel;
     private final CoordinatesPanel coordinatesPanel;
     private final AppStateIndicator appStateIndicator;
+
+    private boolean draggingEntity = false;
+    private Cursor defaultCursor = Cursor.getDefaultCursor();
+    private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 
     public PvdView(final ServiceManager app, final Simulation sim, final Runnable beforeRepaint)
     {
@@ -149,6 +154,17 @@ public class PvdView extends JPanel
         detonationShapes.dispose();
     }
 
+    public void setIsDraggingEntity(boolean b)
+    {
+        draggingEntity = b;
+        setCursor(b ? draggingCursor : defaultCursor);
+    }
+
+    public boolean isDraggingEntity()
+    {
+        return draggingEntity;
+    }
+    
     /**
      * @param point
      * @return The first entity under the given screen point (within some tolerance), or
@@ -539,5 +555,38 @@ public class PvdView extends JPanel
         s += "</html>";
 
         return s;
+    }
+
+    /**
+     * Default cursor to use when not performing a user-specific operation
+     * (e.g., dragging the pvd.)
+     */
+    public void setCursorPreference(Cursor cursor)
+    {
+        this.defaultCursor = cursor;
+    }
+
+    /**
+     * @return the {@link Cursor} preferred when not dragging.
+     */
+    public Cursor getCursorPreference()
+    {
+        return this.defaultCursor;
+    }
+
+    /**
+     * The {@link Cursor} preferred when the user drags the PVD.
+     */
+    public void setDraggingCursor(Cursor cursor)
+    {
+        this.draggingCursor = cursor;
+    }
+
+    /**
+     * @return the {@link Cursor} preferred when the user drags the PVD.
+     */
+    public Cursor getDraggingCursor()
+    {
+        return draggingCursor;
     }
 }

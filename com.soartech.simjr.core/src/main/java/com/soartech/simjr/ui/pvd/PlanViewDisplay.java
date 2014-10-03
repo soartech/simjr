@@ -141,11 +141,6 @@ public class PlanViewDisplay
         controller.setContextMenuEnabled(enabled);
     }
     
-    public boolean isDraggingEntity()
-    {
-        return controller.isDraggingEntity();
-    }
-    
     public Entity getLockEntity()
     {
         return controller.getLockEntity();
