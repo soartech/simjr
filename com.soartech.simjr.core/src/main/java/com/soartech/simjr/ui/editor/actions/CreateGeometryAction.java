@@ -67,8 +67,9 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdController;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Begins a geometry creation mode that adds and removes points based on user clicks in the PVD.
@@ -85,7 +86,8 @@ public class CreateGeometryAction extends AbstractEditorAction
     private static final double SELECTION_TOLERANCE = SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0);
     
     private final Simulation sim;
-    private final PlanViewDisplay pvd;
+    private final PvdView pvd;
+    private final PvdController pvdController;
     
     //TODO: Merge these GUI components into a container or another class?
     
@@ -202,7 +204,8 @@ public class CreateGeometryAction extends AbstractEditorAction
         this.initialPosition = position;
         
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
-        pvd = pvdProvider.getActivePlanViewDisplay();
+        pvd = pvdProvider.getActivePlanViewDisplay().getView();
+        pvdController = pvdProvider.getActivePlanViewDisplay().getController();
         sim = getServices().findService(Simulation.class);
         
         doneButton.addActionListener(new ActionListener() {
@@ -234,7 +237,7 @@ public class CreateGeometryAction extends AbstractEditorAction
         
         pvd.addComponentListener(resizeListener);
         pvd.addMouseListener(mouseAdapter);
-        pvd.setContextMenuEnabled(false);
+        pvdController.setContextMenuEnabled(false);
         
         pvd.repaint();
         
@@ -272,7 +275,7 @@ public class CreateGeometryAction extends AbstractEditorAction
         pvd.remove(modeLabel);
         pvd.removeComponentListener(resizeListener);
         pvd.removeMouseListener(mouseAdapter);
-        pvd.setContextMenuEnabled(true);
+        pvdController.setContextMenuEnabled(true);
         
         CreateGeometryAction.this.setEnabled(true);
         

@@ -340,10 +340,9 @@ public class PvdView extends JPanel
      */
     public Vector3 getDisplacementInMeters(Point screenDelta)
     {
-        return new Vector3(
-                transformer.screenToMeters(screenDelta.getX()),
-                -transformer.screenToMeters(screenDelta.getY()), // Y down
-                 0.0); // Preserve altitude
+        Vector3 d1 = transformer.screenToMeters(screenDelta.getX(), screenDelta.getY());
+        Vector3 d0 = transformer.screenToMeters(0.0, 0.0);
+        return new Vector3(d1.x - d0.x, d1.y - d0.y, 0.0);
     }
     
     /**

@@ -83,6 +83,7 @@ import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.PvdController;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -94,6 +95,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     private final ScenarioEditorServiceManager app;
     private final Simulation sim;
     private final PlanViewDisplay pvd;
+    private final PvdView pvdView;
     private final Set<Entity> movedEntities = new HashSet<Entity>();
     private final EntityPropertiesPanel propsPanel;
 
@@ -115,6 +117,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         
         this.app = app;
         this.sim = app.findService(Simulation.class);
+        
         this.pvd = new PlanViewDisplay(app, null, new PvdController() {
             @Override
             protected void dragFinished()
@@ -124,7 +127,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             }
         });
         
-        this.pvd.setContextMenu(new ObjectContextMenu(app) {
+        pvd.setContextMenu(new ObjectContextMenu(app) {
 
             private static final long serialVersionUID = -5454693942029564642L;
 
@@ -148,8 +151,9 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         
         SelectionManager.findService(app).addListener(this);
         
-        add(pvd);
-
+        pvdView = pvd.getView();
+        add(pvdView);
+        
         this.app.addService(this); // So PVD actions can access
         this.app.getModel().addModelChangeListener(this);
         
@@ -279,18 +283,18 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     
     private MapImage ensureMapImageExists(TerrainImageElement tie)
     {
-        if(pvd.getMapImage() == null)
+        if(pvdView.getMapImage() == null)
         {
             final MapImage mi = new MapImage();
             mi.setImage(tie.getImageFile());
             mi.setMetersPerPixel(tie.getImageMetersPerPixel());
             mi.setCenterMeters(sim.getTerrain().fromGeodetic(tie.getLocation().toRadians()));
-            pvd.setMapImage(mi);
+            pvdView.setMapImage(mi);
             final TerrainImageEntity entity = new TerrainImageEntity("@@@___TERRAIN___@@@", this);
             entity.setPosition(mi.getCenterMeters());
             sim.addEntity(entity);
         }
-        return pvd.getMapImage();
+        return pvdView.getMapImage();
     }
 
     private TerrainImageEntity getTerrainImageEntity(TerrainImageElement tie)
@@ -301,8 +305,8 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     @Override
     public void terrainImageMoved(TerrainImageEntity tie)
     {
-        this.pvd.getMapImage().setCenterMeters(tie.getPosition());
-        if(pvd.isDraggingEntity())
+        pvdView.getMapImage().setCenterMeters(tie.getPosition());
+        if(pvdView.isDraggingEntity())
         {
             movedEntities.add(tie);
         }
@@ -312,7 +316,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     {
         if(property.equals(Model.LOADED) && source.hasImage())
         {
-            pvd.setMapImage(null);
+            pvdView.setMapImage(null);
             ensureMapImageExists(source);
         }
         else if(property.equals(LocationElement.LOCATION))
@@ -333,7 +337,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         else if(property.equals(TerrainImageElement.REMOVED))
         {
             sim.removeEntity(getTerrainImageEntity(source));
-            pvd.setMapImage(null);
+            pvdView.setMapImage(null);
         }
     }
 
@@ -357,7 +361,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         final Terrain newTerrain = new SimpleTerrain(origin);
         sim.setTerrain(newTerrain);
         
-        pvd.showPosition(Vector3.ZERO);
+        pvdView.showPosition(Vector3.ZERO);
     }
     
     private void updateSimEntityForce(final EntityElement ee)
@@ -416,7 +420,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             {
                 super.setPosition(position);
                 
-                if(pvd.isDraggingEntity())
+                if(pvdView.isDraggingEntity())
                 {
                     movedEntities.add(this);
                 }

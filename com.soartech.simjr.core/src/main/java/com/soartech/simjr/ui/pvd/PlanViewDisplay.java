@@ -94,10 +94,10 @@ public class PlanViewDisplay
         view.dispose();
     }
 
-//    public PvdController getController()
-//    {
-//        return controller;
-//    }
+    public PvdController getController()
+    {
+        return controller;
+    }
     
     public PvdView getView()
     {
