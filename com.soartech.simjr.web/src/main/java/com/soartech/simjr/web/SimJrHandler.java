@@ -19,12 +19,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.soartech.math.Vector3;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.web.gson.adapter.EntityAdapter;
 import com.soartech.simjr.web.gson.adapter.EntityListAdapter;
-import com.soartech.simjr.web.gson.adapter.Vector3Adapter;
 
 public class SimJrHandler extends AbstractHandler
 {

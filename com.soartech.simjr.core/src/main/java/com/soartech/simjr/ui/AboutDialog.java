@@ -31,9 +31,6 @@
  */
 package com.soartech.simjr.ui;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
