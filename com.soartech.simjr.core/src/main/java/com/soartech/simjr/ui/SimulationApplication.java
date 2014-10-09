@@ -147,21 +147,34 @@ public class SimulationApplication extends DefaultServiceManager
                 try
                 {
                     // use reflection to get a class from the name
-                    Class<?> clazz = Class.forName(servicePath);
-
-                    // get the constructor for that class with the given
-                    // parameters
-                    Constructor<?> constructor = clazz
-                            .getConstructor(ServiceManager.class);
-
-                    // instantiate the class with the constructor
-                    SimulationService ss = (SimulationService) constructor
-                            .newInstance(this);
-
-                    // add the newly instantiated service to the simulation and
-                    // start it
-                    addService(ss);
-                    ss.start(null);
+                    @SuppressWarnings("unchecked")
+                    Class<? extends SimulationService> clazz = (Class<? extends SimulationService>) Class.forName(servicePath);
+                    
+                    // Checking to see if the service has already been started before starting it again
+                    // This can happen if the service can be started on demand and is used in a scenario
+                    // script started from the command line.
+                    //
+                    // Note: This will end up directly starting any construct on demand services 
+                    SimulationService tmp = findService(clazz);
+                    
+                    if ( tmp == null )
+                    {
+                    	// TODO: This code is essentially duplicated in the DefaultServiceManager
+                    	
+                        // get the constructor for that class with the given
+                        // parameters
+                        Constructor<?> constructor = clazz
+                                .getConstructor(ServiceManager.class);
+    
+                        // instantiate the class with the constructor
+                        SimulationService ss = (SimulationService) constructor
+                                .newInstance(this);
+    
+                        // add the newly instantiated service to the simulation and
+                        // start it
+                        addService(ss);
+                        ss.start(null);
+                    }
                 }
                 catch (ClassNotFoundException e)
                 {
