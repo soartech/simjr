@@ -41,7 +41,6 @@ public class AnglesTest
     @Test
     public void testMathRadiansToNavRadians()
     {
-        
         assertEquals(0.0, Angles.mathRadiansToNavRadians(Math.PI / 2.0), 0.0001);
         assertEquals(-Math.PI / 2, Angles.mathRadiansToNavRadians(Math.PI), 0.0001);
         assertEquals(Math.PI / 2, Angles.mathRadiansToNavRadians(0), 0.0001);

@@ -32,7 +32,6 @@
 package com.soartech.math;
 
 
-
 /**
  * @author ray
  */

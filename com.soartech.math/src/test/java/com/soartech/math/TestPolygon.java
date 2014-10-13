@@ -138,4 +138,35 @@ public class TestPolygon
             
         }
     }
+    
+    @Test
+    public void testCentroid()
+    {
+        Vector3 a = new Vector3(2, 1, 0);
+        Vector3 b = new Vector3(-1, -1, 0);
+        Vector3 c = new Vector3(1, -1, 0);
+        Vector3 d = new Vector3(-1, 4, 2);
+        Vector3 zero = Vector3.ZERO;
+        
+        Polygon p = Polygon.createConvexHull(Arrays.asList(a, b, c, d, zero));
+        
+        Vector3 cent = p.getCentroid();
+        
+        System.out.println("Centroid: " + cent);
+        assertTrue(0.24 < cent.x && cent.x < 0.26);
+        assertTrue(0.74 < cent.y && cent.y < 0.76);
+        
+        Vector3[] bb = p.getBoundingBox();
+        
+        System.out.println("Min: " + bb[0]);
+        System.out.println("Max: " + bb[1]);
+        
+        assertTrue(bb[0].x == -1);
+        assertTrue(bb[0].y == -1);
+        assertTrue(bb[0].z == 0);
+        
+        assertTrue(bb[1].x == 2);
+        assertTrue(bb[1].y == 4);
+        assertTrue(bb[1].z == 2);
+    }
 }

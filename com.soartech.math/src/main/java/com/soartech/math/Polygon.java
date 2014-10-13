@@ -106,6 +106,56 @@ public class Polygon
         return points;
     }
 
+    public Vector3[] getBoundingBox()
+    {
+        double maxX = -Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+        double maxZ = -Double.MAX_VALUE;
+        double minX =  Double.MAX_VALUE;
+        double minY =  Double.MAX_VALUE;
+        double minZ =  Double.MAX_VALUE;
+        
+        for( Vector3 v : points)
+        {
+            if (maxX < v.x) maxX = v.x;
+            if (maxY < v.y) maxY = v.y;
+            if (maxZ < v.z) maxZ = v.z;
+
+            if (minX > v.x) minX = v.x;
+            if (minY > v.y) minY = v.y;
+            if (minZ > v.z) minZ = v.z;
+        }
+        
+        Vector3[] retVal = new Vector3[2];
+        retVal[0] = new Vector3(minX, minY, minZ);
+        retVal[1] = new Vector3(maxX, maxY, maxZ);
+        
+        return retVal;
+    }
+    
+    /** 
+     * @return Returns an average of all the points in the polygon
+     */
+    public Vector3 getCentroid()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        
+        for( Vector3 v : points)
+        {
+            x += v.x;
+            y += v.y;
+            z += v.z;
+        }
+        
+        x /= points.size();
+        y /= points.size();
+        z /= points.size();
+        
+        return new Vector3(x, y, z);
+    }
+    
     /**
      * Returns true if the polygon contains the given point, ignoring the
      * point's Z coordinate.
