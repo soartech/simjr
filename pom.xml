@@ -4,6 +4,11 @@
     <artifactId>simjr</artifactId>
     <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>Sim Jr</name>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <modules>
         <module>com.soartech.math</module>

@@ -78,7 +78,7 @@ public class TestGeocentric extends TestCase
     
     public void testGeocentricFromGeodeticAngle() {
         
-        // Sample from DSTO–TN–0640
+        // Sample from DSTO TN 0640
         // Aircraft at lat = -34.9 deg lat and 138.5 deg long 
         // heading southeast (135 deg) at pitch 20 degrees and roll 30 degrees
         //

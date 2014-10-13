@@ -5,8 +5,12 @@
     <groupId>com.soartech</groupId>
     <artifactId>simjr-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>${project.groupId}:${project.artifactId}</name>
+    <name>SimJr Example</name>
     
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+                
     <!-- extra info -->
     <organization>
         <name>Soar Technology, Inc</name>
