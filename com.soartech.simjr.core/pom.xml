@@ -142,7 +142,6 @@
 			<groupId>fakepath</groupId>
 			<artifactId>jreality</artifactId>
 			<version>1.0.0</version>
-			<type>pom</type>
 		</dependency>
 <!-- 		<dependency>
 			<groupId>josm.openstreetmap.de</groupId>
