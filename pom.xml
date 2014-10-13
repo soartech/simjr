@@ -6,12 +6,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>com.soartech.simjr.core</module>
-        <module>com.example.simjr.hello</module>
         <module>com.soartech.math</module>
-        <module>com.soartech.math.test</module>
         <module>com.soartech.shapesystem</module>
-        <module>com.soartech.simjr.web</module>
+        <module>com.soartech.simjr.core</module>
         <module>com.soartech.simjr.example</module>
+        <module>com.soartech.simjr.web</module>
     </modules>
 </project>
