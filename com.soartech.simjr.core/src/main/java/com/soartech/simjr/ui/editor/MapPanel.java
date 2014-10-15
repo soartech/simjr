@@ -80,11 +80,11 @@ import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.editor.actions.ClearTerrainImageAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
 import com.soartech.simjr.ui.editor.actions.SetTerrainImageAction;
-import com.soartech.simjr.ui.pvd.IPvdController;
+import com.soartech.simjr.ui.pvd.PvdController;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.ui.pvd.PvdController;
+import com.soartech.simjr.ui.pvd.DefaultPvdController;
 import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
@@ -99,7 +99,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     
     private final PlanViewDisplay pvd;
     private final PvdView pvdView;
-    private final IPvdController pvdController;
+    private final PvdController pvdController;
     private final JComponent pvdComponent;
     
     private final Set<Entity> movedEntities = new HashSet<Entity>();
@@ -124,7 +124,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         this.app = app;
         this.sim = app.findService(Simulation.class);
         
-        this.pvd = new PlanViewDisplay(app, new PvdController() {
+        this.pvd = new PlanViewDisplay(app, new DefaultPvdController() {
             @Override
             protected void dragFinished()
             {

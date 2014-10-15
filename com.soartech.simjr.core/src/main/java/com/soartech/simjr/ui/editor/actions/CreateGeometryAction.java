@@ -68,7 +68,7 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
-import com.soartech.simjr.ui.pvd.IPvdController;
+import com.soartech.simjr.ui.pvd.PvdController;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.PvdView;
 
@@ -89,7 +89,7 @@ public class CreateGeometryAction extends AbstractEditorAction
     private final Simulation sim;
     private final PvdView pvdView;
     private final JComponent pvdComponent;
-    private final IPvdController pvdController;
+    private final PvdController pvdController;
     
     //TODO: Merge these GUI components into a container or another class?
     

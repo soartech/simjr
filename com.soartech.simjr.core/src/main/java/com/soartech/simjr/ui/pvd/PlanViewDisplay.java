@@ -49,7 +49,7 @@ public class PlanViewDisplay
 {
     private static final Logger logger = LoggerFactory.getLogger(PlanViewDisplay.class);
     
-    private final IPvdController controller;
+    private final PvdController controller;
     private final PvdView view;
     
     /**
@@ -68,7 +68,7 @@ public class PlanViewDisplay
      * @param app
      * @param controller
      */
-    public PlanViewDisplay(ServiceManager app, PvdController controller)
+    public PlanViewDisplay(ServiceManager app, DefaultPvdController controller)
     {
         this(app, DefaultPvdView.FACTORY, controller);
     }
@@ -80,7 +80,7 @@ public class PlanViewDisplay
      * @param viewFactory
      * @param controller
      */
-    public PlanViewDisplay(ServiceManager app, PvdViewFactory viewFactory, PvdController controller)
+    public PlanViewDisplay(ServiceManager app, PvdViewFactory viewFactory, DefaultPvdController controller)
     {
         final Simulation sim = app.findService(Simulation.class);
         
@@ -88,7 +88,7 @@ public class PlanViewDisplay
         
         if (controller == null)
         {
-            this.controller = new PvdController();
+            this.controller = new DefaultPvdController();
         }
         else
         {
@@ -119,7 +119,7 @@ public class PlanViewDisplay
         view.dispose();
     }
 
-    public IPvdController getController()
+    public PvdController getController()
     {
         return controller;
     }
