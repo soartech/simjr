@@ -123,7 +123,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         this.app = app;
         this.sim = app.findService(Simulation.class);
         
-        this.pvd = new PlanViewDisplay(app, null, new PvdController() {
+        this.pvd = new PlanViewDisplay(app, new PvdController() {
             @Override
             protected void dragFinished()
             {

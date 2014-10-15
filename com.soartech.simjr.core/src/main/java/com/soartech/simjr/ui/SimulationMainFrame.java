@@ -599,7 +599,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private PlanViewDisplay createPlanViewDisplay(PvdFrame pf, String title, boolean split, boolean first)
     {
-        pf.pvd = new PlanViewDisplay(services, getActivePlanViewDisplay());
+        pf.pvd = new PlanViewDisplay(services);
+        pf.pvd.copyFromDisplay(getActivePlanViewDisplay());
         pf.title = title;
         
         //DF settings

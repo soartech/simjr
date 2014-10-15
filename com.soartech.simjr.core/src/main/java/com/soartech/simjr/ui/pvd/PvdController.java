@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import com.soartech.math.Vector3;
@@ -48,6 +49,11 @@ public class PvdController
         // nothing until view is attached
     }
 
+    public void dispose()
+    {
+        // TODO: detach the mouse listeners?
+    }
+    
     void attachToView(IPvdView view, Simulation sim, ServiceManager app)
     {
         this.view = view;
@@ -56,9 +62,10 @@ public class PvdController
         
         this.contextMenu = new ObjectContextMenu(app);
 
-        view.getComponent().addMouseListener(new MouseHandler());
-        view.getComponent().addMouseMotionListener(new MouseMotionHandler());
-        view.getComponent().addMouseWheelListener(new MouseWheelHandler());
+        JComponent pvdComponent = view.getComponent();
+        pvdComponent.addMouseListener(new MouseHandler());
+        pvdComponent.addMouseMotionListener(new MouseMotionHandler());
+        pvdComponent.addMouseWheelListener(new MouseWheelHandler());
     }
     
     /**

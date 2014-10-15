@@ -52,21 +52,27 @@ public class PlanViewDisplay
     private final PvdController controller;
     private final IPvdView view;
     
-    public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
+    /**
+     * Create a new PVD with the default view and controller.
+     * 
+     * @param app
+     */
+    public PlanViewDisplay(ServiceManager app)
     {
-        this(app, toCopy, null);
+        this(app, null);
     }
     
-    public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy, PvdController controller)
+    /**
+     * Create a new PVD with the default view and a custom controller.
+     * 
+     * @param app
+     * @param controller
+     */
+    public PlanViewDisplay(ServiceManager app, PvdController controller)
     {
         final Simulation sim = app.findService(Simulation.class);
         
         this.view = new PvdView(app, sim);
-        
-        if (toCopy != null)
-        {
-            view.setMapImage(toCopy.getView().getMapImage());
-        }
         
         if (controller == null)
         {
@@ -80,11 +86,24 @@ public class PlanViewDisplay
         this.controller.attachToView(this.view, sim, app);
     }
 
+    /**
+     * Copy map image from another display.
+     * 
+     * @param toCopy
+     */
+    public void copyFromDisplay(PlanViewDisplay toCopy)
+    {
+        if (toCopy != null)
+        {
+            view.setMapImage(toCopy.getView().getMapImage());
+        }
+    }
+    
     public void dispose()
     {
         logger.info("Disposing PVD " + this);
         
-        // controller.dispose();
+        controller.dispose();
         view.dispose();
     }
 
