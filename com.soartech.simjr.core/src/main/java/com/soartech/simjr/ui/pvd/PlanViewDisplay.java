@@ -49,7 +49,7 @@ public class PlanViewDisplay
 {
     private static final Logger logger = LoggerFactory.getLogger(PlanViewDisplay.class);
     
-    private final PvdController controller;
+    private final IPvdController controller;
     private final PvdView view;
     
     /**
@@ -70,9 +70,21 @@ public class PlanViewDisplay
      */
     public PlanViewDisplay(ServiceManager app, PvdController controller)
     {
+        this(app, DefaultPvdView.FACTORY, controller);
+    }
+
+    /**
+     * Create a new PVD with a custom view and a custom controller.
+     * 
+     * @param app
+     * @param viewFactory
+     * @param controller
+     */
+    public PlanViewDisplay(ServiceManager app, PvdViewFactory viewFactory, PvdController controller)
+    {
         final Simulation sim = app.findService(Simulation.class);
         
-        this.view = new DefaultPvdView(app, sim);
+        this.view = viewFactory.createPvdView(app, sim);
         
         if (controller == null)
         {
@@ -107,7 +119,7 @@ public class PlanViewDisplay
         view.dispose();
     }
 
-    public PvdController getController()
+    public IPvdController getController()
     {
         return controller;
     }

@@ -93,6 +93,15 @@ class DefaultPvdView extends JPanel implements PvdView
         return this;
     }
     
+    public static PvdViewFactory FACTORY = new PvdViewFactory() {
+
+        @Override
+        public PvdView createPvdView(ServiceManager app, Simulation sim)
+        {
+            return new DefaultPvdView(app, sim);
+        }
+    };
+    
     public DefaultPvdView(final ServiceManager app, final Simulation sim)
     {
         setLayout(null);

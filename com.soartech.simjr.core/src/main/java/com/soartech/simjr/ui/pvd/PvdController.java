@@ -30,7 +30,7 @@ import com.soartech.simjr.ui.SimulationMainFrame;
  * @author mjquist
  *
  */
-public class PvdController
+public class PvdController implements IPvdController
 {
     private Simulation sim;
     private ServiceManager app;
@@ -49,12 +49,14 @@ public class PvdController
         // nothing until view is attached
     }
 
+    @Override
     public void dispose()
     {
         // TODO: detach the mouse listeners?
     }
     
-    void attachToView(PvdView view, Simulation sim, ServiceManager app)
+    @Override
+    public void attachToView(PvdView view, Simulation sim, ServiceManager app)
     {
         this.view = view;
         this.sim = sim;
@@ -71,11 +73,13 @@ public class PvdController
     /**
      * @return the currently installed context menu
      */
+    @Override
     public ObjectContextMenu getContextMenu()
     {
         return contextMenu;
     }
     
+    @Override
     public Point getContextMenuPoint()
     {
         return contextMenuPoint;
@@ -84,6 +88,7 @@ public class PvdController
     /**
      * @param contextMenu the new context menu
      */
+    @Override
     public void setContextMenu(ObjectContextMenu contextMenu)
     {
         if (contextMenu == null)
@@ -93,6 +98,7 @@ public class PvdController
         this.contextMenu = contextMenu;
     }
     
+    @Override
     public void setContextMenuEnabled(boolean enabled)
     {
         this.contextMenuEnabled = enabled;
