@@ -51,6 +51,7 @@ import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.DefaultApplicationStateService;
 import com.soartech.simjr.scripting.ScriptRunner;
+import com.soartech.simjr.services.ConstructOnDemand;
 import com.soartech.simjr.services.DefaultServiceManager;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.ServiceProvider;
@@ -149,31 +150,45 @@ public class SimulationApplication extends DefaultServiceManager
                     // use reflection to get a class from the name
                     @SuppressWarnings("unchecked")
                     Class<? extends SimulationService> clazz = (Class<? extends SimulationService>) Class.forName(servicePath);
-                    
-                    // Checking to see if the service has already been started before starting it again
-                    // This can happen if the service can be started on demand and is used in a scenario
-                    // script started from the command line.
-                    //
-                    // Note: This will end up directly starting any construct on demand services 
-                    SimulationService tmp = findService(clazz);
-                    
-                    if ( tmp == null )
+
+                    // If it's "construct on demand" then skip the "find"
+                    // section which would construct it
+                    // automatically
+                    ConstructOnDemand cod = clazz.getAnnotation(ConstructOnDemand.class);
+                    if (cod == null) 
                     {
-                    	// TODO: This code is essentially duplicated in the DefaultServiceManager
-                    	
-                        // get the constructor for that class with the given
-                        // parameters
-                        Constructor<?> constructor = clazz
-                                .getConstructor(ServiceManager.class);
-    
-                        // instantiate the class with the constructor
-                        SimulationService ss = (SimulationService) constructor
-                                .newInstance(this);
-    
-                        // add the newly instantiated service to the simulation and
-                        // start it
-                        addService(ss);
-                        ss.start(null);
+                        // Checking to see if the service has already been
+                        // started before starting it again
+                        // This can happen if the service can be started on
+                        // demand and is used in a scenario
+                        // script started from the command line.
+                        //
+                        // Note: This will end up directly starting any
+                        // construct on demand services so they
+                        // are excluded with the previous annotation check
+                        SimulationService tmp = findService(clazz);
+
+                        if (tmp == null) 
+                        {
+                            // TODO: This code is essentially duplicated in the
+                            // DefaultServiceManager so it seems
+                            // like this could be done in a more elegant way
+
+                            // get the constructor for that class with the given
+                            // parameters
+                            Constructor<?> constructor = clazz
+                                    .getConstructor(ServiceManager.class);
+
+                            // instantiate the class with the constructor
+                            SimulationService ss = (SimulationService) constructor
+                                    .newInstance(this);
+
+                            // add the newly instantiated service to the
+                            // simulation and
+                            // start it
+                            addService(ss);
+                            ss.start(null);
+                        }
                     }
                 }
                 catch (ClassNotFoundException e)
