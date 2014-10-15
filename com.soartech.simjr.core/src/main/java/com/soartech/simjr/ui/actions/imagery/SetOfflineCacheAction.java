@@ -42,9 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.ui.pvd.PvdView;
+import com.soartech.simjr.ui.pvd.IPvdView;
 
 /**
  * Sets and enables the offline cache directory.
@@ -74,14 +72,14 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        PvdView pvd = getPvdView();
+        IPvdView pvd = getPvdView();
         if(pvd != null) {
             pvd.getMapTileRenderer();
             
             Preferences prefs = Preferences.userRoot().node(getClass().getName());
             final JFileChooser fc = new JFileChooser(prefs.get(LAST_USED_FOLDER, new File(".").getAbsolutePath()));
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if(fc.showOpenDialog(pvd) == JFileChooser.APPROVE_OPTION) {
+            if(fc.showOpenDialog(pvd.getComponent()) == JFileChooser.APPROVE_OPTION) {
                 final File destDir = fc.getSelectedFile();
                 logger.info("User selected: " + destDir);
                 prefs.put(LAST_USED_FOLDER, destDir.getAbsolutePath());

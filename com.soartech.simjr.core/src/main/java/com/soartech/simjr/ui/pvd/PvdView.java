@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -48,8 +49,13 @@ import com.soartech.simjr.util.SwingTools;
  * @author mjquist
  *
  */
-public class PvdView extends JPanel
+class PvdView extends JPanel implements IPvdView
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2929169569151795320L;
+    
     private final Simulation sim;
     private final ServiceManager app;
     
@@ -81,6 +87,12 @@ public class PvdView extends JPanel
 
     private Entity lockEntity;
 
+    @Override
+    public JComponent getComponent()
+    {
+        return this;
+    }
+    
     public PvdView(final ServiceManager app, final Simulation sim)
     {
         setLayout(null);
@@ -146,6 +158,28 @@ public class PvdView extends JPanel
 
     }
 
+    private void addCoordinatesPanel()
+    {
+        coordinatesPanel.setActivePvd(this);
+        coordinatesPanel.setBounds(12, 10, 300, 20);
+        add(coordinatesPanel);
+    }
+    
+    private void addMapOpacityController()
+    {
+        mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
+        add(mapOpacityController);
+        showMapOpacityController(false);
+    }
+
+    private void addMapDebugPanel()
+    {
+        mapDebugPanel.setActivePvd(this);
+        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
+        add(mapDebugPanel);
+    }
+    
+    @Override
     public void dispose()
     {
         SelectionManager.findService(this.app).removeListener(selectionListener);
@@ -156,35 +190,26 @@ public class PvdView extends JPanel
         detonationShapes.dispose();
     }
 
+    @Override
     public void setIsDraggingEntity(boolean b)
     {
         draggingEntity = b;
         setCursor(b ? draggingCursor : defaultCursor);
     }
 
+    @Override
     public boolean isDraggingEntity()
     {
         return draggingEntity;
     }
     
-
-    /**
-     * Get the entity for the PVD is locked onto (the area of the PVD moves so that this
-     * entity is always in the center).
-     * 
-     * @return the lockEntity
-     */
+    @Override
     public Entity getLockEntity()
     {
         return lockEntity;
     }
 
-    /**
-     * Set the entity for the PVD to lock onto (the area of the PVD will move so that this
-     * entity is always in the center).
-     * 
-     * @param lockEntity the lockEntity to set
-     */
+    @Override
     public void setLockEntity(Entity lockEntity)
     {
         this.lockEntity = lockEntity;
@@ -196,57 +221,68 @@ public class PvdView extends JPanel
      * @return The first entity under the given screen point (within some tolerance), or
      * <code>null</code> if there are no entities nearby.
      */
+    @Override
     public Entity getEntityAtScreenPoint(Point point)
     {
         final List<Entity> entities = shapeAdapter.getEntitiesAtScreenPoint(point.getX(), point.getY(), SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0));
         return !entities.isEmpty() ? entities.get(0) : null;
     }
 
+    @Override
     public EntityShapeManager getShapeAdapter()
     {
         return shapeAdapter;
     }
     
+    @Override
     public ShapeSystem getShapeSystem()
     {
         return shapeSystem;
     }
     
+    @Override
     public Terrain getTerrain()
     {
         return sim.getTerrain();
     }
     
+    @Override
     public SwingCoordinateTransformer getTransformer()
     {
         return transformer;
     }
     
+    @Override
     public MapTileRenderer getMapTileRenderer()
     {
         return tileRenderer;
     }
     
+    @Override
     public void setMapImage(MapImage map)
     {
         this.mapBackgroundImage = map;
     }
     
+    @Override
     public MapImage getMapImage()
     {
         return mapBackgroundImage;
     }
     
+    @Override
     public GridManager getGrid()
     {
         return grid;
     }
     
+    @Override
     public DistanceToolManager getDistanceTools()
     {
         return distanceTools;
     }
 
+    @Override
     public void highlightEntity(Entity e)
     {
         shapeAdapter.highlightEntity(e);
@@ -258,6 +294,7 @@ public class PvdView extends JPanel
      * 
      * @param delta The desired translation, in pixels.
      */
+    @Override
     public void pan(Point screenDelta)
     {
         double offsetX = transformer.getPanOffsetX() + screenDelta.getX();
@@ -274,6 +311,7 @@ public class PvdView extends JPanel
      * @param amount The amount to zoom.  Positive values zoom out; negative
      * values zoom in.  Each unit of zoom is about +/-10%.
      */
+    @Override
     public void zoomRelativeToPoint(Point pt, int amount)
     {
         // capture fixedPoint which is under mouse cursor
@@ -302,32 +340,13 @@ public class PvdView extends JPanel
      * @param amount The amount to zoom.  Positive values zoom out; negative
      * values zoom in.  Each unit of zoom is about +/-10%.
      */
+    @Override
     public void zoom(int amount)
     {
         zoomRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), amount);
     }
 
-    private void addCoordinatesPanel()
-    {
-        coordinatesPanel.setActivePvd(this);
-        coordinatesPanel.setBounds(12, 10, 300, 20);
-        add(coordinatesPanel);
-    }
-    
-    private void addMapOpacityController()
-    {
-        mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
-        add(mapOpacityController);
-        showMapOpacityController(false);
-    }
-
-    private void addMapDebugPanel()
-    {
-        mapDebugPanel.setActivePvd(this);
-        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        add(mapDebugPanel);
-    }
-    
+    @Override
     public void showMapOpacityController(boolean show)
     {
         mapOpacityController.setVisible(show);
@@ -338,6 +357,7 @@ public class PvdView extends JPanel
      * @return The displacement vector, in meters, corresponding to the given screen
      * vector.
      */
+    @Override
     public Vector3 getDisplacementInMeters(Point screenDelta)
     {
         Vector3 d1 = transformer.screenToMeters(screenDelta.getX(), screenDelta.getY());
@@ -351,6 +371,7 @@ public class PvdView extends JPanel
      *  
      *  TODO: figure it what this should do if there is a rotation, and fix it.
      */
+    @Override
     public Rectangle2D getViewExtentsInMeters()
     {
         Vector3 bottomLeft = transformer.screenToMeters(0, getHeight());
@@ -365,6 +386,7 @@ public class PvdView extends JPanel
      * @return The center of the display in meters. Z is "fixed" to ground 
      *      level.
      */
+    @Override
     public Vector3 getCenterInMeters()
     {
         Vector3 pos = transformer.screenToMeters(getWidth() / 2, getHeight() / 2);
@@ -378,6 +400,7 @@ public class PvdView extends JPanel
      * 
      * @param p The position to show, in meters.
      */
+    @Override
     public void showPosition(Vector3 p)
     {
         panAnimator.panToPosition(p);
@@ -389,6 +412,7 @@ public class PvdView extends JPanel
      * @param p The position to show, in meters.
      * @param doRepaint If true, a repaint is forced.
      */
+    @Override
     public void jumpToPosition(Vector3 p, boolean doRepaint)
     {
         panAnimator.jumpToPosition(p, doRepaint);
@@ -398,6 +422,7 @@ public class PvdView extends JPanel
      * Force the display to zoom out to show all of the entities in the 
      * simulation. Does nothing if there are no entities
      */
+    @Override
     public void showAll()
     {
         double minX = Double.MAX_VALUE;
@@ -588,6 +613,7 @@ public class PvdView extends JPanel
      * Default cursor to use when not performing a user-specific operation
      * (e.g., dragging the pvd.)
      */
+    @Override
     public void setCursorPreference(Cursor cursor)
     {
         this.defaultCursor = cursor;
@@ -596,6 +622,7 @@ public class PvdView extends JPanel
     /**
      * @return the {@link Cursor} preferred when not dragging.
      */
+    @Override
     public Cursor getCursorPreference()
     {
         return this.defaultCursor;
@@ -604,6 +631,7 @@ public class PvdView extends JPanel
     /**
      * The {@link Cursor} preferred when the user drags the PVD.
      */
+    @Override
     public void setDraggingCursor(Cursor cursor)
     {
         this.draggingCursor = cursor;
@@ -612,6 +640,7 @@ public class PvdView extends JPanel
     /**
      * @return the {@link Cursor} preferred when the user drags the PVD.
      */
+    @Override
     public Cursor getDraggingCursor()
     {
         return draggingCursor;

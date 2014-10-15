@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
@@ -79,11 +80,11 @@ import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.editor.actions.ClearTerrainImageAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
 import com.soartech.simjr.ui.editor.actions.SetTerrainImageAction;
+import com.soartech.simjr.ui.pvd.IPvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.PvdController;
-import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -94,8 +95,12 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     private static final String EDITOR_ENTITY_PROP = MapPanel.class.getCanonicalName() + ".editorEntity";
     private final ScenarioEditorServiceManager app;
     private final Simulation sim;
+    
     private final PlanViewDisplay pvd;
-    private final PvdView pvdView;
+    private final IPvdView pvdView;
+    private final PvdController pvdController;
+    private final JComponent pvdComponent;
+    
     private final Set<Entity> movedEntities = new HashSet<Entity>();
     private final EntityPropertiesPanel propsPanel;
 
@@ -127,7 +132,11 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             }
         });
         
-        pvd.setContextMenu(new ObjectContextMenu(app) {
+        pvdView = pvd.getView();
+        pvdController = pvd.getController();
+        pvdComponent = pvdView.getComponent();
+        
+        pvdController.setContextMenu(new ObjectContextMenu(app) {
 
             private static final long serialVersionUID = -5454693942029564642L;
 
@@ -135,8 +144,8 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
             protected List<Action> getAdditionalActions()
             {
                 List<Action> actions = super.getAdditionalActions();
-                final Point contextPoint = pvd.getContextMenuPoint();
-                final Vector3 meters = pvd.getTransformer().screenToMeters((double)contextPoint.x, (double) contextPoint.y);
+                final Point contextPoint = pvdController.getContextMenuPoint();
+                final Vector3 meters = pvdView.getTransformer().screenToMeters((double)contextPoint.x, (double) contextPoint.y);
                 final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
                 actions.add(new NewEntityAction(getActionManager(), "New Entity", "any", lla));
                 actions.add(new NewEntityAction(getActionManager(), "New Waypoint", "waypoint", lla));
@@ -151,8 +160,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         
         SelectionManager.findService(app).addListener(this);
         
-        pvdView = pvd.getView();
-        add(pvdView);
+        add(pvdComponent);
         
         this.app.addService(this); // So PVD actions can access
         this.app.getModel().addModelChangeListener(this);

@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 
 import com.soartech.simjr.ui.SimulationImages;
-import com.soartech.simjr.ui.pvd.PvdView;
+import com.soartech.simjr.ui.pvd.IPvdView;
 
 /**
  * @author ray
@@ -71,7 +71,7 @@ public class ShowAllAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        PvdView pvd = getPvdView();
+        IPvdView pvd = getPvdView();
         if(pvd == null)
         {
             return;

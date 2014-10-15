@@ -35,8 +35,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractButton;
 
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PvdView;
+import com.soartech.simjr.ui.pvd.IPvdView;
 
 /**
  * @author ray
@@ -69,7 +68,7 @@ public class ShowGridAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        PvdView pvd = getPvdView();
+        IPvdView pvd = getPvdView();
         
         menu.setEnabled(pvd != null);
         menu.setSelected(pvd != null && pvd.getGrid().isVisible());
@@ -80,7 +79,7 @@ public class ShowGridAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        PvdView pvd = getPvdView();
+        IPvdView pvd = getPvdView();
         if(pvd != null)
         {
             pvd.getGrid().setVisible(menu.isSelected());

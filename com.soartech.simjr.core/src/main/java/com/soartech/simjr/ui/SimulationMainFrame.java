@@ -618,7 +618,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         }
         
         //add the plan view display to the dockable's content pane
-        pf.getContentPane().add(pf.pvd.getView());
+        pf.getContentPane().add(pf.pvd.getView().getComponent());
         
         //add the dockable to the DF controller
         control.addDockable("__" + pf.title, pf);

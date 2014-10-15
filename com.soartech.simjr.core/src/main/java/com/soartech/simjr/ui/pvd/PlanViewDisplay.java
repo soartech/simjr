@@ -31,18 +31,15 @@
  */
 package com.soartech.simjr.ui.pvd;
 
-import java.awt.Point;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.ui.ObjectContextMenu;
 import com.soartech.simjr.ui.SelectionManager;
 
 /**
@@ -52,11 +49,8 @@ public class PlanViewDisplay
 {
     private static final Logger logger = LoggerFactory.getLogger(PlanViewDisplay.class);
     
-    private final Simulation sim;
-    private final ServiceManager app;
-    
     private final PvdController controller;
-    private final PvdView view;
+    private final IPvdView view;
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy)
     {
@@ -65,8 +59,8 @@ public class PlanViewDisplay
     
     public PlanViewDisplay(ServiceManager app, PlanViewDisplay toCopy, PvdController controller)
     {
-        this.app = app;
-        this.sim = this.app.findService(Simulation.class);
+        final Simulation sim = app.findService(Simulation.class);
+        
         this.view = new PvdView(app, sim);
         
         if (toCopy != null)
@@ -83,7 +77,7 @@ public class PlanViewDisplay
             this.controller = controller;
         }
 
-        this.controller.attachToView(this.view, this.sim, this.app);
+        this.controller.attachToView(this.view, sim, app);
     }
 
     public void dispose()
@@ -99,41 +93,11 @@ public class PlanViewDisplay
         return controller;
     }
     
-    public PvdView getView()
+    public IPvdView getView()
     {
         return view;
     }
-    
-    public CoordinateTransformer getTransformer()
-    {
-        return view.getTransformer();
-    }
-    
-    public Point getContextMenuPoint()
-    {
-        return controller.getContextMenuPoint();
-    }
-    
-    public void setContextMenu(ObjectContextMenu contextMenu)
-    {
-        controller.setContextMenu(contextMenu);
-    }
-    
-    public void setContextMenuEnabled(boolean enabled)
-    {
-        controller.setContextMenuEnabled(enabled);
-    }
-    
-    public Entity getLockEntity()
-    {
-        return view.getLockEntity();
-    }
-    
-    public void setLockEntity(Entity lockEntity)
-    {
-        view.setLockEntity(lockEntity);
-    }
-    
+
     /**
      * @return A list of all the entities that are selected.
      */

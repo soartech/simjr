@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -67,9 +68,9 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
+import com.soartech.simjr.ui.pvd.IPvdView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.PvdController;
-import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Begins a geometry creation mode that adds and removes points based on user clicks in the PVD.
@@ -86,7 +87,8 @@ public class CreateGeometryAction extends AbstractEditorAction
     private static final double SELECTION_TOLERANCE = SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0);
     
     private final Simulation sim;
-    private final PvdView pvd;
+    private final IPvdView pvdView;
+    private final JComponent pvdComponent;
     private final PvdController pvdController;
     
     //TODO: Merge these GUI components into a container or another class?
@@ -204,7 +206,8 @@ public class CreateGeometryAction extends AbstractEditorAction
         this.initialPosition = position;
         
         PlanViewDisplayProvider pvdProvider = getServices().findService(PlanViewDisplayProvider.class);
-        pvd = pvdProvider.getActivePlanViewDisplay().getView();
+        pvdView = pvdProvider.getActivePlanViewDisplay().getView();
+        pvdComponent = pvdView.getComponent();
         pvdController = pvdProvider.getActivePlanViewDisplay().getController();
         sim = getServices().findService(Simulation.class);
         
@@ -232,14 +235,15 @@ public class CreateGeometryAction extends AbstractEditorAction
         setEnabled(false);
         
         updateGuiPosition();
-        pvd.add(doneButton);
-        pvd.add(modeLabel);
+        pvdComponent.add(doneButton);
+        pvdComponent.add(modeLabel);
         
-        pvd.addComponentListener(resizeListener);
-        pvd.addMouseListener(mouseAdapter);
+        pvdComponent.addComponentListener(resizeListener);
+        pvdComponent.addMouseListener(mouseAdapter);
+        
         pvdController.setContextMenuEnabled(false);
         
-        pvd.repaint();
+        pvdComponent.repaint();
         
         pointEdits = new Stack<UndoableEdit>();
         newGeometryEdit = getModel().getEntities().addEntity(geometryType.getPrototype(), geometryType.getPrototype());
@@ -271,15 +275,16 @@ public class CreateGeometryAction extends AbstractEditorAction
             compoundEdit.undo();
         }
         
-        pvd.remove(doneButton);
-        pvd.remove(modeLabel);
-        pvd.removeComponentListener(resizeListener);
-        pvd.removeMouseListener(mouseAdapter);
+        pvdComponent.remove(doneButton);
+        pvdComponent.remove(modeLabel);
+        pvdComponent.removeComponentListener(resizeListener);
+        pvdComponent.removeMouseListener(mouseAdapter);
+        
         pvdController.setContextMenuEnabled(true);
         
         CreateGeometryAction.this.setEnabled(true);
         
-        pvd.repaint();
+        pvdComponent.repaint();
     }
     
     private void addExistingPoint(String wpName)
@@ -307,13 +312,13 @@ public class CreateGeometryAction extends AbstractEditorAction
     private void addNewOrExistingPoint(Point position)
     {
         Vector3 xyz = sim.getTerrain().fromGeodetic(position);
-        final SimplePosition screenLocation = pvd.getTransformer().metersToScreen(xyz.x, xyz.y);
+        final SimplePosition screenLocation = pvdView.getTransformer().metersToScreen(xyz.x, xyz.y);
         addNewOrExistingPoint((int)screenLocation.x, (int)screenLocation.y);        
     }
     
     private void addNewPoint(int x, int y) 
     {
-        final Vector3 meters = pvd.getTransformer().screenToMeters((double) x, (double) y);
+        final Vector3 meters = pvdView.getTransformer().screenToMeters((double) x, (double) y);
         final Geodetic.Point lla = sim.getTerrain().toGeodetic(meters);
         addNewPoint(lla);
     }
@@ -386,7 +391,7 @@ public class CreateGeometryAction extends AbstractEditorAction
      */
     private Entity getWaypointAt(double x, double y)
     {
-        final List<Entity> entities = pvd.getShapeAdapter().getEntitiesAtScreenPoint(x, y, SELECTION_TOLERANCE);
+        final List<Entity> entities = pvdView.getShapeAdapter().getEntitiesAtScreenPoint(x, y, SELECTION_TOLERANCE);
         Entity selected = null;
         if(!entities.isEmpty()) {
             for(Entity e: entities) {
@@ -401,8 +406,8 @@ public class CreateGeometryAction extends AbstractEditorAction
     
     private void updateGuiPosition()
     {
-        doneButton.setBounds(pvd.getWidth()/2 - BUTTON_WIDTH/2, LABEL_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-        modeLabel.setBounds(pvd.getWidth()/2 - LABEL_WIDTH/2, 5, LABEL_WIDTH, LABEL_HEIGHT);
+        doneButton.setBounds(pvdComponent.getWidth()/2 - BUTTON_WIDTH/2, LABEL_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        modeLabel.setBounds(pvdComponent.getWidth()/2 - LABEL_WIDTH/2, 5, LABEL_WIDTH, LABEL_HEIGHT);
     }
 
     @Override

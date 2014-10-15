@@ -38,8 +38,8 @@ import javax.swing.KeyStroke;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.ui.SelectionManager;
+import com.soartech.simjr.ui.pvd.IPvdView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -154,7 +154,7 @@ public abstract class AbstractSimulationAction extends AbstractAction
         this.submenuId = newSubmenuId;
     }
     
-    public PvdView getPvdView()
+    public IPvdView getPvdView()
     {
         PlanViewDisplayProvider mf = findService(PlanViewDisplayProvider.class);
         

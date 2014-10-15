@@ -44,7 +44,9 @@ import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
+import com.soartech.simjr.ui.pvd.IPvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
+import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 
@@ -87,16 +89,33 @@ public class ScenarioExporter
         
     }
     
-    private void exportMapImage(Model model, Simulation sim, ServiceManager services)
+    private static MapImage findMapImage(ServiceManager services)
     {
-        final PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
-        if(pvdPro == null || pvdPro.getActivePlanViewDisplay() == null)
+        PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
+        if (pvdPro == null)
         {
-            return;
+            return null;
         }
         
-        final MapImage map = pvdPro.getActivePlanViewDisplay().getView().getMapImage();
-        if(map == null)
+        PlanViewDisplay pvd = pvdPro.getActivePlanViewDisplay();
+        if (pvd == null)
+        {
+            return null;
+        }
+        
+        IPvdView pvdView = pvd.getView();
+        if (pvdView == null)
+        {
+            return null;
+        }
+        
+        return pvdView.getMapImage();
+    }
+    
+    private void exportMapImage(Model model, Simulation sim, ServiceManager services)
+    {
+        final MapImage map = findMapImage(services);
+        if (map == null)
         {
             return;
         }

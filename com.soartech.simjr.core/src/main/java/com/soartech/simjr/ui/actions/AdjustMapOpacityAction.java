@@ -35,14 +35,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import com.soartech.simjr.ui.MapImageOpacityController;
 import com.soartech.simjr.ui.SimulationMainFrame;
+import com.soartech.simjr.ui.pvd.IPvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
-import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -62,7 +61,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        final PvdView pvd = getPvdView();
+        final IPvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getMapImage() != null);
     }
 
@@ -71,7 +70,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        final PvdView pvd = getPvdView();
+        final IPvdView pvd = getPvdView();
         if (pvd == null)
         {
             return;
@@ -81,9 +80,11 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
         {
             return;
         }
-        final Rectangle rect = pvd.getBounds();
+        
+        final JComponent pvdComponent = pvd.getComponent();
+        final Rectangle rect = pvdComponent.getBounds();
         
         JFrame frame = getServices().findService(SimulationMainFrame.class);
-        MapImageOpacityController.showPopupEditor(frame, pvd, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
+        MapImageOpacityController.showPopupEditor(frame, pvdComponent, new Point((int) rect.getCenterX(), (int) rect.getCenterY()) , map);
     }
 }

@@ -34,7 +34,7 @@ public class PvdController
     private Simulation sim;
     private ServiceManager app;
 
-    private PvdView view;
+    private IPvdView view;
     
     private ObjectContextMenu contextMenu;
     private Point contextMenuPoint;
@@ -48,7 +48,7 @@ public class PvdController
         // nothing until view is attached
     }
 
-    void attachToView(PvdView view, Simulation sim, ServiceManager app)
+    void attachToView(IPvdView view, Simulation sim, ServiceManager app)
     {
         this.view = view;
         this.sim = sim;
@@ -56,9 +56,9 @@ public class PvdController
         
         this.contextMenu = new ObjectContextMenu(app);
 
-        view.addMouseListener(new MouseHandler());
-        view.addMouseMotionListener(new MouseMotionHandler());
-        view.addMouseWheelListener(new MouseWheelHandler());
+        view.getComponent().addMouseListener(new MouseHandler());
+        view.getComponent().addMouseMotionListener(new MouseMotionHandler());
+        view.getComponent().addMouseWheelListener(new MouseWheelHandler());
     }
     
     /**
@@ -125,7 +125,7 @@ public class PvdController
             panOrigin.setLocation(e.getPoint());
         }
         
-        view.repaint();
+        view.getComponent().repaint();
     }
     
     /**
@@ -133,7 +133,7 @@ public class PvdController
      */
     private void mouseReleased(MouseEvent e)
     {
-        view.requestFocus();
+        view.getComponent().requestFocus();
         
         final SelectionManager sm = SelectionManager.findService(this.app);
         final List<Entity> selectedEntities = PlanViewDisplay.getSelectedEntities(app);
@@ -142,7 +142,7 @@ public class PvdController
         if (SwingUtilities.isRightMouseButton(e) && contextMenuEnabled)
         {
             contextMenuPoint = e.getPoint();
-            contextMenu.show(view, e.getX(), e.getY());
+            contextMenu.show(view.getComponent(), e.getX(), e.getY());
         }
         else if (!e.isControlDown() && selectedEntities.size() > 1)
         {
@@ -163,7 +163,7 @@ public class PvdController
         
         view.setIsDraggingEntity(false);
 
-        view.repaint();
+        view.getComponent().repaint();
         
         dragFinished();
     }
@@ -217,7 +217,7 @@ public class PvdController
         }
         
         // Don't wait for the timer. This makes the UI a little snappier
-        view.repaint();
+        view.getComponent().repaint();
     }
 
     private void moveEntityPreservingAltitude(Entity p, final Vector3 delta)
