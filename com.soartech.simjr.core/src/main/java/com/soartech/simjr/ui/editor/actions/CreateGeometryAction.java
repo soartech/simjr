@@ -68,7 +68,7 @@ import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.actions.ActionManager;
 import com.soartech.simjr.ui.editor.UndoService;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.PvdController;
 
@@ -87,7 +87,7 @@ public class CreateGeometryAction extends AbstractEditorAction
     private static final double SELECTION_TOLERANCE = SimJrProps.get("simjr.pvd.mouse.tolerance", 15.0);
     
     private final Simulation sim;
-    private final IPvdView pvdView;
+    private final PvdView pvdView;
     private final JComponent pvdComponent;
     private final PvdController pvdController;
     

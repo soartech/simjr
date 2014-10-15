@@ -38,7 +38,7 @@ import javax.swing.event.AncestorListener;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.MapImageryDownloader;
 
 /**
@@ -62,7 +62,7 @@ public class ShowMapDownloaderAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         setEnabled(pvd != null && 
                    pvd.getMapTileRenderer() != null && 
                    //pvd.getMapTileRenderer().getTileSource() != null &&
@@ -74,7 +74,7 @@ public class ShowMapDownloaderAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         if(pvd != null) 
         {
             MapImageryDownloader ui = new MapImageryDownloader(pvd);

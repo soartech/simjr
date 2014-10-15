@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Sets and enables the offline cache directory.
@@ -72,7 +72,7 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         if(pvd != null) {
             pvd.getMapTileRenderer();
             

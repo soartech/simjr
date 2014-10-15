@@ -35,7 +35,7 @@ public class PvdController
     private Simulation sim;
     private ServiceManager app;
 
-    private IPvdView view;
+    private PvdView view;
     
     private ObjectContextMenu contextMenu;
     private Point contextMenuPoint;
@@ -54,7 +54,7 @@ public class PvdController
         // TODO: detach the mouse listeners?
     }
     
-    void attachToView(IPvdView view, Simulation sim, ServiceManager app)
+    void attachToView(PvdView view, Simulation sim, ServiceManager app)
     {
         this.view = view;
         this.sim = sim;

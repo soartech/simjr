@@ -40,7 +40,7 @@ import javax.swing.JFrame;
 
 import com.soartech.simjr.ui.MapImageOpacityController;
 import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 
 /**
@@ -61,7 +61,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getMapImage() != null);
     }
 
@@ -70,7 +70,7 @@ public class AdjustMapOpacityAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         if (pvd == null)
         {
             return;

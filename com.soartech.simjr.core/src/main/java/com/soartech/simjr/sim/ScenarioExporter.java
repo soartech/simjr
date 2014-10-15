@@ -44,7 +44,7 @@ import com.soartech.simjr.scenario.TerrainImageElement;
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
@@ -103,7 +103,7 @@ public class ScenarioExporter
             return null;
         }
         
-        IPvdView pvdView = pvd.getView();
+        PvdView pvdView = pvd.getView();
         if (pvdView == null)
         {
             return null;

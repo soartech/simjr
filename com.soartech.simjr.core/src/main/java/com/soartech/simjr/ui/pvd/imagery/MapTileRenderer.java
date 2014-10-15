@@ -53,7 +53,7 @@ import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.SimJrProps;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.AttributionSupport;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Coordinate;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.JobDispatcher;
@@ -92,7 +92,7 @@ public class MapTileRenderer implements TileLoaderListener
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
     
-    private final IPvdView pvdView;
+    private final PvdView pvdView;
     private final JComponent pvdComponent;
     
     //Notify listeners when the tile source changes
@@ -121,7 +121,7 @@ public class MapTileRenderer implements TileLoaderListener
      * Creates a MapTileRenderer that renders tiles on the given PVD.
      * @param renderTarget
      */
-    public MapTileRenderer(IPvdView renderTarget)
+    public MapTileRenderer(PvdView renderTarget)
     {
         this.pvdView = renderTarget;
         this.pvdComponent = renderTarget.getComponent();

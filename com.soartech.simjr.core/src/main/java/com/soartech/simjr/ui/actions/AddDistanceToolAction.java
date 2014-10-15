@@ -42,7 +42,7 @@ import javax.swing.KeyStroke;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
@@ -108,7 +108,7 @@ public class AddDistanceToolAction extends AbstractSimulationAction
         
         Collections.sort(entities, EntityTools.NAME_COMPARATOR);
         
-        final IPvdView pvdView = getPvdView();
+        final PvdView pvdView = getPvdView();
         if(pvdView == null)
         {
             return;

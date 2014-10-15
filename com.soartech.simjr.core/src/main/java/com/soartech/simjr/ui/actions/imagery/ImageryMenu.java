@@ -11,7 +11,7 @@ import javax.swing.event.MenuListener;
 
 //import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
@@ -53,7 +53,7 @@ public class ImageryMenu extends JMenu
             public void menuCanceled(MenuEvent e) { }
             public void menuDeselected(MenuEvent e) { }
             public void menuSelected(MenuEvent e) {
-                IPvdView activePvd = getPvd();
+                PvdView activePvd = getPvd();
                 if(activePvd != null && activePvd.getMapTileRenderer() != null) {
                     MapTileRenderer tileRenderer = activePvd.getMapTileRenderer();
                     setSelectedSource(tileRenderer.getTileSource());
@@ -72,7 +72,7 @@ public class ImageryMenu extends JMenu
         this.setEnabled(false);
     }
     
-    private IPvdView getPvd() 
+    private PvdView getPvd() 
     {
         final PlanViewDisplayProvider prov = am.getServices().findService(PlanViewDisplayProvider.class);
         if(prov != null) { 

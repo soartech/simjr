@@ -37,7 +37,7 @@ import java.util.List;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmTileSource;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.TileSource.BingAerialTileSource;
@@ -95,7 +95,7 @@ public class SetMapImageryProviderAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         if(pvd != null) {
             pvd.getMapTileRenderer().setTileSource(source);
             pvd.getMapTileRenderer().approximateScale();

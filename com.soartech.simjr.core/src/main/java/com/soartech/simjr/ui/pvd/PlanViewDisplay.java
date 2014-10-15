@@ -50,7 +50,7 @@ public class PlanViewDisplay
     private static final Logger logger = LoggerFactory.getLogger(PlanViewDisplay.class);
     
     private final PvdController controller;
-    private final IPvdView view;
+    private final PvdView view;
     
     /**
      * Create a new PVD with the default view and controller.
@@ -72,7 +72,7 @@ public class PlanViewDisplay
     {
         final Simulation sim = app.findService(Simulation.class);
         
-        this.view = new PvdView(app, sim);
+        this.view = new DefaultPvdView(app, sim);
         
         if (controller == null)
         {
@@ -112,7 +112,7 @@ public class PlanViewDisplay
         return controller;
     }
     
-    public IPvdView getView()
+    public PvdView getView()
     {
         return view;
     }

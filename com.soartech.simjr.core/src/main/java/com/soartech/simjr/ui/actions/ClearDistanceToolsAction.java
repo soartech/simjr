@@ -35,7 +35,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.KeyStroke;
 
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -57,7 +57,7 @@ public class ClearDistanceToolsAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getDistanceTools().hasDistanceTools());
     }
 
@@ -66,7 +66,7 @@ public class ClearDistanceToolsAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         if(pvd != null)
         {
             pvd.getDistanceTools().clearDistanceTools();

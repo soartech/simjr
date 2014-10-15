@@ -57,7 +57,7 @@ import com.soartech.simjr.scripting.ScriptRunner;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
@@ -161,7 +161,7 @@ public class ScenarioLoader
         loadTerrainImages(sim, detailedTerrain);
     }
 
-    private IPvdView findPvdView()
+    private PvdView findPvdView()
     {
         PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
         if (pvdPro == null)
@@ -191,7 +191,7 @@ public class ScenarioLoader
         final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
         detailedTerrain.setCoordinateFrame(origin, tie.getImageMetersPerPixel());
         
-        IPvdView pvdView = findPvdView();
+        PvdView pvdView = findPvdView();
         if (pvdView != null)
         {
         	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());

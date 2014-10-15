@@ -80,7 +80,7 @@ import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.editor.actions.ClearTerrainImageAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
 import com.soartech.simjr.ui.editor.actions.SetTerrainImageAction;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
@@ -97,7 +97,7 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
     private final Simulation sim;
     
     private final PlanViewDisplay pvd;
-    private final IPvdView pvdView;
+    private final PvdView pvdView;
     private final PvdController pvdController;
     private final JComponent pvdComponent;
     

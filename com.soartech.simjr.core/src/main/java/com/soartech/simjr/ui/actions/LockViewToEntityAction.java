@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.ui.SimulationImages;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -101,7 +101,7 @@ public class LockViewToEntityAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         
         button.setEnabled(pvd != null && (button.isSelected() || getSelection() != null));
         Entity lockEntity = pvd.getLockEntity();
@@ -127,7 +127,7 @@ public class LockViewToEntityAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         
         if(!button.isSelected())
         {

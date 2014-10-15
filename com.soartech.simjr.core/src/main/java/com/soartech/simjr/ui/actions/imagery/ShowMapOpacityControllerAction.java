@@ -35,7 +35,7 @@ import java.awt.event.ActionEvent;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.IPvdView;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Shows / hides the map imagery control panel. 
@@ -57,7 +57,7 @@ public class ShowMapOpacityControllerAction extends AbstractSimulationAction
     @Override
     public void update()
     {
-        IPvdView pvd = getPvdView();
+        PvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getMapTileRenderer() != null && pvd.getMapTileRenderer().getTileSource() != null);
     }
 
@@ -66,7 +66,7 @@ public class ShowMapOpacityControllerAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        final IPvdView pvd = getPvdView();
+        final PvdView pvd = getPvdView();
         if(pvd != null) 
         {
             shown = !shown;
