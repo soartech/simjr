@@ -93,7 +93,7 @@ public class OpenAction extends AbstractEditorAction
             final PlanViewDisplayProvider pvdPro = findService(PlanViewDisplayProvider.class);
             if(pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
             {
-                pvdPro.getActivePlanViewDisplay().showAll();
+                pvdPro.getActivePlanViewDisplay().getView().showAll();
             }
         }
         catch (ModelException e1)

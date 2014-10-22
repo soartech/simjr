@@ -42,8 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * Sets and enables the offline cache directory.
@@ -59,24 +58,13 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
         super(actionManager, "Set Offline Cache...");
     }
     
-    private PlanViewDisplay getPvd() 
-    {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov != null) { 
-            return prov.getActivePlanViewDisplay();
-        }
-        else {
-            return null;
-        }
-    }
-    
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        setEnabled(getPvd() != null);
+        setEnabled(getPvdView() != null);
     }
 
     /* (non-Javadoc)
@@ -84,14 +72,14 @@ public class SetOfflineCacheAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         if(pvd != null) {
             pvd.getMapTileRenderer();
             
             Preferences prefs = Preferences.userRoot().node(getClass().getName());
             final JFileChooser fc = new JFileChooser(prefs.get(LAST_USED_FOLDER, new File(".").getAbsolutePath()));
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if(fc.showOpenDialog(pvd) == JFileChooser.APPROVE_OPTION) {
+            if(fc.showOpenDialog(pvd.getComponent()) == JFileChooser.APPROVE_OPTION) {
                 final File destDir = fc.getSelectedFile();
                 logger.info("User selected: " + destDir);
                 prefs.put(LAST_USED_FOLDER, destDir.getAbsolutePath());

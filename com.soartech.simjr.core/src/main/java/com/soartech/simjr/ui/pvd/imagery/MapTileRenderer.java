@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +53,7 @@ import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Scalar;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.SimJrProps;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.AttributionSupport;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.Coordinate;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.JobDispatcher;
@@ -90,7 +92,8 @@ public class MapTileRenderer implements TileLoaderListener
     //Responsible for displaying correct map imagery attribution (copyright notice, etc)
     private AttributionSupport attribution = new AttributionSupport();
     
-    private final PlanViewDisplay pvd;
+    private final PvdView pvdView;
+    private final JComponent pvdComponent;
     
     //Notify listeners when the tile source changes
     public interface TileSourceListener { public void onTileSourceChanged(TileSource ts); }
@@ -118,9 +121,10 @@ public class MapTileRenderer implements TileLoaderListener
      * Creates a MapTileRenderer that renders tiles on the given PVD.
      * @param renderTarget
      */
-    public MapTileRenderer(PlanViewDisplay renderTarget)
+    public MapTileRenderer(PvdView renderTarget)
     {
-        this.pvd = renderTarget;
+        this.pvdView = renderTarget;
+        this.pvdComponent = renderTarget.getComponent();
         
         JobDispatcher.setMaxWorkers(DOWNLOAD_THREAD_COUNT);
         tileSource = getTileSource(SimJrProps.get("simjr.map.imagery.source", "mapnik")); //TODO: Pull this value from properties
@@ -221,7 +225,7 @@ public class MapTileRenderer implements TileLoaderListener
     public void approximateScale()
     {
         //Don't like the cast here. 
-        approximateScale(((SwingCoordinateTransformer)pvd.getTransformer()).screenToMeters(1));
+        approximateScale(((SwingCoordinateTransformer)pvdView.getTransformer()).screenToMeters(1));
     }
     
     public TileSource getTileSource() 
@@ -248,7 +252,7 @@ public class MapTileRenderer implements TileLoaderListener
             }
             attribution.initialize(tileSource);
             
-            pvd.repaint();
+            pvdComponent.repaint();
         }
         
         notifyTileSourceListeners(tileSource);
@@ -263,7 +267,7 @@ public class MapTileRenderer implements TileLoaderListener
     @Override
     public void tileLoadingFinished(Tile tile, boolean success)
     {
-        pvd.repaint();
+        pvdComponent.repaint();
     }
 
     @Override
@@ -295,8 +299,8 @@ public class MapTileRenderer implements TileLoaderListener
         int off_x = (center.x % tilesize);       // distance in px from center pt to left edge of tile
         int off_y = (center.y % tilesize);       // distance in px from center pt to top edge of tile
 
-        int w2 = (int) ((pvd.getWidth() / 2) / scale);  // half screen width
-        int h2 = (int) ((pvd.getHeight() / 2) / scale); // half screen height
+        int w2 = (int) ((pvdComponent.getWidth() / 2) / scale);  // half screen width
+        int h2 = (int) ((pvdComponent.getHeight() / 2) / scale); // half screen height
         int posx = w2 - off_x;                   // x coord in screen px of left edge of tile 
         int posy = h2 - off_y;                   // y coord in screen px of upper edge of tile
 
@@ -326,8 +330,8 @@ public class MapTileRenderer implements TileLoaderListener
         // calculate the visibility borders
         double x_min = -tilesize; 
         double y_min = -tilesize;
-        double x_max = pvd.getWidth() / scale; 
-        double y_max = pvd.getHeight() / scale;
+        double x_max = pvdComponent.getWidth() / scale; 
+        double y_max = pvdComponent.getHeight() / scale;
         
         //logger.info("drawing tiles from: (" + x_min + " - " + x_max + ", " + y_min + " - " + y_max + ")");
 
@@ -392,8 +396,8 @@ public class MapTileRenderer implements TileLoaderListener
         // outer border of the map
         int mapSize = tilesize << zoom;
         if (scrollWrapEnabled) {
-            gScaled.drawLine(0, h2 - center.y,(int) (pvd.getWidth() / scale), h2 - center.y);
-            gScaled.drawLine(0, h2 - center.y + mapSize, (int) (pvd.getWidth() / scale), h2 - center.y + mapSize);
+            gScaled.drawLine(0, h2 - center.y,(int) (pvdComponent.getWidth() / scale), h2 - center.y);
+            gScaled.drawLine(0, h2 - center.y + mapSize, (int) (pvdComponent.getWidth() / scale), h2 - center.y + mapSize);
         } else {
             gScaled.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
         }
@@ -407,8 +411,8 @@ public class MapTileRenderer implements TileLoaderListener
         
         gScaled.dispose(); //TODO: In a finally block
 
-        attribution.paintAttribution(g, pvd.getWidth(), pvd.getHeight(), 
-                getPosition(0, 0), getPosition(pvd.getWidth(), pvd.getHeight()), zoom, pvd);
+        attribution.paintAttribution(g, pvdComponent.getWidth(), pvdComponent.getHeight(), 
+                getPosition(0, 0), getPosition(pvdComponent.getWidth(), pvdComponent.getHeight()), zoom, pvdComponent);
     }
     
     /**
@@ -477,8 +481,8 @@ public class MapTileRenderer implements TileLoaderListener
         if(tileSource == null) { return null; }
         
         Point center = getCenter(targetZoom);
-        int x = center.x + mapPointX - pvd.getWidth() / 2;
-        int y = center.y + mapPointY - pvd.getHeight() / 2;
+        int x = center.x + mapPointX - pvdComponent.getWidth() / 2;
+        int y = center.y + mapPointY - pvdComponent.getHeight() / 2;
         double lon = tileSource.XToLon(x, targetZoom);
         double lat = tileSource.YToLat(y, targetZoom);
         return new Coordinate(lat, lon);
@@ -505,7 +509,7 @@ public class MapTileRenderer implements TileLoaderListener
         
         //Measure pixel distance from 5,5 to center
         Point origin = new Point(5,5);
-        Point center = new Point(pvd.getWidth()/2, pvd.getHeight()/2);
+        Point center = new Point(pvdComponent.getWidth()/2, pvdComponent.getHeight()/2);
         double pDistance = center.distance(origin);
         
         //Measure meters distance from 5,5 to center
@@ -535,13 +539,13 @@ public class MapTileRenderer implements TileLoaderListener
         if(tileSource == null) { return null; }
         
         //TODO: this is by no means efficient
-        CoordinateTransformer transformer = pvd.getTransformer();
+        CoordinateTransformer transformer = pvdView.getTransformer();
         
         //Get meters coordinate of center
-        Vector3 metersCenter = transformer.screenToMeters(pvd.getWidth()/2, pvd.getHeight()/2);
+        Vector3 metersCenter = transformer.screenToMeters(pvdComponent.getWidth()/2, pvdComponent.getHeight()/2);
         
         //Convert to lat/lon TODO: This seems like it might have issues far from origin
-        Geodetic.Point latLonCenter = pvd.getTerrain().toGeodetic(metersCenter);
+        Geodetic.Point latLonCenter = pvdView.getTerrain().toGeodetic(metersCenter);
         
         //Translate that lat/lon into tile coords
         Point center = new Point(tileSource.LonToX(Math.toDegrees(latLonCenter.longitude), zoomLevel),
@@ -560,7 +564,7 @@ public class MapTileRenderer implements TileLoaderListener
     
     public double getScaleFactor(int zoomLevel)
     {
-        double simPpm = pvd.getTransformer().scalarToPixels(Scalar.createMeter(1));
+        double simPpm = pvdView.getTransformer().scalarToPixels(Scalar.createMeter(1));
         return getMetersPerPixel(zoomLevel) * simPpm;
     }
     
@@ -570,7 +574,7 @@ public class MapTileRenderer implements TileLoaderListener
         
         Point osmCenterPx = getCenter(zoomLevel);
         double scale = getScaleFactor(zoomLevel);
-        Point.Double osmUpperLeftPx = new Point.Double(osmCenterPx.x - (pvd.getWidth()/2 / scale), osmCenterPx.y - (pvd.getHeight()/2) / scale);
+        Point.Double osmUpperLeftPx = new Point.Double(osmCenterPx.x - (pvdComponent.getWidth()/2 / scale), osmCenterPx.y - (pvdComponent.getHeight()/2) / scale);
         Point.Double osmMousePx =   new Point.Double(osmUpperLeftPx.x + screenCoordsPx.x / scale, osmUpperLeftPx.y + screenCoordsPx.y / scale);
         double tileSize = getTileSize();
         return new Point((int) (osmMousePx.x / tileSize), (int) (osmMousePx.y / tileSize));

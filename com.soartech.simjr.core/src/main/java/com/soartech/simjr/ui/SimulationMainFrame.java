@@ -599,7 +599,8 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private PlanViewDisplay createPlanViewDisplay(PvdFrame pf, String title, boolean split, boolean first)
     {
-        pf.pvd = new PlanViewDisplay(services, getActivePlanViewDisplay());
+        pf.pvd = new PlanViewDisplay(services);
+        pf.pvd.copyFromDisplay(getActivePlanViewDisplay());
         pf.title = title;
         
         //DF settings
@@ -618,7 +619,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         }
         
         //add the plan view display to the dockable's content pane
-        pf.getContentPane().add(pf.pvd);
+        pf.getContentPane().add(pf.pvd.getView().getComponent());
         
         //add the dockable to the DF controller
         control.addDockable("__" + pf.title, pf);
@@ -634,7 +635,7 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         if(!first)
         {
-           pf.pvd.showAll();
+           pf.pvd.getView().showAll();
         }
         
         pf.addFocusListener(new MyFocusListener());

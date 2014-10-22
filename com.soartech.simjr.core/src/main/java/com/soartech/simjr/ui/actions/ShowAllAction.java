@@ -36,8 +36,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 
 import com.soartech.simjr.ui.SimulationImages;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -58,21 +57,13 @@ public class ShowAllAction extends AbstractSimulationAction
         setAcceleratorKey(KeyStroke.getKeyStroke("F4"));
     }
     
-    private PlanViewDisplay getPvd()
-    {
-        PlanViewDisplayProvider mf = findService(PlanViewDisplayProvider.class);
-        
-        return mf != null ? mf.getActivePlanViewDisplay() : null;
-    }
-    
-
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        setEnabled(getPvd() != null);
+        setEnabled(getPvdView() != null);
     }
 
     /* (non-Javadoc)
@@ -80,7 +71,7 @@ public class ShowAllAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         if(pvd == null)
         {
             return;

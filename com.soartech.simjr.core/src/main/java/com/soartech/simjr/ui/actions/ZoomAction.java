@@ -36,8 +36,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 
 import com.soartech.simjr.ui.SimulationImages;
-import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PvdView;
 
 /**
  * @author ray
@@ -61,20 +60,13 @@ public abstract class ZoomAction extends AbstractSimulationAction
         setToolTip("Zoom " + (amount > 0 ? "Out" : "In"));
     }
     
-    private PlanViewDisplay getPvd()
-    {
-        SimulationMainFrame mf = findService(SimulationMainFrame.class);
-        
-        return mf != null ? mf.getActivePlanViewDisplay() : null;
-    }
-    
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        setEnabled(getPvd() != null);
+        setEnabled(getPvdView() != null);
     }
 
     /* (non-Javadoc)
@@ -82,7 +74,7 @@ public abstract class ZoomAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent arg0)
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         if(pvd == null)
         {
             return;

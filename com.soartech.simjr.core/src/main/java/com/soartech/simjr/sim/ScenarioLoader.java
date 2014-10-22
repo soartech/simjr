@@ -57,7 +57,9 @@ import com.soartech.simjr.scripting.ScriptRunner;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.sim.entities.AbstractPolygon;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
+import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
@@ -159,6 +161,23 @@ public class ScenarioLoader
         loadTerrainImages(sim, detailedTerrain);
     }
 
+    private PvdView findPvdView()
+    {
+        PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
+        if (pvdPro == null)
+        {
+            return null;
+        }
+        
+        PlanViewDisplay pvd = pvdPro.getActivePlanViewDisplay();
+        if (pvd == null)
+        {
+            return null;
+        }
+        
+        return pvd.getView();
+    }
+    
     private void loadTerrainImages(Simulation sim, DetailedTerrain detailedTerrain)
     {
         final TerrainImageElement tie = model.getModel().getTerrain().getImage();
@@ -172,11 +191,11 @@ public class ScenarioLoader
         final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
         detailedTerrain.setCoordinateFrame(origin, tie.getImageMetersPerPixel());
         
-        final PlanViewDisplayProvider pvdPro = services.findService(PlanViewDisplayProvider.class);
-        if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
+        PvdView pvdView = findPvdView();
+        if (pvdView != null)
         {
         	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
-            pvdPro.getActivePlanViewDisplay().setMapImage(image);
+        	pvdView.setMapImage(image);
         }
         
         BufferedImage terrainImage = detailedTerrain.getTerrainImage();
@@ -187,9 +206,9 @@ public class ScenarioLoader
         
         logger.info("Using terrain image.");
         
-        if (pvdPro != null && pvdPro.getActivePlanViewDisplay() != null)
+        if (pvdView != null)
         {
-            MapImage mi = pvdPro.getActivePlanViewDisplay().getMapImage();
+            MapImage mi = pvdView.getMapImage();
             mi.setCenterMeters(1, origin);
             mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
             mi.setImage(1, terrainImage);

@@ -35,8 +35,7 @@ import java.awt.event.ActionEvent;
 
 import com.soartech.simjr.ui.actions.AbstractSimulationAction;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 
 /**
@@ -51,24 +50,13 @@ public class SetTileGridVisibilityAction extends AbstractSimulationAction
         super(actionManager, "Show Tile Grid");
     }
     
-    private PlanViewDisplay getPvd() 
-    {
-        final PlanViewDisplayProvider prov = findService(PlanViewDisplayProvider.class);
-        if(prov != null) { 
-            return prov.getActivePlanViewDisplay();
-        }
-        else {
-            return null;
-        }
-    }
-    
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.actions.AbstractSimulationAction#update()
      */
     @Override
     public void update()
     {
-        PlanViewDisplay pvd = getPvd();
+        PvdView pvd = getPvdView();
         setEnabled(pvd != null && pvd.getMapTileRenderer() != null);
     }
 
@@ -77,7 +65,7 @@ public class SetTileGridVisibilityAction extends AbstractSimulationAction
      */
     public void actionPerformed(ActionEvent a)
     {
-        final PlanViewDisplay pvd = getPvd();
+        final PvdView pvd = getPvdView();
         if(pvd != null && pvd.getMapTileRenderer() != null) 
         {
             MapTileRenderer renderer = pvd.getMapTileRenderer();

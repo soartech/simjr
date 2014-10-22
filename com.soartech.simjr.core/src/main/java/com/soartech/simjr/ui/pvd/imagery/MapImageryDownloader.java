@@ -56,6 +56,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -70,7 +71,7 @@ import org.jdesktop.swingx.JXPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.soartech.simjr.ui.pvd.PlanViewDisplay;
+import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileSourceListener;
 import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer.TileZoomListener;
 import com.soartech.simjr.ui.pvd.imagery.fakeimpl.OsmFileCacheTileLoader;
@@ -88,7 +89,8 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private static final long AVG_TILE_SIZE_BYTES = 45000;
     private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 
-    private final PlanViewDisplay pvd;
+    private final PvdView pvdView;
+    private final JComponent pvdComponent;
     private final MapTileRenderer mapRenderer;
     
     private ScheduledThreadPoolExecutor scheduler;
@@ -132,11 +134,12 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
      * 
      * @param mapRenderer
      */
-    public MapImageryDownloader(final PlanViewDisplay pvd)
+    public MapImageryDownloader(final PvdView pvd)
     {
         super();
         
-        this.pvd = pvd;
+        this.pvdView = pvd;
+        this.pvdComponent = pvd.getComponent();
         this.mapRenderer = pvd.getMapTileRenderer();
         
         setLayout(new MigLayout("gapx 0"));
@@ -184,9 +187,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         mapRenderer.addTileSourceListener(this);
         mapRenderer.addTileZoomListener(this);
         
-        pvd.addComponentListener(resizeListenerPositioner);
+        pvdComponent.addComponentListener(resizeListenerPositioner);
         
-        pvd.add(this);
+        pvdComponent.add(this);
         updateGuiPosition();
         updateDownloadButton();
     }
@@ -210,7 +213,7 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         @Override
         public void mouseDragged(MouseEvent e) {
             if(SwingUtilities.isLeftMouseButton(e)) {
-                if (!pvd.isDraggingEntity()) {
+                if (!pvdView.isDraggingEntity()) {
                     updateDownloadButton();
                 }
             }
@@ -227,9 +230,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     
     private void updateGuiPosition()
     {
-        this.setBounds(pvd.getWidth() - getPreferredSize().width - 10, 10, getPreferredSize().width, getPreferredSize().height);
-        pvd.repaint();
-        pvd.revalidate();
+        this.setBounds(pvdComponent.getWidth() - getPreferredSize().width - 10, 10, getPreferredSize().width, getPreferredSize().height);
+        pvdComponent.repaint();
+        pvdComponent.revalidate();
     }
     
     /**
@@ -238,16 +241,16 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
     private void onComplete()
     {
         logger.info("MapImageryDownloader complete");
-        pvd.remove(this);
-        pvd.removeComponentListener(resizeListenerDownloadUpdater);
-        pvd.removeComponentListener(resizeListenerPositioner);
-        pvd.removeMouseMotionListener(pvdMouseMotionAdapter);
-        pvd.removeMouseWheelListener(pvdMouseWheelListener);
+        pvdComponent.remove(this);
+        pvdComponent.removeComponentListener(resizeListenerDownloadUpdater);
+        pvdComponent.removeComponentListener(resizeListenerPositioner);
+        pvdComponent.removeMouseMotionListener(pvdMouseMotionAdapter);
+        pvdComponent.removeMouseWheelListener(pvdMouseWheelListener);
         
         mapRenderer.removeTileSourceListener(this);
         mapRenderer.removeTileZoomListener(this);
         
-        pvd.repaint();
+        pvdComponent.repaint();
     }
     
     /**
@@ -316,9 +319,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         cancelButton.addActionListener(cancelButtonStop);
         cancelButton.setText("Cancel");
         
-        pvd.removeMouseMotionListener(pvdMouseMotionAdapter);
-        pvd.removeMouseWheelListener(pvdMouseWheelListener);
-        pvd.removeComponentListener(resizeListenerDownloadUpdater);
+        pvdComponent.removeMouseMotionListener(pvdMouseMotionAdapter);
+        pvdComponent.removeMouseWheelListener(pvdMouseWheelListener);
+        pvdComponent.removeComponentListener(resizeListenerDownloadUpdater);
         
         updateGuiPosition();
     }
@@ -332,9 +335,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         downloadButton.setEnabled(true);
         updateDownloadButton();
         
-        pvd.addMouseMotionListener(pvdMouseMotionAdapter);
-        pvd.addMouseWheelListener(pvdMouseWheelListener);
-        pvd.addComponentListener(resizeListenerDownloadUpdater);
+        pvdComponent.addMouseMotionListener(pvdMouseMotionAdapter);
+        pvdComponent.addMouseWheelListener(pvdMouseWheelListener);
+        pvdComponent.addComponentListener(resizeListenerDownloadUpdater);
         
         updateGuiPosition();
     }
@@ -354,9 +357,9 @@ public class MapImageryDownloader extends JXPanel implements TileSourceListener,
         for(int z = minZoom; z <= maxZoom; z++) 
         {
             Point ul = mapRenderer.getTileCoordinates(new Point(0, 0), z);
-            Point ur = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), 0), z);
-            Point lr = mapRenderer.getTileCoordinates(new Point(pvd.getWidth(), pvd.getHeight()), z);
-            Point ll = mapRenderer.getTileCoordinates(new Point(0, pvd.getHeight()), z);
+            Point ur = mapRenderer.getTileCoordinates(new Point(pvdComponent.getWidth(), 0), z);
+            Point lr = mapRenderer.getTileCoordinates(new Point(pvdComponent.getWidth(), pvdComponent.getHeight()), z);
+            Point ll = mapRenderer.getTileCoordinates(new Point(0, pvdComponent.getHeight()), z);
             
             int tileMinX = Math.min(ul.x, ll.x);
             int tileMinY = Math.min(ul.y, ur.y);
