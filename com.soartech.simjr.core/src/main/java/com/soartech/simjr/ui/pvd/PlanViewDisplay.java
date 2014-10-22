@@ -68,7 +68,7 @@ public class PlanViewDisplay
      * @param app
      * @param controller
      */
-    public PlanViewDisplay(ServiceManager app, DefaultPvdController controller)
+    public PlanViewDisplay(ServiceManager app, PvdController controller)
     {
         this(app, DefaultPvdView.FACTORY, controller);
     }
@@ -80,7 +80,7 @@ public class PlanViewDisplay
      * @param viewFactory
      * @param controller
      */
-    public PlanViewDisplay(ServiceManager app, PvdViewFactory viewFactory, DefaultPvdController controller)
+    public PlanViewDisplay(ServiceManager app, PvdViewFactory viewFactory, PvdController controller)
     {
         final Simulation sim = app.findService(Simulation.class);
         
