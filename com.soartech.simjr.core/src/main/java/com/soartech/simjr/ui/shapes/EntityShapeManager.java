@@ -196,6 +196,12 @@ public class EntityShapeManager
         {
             for(Entity e : addedEntities)
             {
+                // Skip entities that have been removed
+                if(e.getSimulation() == null)
+                {
+                    continue;
+                }
+                
                 entityAdded(e);
                 //If we re-add something that has just been removed we should assume that the shape has changed, but it is still selected
                 if(e.getName().equals(selectionRemoved))
