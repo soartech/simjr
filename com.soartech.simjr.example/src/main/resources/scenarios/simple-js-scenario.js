@@ -58,7 +58,7 @@ requireScript("hello");
         }
     });
     
-    getActivePlanViewDisplay().showAll();
+    getActivePlanViewDisplay().getView().showAll();
     logger.info("done");
     
 //    logger.info("Starting webserver");

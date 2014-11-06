@@ -131,7 +131,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
 
   <simjr:postLoadScript simjr:type="text/javascript">
     // createCheatSheet(); // load cheatsheet.html
-    getActivePlanViewDisplay().showAll();
+    getActivePlanViewDisplay().getView().showAll();
   </simjr:postLoadScript>
   
 </simjr:scenario>

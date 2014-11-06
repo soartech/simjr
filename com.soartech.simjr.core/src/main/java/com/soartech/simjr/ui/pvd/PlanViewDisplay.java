@@ -128,6 +128,18 @@ public class PlanViewDisplay
     {
         return view;
     }
+    
+    /**
+     * Helper shortcut method for PvdView's showAll command.
+     * 
+     * Adding this back in because it is inserted by default by 
+     * the scenario editor, so a lot of old scenarios don't
+     * work when this is missing.
+     */
+    public void showAll()
+    {
+    	view.showAll();
+    }
 
     /**
      * @return A list of all the entities that are selected.

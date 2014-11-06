@@ -73,6 +73,6 @@ requireScript("weapons");
 // var ss = configureSoarSpeak("simjr.helosoar.sagis.grammar.nuance", "Dragon34", "34");
 // if(ss != null) ss.tts("*", "66");</simjr:preLoadScript>
   <simjr:postLoadScript simjr:type="text/javascript">// createCheatSheet(); // load cheatsheet.html
-getActivePlanViewDisplay().showAll();</simjr:postLoadScript>
+getActivePlanViewDisplay().getView().showAll();</simjr:postLoadScript>
 </simjr:scenario>
 
