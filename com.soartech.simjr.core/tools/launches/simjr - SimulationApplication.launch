@@ -22,6 +22,6 @@
 <stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_SET" value="tptp-dummy-profiling-set-SimulationApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.soartech.simjr.ui.SimulationApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.soartech.simjr.core"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="simjr-core"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>
