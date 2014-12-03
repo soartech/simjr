@@ -43,7 +43,6 @@ import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityTools;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.ui.pvd.PvdView;
-import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
 
 /**
  * @author ray
