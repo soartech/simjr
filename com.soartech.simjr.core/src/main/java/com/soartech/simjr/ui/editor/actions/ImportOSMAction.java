@@ -27,6 +27,16 @@ public class ImportOSMAction extends AbstractEditorAction
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(ImportOSMAction.class);
+    
+    @SuppressWarnings("serial")
+	private static Map<String, OSMHighway> osmHighways = new HashMap<String, OSMHighway>(){{
+    	put("residential", new OSMHighway("residential", 2, 8, 4));
+    	put("motorway", new OSMHighway("service", 8, 40, 5));
+    	put("highway", new OSMHighway("service", 6, 30, 5));
+    	put("primary", new OSMHighway("service", 4, 20, 5));
+    	put("secondary", new OSMHighway("service", 2, 10, 5));
+    	put("service", new OSMHighway("service", 1, 5, 5));
+    }};
 
     private Map<String,Node> idToNodeMap = new HashMap<String,Node>();
     
@@ -106,6 +116,41 @@ public class ImportOSMAction extends AbstractEditorAction
         createRouteEntities(doc);        
     }
 
+    private double getWayWidth(Map<String, String> tags){
+
+    	// Return width if available.
+    	if(tags.containsKey("width"))
+    	{
+    		return Double.parseDouble(tags.get("width"));
+    	} 
+    	else if(tags.containsKey("highway"))
+    	{
+    		String highwayType = tags.get("highway");
+    		// Try to calculate width from lanes.
+    		if(tags.containsKey("lanes"))
+    		{
+	    		int lanes = Integer.parseInt(tags.get("lanes"));
+	    		if(osmHighways.containsKey(highwayType)){
+	    			return lanes * osmHighways.get(highwayType).getLaneWidth();
+	    		}
+	    		else 
+	    		{
+	    			return lanes * 4;
+	    		}
+    		} 
+    		else 
+    		{
+    			if(osmHighways.containsKey(highwayType))
+				{
+    				return osmHighways.get(highwayType).getWidth();
+				}
+    		}
+    	}
+    	
+    	
+    	return 10;
+    }
+    
     private void createRouteEntities(Document doc) {
         // Creating the route entities
         List<?> ways = doc.getRootElement().getChildren("way");
@@ -138,6 +183,7 @@ public class ImportOSMAction extends AbstractEditorAction
                 NewEntityEdit edit = getModel().getEntities().addEntity(name, "route");
                 edit.getEntity().getPoints().setPoints(nodeNames);
                 edit.getEntity().setLabelVisible(false);
+                edit.getEntity().setRouteWidth(getWayWidth(tags));
             }
         }
     }
@@ -239,5 +285,36 @@ public class ImportOSMAction extends AbstractEditorAction
         // Nothing to do here. Typically used to update the state of the action
         // (enable or disable based on application state) when application state
         // changes.
+    }
+    
+    private static class OSMHighway{
+    	private String id;
+    	private int lanes;
+    	private double width;
+    	private double laneWidth;
+    	
+    	public OSMHighway(String id, int lanes, double width, double laneWidth){
+    		this.id = id;
+    		this.lanes = lanes;
+    		this.width = width;
+    		this.laneWidth = laneWidth;
+    	}
+
+		public String getId() {
+			return id;
+		}
+
+		public int getLanes() {
+			return lanes;
+		}
+
+		public double getWidth() {
+			return width;
+		}
+
+		public double getLaneWidth() {
+			return laneWidth;
+		}
+    	
     }
 }
