@@ -362,6 +362,27 @@ prototypes:
     category: mobile-sam
     properties:
         ms2525.template: "S%cGPUCDS--"
+        
+- &hmmwv
+    id: hmmwv
+    parent: *ground-vehicle
+    category: hmmwv
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+
+- &rader
+    id: rader
+    parent: *ground-vehicle
+    category: rader
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+
+- &mrap
+    id: mrap
+    parent: *ground-vehicle
+    category: mrap
+    properties:
+        ms2525.template: "S%cGPUCAT--"
     
 #### F-18 #####################################################################
 - &fa-18
