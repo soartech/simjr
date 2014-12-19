@@ -383,6 +383,16 @@ prototypes:
     category: mrap
     properties:
         ms2525.template: "S%cGPUCAT--"
+        
+- &metallic-ied
+    id: metallic-ied
+    parent: *ground
+    category: ied
+        
+- &non-metallic-ied
+    id: non-metallic-ied
+    parent: *ground
+    category: ied
     
 #### F-18 #####################################################################
 - &fa-18

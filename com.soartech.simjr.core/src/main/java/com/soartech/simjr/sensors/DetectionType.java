@@ -5,5 +5,6 @@ public enum DetectionType
     RADAR_WARNING,
     RADAR,
     VISIBLE,
-    AIS
+    AIS,
+    MAGNETIC
 }
