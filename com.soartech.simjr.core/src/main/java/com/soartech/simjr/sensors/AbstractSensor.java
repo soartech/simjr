@@ -103,7 +103,6 @@ public abstract class AbstractSensor implements Sensor
         listeners.remove(listener);
     }
 
-    @Override
     public List<SensorListener> getListeners()
     {
         return Collections.unmodifiableList(listeners);

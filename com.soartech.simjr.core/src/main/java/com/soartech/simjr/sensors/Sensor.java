@@ -91,6 +91,4 @@ public interface Sensor extends Tickable
 
     public void removeListener(SensorListener listener);
 
-    public List<SensorListener> getListeners();
-
 }
