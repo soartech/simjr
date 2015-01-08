@@ -22,9 +22,9 @@
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on July 24, 2012
@@ -45,7 +45,7 @@ public interface Sensor extends Tickable
      * @param entity
      */
     public void setEntity(Entity entity);
-    
+
     /**
      * Returns the owning entity of the sensor.
      * 
@@ -64,27 +64,33 @@ public interface Sensor extends Tickable
      * Turns the sensor on (true) and off (false).
      */
     public void setEnabled(boolean enabled);
-    
+
     /**
      * Returns true if sensor is enable and false otherwise.
      * 
      */
     public boolean isEnabled();
-    
+
     /**
-     * A tick function that should get called every tick cycle that allows the 
+     * A tick function that should get called every tick cycle that allows the
      * sensor implementation to do any processing that it needs to do.
      * 
      * @param dt
      */
     @Override
     public void tick(double dt);
-    
+
     /**
-     * Returns the detections as seen by the sensor. 
+     * Returns the detections as seen by the sensor.
      * 
      * @return List of Detections
      */
     public List<Detection> getDetections();
-   
+
+    public void addListener(SensorListener listener);
+
+    public void removeListener(SensorListener listener);
+
+    public List<SensorListener> getListeners();
+
 }

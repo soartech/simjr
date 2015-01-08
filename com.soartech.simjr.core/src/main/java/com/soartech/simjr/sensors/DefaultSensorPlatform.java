@@ -22,9 +22,9 @@
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on July 24, 2012
@@ -42,12 +42,12 @@ import com.soartech.simjr.sim.Entity;
 public class DefaultSensorPlatform extends AbstractEntityCapability implements SensorPlatform
 {
     private final Map<String,Sensor> sensors = new HashMap<String,Sensor>();
-    
-    public DefaultSensorPlatform() 
+
+    public DefaultSensorPlatform()
     {
         // Intentionally left blank
     }
-    
+
     @Override
     public void attach(Entity e)
     {
@@ -57,7 +57,7 @@ public class DefaultSensorPlatform extends AbstractEntityCapability implements S
             s.setEntity(e);
         }
     }
-    
+
     @Override
     public void detach()
     {
@@ -96,15 +96,15 @@ public class DefaultSensorPlatform extends AbstractEntityCapability implements S
             removedSensor.setEntity(null);
         }
     }
-    
+
     @Override
     public void tick(double dt) {
         for ( Sensor sensor : sensors.values() ) {
-            if ( sensor.isEnabled() ) 
+            if ( sensor.isEnabled() )
             {
-                sensor.tick(dt);                
+                sensor.tick(dt);
             }
         }
     }
-    
+
 }

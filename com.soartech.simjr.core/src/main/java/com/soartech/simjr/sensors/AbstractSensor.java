@@ -22,16 +22,18 @@
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Created on July 24, 2012
  */
 package com.soartech.simjr.sensors;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.soartech.simjr.sim.Entity;
 
@@ -44,6 +46,7 @@ import com.soartech.simjr.sim.Entity;
  */
 public abstract class AbstractSensor implements Sensor
 {
+    private List<SensorListener> listeners = new CopyOnWriteArrayList<SensorListener>();
 
     private Entity entity;
     private String name;
@@ -53,13 +56,13 @@ public abstract class AbstractSensor implements Sensor
     {
         this.name = name;
     }
-    
+
     @Override
     public void setEntity(Entity entity)
     {
         this.entity = entity;
     }
-    
+
     @Override
     public Entity getEntity()
     {
@@ -71,20 +74,38 @@ public abstract class AbstractSensor implements Sensor
     {
         return name;
     }
-    
+
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
+
     @Override
     public boolean isEnabled() {
         return this.enabled;
     }
-    
+
     @Override
     public abstract void tick(double dt);
-    
+
     @Override
     public abstract List<Detection> getDetections();
+
+    @Override
+    public void addListener(SensorListener listener)
+    {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(SensorListener listener)
+    {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public List<SensorListener> getListeners()
+    {
+        return Collections.unmodifiableList(listeners);
+    }
 }
