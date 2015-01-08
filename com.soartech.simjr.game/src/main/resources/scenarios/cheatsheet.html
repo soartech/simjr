@@ -1,0 +1,43 @@
+
+<html>
+<head>
+<script type="text/javascript">
+    importPackage(Packages.com.soartech.simjr.ui);
+    importPackage(Packages.com.soartech.simjr.sim);
+    importPackage(Packages.com.soartech.simjr.adaptables);
+    importPackage(Packages.com.soartech.simjr.game);
+    
+    function turnLeft() {
+    	var txaInterface = TxaInterfaceManager.findService(services);
+        txaInterface.turnLeft();
+    }
+    
+    function turnRight() {
+    	var txaInterface = TxaInterfaceManager.findService(services);
+        txaInterface.turnRight();
+    }
+    
+    function speedUp() {
+    	var txaInterface = TxaInterfaceManager.findService(services);
+        txaInterface.speedUp();
+    }
+    
+    function speedDown() {
+    	var txaInterface = TxaInterfaceManager.findService(services);
+        txaInterface.speedDown();
+    }
+    
+</script>
+</head>
+<body>
+    <h3>Flight Controls</h3>
+    <ul>
+        <li><a href="simjr:turnLeft()">Turn Left</a></li>
+        <li><a href="simjr:turnRight()">Turn Right</a></li>
+    </ul>
+    <ul>
+        <li><a href="simjr:speedUp()">Speed Up</a></li>
+        <li><a href="simjr:speedDown()">Speed Down</a></li>
+    </ul>
+</body>
+</html>

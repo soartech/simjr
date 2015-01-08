@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
+  <simjr:metadata>
+    <simjr:name>TXA Game Scenario</simjr:name>
+    <simjr:description />
+  </simjr:metadata>
+  
+  // Commonly used imports and scripts
+  <simjr:preLoadScript simjr:type="text/javascript">
+    importPackage(Packages.com.soartech.simjr.controllers);
+    importPackage(Packages.com.soartech.simjr.web);
+    requireScript("ui");
+    requireScript("terrain");
+    requireScript("polygons");
+    requireScript("weapons");
+    
+    importPackage(Packages.com.soartech.simjr.game);
+    var txaInterfaceManager = new TxaInterfaceManager(services);
+    services.addService(txaInterfaceManager);
+    txaInterfaceManager.start(null);
+    
+    //setup dis connection
+    requireScript("dis");
+    var disConn = createDisBroadcast(3000, "192.168.0.255");
+    disConn.setApplication(3);
+    disConn.setSite(1);
+    disConn.setExercise(17);
+    startDis(disConn);
+    
+    //set the origin for the map
+    setOrigin({"latitude": 37.19, "longitude": -115.02});
+
+  </simjr:preLoadScript>
+  
+  <simjr:postLoadScript simjr:type="text/javascript">
+    // createCheatSheet(); 
+    // load cheatsheet.html
+    getActivePlanViewDisplay().getView().showAll();
+  </simjr:postLoadScript>
+  
+</simjr:scenario>
