@@ -7,37 +7,47 @@
     importPackage(Packages.com.soartech.simjr.adaptables);
     importPackage(Packages.com.soartech.simjr.game);
     
-    function turnLeft() {
+    function turnLeft(player) {
     	var txaInterface = TxaInterfaceManager.findService(services);
-        txaInterface.turnLeft();
+        txaInterface.turnLeft(player);
     }
     
-    function turnRight() {
+    function turnRight(player) {
     	var txaInterface = TxaInterfaceManager.findService(services);
-        txaInterface.turnRight();
+        txaInterface.turnRight(player);
     }
     
-    function speedUp() {
+    function speedUp(player) {
     	var txaInterface = TxaInterfaceManager.findService(services);
-        txaInterface.speedUp();
+        txaInterface.speedUp(player);
     }
     
-    function speedDown() {
+    function speedDown(player) {
     	var txaInterface = TxaInterfaceManager.findService(services);
-        txaInterface.speedDown();
+        txaInterface.speedDown(player);
     }
     
 </script>
 </head>
 <body>
-    <h3>Flight Controls</h3>
+    <h3>Flight Controls Player-1</h3>
     <ul>
-        <li><a href="simjr:turnLeft()">Turn Left</a></li>
-        <li><a href="simjr:turnRight()">Turn Right</a></li>
+        <li><a href="simjr:turnLeft('Player%2D1')">Turn Left</a></li>
+        <li><a href="simjr:turnRight('Player%2D1')">Turn Right</a></li>
     </ul>
     <ul>
-        <li><a href="simjr:speedUp()">Speed Up</a></li>
-        <li><a href="simjr:speedDown()">Speed Down</a></li>
+        <li><a href="simjr:speedUp('Player%2D1')">Speed Up</a></li>
+        <li><a href="simjr:speedDown('Player%2D1')">Speed Down</a></li>
+    </ul>
+    
+    <h3>Flight Controls Player-2</h3>
+    <ul>
+        <li><a href="simjr:turnLeft('Player%2D2')">Turn Left</a></li>
+        <li><a href="simjr:turnRight('Player%2D2')">Turn Right</a></li>
+    </ul>
+    <ul>
+        <li><a href="simjr:speedUp('Player%2D2')">Speed Up</a></li>
+        <li><a href="simjr:speedDown('Player%2D2')">Speed Down</a></li>
     </ul>
 </body>
 </html>

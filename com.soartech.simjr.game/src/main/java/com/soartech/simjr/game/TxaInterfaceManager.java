@@ -72,8 +72,8 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
 
     }
     
-    public void turnLeft() {
-        logger.info("Turn left");
+    public void turnLeft(String player) {
+        logger.info("Turn left : " + player);
         
         // Example of constructing a protocol buffer.
         // OUTER_CLASS is typically the name of the .proto or .java file containing the protocol buffers.
@@ -84,15 +84,15 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
             .setChangeDirection(
                     TxaGame.ChangeDirection.newBuilder()
                     .setDegreeChange(-15.0)
-                    .setEntityName("Player-1")
+                    .setEntityName(player)
         ).build();
         
         // Send the newly constructed message.
         publisher.publish(new TxaGameMessage(msg));
     }
     
-    public void turnRight() {
-        logger.info("Turn right");
+    public void turnRight(String player) {
+        logger.info("Turn right : " + player);
         
 
         // Example of constructing a protocol buffer.
@@ -104,37 +104,37 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
             .setChangeDirection(
                     TxaGame.ChangeDirection.newBuilder()
                     .setDegreeChange(15.0)
-                    .setEntityName("Player-1")
+                    .setEntityName(player)
         ).build();
         
         // Send the newly constructed message.
         publisher.publish(new TxaGameMessage(msg));
     }
     
-    public void speedUp() {
-        logger.info("Speed Up");
+    public void speedUp(String player) {
+        logger.info("Speed Up : " + player);
         
         TxaGame.TxaGameMessage msg = TxaGame.TxaGameMessage.newBuilder()
                 .setType(TxaGame.TxaGameMessage.Type.CHANGE_SPEED)
                 .setChangeSpeed(
                         TxaGame.ChangeSpeed.newBuilder()
                         .setSpeedFactor(1)
-                        .setEntityName("Player-1")
+                        .setEntityName(player)
             ).build();
             
             // Send the newly constructed message.
             publisher.publish(new TxaGameMessage(msg));
     }
     
-    public void speedDown() {
-        logger.info("Speed Down");
+    public void speedDown(String player) {
+        logger.info("Speed Down : " + player);
         
         TxaGame.TxaGameMessage msg = TxaGame.TxaGameMessage.newBuilder()
                 .setType(TxaGame.TxaGameMessage.Type.CHANGE_SPEED)
                 .setChangeSpeed(
                         TxaGame.ChangeSpeed.newBuilder()
                         .setSpeedFactor(.2)
-                        .setEntityName("Player-1")
+                        .setEntityName(player)
             ).build();
             
             // Send the newly constructed message.
