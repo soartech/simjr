@@ -84,7 +84,7 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
             .setChangeDirection(
                     TxaGame.ChangeDirection.newBuilder()
                     .setDegreeChange(-15.0)
-                    .setEntityName("Player 1")
+                    .setEntityName("Player-1")
         ).build();
         
         // Send the newly constructed message.
@@ -93,6 +93,22 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
     
     public void turnRight() {
         logger.info("Turn right");
+        
+
+        // Example of constructing a protocol buffer.
+        // OUTER_CLASS is typically the name of the .proto or .java file containing the protocol buffers.
+        // INNER_CLASS is, in the usual protocol buffer pattern, the name of the "container" class.
+        // MESSAGE_TYPE is, in the usual protocol buffer pattern, the name of the "contained" message type.
+        TxaGame.TxaGameMessage msg = TxaGame.TxaGameMessage.newBuilder()
+            .setType(TxaGame.TxaGameMessage.Type.CHANGE_DIRECTION)
+            .setChangeDirection(
+                    TxaGame.ChangeDirection.newBuilder()
+                    .setDegreeChange(15.0)
+                    .setEntityName("Player-1")
+        ).build();
+        
+        // Send the newly constructed message.
+        publisher.publish(new TxaGameMessage(msg));
     }
     
     public void speedUp() {
@@ -103,7 +119,7 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
                 .setChangeSpeed(
                         TxaGame.ChangeSpeed.newBuilder()
                         .setSpeedFactor(1)
-                        .setEntityName("Player 1")
+                        .setEntityName("Player-1")
             ).build();
             
             // Send the newly constructed message.
@@ -118,7 +134,7 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
                 .setChangeSpeed(
                         TxaGame.ChangeSpeed.newBuilder()
                         .setSpeedFactor(.2)
-                        .setEntityName("Player 1")
+                        .setEntityName("Player-1")
             ).build();
             
             // Send the newly constructed message.
