@@ -31,7 +31,7 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
 
     // Grabbing a Publisher handle (usually a class will share a publisher)
     // The Publisher name can be anything you want to use to identify the sender, such as the class name.
-    private static Publisher publisher = Switchboard.getInstance().requestPublisher(TxaInterfaceManager.class.getSimpleName());
+    private static Publisher publisher = Switchboard.getInstance().requestPublisher("DirectiveUI");
 
     
     // Services
