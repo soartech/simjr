@@ -14,6 +14,7 @@
     requireScript("polygons");
     requireScript("weapons");
     
+    //setup txa connection
     importPackage(Packages.com.soartech.simjr.game);
     var txaInterfaceManager = new TxaInterfaceManager(services);
     services.addService(txaInterfaceManager);
@@ -28,13 +29,25 @@
     startDis(disConn);
     
     //set the origin for the map
-    setOrigin({"latitude": 37.19, "longitude": -115.02});
+    //fallon-1 map has origin of 38.694085,-119.638796
+    //fallon-large map has origin of 39.04052,-118.999786
+    //setOrigin({"latitude": 37.19, "longitude": -115.02});
+    setOrigin({"latitude": 39.04, "longitude": -119.00});
+    
 
   </simjr:preLoadScript>
   
   <simjr:postLoadScript simjr:type="text/javascript">
     // createCheatSheet(); 
     // load cheatsheet.html
+    
+    // Set up the background map of fallon naval air base
+    importPackage(Packages.com.soartech.simjr.ui.pvd)  // For MapImage
+    var map = new MapImage(getRelativeFile("./fallon-large.png"),
+                       new Vector3(0, 0, 0) /*center*/, 
+                       118.0 /*metersPerPixel*/);
+    getActivePlanViewDisplay().getView().setMapImage(map);
+    
     getActivePlanViewDisplay().getView().showAll();
   </simjr:postLoadScript>
   
