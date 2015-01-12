@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2012, Soar Technology, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of Soar Technology, Inc. nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without the specific prior written permission of Soar Technology, Inc.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
@@ -53,7 +53,7 @@ public class CircularRegionShape extends EntityShape
     public static final String NAME = "cylinder";
     private boolean updateWidth = false;
     private Circle region;
-    
+
     public static final EntityShapeFactory FACTORY = new Factory();
     public static class Factory extends AbstractEntityShapeFactory {
 
@@ -61,7 +61,7 @@ public class CircularRegionShape extends EntityShape
         {
             return new CircularRegionShape(entity, system);
         }
-        
+
         public Shape createSelection(String id, Entity selected)
         {
             Circle highlightedRegion;
@@ -71,21 +71,21 @@ public class CircularRegionShape extends EntityShape
             {
                 highlightedRegion = new Circle(id, EntityConstants.LAYER_AREA,
                         new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
-                        Scalar.createPixel(20));    
+                        Scalar.createPixel(20));
             }
             else
             {
-                highlightedRegion = 
+                highlightedRegion =
                         new Circle(id, EntityConstants.LAYER_AREA,
                                 new Position(selected.getName()), Rotation.IDENTITY, createSelectionStyle(),
-                                Scalar.createMeter(lineWidth.doubleValue()/2));         
+                                Scalar.createMeter(lineWidth.doubleValue()/2));
             }
             return highlightedRegion;
         }
-        
+
         public String toString() { return NAME; }
     };
-    
+
     private static final ShapeStyle labelStyle = new ShapeStyle();
     static
     {
@@ -93,7 +93,7 @@ public class CircularRegionShape extends EntityShape
         labelStyle.setFillColor(new Color(0xF0, 0xF0, 0xE0));
         labelStyle.setOpacity(0.75f);
     }
-    
+
     /**
      * @param entity
      * @param system
@@ -101,107 +101,107 @@ public class CircularRegionShape extends EntityShape
     public CircularRegionShape(Entity entity, ShapeSystem system)
     {
         super(entity, system);
-        
+
         final Map<String, Object> props = entity.getProperties();
-        String layer = EntityTools.getProperty(props, 
-               EntityConstants.PROPERTY_SHAPE_LAYER, 
+        String layer = EntityTools.getProperty(props,
+               EntityConstants.PROPERTY_SHAPE_LAYER,
                EntityConstants.LAYER_AREA).toString();
         String name = getRootFrame().getName();
-        
+
         final ShapeStyle style = new ShapeStyle();
         style.setFillStyle(FillStyle.FILLED);
         final Color fillColor =(Color) EntityTools.getFillColor(entity, Color.LIGHT_GRAY);
         style.setFillColor(fillColor);
-        
-        
+
+
         final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 0.5f);
         if(opacity != null)
         {
             style.setOpacity(opacity.floatValue());
         }
-        
+
         Number lineWidth = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_WIDTH_METERS,null);
         if(lineWidth == null || Math.abs(lineWidth.doubleValue()) <.5)
         {
-            region = new Circle(name + ".body", EntityConstants.LAYER_AREA, 
+            region = new Circle(name + ".body", layer,
                                 new Position(name),
                                 Rotation.IDENTITY,
-                                style, 
+                                style,
                                 Scalar.createPixel(10)
                                 );
         }
         else
         {
-            region = new Circle(name + ".body", EntityConstants.LAYER_AREA, 
+            region = new Circle(name + ".body", layer,
                     new Position(name),
                     Rotation.IDENTITY,
-                    style, 
+                    style,
                     Scalar.createMeter(lineWidth.doubleValue()/2)
                     );
-            
+
         }
         createLabel(10, 10, name);
         addHitableShape(region);
-       
+
     }
-    
+
     @Override
     public void update()
     {
         super.update();
         if(updateWidth)
         {
-            
+
             updateWidth = false;
             updateWidth();
         }
     }
-    
+
     private void updateWidth()
     {
         removeShape(region);
         final Map<String, Object> props = getEntity().getProperties();
-        String layer = EntityTools.getProperty(props, 
-               EntityConstants.PROPERTY_SHAPE_LAYER, 
+        String layer = EntityTools.getProperty(props,
+               EntityConstants.PROPERTY_SHAPE_LAYER,
                EntityConstants.LAYER_ROUTE).toString();
         String name = getRootFrame().getName();
-        
+
         final ShapeStyle style = new ShapeStyle();
         style.setFillStyle(FillStyle.FILLED);
         final Color fillColor =(Color) EntityTools.getFillColor(getEntity(), Color.LIGHT_GRAY);
         style.setFillColor(fillColor);
         //final Color lineColor = (Color) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_LINE_COLOR, Color.BLUE);
         //style.setLineColor(lineColor);
-        
+
         final Number opacity = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_OPACITY, 0.5);
         if(opacity != null)
         {
             style.setOpacity(opacity.floatValue());
         }
-        
+
         Number lineWidth = (Number) EntityTools.getProperty(props, EntityConstants.PROPERTY_SHAPE_WIDTH_METERS,null);
         if(Math.abs(lineWidth.doubleValue()) <.5)
         {
-            region = new Circle(name + ".body", EntityConstants.LAYER_AREA, 
+            region = new Circle(name + ".body", layer,
                                 new Position(name),
                                 Rotation.IDENTITY,
-                                style, 
+                                style,
                                 Scalar.createPixel(10)
                                 );
         }
         else
         {
-            region = new Circle(name + ".body", EntityConstants.LAYER_AREA, 
+            region = new Circle(name + ".body", layer,
                     new Position(name),
                     Rotation.IDENTITY,
-                    style, 
+                    style,
                     Scalar.createMeter(lineWidth.doubleValue()/2)
                     );
-            
+
         }
         addHitableShape(region);
     }
-    
+
     @Override
     public void onPropertyChanged(Entity entity, String propertyName)
     {
@@ -211,7 +211,7 @@ public class CircularRegionShape extends EntityShape
             this.updateWidth = true;
         }
     }
-    
+
     /* (non-Javadoc)
      * @see com.soartech.simjr.ui.pvd.EntityShapeFactory#createSelection(java.lang.String, com.soartech.simjr.Entity)
      */
