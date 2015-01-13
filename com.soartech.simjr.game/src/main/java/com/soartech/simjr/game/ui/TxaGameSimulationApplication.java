@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.soartech.simjr.game;
+package com.soartech.simjr.game.ui;
 
 import bibliothek.gui.dock.common.CLocation;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.soartech.simjr.game;
+package com.soartech.simjr.game.ui;
 
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.ui.SimulationMainFrame;

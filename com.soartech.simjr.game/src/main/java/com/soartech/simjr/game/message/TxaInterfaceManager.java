@@ -1,4 +1,4 @@
-package com.soartech.simjr.game;
+package com.soartech.simjr.game.message;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
-import com.soartech.simjr.game.message.TxaDirectiveMessage;
-import com.soartech.simjr.game.message.TxaGameMessage;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.sim.Simulation;
