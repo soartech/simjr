@@ -14,8 +14,14 @@
     requireScript("polygons");
     requireScript("weapons");
     
-    //setup txa connection
     importPackage(Packages.com.soartech.simjr.game);
+    
+    
+    //listen for simulation changes
+    var simListener = new GameSimulationListenerAdapter();
+    simulation.addListener(simListener);
+    
+    //setup txa connection
     var txaInterfaceManager = new TxaInterfaceManager(services);
     services.addService(txaInterfaceManager);
     txaInterfaceManager.start(null);
