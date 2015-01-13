@@ -5,6 +5,161 @@
     <simjr:description />
   </simjr:metadata>
   
+  <simjr:entities>
+    <simjr:entity simjr:name="Alpha" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="40.204" simjr:longitude="-116.977" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Bravo" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.805" simjr:longitude="-117.315" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Charlie" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.689" simjr:longitude="-116.631" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Delta" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.4575" simjr:longitude="-117.720" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Start" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.945" simjr:longitude="-118.222" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="sd1a" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.7177" simjr:longitude="-117.8012" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd1b" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.4883" simjr:longitude="-117.9831" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd1c" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.2599" simjr:longitude="-117.7269" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd1d" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.4142" simjr:longitude="-117.3690" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd1e" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.7335" simjr:longitude="-117.4180" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd1f" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.7178" simjr:longitude="-117.8045" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Slow Down 1" simjr:prototype="area" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="sd1a" />
+        <simjr:point simjr:name="sd1b" />
+        <simjr:point simjr:name="sd1c" />
+        <simjr:point simjr:name="sd1d" />
+        <simjr:point simjr:name="sd1e" />
+        <simjr:point simjr:name="sd1f" />
+      </simjr:points>
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="sd2a" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.9610" simjr:longitude="-117.0284" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd2b" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="40.1687" simjr:longitude="-116.6957" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd2c" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.8920" simjr:longitude="-116.5204" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="sd2d" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.7714" simjr:longitude="-116.8416" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity><simjr:entity simjr:name="Slow Down 2" simjr:prototype="area" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">// Refer to newly created entity with 'self'
+logger.info("Created entity " + self.name);</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="sd2a" />
+        <simjr:point simjr:name="sd2b" />
+        <simjr:point simjr:name="sd2c" />
+        <simjr:point simjr:name="sd2d" />
+      </simjr:points>
+    </simjr:entity>
+  </simjr:entities>
+  
+  
   // Commonly used imports and scripts
   <simjr:preLoadScript simjr:type="text/javascript">
     importPackage(Packages.com.soartech.simjr.controllers);
