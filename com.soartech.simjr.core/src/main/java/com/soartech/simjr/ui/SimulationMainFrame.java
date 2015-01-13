@@ -265,12 +265,18 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         initToolbar();
     }
 
-    private void addDockable(SingleCDockable dockable, CLocation location, String key)
+    public void addDockable(SingleCDockable dockable, CLocation location, String key)
     {
         dockable.setLocation(location);
         singleDockables.put(key, dockable);
         control.addDockable(dockable);
         dockable.setVisible(true);        
+    }
+    
+    public void removeDockable(String key)
+    {
+        SingleCDockable dockable = singleDockables.remove(key);
+        control.removeDockable(dockable);
     }
     
     /**
