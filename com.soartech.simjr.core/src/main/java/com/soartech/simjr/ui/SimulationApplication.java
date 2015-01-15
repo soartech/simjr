@@ -256,7 +256,7 @@ public class SimulationApplication extends DefaultServiceManager
         }
     }
 
-    private void completeInitialization(SimulationMainFrame mainFrame)
+    protected void completeInitialization(SimulationMainFrame mainFrame)
     {
         actionManager.updateActions();
         mainFrame.toFront();
