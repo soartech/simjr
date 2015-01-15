@@ -6,6 +6,23 @@
   </simjr:metadata>
   
   <simjr:entities>
+    <simjr:entity simjr:name="Fake Player 1" simjr:prototype="fwa" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.804" simjr:longitude="-116.977" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+    <simjr:entity simjr:name="Fake Player 2" simjr:prototype="fwa" simjr:force="friendly" simjr:visible="false" simjr:labelVisible="false" simjr:minAltitude="0.0">
+      <simjr:location>
+        <simjr:lla simjr:latitude="39.404" simjr:longitude="-116.977" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:points />
+      <simjr:capabilities />
+    </simjr:entity>
+  
     <simjr:entity simjr:name="Alpha" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true" simjr:labelVisible="true" simjr:minAltitude="0.0">
       <simjr:location>
         <simjr:lla simjr:latitude="40.204" simjr:longitude="-116.977" simjr:altitude="0.0" />
@@ -170,6 +187,7 @@ logger.info("Created entity " + self.name);</simjr:initScript>
     requireScript("weapons");
     
     importPackage(Packages.com.soartech.simjr.game);
+    importPackage(Packages.com.soartech.simjr.game.message);
     
     
     //listen for simulation changes
@@ -194,7 +212,6 @@ logger.info("Created entity " + self.name);</simjr:initScript>
     //fallon-large map has origin of 39.04052,-118.999786
     //setOrigin({"latitude": 37.19, "longitude": -115.02});
     setOrigin({"latitude": 39.04, "longitude": -119.00});
-    
 
   </simjr:preLoadScript>
   
@@ -208,8 +225,8 @@ logger.info("Created entity " + self.name);</simjr:initScript>
                        new Vector3(0, 0, 0) /*center*/, 
                        118.0 /*metersPerPixel*/);
     getActivePlanViewDisplay().getView().setMapImage(map);
-    
     getActivePlanViewDisplay().getView().showAll();
+    
   </simjr:postLoadScript>
   
 </simjr:scenario>

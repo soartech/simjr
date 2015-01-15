@@ -1,17 +1,24 @@
 package com.soartech.simjr.game.message;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimulationException;
 import com.soartech.simjr.adaptables.AbstractAdaptable;
+import com.soartech.simjr.game.ui.TxaGameSimulationApplication;
 import com.soartech.simjr.services.ServiceManager;
 import com.soartech.simjr.services.SimulationService;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.switchboard.Publisher;
 import com.soartech.switchboard.Switchboard;
+import com.soartech.switchboard.message.Message;
 import com.soartech.switchboard.message.MessageBuilder;
+import com.soartech.switchboard.notifier.Notifier;
+import com.soartech.switchboard.subscription.SenderTypeSubscription;
+import com.soartech.txa.proto.TxaDirective;
 import com.soartech.txa.proto.TxaGame;
 
 /**
@@ -30,7 +37,6 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
     // Grabbing a Publisher handle (usually a class will share a publisher)
     // The Publisher name can be anything you want to use to identify the sender, such as the class name.
     private static Publisher publisher = Switchboard.getInstance().requestPublisher("DirectiveUI");
-
     
     // Services
     private final ServiceManager services;
@@ -50,6 +56,103 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
     public TxaInterfaceManager(ServiceManager services) {
         this.services = services;
         this.simulation = Simulation.findService(services);
+        
+        final ServiceManager localServices = services;
+        
+        Switchboard.getInstance().subscribe(new SenderTypeSubscription(new Notifier() {
+            @Override
+            public void doNotify(Message uncastMsg) {
+                // Make sure that we are receiving the right message type (safety net)
+                if (!TxaGameMessage.class.isInstance(uncastMsg))
+                    return;
+                TxaGameMessage msgData = (TxaGameMessage)uncastMsg;
+
+                // Grab the nested type and make sure it's valid.
+                Object nestedField = msgData.getField();
+                if (nestedField == null || msgData.get().getType() != TxaGame.TxaGameMessage.Type.UPDATE_SCORE || !TxaGame.UpdateScore.class.isInstance(nestedField))
+                    return;
+
+                TxaGame.UpdateScore msg = (TxaGame.UpdateScore)nestedField;
+
+                // Now you can do something with the message.
+                int theScore = msg.getScore();
+                if(localServices instanceof TxaGameSimulationApplication)
+                {
+                    TxaGameSimulationApplication txaServices = (TxaGameSimulationApplication) localServices;
+                    txaServices.setScore(theScore);
+                }
+            }
+        }, "TXAIO", "updateScore"));
+        
+        
+        Switchboard.getInstance().subscribe(new SenderTypeSubscription(new Notifier() {
+            @Override
+            public void doNotify(Message uncastMsg) {
+                // Make sure that we are receiving the right message type (safety net)
+                if (!TxaGameMessage.class.isInstance(uncastMsg))
+                    return;
+                TxaGameMessage msgData = (TxaGameMessage)uncastMsg;
+
+                // Grab the nested type and make sure it's valid.
+                Object nestedField = msgData.getField();
+                if (nestedField == null || msgData.get().getType() != TxaGame.TxaGameMessage.Type.UPDATE_GOALS || !TxaGame.UpdateGoals.class.isInstance(nestedField))
+                    return;
+
+                TxaGame.UpdateGoals msg = (TxaGame.UpdateGoals)nestedField;
+
+                // Now you can do something with the message.
+                List<String> goalsList = msg.getGoalsList();
+                String entityName = msg.getEntityName();
+                
+//                String goalsString = "";
+//                for(String s : goalsList)
+//                {
+//                    goalsString += s;
+//                }
+//                logger.info("*** Goals for: " + entityName);
+//                logger.info("*** The goals: " + goalsString);
+                if(localServices instanceof TxaGameSimulationApplication)
+                {
+                    TxaGameSimulationApplication txaServices = (TxaGameSimulationApplication) localServices;
+                    txaServices.setGoals(goalsList, entityName);
+                }
+            }
+        }, "TXAIO", "updateGoals"));
+        
+
+        Switchboard.getInstance().subscribe(new SenderTypeSubscription(new Notifier() {
+            @Override
+            public void doNotify(Message uncastMsg) {
+                // Make sure that we are receiving the right message type (safety net)
+                if (!TxaGameMessage.class.isInstance(uncastMsg))
+                    return;
+                TxaGameMessage msgData = (TxaGameMessage)uncastMsg;
+
+                // Grab the nested type and make sure it's valid.
+                Object nestedField = msgData.getField();
+                if (nestedField == null || msgData.get().getType() != TxaGame.TxaGameMessage.Type.UPDATE_RULES || !TxaGame.UpdateRules.class.isInstance(nestedField))
+                    return;
+
+                TxaGame.UpdateRules msg = (TxaGame.UpdateRules)nestedField;
+
+                // Now you can do something with the message.
+                List<String> rulesList = msg.getRulesList();
+                String entityName = msg.getEntityName();
+                
+//                String rulesString = "";
+//                for(String s : rulesList)
+//                {
+//                    rulesString += s;
+//                }
+//                logger.info("*** Rules for: " + entityName);
+//                logger.info("*** The rules: " + rulesString);
+                if(localServices instanceof TxaGameSimulationApplication)
+                {
+                    TxaGameSimulationApplication txaServices = (TxaGameSimulationApplication) localServices;
+                    txaServices.setRules(rulesList, entityName);
+                }
+            }
+        }, "TXAIO", "updateRules"));
     }
     
     @Override
@@ -68,6 +171,29 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
     public void shutdown() throws SimulationException {
         // TODO Auto-generated method stub
 
+    }
+    
+    public void setMatchSpeedAutopilot(boolean value) {
+        logger.info("Setting match speed autopilot to: " + Boolean.toString(value));
+    }
+    
+    public void setObstableAvoidAutopilot(boolean value) {
+        logger.info("Setting obstacle avoid autopilot to: " + Boolean.toString(value));
+    }
+    
+    public void setHeading(String player, double degrees) {
+//        logger.info("Setting heading to: " + degrees);
+        
+        TxaGame.TxaGameMessage msg = TxaGame.TxaGameMessage.newBuilder()
+                .setType(TxaGame.TxaGameMessage.Type.CHANGE_DIRECTION)
+                .setChangeDirection(
+                        TxaGame.ChangeDirection.newBuilder()
+                        .setDegreeChange(degrees)
+                        .setEntityName(player)
+            ).build();
+            
+            // Send the newly constructed message.
+            publisher.publish(new TxaGameMessage(msg));
     }
     
     public void turnLeft(String player) {
@@ -107,6 +233,27 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
         
         // Send the newly constructed message.
         publisher.publish(new TxaGameMessage(msg));
+    }
+    
+    /**
+     * Set the entity speed and send the message over the txa connection.
+     * 
+     * @param player The name of the entity
+     * @param speed The speed expressed from 0.0 to 1.0
+     */
+    public void setSpeed(String player, double speed) {
+//        logger.info("Setting speed to: " + speed);
+        
+        TxaGame.TxaGameMessage msg = TxaGame.TxaGameMessage.newBuilder()
+                .setType(TxaGame.TxaGameMessage.Type.CHANGE_SPEED)
+                .setChangeSpeed(
+                        TxaGame.ChangeSpeed.newBuilder()
+                        .setSpeedFactor(speed)
+                        .setEntityName(player)
+            ).build();
+            
+            // Send the newly constructed message.
+            publisher.publish(new TxaGameMessage(msg));
     }
     
     public void speedUp(String player) {
