@@ -173,12 +173,70 @@ public class TxaInterfaceManager extends AbstractAdaptable implements
 
     }
     
-    public void setMatchSpeedAutopilot(boolean value) {
+    public void setMatchSpeedAutopilot(boolean value, String player) {
         logger.info("Setting match speed autopilot to: " + Boolean.toString(value));
+        
+        if(value)
+        {
+            TxaDirective.TxaDirectiveMessage msg = TxaDirective.TxaDirectiveMessage.newBuilder()
+                    .setType(TxaDirective.TxaDirectiveMessage.Type.INSTANTIATE_DIRECTIVE)
+                    .setInstantiateDirective(TxaDirective.InstantiateDirective.newBuilder()
+                            .setDirective(TxaDirective.Directive.newBuilder()
+                                    .setDirectiveTemplateName("ObeySpeedZones")
+                                    .addTacticalVariables(TxaDirective.TacticalVariable.newBuilder()
+                                            .setVariableName("PlayerName")
+                                            .setVariableValue(player)
+                                            .setVariableType("std::string")
+                                            .build()))
+                            .setAliasedId("_matchSpeed_" + player))
+                    .build();
+            
+            publisher.publish(new TxaDirectiveMessage(msg));
+        }
+        else
+        {
+            TxaDirective.TxaDirectiveMessage msg = TxaDirective.TxaDirectiveMessage.newBuilder()
+                    .setType(TxaDirective.TxaDirectiveMessage.Type.TERMINATE_DIRECTIVE)
+                    .setTerminateDirective(TxaDirective.TerminateDirective.newBuilder()
+                            .setAliasedId("_matchSpeed_" + player))
+                    .build();
+            
+            publisher.publish(new TxaDirectiveMessage(msg));
+        }
+        
+        
     }
     
-    public void setObstableAvoidAutopilot(boolean value) {
+    public void setObstableAvoidAutopilot(boolean value, String player) {
         logger.info("Setting obstacle avoid autopilot to: " + Boolean.toString(value));
+        
+        if(value)
+        {
+            TxaDirective.TxaDirectiveMessage msg = TxaDirective.TxaDirectiveMessage.newBuilder()
+                    .setType(TxaDirective.TxaDirectiveMessage.Type.INSTANTIATE_DIRECTIVE)
+                    .setInstantiateDirective(TxaDirective.InstantiateDirective.newBuilder()
+                            .setDirective(TxaDirective.Directive.newBuilder()
+                                    .setDirectiveTemplateName("AvoidObstacles")
+                                    .addTacticalVariables(TxaDirective.TacticalVariable.newBuilder()
+                                            .setVariableName("PlayerName")
+                                            .setVariableValue(player)
+                                            .setVariableType("std::string")
+                                            .build()))
+                            .setAliasedId("_avoidObstacle_" + player))
+                    .build();
+            
+            publisher.publish(new TxaDirectiveMessage(msg));
+        }
+        else
+        {
+            TxaDirective.TxaDirectiveMessage msg = TxaDirective.TxaDirectiveMessage.newBuilder()
+                    .setType(TxaDirective.TxaDirectiveMessage.Type.TERMINATE_DIRECTIVE)
+                    .setTerminateDirective(TxaDirective.TerminateDirective.newBuilder()
+                            .setAliasedId("_avoidObstacle_" + player))
+                    .build();
+            
+            publisher.publish(new TxaDirectiveMessage(msg));
+        }
     }
     
     public void setHeading(String player, double degrees) {

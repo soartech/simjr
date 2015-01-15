@@ -1269,18 +1269,6 @@ public final class TxaDirective {
           return false;
         }
       }
-      if (hasTerminateDirective()) {
-        if (!getTerminateDirective().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      if (hasDirectiveRemoved()) {
-        if (!getDirectiveRemoved().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       if (hasUpdateDirective()) {
         if (!getUpdateDirective().isInitialized()) {
           memoizedIsInitialized = 0;
@@ -1963,18 +1951,6 @@ public final class TxaDirective {
         }
         if (hasPauseDirective()) {
           if (!getPauseDirective().isInitialized()) {
-            
-            return false;
-          }
-        }
-        if (hasTerminateDirective()) {
-          if (!getTerminateDirective().isInitialized()) {
-            
-            return false;
-          }
-        }
-        if (hasDirectiveRemoved()) {
-          if (!getDirectiveRemoved().isInitialized()) {
             
             return false;
           }
@@ -6642,6 +6618,21 @@ public final class TxaDirective {
      */
     com.google.protobuf.ByteString
         getTargetEntityBytes();
+
+    // optional string aliasedId = 6;
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    boolean hasAliasedId();
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    java.lang.String getAliasedId();
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getAliasedIdBytes();
   }
   /**
    * Protobuf type {@code TxaDirective.DirectiveInstance}
@@ -6731,6 +6722,11 @@ public final class TxaDirective {
             case 42: {
               bitField0_ |= 0x00000010;
               targetEntity_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              aliasedId_ = input.readBytes();
               break;
             }
           }
@@ -6913,12 +6909,56 @@ public final class TxaDirective {
       }
     }
 
+    // optional string aliasedId = 6;
+    public static final int ALIASEDID_FIELD_NUMBER = 6;
+    private java.lang.Object aliasedId_;
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    public boolean hasAliasedId() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    public java.lang.String getAliasedId() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          aliasedId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string aliasedId = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAliasedIdBytes() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        aliasedId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       directive_ = com.soartech.txa.proto.TxaDirective.Directive.getDefaultInstance();
       directiveId_ = 0;
       directiveName_ = "";
       directiveStatus_ = com.soartech.txa.proto.TxaDirective.DirectiveStatus.Value.ACTIVE;
       targetEntity_ = "";
+      aliasedId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6955,6 +6995,9 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, getTargetEntityBytes());
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, getAliasedIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -6983,6 +7026,10 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, getTargetEntityBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getAliasedIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7115,6 +7162,8 @@ public final class TxaDirective {
         bitField0_ = (bitField0_ & ~0x00000008);
         targetEntity_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
+        aliasedId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -7167,6 +7216,10 @@ public final class TxaDirective {
           to_bitField0_ |= 0x00000010;
         }
         result.targetEntity_ = targetEntity_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.aliasedId_ = aliasedId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -7200,6 +7253,11 @@ public final class TxaDirective {
         if (other.hasTargetEntity()) {
           bitField0_ |= 0x00000010;
           targetEntity_ = other.targetEntity_;
+          onChanged();
+        }
+        if (other.hasAliasedId()) {
+          bitField0_ |= 0x00000020;
+          aliasedId_ = other.aliasedId_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -7567,6 +7625,80 @@ public final class TxaDirective {
   }
   bitField0_ |= 0x00000010;
         targetEntity_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string aliasedId = 6;
+      private java.lang.Object aliasedId_ = "";
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public boolean hasAliasedId() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public java.lang.String getAliasedId() {
+        java.lang.Object ref = aliasedId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          aliasedId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAliasedIdBytes() {
+        java.lang.Object ref = aliasedId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          aliasedId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public Builder setAliasedId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public Builder clearAliasedId() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        aliasedId_ = getDefaultInstance().getAliasedId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 6;</code>
+       */
+      public Builder setAliasedIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        aliasedId_ = value;
         onChanged();
         return this;
       }
@@ -11713,6 +11845,21 @@ public final class TxaDirective {
      * <code>required .TxaDirective.Directive directive = 1;</code>
      */
     com.soartech.txa.proto.TxaDirective.DirectiveOrBuilder getDirectiveOrBuilder();
+
+    // optional string aliasedId = 2;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    boolean hasAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    java.lang.String getAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAliasedIdBytes();
   }
   /**
    * Protobuf type {@code TxaDirective.InstantiateDirective}
@@ -11778,6 +11925,11 @@ public final class TxaDirective {
               bitField0_ |= 0x00000001;
               break;
             }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              aliasedId_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -11840,8 +11992,52 @@ public final class TxaDirective {
       return directive_;
     }
 
+    // optional string aliasedId = 2;
+    public static final int ALIASEDID_FIELD_NUMBER = 2;
+    private java.lang.Object aliasedId_;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public boolean hasAliasedId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public java.lang.String getAliasedId() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          aliasedId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAliasedIdBytes() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        aliasedId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       directive_ = com.soartech.txa.proto.TxaDirective.Directive.getDefaultInstance();
+      aliasedId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -11866,6 +12062,9 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, directive_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getAliasedIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -11878,6 +12077,10 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, directive_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getAliasedIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -12002,6 +12205,8 @@ public final class TxaDirective {
           directiveBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        aliasedId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -12038,6 +12243,10 @@ public final class TxaDirective {
         } else {
           result.directive_ = directiveBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.aliasedId_ = aliasedId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -12056,6 +12265,11 @@ public final class TxaDirective {
         if (other == com.soartech.txa.proto.TxaDirective.InstantiateDirective.getDefaultInstance()) return this;
         if (other.hasDirective()) {
           mergeDirective(other.getDirective());
+        }
+        if (other.hasAliasedId()) {
+          bitField0_ |= 0x00000002;
+          aliasedId_ = other.aliasedId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -12207,6 +12421,80 @@ public final class TxaDirective {
           directive_ = null;
         }
         return directiveBuilder_;
+      }
+
+      // optional string aliasedId = 2;
+      private java.lang.Object aliasedId_ = "";
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public boolean hasAliasedId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public java.lang.String getAliasedId() {
+        java.lang.Object ref = aliasedId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          aliasedId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAliasedIdBytes() {
+        java.lang.Object ref = aliasedId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          aliasedId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder clearAliasedId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        aliasedId_ = getDefaultInstance().getAliasedId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:TxaDirective.InstantiateDirective)
@@ -12746,23 +13034,46 @@ public final class TxaDirective {
   public interface PauseDirectiveOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     boolean hasDirectiveId();
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     int getDirectiveId();
 
-    // required bool paused = 2;
+    // optional string aliasedId = 2;
     /**
-     * <code>required bool paused = 2;</code>
+     * <code>optional string aliasedId = 2;</code>
+     */
+    boolean hasAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    java.lang.String getAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAliasedIdBytes();
+
+    // required bool paused = 3;
+    /**
+     * <code>required bool paused = 3;</code>
      */
     boolean hasPaused();
     /**
-     * <code>required bool paused = 2;</code>
+     * <code>required bool paused = 3;</code>
      */
     boolean getPaused();
   }
@@ -12822,8 +13133,13 @@ public final class TxaDirective {
               directiveId_ = input.readInt32();
               break;
             }
-            case 16: {
+            case 18: {
               bitField0_ |= 0x00000002;
+              aliasedId_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
               paused_ = input.readBool();
               break;
             }
@@ -12867,33 +13183,84 @@ public final class TxaDirective {
     }
 
     private int bitField0_;
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     public static final int DIRECTIVEID_FIELD_NUMBER = 1;
     private int directiveId_;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public boolean hasDirectiveId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public int getDirectiveId() {
       return directiveId_;
     }
 
-    // required bool paused = 2;
-    public static final int PAUSED_FIELD_NUMBER = 2;
-    private boolean paused_;
+    // optional string aliasedId = 2;
+    public static final int ALIASEDID_FIELD_NUMBER = 2;
+    private java.lang.Object aliasedId_;
     /**
-     * <code>required bool paused = 2;</code>
+     * <code>optional string aliasedId = 2;</code>
      */
-    public boolean hasPaused() {
+    public boolean hasAliasedId() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required bool paused = 2;</code>
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public java.lang.String getAliasedId() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          aliasedId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAliasedIdBytes() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        aliasedId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required bool paused = 3;
+    public static final int PAUSED_FIELD_NUMBER = 3;
+    private boolean paused_;
+    /**
+     * <code>required bool paused = 3;</code>
+     */
+    public boolean hasPaused() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required bool paused = 3;</code>
      */
     public boolean getPaused() {
       return paused_;
@@ -12901,6 +13268,7 @@ public final class TxaDirective {
 
     private void initFields() {
       directiveId_ = 0;
+      aliasedId_ = "";
       paused_ = false;
     }
     private byte memoizedIsInitialized = -1;
@@ -12908,10 +13276,6 @@ public final class TxaDirective {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasDirectiveId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasPaused()) {
         memoizedIsInitialized = 0;
         return false;
@@ -12927,7 +13291,10 @@ public final class TxaDirective {
         output.writeInt32(1, directiveId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBool(2, paused_);
+        output.writeBytes(2, getAliasedIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBool(3, paused_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -12944,7 +13311,11 @@ public final class TxaDirective {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, paused_);
+          .computeBytesSize(2, getAliasedIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, paused_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -13064,8 +13435,10 @@ public final class TxaDirective {
         super.clear();
         directiveId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        paused_ = false;
+        aliasedId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        paused_ = false;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -13101,6 +13474,10 @@ public final class TxaDirective {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
+        result.aliasedId_ = aliasedId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
         result.paused_ = paused_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -13121,6 +13498,11 @@ public final class TxaDirective {
         if (other.hasDirectiveId()) {
           setDirectiveId(other.getDirectiveId());
         }
+        if (other.hasAliasedId()) {
+          bitField0_ |= 0x00000002;
+          aliasedId_ = other.aliasedId_;
+          onChanged();
+        }
         if (other.hasPaused()) {
           setPaused(other.getPaused());
         }
@@ -13129,10 +13511,6 @@ public final class TxaDirective {
       }
 
       public final boolean isInitialized() {
-        if (!hasDirectiveId()) {
-          
-          return false;
-        }
         if (!hasPaused()) {
           
           return false;
@@ -13159,22 +13537,34 @@ public final class TxaDirective {
       }
       private int bitField0_;
 
-      // required int32 directiveId = 1;
+      // optional int32 directiveId = 1;
       private int directiveId_ ;
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public boolean hasDirectiveId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public int getDirectiveId() {
         return directiveId_;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder setDirectiveId(int value) {
         bitField0_ |= 0x00000001;
@@ -13183,7 +13573,11 @@ public final class TxaDirective {
         return this;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder clearDirectiveId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -13192,34 +13586,108 @@ public final class TxaDirective {
         return this;
       }
 
-      // required bool paused = 2;
-      private boolean paused_ ;
+      // optional string aliasedId = 2;
+      private java.lang.Object aliasedId_ = "";
       /**
-       * <code>required bool paused = 2;</code>
+       * <code>optional string aliasedId = 2;</code>
        */
-      public boolean hasPaused() {
+      public boolean hasAliasedId() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required bool paused = 2;</code>
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public java.lang.String getAliasedId() {
+        java.lang.Object ref = aliasedId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          aliasedId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAliasedIdBytes() {
+        java.lang.Object ref = aliasedId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          aliasedId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder clearAliasedId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        aliasedId_ = getDefaultInstance().getAliasedId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // required bool paused = 3;
+      private boolean paused_ ;
+      /**
+       * <code>required bool paused = 3;</code>
+       */
+      public boolean hasPaused() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required bool paused = 3;</code>
        */
       public boolean getPaused() {
         return paused_;
       }
       /**
-       * <code>required bool paused = 2;</code>
+       * <code>required bool paused = 3;</code>
        */
       public Builder setPaused(boolean value) {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         paused_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required bool paused = 2;</code>
+       * <code>required bool paused = 3;</code>
        */
       public Builder clearPaused() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         paused_ = false;
         onChanged();
         return this;
@@ -14611,15 +15079,38 @@ public final class TxaDirective {
   public interface TerminateDirectiveOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     boolean hasDirectiveId();
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     int getDirectiveId();
+
+    // optional string aliasedId = 2;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    boolean hasAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    java.lang.String getAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAliasedIdBytes();
   }
   /**
    * Protobuf type {@code TxaDirective.TerminateDirective}
@@ -14677,6 +15168,11 @@ public final class TxaDirective {
               directiveId_ = input.readInt32();
               break;
             }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              aliasedId_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -14717,34 +15213,82 @@ public final class TxaDirective {
     }
 
     private int bitField0_;
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     public static final int DIRECTIVEID_FIELD_NUMBER = 1;
     private int directiveId_;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public boolean hasDirectiveId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public int getDirectiveId() {
       return directiveId_;
     }
 
+    // optional string aliasedId = 2;
+    public static final int ALIASEDID_FIELD_NUMBER = 2;
+    private java.lang.Object aliasedId_;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public boolean hasAliasedId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public java.lang.String getAliasedId() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          aliasedId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAliasedIdBytes() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        aliasedId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       directiveId_ = 0;
+      aliasedId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasDirectiveId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -14754,6 +15298,9 @@ public final class TxaDirective {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, directiveId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getAliasedIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -14767,6 +15314,10 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, directiveId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getAliasedIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -14886,6 +15437,8 @@ public final class TxaDirective {
         super.clear();
         directiveId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        aliasedId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -14918,6 +15471,10 @@ public final class TxaDirective {
           to_bitField0_ |= 0x00000001;
         }
         result.directiveId_ = directiveId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.aliasedId_ = aliasedId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -14937,15 +15494,16 @@ public final class TxaDirective {
         if (other.hasDirectiveId()) {
           setDirectiveId(other.getDirectiveId());
         }
+        if (other.hasAliasedId()) {
+          bitField0_ |= 0x00000002;
+          aliasedId_ = other.aliasedId_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasDirectiveId()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -14968,22 +15526,34 @@ public final class TxaDirective {
       }
       private int bitField0_;
 
-      // required int32 directiveId = 1;
+      // optional int32 directiveId = 1;
       private int directiveId_ ;
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public boolean hasDirectiveId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public int getDirectiveId() {
         return directiveId_;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder setDirectiveId(int value) {
         bitField0_ |= 0x00000001;
@@ -14992,11 +15562,89 @@ public final class TxaDirective {
         return this;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder clearDirectiveId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         directiveId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional string aliasedId = 2;
+      private java.lang.Object aliasedId_ = "";
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public boolean hasAliasedId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public java.lang.String getAliasedId() {
+        java.lang.Object ref = aliasedId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          aliasedId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAliasedIdBytes() {
+        java.lang.Object ref = aliasedId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          aliasedId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder clearAliasedId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        aliasedId_ = getDefaultInstance().getAliasedId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
         onChanged();
         return this;
       }
@@ -15015,15 +15663,38 @@ public final class TxaDirective {
   public interface DirectiveRemovedOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     boolean hasDirectiveId();
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     int getDirectiveId();
+
+    // optional string aliasedId = 2;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    boolean hasAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    java.lang.String getAliasedId();
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAliasedIdBytes();
   }
   /**
    * Protobuf type {@code TxaDirective.DirectiveRemoved}
@@ -15081,6 +15752,11 @@ public final class TxaDirective {
               directiveId_ = input.readInt32();
               break;
             }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              aliasedId_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -15121,34 +15797,82 @@ public final class TxaDirective {
     }
 
     private int bitField0_;
-    // required int32 directiveId = 1;
+    // optional int32 directiveId = 1;
     public static final int DIRECTIVEID_FIELD_NUMBER = 1;
     private int directiveId_;
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public boolean hasDirectiveId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 directiveId = 1;</code>
+     * <code>optional int32 directiveId = 1;</code>
+     *
+     * <pre>
+     * Union - fill out exactly one of the following two choices.
+     * </pre>
      */
     public int getDirectiveId() {
       return directiveId_;
     }
 
+    // optional string aliasedId = 2;
+    public static final int ALIASEDID_FIELD_NUMBER = 2;
+    private java.lang.Object aliasedId_;
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public boolean hasAliasedId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public java.lang.String getAliasedId() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          aliasedId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string aliasedId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAliasedIdBytes() {
+      java.lang.Object ref = aliasedId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        aliasedId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       directiveId_ = 0;
+      aliasedId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasDirectiveId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -15158,6 +15882,9 @@ public final class TxaDirective {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, directiveId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getAliasedIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -15171,6 +15898,10 @@ public final class TxaDirective {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, directiveId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getAliasedIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -15290,6 +16021,8 @@ public final class TxaDirective {
         super.clear();
         directiveId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        aliasedId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -15322,6 +16055,10 @@ public final class TxaDirective {
           to_bitField0_ |= 0x00000001;
         }
         result.directiveId_ = directiveId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.aliasedId_ = aliasedId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -15341,15 +16078,16 @@ public final class TxaDirective {
         if (other.hasDirectiveId()) {
           setDirectiveId(other.getDirectiveId());
         }
+        if (other.hasAliasedId()) {
+          bitField0_ |= 0x00000002;
+          aliasedId_ = other.aliasedId_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasDirectiveId()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -15372,22 +16110,34 @@ public final class TxaDirective {
       }
       private int bitField0_;
 
-      // required int32 directiveId = 1;
+      // optional int32 directiveId = 1;
       private int directiveId_ ;
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public boolean hasDirectiveId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public int getDirectiveId() {
         return directiveId_;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder setDirectiveId(int value) {
         bitField0_ |= 0x00000001;
@@ -15396,11 +16146,89 @@ public final class TxaDirective {
         return this;
       }
       /**
-       * <code>required int32 directiveId = 1;</code>
+       * <code>optional int32 directiveId = 1;</code>
+       *
+       * <pre>
+       * Union - fill out exactly one of the following two choices.
+       * </pre>
        */
       public Builder clearDirectiveId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         directiveId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional string aliasedId = 2;
+      private java.lang.Object aliasedId_ = "";
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public boolean hasAliasedId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public java.lang.String getAliasedId() {
+        java.lang.Object ref = aliasedId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          aliasedId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAliasedIdBytes() {
+        java.lang.Object ref = aliasedId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          aliasedId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder clearAliasedId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        aliasedId_ = getDefaultInstance().getAliasedId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string aliasedId = 2;</code>
+       */
+      public Builder setAliasedIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        aliasedId_ = value;
         onChanged();
         return this;
       }
@@ -16682,35 +17510,37 @@ public final class TxaDirective {
       "ctive.TacticalVariable\022\020\n\010location\030\003 \001(\t" +
       "\022\023\n\013description\030\004 \001(\t\"O\n\017DirectiveStatus" +
       "\"<\n\005Value\022\n\n\006ACTIVE\020\000\022\014\n\010INACTIVE\020\001\022\014\n\010C" +
-      "OMPLETE\020\002\022\013\n\007UNKNOWN\020\003\"\277\001\n\021DirectiveInst" +
+      "OMPLETE\020\002\022\013\n\007UNKNOWN\020\003\"\322\001\n\021DirectiveInst" +
       "ance\022*\n\tdirective\030\001 \002(\0132\027.TxaDirective.D" +
       "irective\022\023\n\013directiveId\030\002 \001(\005\022\025\n\rdirecti" +
       "veName\030\003 \001(\t\022<\n\017directiveStatus\030\004 \001(\0162#." +
       "TxaDirective.DirectiveStatus.Value\022\024\n\014ta",
-      "rgetEntity\030\005 \001(\t\"B\n\006Entity\022\022\n\nentityName" +
-      "\030\001 \002(\t\022\020\n\010entityId\030\002 \001(\005\022\022\n\nentityTeam\030\003" +
-      " \001(\005\"\036\n\nInitialize\022\020\n\010scenario\030\001 \001(\t\"\017\n\r" +
-      "GetEntityList\"4\n\nEntityList\022&\n\010entities\030" +
-      "\001 \003(\0132\024.TxaDirective.Entity\"\022\n\020GetDirect" +
-      "iveList\"L\n\rDirectiveList\022;\n\022directiveIns" +
-      "tances\030\001 \003(\0132\037.TxaDirective.DirectiveIns" +
-      "tance\"\027\n\025GetDirectiveTemplates\"A\n\022Direct" +
-      "iveTemplates\022+\n\ndirectives\030\001 \003(\0132\027.TxaDi" +
-      "rective.Directive\"B\n\024InstantiateDirectiv",
-      "e\022*\n\tdirective\030\001 \002(\0132\027.TxaDirective.Dire" +
-      "ctive\"S\n\025DirectiveInstantiated\022:\n\021direct" +
-      "iveInstance\030\001 \002(\0132\037.TxaDirective.Directi" +
-      "veInstance\"5\n\016PauseDirective\022\023\n\013directiv" +
-      "eId\030\001 \002(\005\022\016\n\006paused\030\002 \002(\010\"N\n\020DirectiveUp" +
-      "dated\022:\n\021directiveInstance\030\001 \003(\0132\037.TxaDi" +
-      "rective.DirectiveInstance\"M\n\017UpdateDirec" +
-      "tive\022:\n\021directiveInstance\030\001 \003(\0132\037.TxaDir" +
-      "ective.DirectiveInstance\")\n\022TerminateDir" +
-      "ective\022\023\n\013directiveId\030\001 \002(\005\"\'\n\020Directive",
-      "Removed\022\023\n\013directiveId\030\001 \002(\005\"\022\n\020Heartbea" +
-      "tRequest\"\023\n\021HeartbeatResponse\"!\n\013FlashEn" +
-      "tity\022\022\n\nentityName\030\001 \002(\tB\030\n\026com.soartech" +
-      ".txa.proto"
+      "rgetEntity\030\005 \001(\t\022\021\n\taliasedId\030\006 \001(\t\"B\n\006E" +
+      "ntity\022\022\n\nentityName\030\001 \002(\t\022\020\n\010entityId\030\002 " +
+      "\001(\005\022\022\n\nentityTeam\030\003 \001(\005\"\036\n\nInitialize\022\020\n" +
+      "\010scenario\030\001 \001(\t\"\017\n\rGetEntityList\"4\n\nEnti" +
+      "tyList\022&\n\010entities\030\001 \003(\0132\024.TxaDirective." +
+      "Entity\"\022\n\020GetDirectiveList\"L\n\rDirectiveL" +
+      "ist\022;\n\022directiveInstances\030\001 \003(\0132\037.TxaDir" +
+      "ective.DirectiveInstance\"\027\n\025GetDirective" +
+      "Templates\"A\n\022DirectiveTemplates\022+\n\ndirec" +
+      "tives\030\001 \003(\0132\027.TxaDirective.Directive\"U\n\024",
+      "InstantiateDirective\022*\n\tdirective\030\001 \002(\0132" +
+      "\027.TxaDirective.Directive\022\021\n\taliasedId\030\002 " +
+      "\001(\t\"S\n\025DirectiveInstantiated\022:\n\021directiv" +
+      "eInstance\030\001 \002(\0132\037.TxaDirective.Directive" +
+      "Instance\"H\n\016PauseDirective\022\023\n\013directiveI" +
+      "d\030\001 \001(\005\022\021\n\taliasedId\030\002 \001(\t\022\016\n\006paused\030\003 \002" +
+      "(\010\"N\n\020DirectiveUpdated\022:\n\021directiveInsta" +
+      "nce\030\001 \003(\0132\037.TxaDirective.DirectiveInstan" +
+      "ce\"M\n\017UpdateDirective\022:\n\021directiveInstan" +
+      "ce\030\001 \003(\0132\037.TxaDirective.DirectiveInstanc",
+      "e\"<\n\022TerminateDirective\022\023\n\013directiveId\030\001" +
+      " \001(\005\022\021\n\taliasedId\030\002 \001(\t\":\n\020DirectiveRemo" +
+      "ved\022\023\n\013directiveId\030\001 \001(\005\022\021\n\taliasedId\030\002 " +
+      "\001(\t\"\022\n\020HeartbeatRequest\"\023\n\021HeartbeatResp" +
+      "onse\"!\n\013FlashEntity\022\022\n\nentityName\030\001 \002(\tB" +
+      "\030\n\026com.soartech.txa.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -16746,7 +17576,7 @@ public final class TxaDirective {
           internal_static_TxaDirective_DirectiveInstance_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TxaDirective_DirectiveInstance_descriptor,
-              new java.lang.String[] { "Directive", "DirectiveId", "DirectiveName", "DirectiveStatus", "TargetEntity", });
+              new java.lang.String[] { "Directive", "DirectiveId", "DirectiveName", "DirectiveStatus", "TargetEntity", "AliasedId", });
           internal_static_TxaDirective_Entity_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_TxaDirective_Entity_fieldAccessorTable = new
@@ -16800,7 +17630,7 @@ public final class TxaDirective {
           internal_static_TxaDirective_InstantiateDirective_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TxaDirective_InstantiateDirective_descriptor,
-              new java.lang.String[] { "Directive", });
+              new java.lang.String[] { "Directive", "AliasedId", });
           internal_static_TxaDirective_DirectiveInstantiated_descriptor =
             getDescriptor().getMessageTypes().get(14);
           internal_static_TxaDirective_DirectiveInstantiated_fieldAccessorTable = new
@@ -16812,7 +17642,7 @@ public final class TxaDirective {
           internal_static_TxaDirective_PauseDirective_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TxaDirective_PauseDirective_descriptor,
-              new java.lang.String[] { "DirectiveId", "Paused", });
+              new java.lang.String[] { "DirectiveId", "AliasedId", "Paused", });
           internal_static_TxaDirective_DirectiveUpdated_descriptor =
             getDescriptor().getMessageTypes().get(16);
           internal_static_TxaDirective_DirectiveUpdated_fieldAccessorTable = new
@@ -16830,13 +17660,13 @@ public final class TxaDirective {
           internal_static_TxaDirective_TerminateDirective_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TxaDirective_TerminateDirective_descriptor,
-              new java.lang.String[] { "DirectiveId", });
+              new java.lang.String[] { "DirectiveId", "AliasedId", });
           internal_static_TxaDirective_DirectiveRemoved_descriptor =
             getDescriptor().getMessageTypes().get(19);
           internal_static_TxaDirective_DirectiveRemoved_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TxaDirective_DirectiveRemoved_descriptor,
-              new java.lang.String[] { "DirectiveId", });
+              new java.lang.String[] { "DirectiveId", "AliasedId", });
           internal_static_TxaDirective_HeartbeatRequest_descriptor =
             getDescriptor().getMessageTypes().get(20);
           internal_static_TxaDirective_HeartbeatRequest_fieldAccessorTable = new
