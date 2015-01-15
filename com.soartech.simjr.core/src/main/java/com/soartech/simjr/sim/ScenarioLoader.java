@@ -303,6 +303,8 @@ public class ScenarioLoader
         entity.setProperty(EntityConstants.PROPERTY_MINALTITUDE, ee.getMinAltitude());
         entity.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, ee.getMaxAltitude());
         entity.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, ee.getRouteWidth());
+        entity.setProperty(EntityConstants.PROPERTY_SHAPE_ENTITY_WIDTH_METERS, ee.getEntityWidth());
+        entity.setProperty(EntityConstants.PROPERTY_SHAPE_ENTITY_LENGTH_METERS, ee.getEntityLength());
         
         //Capabilities
         if(ee.getCapabilities().getFollowTarget() != null) {

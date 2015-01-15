@@ -64,9 +64,11 @@ public class EntityElement implements ModelElement
         FORCE("force", ""),
         VISIBLE("visible", ""),
         LABEL_VISIBLE("labelVisible", ""),
-        MIN_ALTITUDE("minAltitude", "0.0"), 
-        MAX_ALTITUDE("maxAltitude", "500"), 
-        ROUTE_WIDTH("routeWidth", "100");
+        MIN_ALTITUDE("minAltitude", "0.0"),
+        MAX_ALTITUDE("maxAltitude", "500"),
+        ROUTE_WIDTH("routeWidth", "100"),
+        WIDTH("width", "10.0"),
+        LENGTH("length", "10.0");
 
         public final String attributeName;
         public final String xPathStr;
@@ -92,25 +94,27 @@ public class EntityElement implements ModelElement
     private final XPath minAltitudePath;
     private final XPath maxAltitudePath;
     private final XPath routeWidthPath;
+    private final XPath widthPath;
+    private final XPath lengthPath;
     private final LocationElement location;
     private final OrientationElement orientation;
     private final ScriptBlockElement initScript;
     private final PointElementList points;
     private final CapabilitiesElement capabilities;
-    
+
     public static EntityElement attach(Model model, Element element)
     {
         return new EntityElement(model, element);
     }
-    
+
     public static Element build(Model model, String name, String prototype)
     {
         Element root = model.newElement("entity");
-        
+
         root.setAttribute(ModelData.NAME.attributeName, name, Model.NAMESPACE);
         root.setAttribute(ModelData.PROTOTYPE.attributeName, prototype, Model.NAMESPACE);
         root.setAttribute(ModelData.FORCE.attributeName, "friendly", Model.NAMESPACE);
-        
+
         Boolean defaultVisibility = true;
         EntityPrototypeDatabase epd = new DefaultServiceManager().findService(EntityPrototypeDatabase.class);
         EntityPrototype ep = epd.getPrototype(prototype);
@@ -129,6 +133,9 @@ public class EntityElement implements ModelElement
         root.setAttribute(ModelData.MAX_ALTITUDE.attributeName, ModelData.MAX_ALTITUDE.defaultValue, Model.NAMESPACE);
         root.setAttribute(ModelData.ROUTE_WIDTH.attributeName, ModelData.ROUTE_WIDTH.defaultValue, Model.NAMESPACE);
         
+        root.setAttribute(ModelData.WIDTH.attributeName, ModelData.WIDTH.defaultValue, Model.NAMESPACE);
+        root.setAttribute(ModelData.LENGTH.attributeName, ModelData.LENGTH.defaultValue, Model.NAMESPACE);
+
         root.addContent(LocationElement.buildDefault(model));
         root.addContent(OrientationElement.buildDefault(model));
         root.addContent(ScriptBlockElement.buildDefault(model, "initScript", SimJrProps.get("simjr.editor.entityInitScript.default", "")));
@@ -136,12 +143,12 @@ public class EntityElement implements ModelElement
         root.addContent(CapabilitiesElement.buildDefault(model));
         return root;
     }
-    
+
     public static void setName(Model model, Element element, String newName)
     {
         model.setText(model.newXPath(ModelData.NAME.xPathStr), element, newName, null);
     }
-    
+
     /**
      * @param model
      */
@@ -157,7 +164,9 @@ public class EntityElement implements ModelElement
         this.minAltitudePath = model.newXPath(ModelData.MIN_ALTITUDE.xPathStr);
         this.maxAltitudePath = model.newXPath(ModelData.MAX_ALTITUDE.xPathStr);
         this.routeWidthPath = model.newXPath(ModelData.ROUTE_WIDTH.xPathStr);
-        
+        this.widthPath = model.newXPath(ModelData.WIDTH.xPathStr);
+        this.lengthPath = model.newXPath(ModelData.LENGTH.xPathStr);
+
         this.location = new LocationElement(this);
         this.orientation = new OrientationElement(this);
         this.initScript = ScriptBlockElement.attach(model, this.element, "initScript");
@@ -342,6 +351,26 @@ public class EntityElement implements ModelElement
     public UndoableEdit setRouteWidth(final Double newWidth)
     {
         return setProperty(ModelData.ROUTE_WIDTH.propertyName, routeWidthPath, getRouteWidth(), newWidth);
+    }
+
+    public double getEntityWidth()
+    {
+        return new ModelLegacyDoubleGetter(widthPath).get();
+    }
+
+    public UndoableEdit setWidth(final double width)
+    {
+        return setProperty(ModelData.WIDTH.propertyName, widthPath, getEntityWidth(), width);
+    }
+
+    public double getEntityLength()
+    {
+        return new ModelLegacyDoubleGetter(lengthPath).get();
+    }
+
+    public UndoableEdit setHeight(final double length)
+    {
+        return setProperty(ModelData.LENGTH.propertyName, lengthPath, getEntityLength(), length);
     }
 
     public double getMinAltitude()

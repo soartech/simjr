@@ -466,6 +466,8 @@ public class MapPanel extends DefaultSingleCDockable implements ModelChangeListe
         e.setProperty(EntityConstants.PROPERTY_MINALTITUDE, source.getMinAltitude());
         e.setProperty(EntityConstants.PROPERTY_MAXALTITUDE, source.getMaxAltitude());
         e.setProperty(EntityConstants.PROPERTY_SHAPE_WIDTH_METERS, source.getRouteWidth());
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_ENTITY_LENGTH_METERS, source.getEntityLength());
+        e.setProperty(EntityConstants.PROPERTY_SHAPE_ENTITY_WIDTH_METERS, source.getEntityWidth());
         e.setProperty(EntityConstants.PROPERTY_VISIBLE, true); //Always visible in editor
         e.addPropertyListener(new PolygonPointChangeListener());
         sim.addEntity(e);
