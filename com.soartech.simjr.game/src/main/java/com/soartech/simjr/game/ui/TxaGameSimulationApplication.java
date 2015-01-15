@@ -14,21 +14,13 @@ import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.SingleCDockable;
 
 import com.soartech.simjr.ProgressMonitor;
-import com.soartech.simjr.game.ui.actions.ToggleAidedGameAction;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.Simulation;
 import com.soartech.simjr.sim.SimulationListenerAdapter;
-import com.soartech.simjr.ui.AboutDialog;
 import com.soartech.simjr.ui.SimulationApplication;
 import com.soartech.simjr.ui.SimulationImages;
 import com.soartech.simjr.ui.SimulationMainFrame;
-import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.actions.AddToPolygonAction;
-import com.soartech.simjr.ui.actions.LoadContainerAction;
-import com.soartech.simjr.ui.actions.RemoveFromPolygonAction;
-import com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction;
-import com.soartech.simjr.ui.actions.UnloadContainerAction;
 
 /**
  * @author aron
