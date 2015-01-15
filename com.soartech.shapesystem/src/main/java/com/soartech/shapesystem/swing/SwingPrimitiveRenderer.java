@@ -205,6 +205,14 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         AffineTransform transform = new AffineTransform();
         transform.rotate(-rotation.inRadians(), center.x, center.y);
         transform.translate(topLeftX, topLeftY);
+        
+        // If the width or height passed in is different from the actual width or height
+        // of the image, scale the image.
+        if(w != image.getWidth(null) || h != image.getHeight(null)){
+            double xScale = width >= 0 ? width / image.getWidth(null) : 1.0;
+            double yScale = height >= 0 ? height / image.getHeight(null) : 1.0;
+            transform.scale(xScale, yScale);
+        }
 
         AffineTransform oldTransform = g.getTransform();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
