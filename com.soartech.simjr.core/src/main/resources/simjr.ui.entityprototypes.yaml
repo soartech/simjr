@@ -113,6 +113,11 @@ prototypes:
         shape.label.displayIfParent: false
         shape: !!com.soartech.simjr.ui.shapes.CompoundAreaShape$CompoundAreaShapeFactory []
         category: CompoundAreas 
+        
+- &fixed-size-ground
+    id: fixed-size-ground
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.FixedSizeEntityShape$Factory []
 
 ###############################################################################
 

@@ -228,6 +228,11 @@ prototypes:
         capabilities: 
         - !class com.soartech.simjr.sim.entities.MilStd2525Provider
     
+- &fixed-size-ground
+    id: fixed-size-ground
+    parent: *ground
+    category: ground
+    
 - &sea
     id: sea
     parent: *any
@@ -313,6 +318,12 @@ prototypes:
     parent: *ground
     category: vehicle
     factory: !class com.soartech.simjr.sim.entities.Vehicle
+    
+- &fixed-size-ground-vehicle
+    id: fixed-size-ground-vehicle
+    parent: *fixed-size-ground
+    category: vehicle
+    factory: !class com.soartech.simjr.sim.entities.Vehicle
       
 - &truck
     id: truck
@@ -365,33 +376,33 @@ prototypes:
         
 - &hmmwv
     id: hmmwv
-    parent: *ground-vehicle
+    parent: *fixed-size-ground-vehicle
     category: hmmwv
     properties:
         ms2525.template: "S%cGPUCAT--"
 
 - &rader
     id: rader
-    parent: *ground-vehicle
+    parent: *fixed-size-ground-vehicle
     category: rader
     properties:
         ms2525.template: "S%cGPUCAT--"
 
 - &mrap
     id: mrap
-    parent: *ground-vehicle
+    parent: *fixed-size-ground-vehicle
     category: mrap
     properties:
         ms2525.template: "S%cGPUCAT--"
         
 - &metallic-ied
     id: metallic-ied
-    parent: *ground
+    parent: *fixed-size-ground
     category: ied
         
 - &non-metallic-ied
     id: non-metallic-ied
-    parent: *ground
+    parent: *fixed-size-ground
     category: ied
     
 #### F-18 #####################################################################
