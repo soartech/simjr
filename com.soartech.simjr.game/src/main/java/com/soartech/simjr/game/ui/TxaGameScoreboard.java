@@ -41,6 +41,8 @@ public class TxaGameScoreboard extends DefaultSingleCDockable
     private Label scoreLabel;
     private Checkbox cb1;
     private Checkbox cb2;
+    private Checkbox cb3;
+    private Checkbox cb4;
     
     private Label goalsLabel1;
     private Label goalsLabel2;
@@ -66,6 +68,8 @@ public class TxaGameScoreboard extends DefaultSingleCDockable
     private boolean updatingRules2 = false;
     private boolean updatingGoals1 = false;
     private boolean updatingGoals2 = false;
+    
+    private boolean showingAidedControls = false;
     
     public TxaGameScoreboard(final ServiceManager services) {
         super("Txa Game Scoreboard");
@@ -96,39 +100,74 @@ public class TxaGameScoreboard extends DefaultSingleCDockable
         //add content
         scorePanel = new JPanel(new BorderLayout());
         scoreLabel = new Label("Current Score: ");
-        cb1 = new Checkbox("Match speed autopilot", false);
+        scorePanel.add(scoreLabel, BorderLayout.NORTH);
+        
+        cb1 = new Checkbox("P1 Match speed autopilot", false);
         cb1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {             
                 TxaInterfaceManager txaInterface = TxaInterfaceManager.findService(services);
                 if(e.getStateChange()==1) {
                     //checked
-                    txaInterface.setMatchSpeedAutopilot(true);
+                    txaInterface.setMatchSpeedAutopilot(true, PLAYER1);
                 } else {
                     //unchecked
-                    txaInterface.setMatchSpeedAutopilot(false);
+                    txaInterface.setMatchSpeedAutopilot(false, PLAYER1);
                 }
             }
          });
         
-        cb2 = new Checkbox("Obstacle avoidance autopilot", false);
+        cb2 = new Checkbox("P1 Obstacle avoidance autopilot", false);
         cb2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 TxaInterfaceManager txaInterface = TxaInterfaceManager.findService(services);
                 if(e.getStateChange()==1) {
                     //checked
-                    txaInterface.setObstableAvoidAutopilot(true);
+                    txaInterface.setObstableAvoidAutopilot(true, PLAYER1);
                 } else {
                     //unchecked
-                    txaInterface.setObstableAvoidAutopilot(true);
+                    txaInterface.setObstableAvoidAutopilot(false, PLAYER1);
                 }
             }
          });
         
-        scorePanel.add(scoreLabel, BorderLayout.NORTH);
+        cb3 = new Checkbox("P2 Match speed autopilot", false);
+        cb3.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {             
+                TxaInterfaceManager txaInterface = TxaInterfaceManager.findService(services);
+                if(e.getStateChange()==1) {
+                    //checked
+                    txaInterface.setMatchSpeedAutopilot(true, PLAYER2);
+                } else {
+                    //unchecked
+                    txaInterface.setMatchSpeedAutopilot(false, PLAYER2);
+                }
+            }
+         });
         
-        JPanel cbPanel = new JPanel(new GridLayout(2, 1));
+        cb4 = new Checkbox("P2 Obstacle avoidance autopilot", false);
+        cb4.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                TxaInterfaceManager txaInterface = TxaInterfaceManager.findService(services);
+                if(e.getStateChange()==1) {
+                    //checked
+                    txaInterface.setObstableAvoidAutopilot(true, PLAYER2);
+                } else {
+                    //unchecked
+                    txaInterface.setObstableAvoidAutopilot(false, PLAYER2);
+                }
+            }
+         });
+        
+        JPanel cbPanel = new JPanel(new GridLayout(4, 1));
         cbPanel.add(cb1);
         cbPanel.add(cb2);
+        cbPanel.add(cb3);
+        cbPanel.add(cb4);
+        
+        cb1.setVisible(showingAidedControls);
+        cb2.setVisible(showingAidedControls);
+        cb3.setVisible(showingAidedControls);
+        cb4.setVisible(showingAidedControls);
         
         scorePanel.add(cbPanel, BorderLayout.CENTER);
         content.add(scorePanel);
@@ -219,6 +258,16 @@ public class TxaGameScoreboard extends DefaultSingleCDockable
             
             updatingRules2 = false;
         }
+    }
+    
+    public void toggleAidedControls() 
+    {
+        showingAidedControls = !showingAidedControls;
+        
+        cb1.setVisible(showingAidedControls);
+        cb2.setVisible(showingAidedControls);
+        cb3.setVisible(showingAidedControls);
+        cb4.setVisible(showingAidedControls);
     }
     
 }
