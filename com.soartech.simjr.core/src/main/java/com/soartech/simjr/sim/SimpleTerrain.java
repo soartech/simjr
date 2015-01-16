@@ -36,6 +36,7 @@ import com.soartech.math.geotrans.GeoTransConstants;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.math.geotrans.LocalCartesian;
 import com.soartech.math.geotrans.Mgrs;
+import com.soartech.simjr.SimJrProps;
 
 /**
  * Simple implementation of the {@link Terrain} interface.
@@ -47,7 +48,8 @@ public class SimpleTerrain implements Terrain
     private Geodetic.Point origin;
     private LocalCartesian localCartesian;
     private Mgrs mgrs = new Mgrs();
-
+    private double clampToGroundError = SimJrProps.get("simjr.terrain.clamp.point.to.ground.error", .01);
+    
     public static SimpleTerrain createExampleTerrain()
     {
         Geodetic.Point origin = new Geodetic.Point();
@@ -109,7 +111,35 @@ public class SimpleTerrain implements Terrain
         Geodetic.Point lla = toGeodetic(point);
         lla.altitude = 0;
         Vector3 atGround = fromGeodetic(lla);
-        return new Vector3(atGround.x, atGround.y, atGround.z + agl);
+        
+        double x = atGround.x;
+        double y = atGround.y;
+        double z = atGround.z;
+
+        /*
+         * To avoid rounding errors changing position of an entity,
+         * atGround values should not be used when they are only slightly
+         * different than the values of the point passed in.  Without
+         * this fix an entity with velocity 0,0,0 can still change
+         * position every tic.
+         * 
+         * The error value can be changed by updating
+         * simjr.terrain.clamp.point.to.ground.error value in the 
+         * properties file.
+         */
+        if(Math.abs(atGround.x - point.x) < clampToGroundError)
+        {
+            x = point.x;
+        }
+        if(Math.abs(atGround.y - point.y) < clampToGroundError)
+        {
+            y = point.y;
+        }
+        if(Math.abs(atGround.z - point.z) < clampToGroundError)
+        {
+            z = point.z;
+        }
+        return new Vector3(x, y, z + agl);
     }
     
     /* (non-Javadoc)
