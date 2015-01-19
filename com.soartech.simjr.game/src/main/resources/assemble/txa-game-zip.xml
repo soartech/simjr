@@ -14,7 +14,7 @@
   <fileSets>
     <!-- copy the scenarios directory into the zip -->
     <fileSet> 
-      <directory>${project.basedir}/scenarios</directory> 
+      <directory>${project.basedir}/src/main/resources/scenarios</directory> 
       <outputDirectory>/scenarios</outputDirectory> 
     </fileSet>
     <!-- copy the run.bat file into the zip -->
