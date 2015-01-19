@@ -256,7 +256,7 @@ public class SimulationApplication extends DefaultServiceManager
         }
     }
 
-    private void completeInitialization(SimulationMainFrame mainFrame)
+    protected void completeInitialization(SimulationMainFrame mainFrame)
     {
         actionManager.updateActions();
         mainFrame.toFront();
@@ -276,7 +276,7 @@ public class SimulationApplication extends DefaultServiceManager
         addService(simulation);
     }
 
-    private SimulationMainFrame createMainFrame(ProgressMonitor progress)
+    protected SimulationMainFrame createMainFrame(ProgressMonitor progress)
     {
         progress.subTask("Initializing main window ...");
         SimulationMainFrame mainFrame = new SimulationMainFrame(this);

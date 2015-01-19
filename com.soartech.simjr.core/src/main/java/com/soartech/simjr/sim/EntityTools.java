@@ -403,7 +403,7 @@ public class EntityTools
      */
     public static Color getLineColor(Entity e, Color def)
     {
-        String color = (String)e.getPrototype().getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
+        String color = (String)e.getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
 
         Color entityColor = getColorByName(color);
         if(entityColor != null) { 
@@ -426,7 +426,7 @@ public class EntityTools
      */
     public static Color getFillColor(Entity e, Color def)
     {
-        String color = (String)e.getPrototype().getProperty(EntityConstants.PROPERTY_SHAPE_FILL_COLOR);
+        String color = (String)e.getProperty(EntityConstants.PROPERTY_SHAPE_FILL_COLOR);
         Color entityColor;
         try{
             Field field = Color.class.getField(color);

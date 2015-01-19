@@ -140,12 +140,12 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
     
     private final CLocation defaultPvdLocation = CLocation.base().normalRectangle(0, 0, 0.8, 0.7).stack(1);
     
-    private final CLocation defaultEntityListLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
+    private final CLocation defaultEntityListLocation =       CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
     private final CLocation defaultEntityPropertiesLocation = CLocation.base().normalRectangle(0.8, 0.5, 0.2, 0.5);
-    private final CLocation defaultRadioMessagesLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3);
-    private final CLocation defaultConsoleLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
-    private final CLocation defaultCheatSheetLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
-    private final CLocation defaultSingleDockableLocation = CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
+    private final CLocation defaultRadioMessagesLocation =    CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3);
+    private final CLocation defaultConsoleLocation =          CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
+    private final CLocation defaultCheatSheetLocation =       CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
+    private final CLocation defaultSingleDockableLocation =   CLocation.base().normalRectangle(0, 0.7, 0.8, 0.3).stack(0);
     
     public static final CLocation defaultSAPLocation = CLocation.base().normalRectangle(0.8, 0, 0.2, 0.5);
     
@@ -265,12 +265,24 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         initToolbar();
     }
 
-    private void addDockable(SingleCDockable dockable, CLocation location, String key)
+    public void addDockable(SingleCDockable dockable, CLocation location, String key)
     {
         dockable.setLocation(location);
         singleDockables.put(key, dockable);
         control.addDockable(dockable);
         dockable.setVisible(true);        
+    }
+    
+    public SingleCDockable removeDockable(String key)
+    {
+        SingleCDockable dockable = singleDockables.remove(key);
+        control.removeDockable(dockable);
+        return dockable;
+    }
+    
+    public void moveDockable(CLocation location, String key)
+    {
+        singleDockables.get(key).setLocation(location);
     }
     
     /**
