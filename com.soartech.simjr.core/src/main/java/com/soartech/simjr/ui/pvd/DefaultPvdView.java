@@ -139,7 +139,8 @@ class DefaultPvdView extends JPanel implements PvdView
 
         // Periodically redraw the screen rather than trying to only redraw
         // when something changes in the simulation
-        repaintTimer = new Timer(200, new ActionListener() {
+        int timerPeriod = SimJrProps.get("simjr.pvd.repaintTimerPeriod", 200);
+        repaintTimer = new Timer(timerPeriod, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(!panAnimator.isAnimating()) {
                     repaint();
