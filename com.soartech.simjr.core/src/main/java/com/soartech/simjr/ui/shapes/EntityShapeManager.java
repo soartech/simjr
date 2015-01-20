@@ -76,7 +76,7 @@ public class EntityShapeManager
     private Simulation simulation;
     private ShapeSystem shapeSystem;
     private SwingPrimitiveRendererFactory shapeFactory;
-    private Listener listener = new Listener();
+    protected Listener listener = new Listener();
     private TimedShapeManager timedShapes;
     private Map<Entity, EntityShape> shapes = new HashMap<Entity, EntityShape>();
     private List<String> selectionIds = new ArrayList<String>();
@@ -231,7 +231,7 @@ public class EntityShapeManager
         
         for(Entity e : entities)
         {
-            if(e != null && EntityTools.isVisible(e))
+            if(e != null && shapes.containsKey(e) && EntityTools.isVisible(e))
             {
                 createSelection(e);
             }
@@ -278,7 +278,7 @@ public class EntityShapeManager
     public void highlightEntity(Entity entity, Color color)
     {
         shapeSystem.removeShape(HIGHLIGHT_ID);
-        if(entity != null && EntityTools.isVisible(entity))
+        if(entity != null && shapes.containsKey(entity) && EntityTools.isVisible(entity))
         {
             createHighlight(entity, HIGHLIGHT_ID, color);
         }
@@ -401,7 +401,7 @@ public class EntityShapeManager
         return f;
     }
     
-    private void entityAdded(Entity e)
+    protected void entityAdded(Entity e)
     {
         final EntityShapeFactory f = getShapeFactory(e);
         if(f == null)
@@ -420,7 +420,7 @@ public class EntityShapeManager
         shapes.put(e, shape);
     }
 
-    private void entityRemoved(Entity e)
+    protected void entityRemoved(Entity e)
     {
         EntityShape shape = shapes.remove(e);
         if(shape != null)
@@ -429,7 +429,7 @@ public class EntityShapeManager
         }
     }
     
-    private class Listener extends SimulationListenerAdapter
+    protected class Listener extends SimulationListenerAdapter
     {
         /* (non-Javadoc)
          * @see com.soartech.simjr.SimulationAdapter#onEntityAdded(com.soartech.simjr.Entity)
