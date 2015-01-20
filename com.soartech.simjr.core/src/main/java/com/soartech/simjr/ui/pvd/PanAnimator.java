@@ -65,7 +65,7 @@ public class PanAnimator
             }});
     }
     
-    boolean isAnimating()
+    public boolean isAnimating()
     {
         return animationTimer.isRunning();
     }
