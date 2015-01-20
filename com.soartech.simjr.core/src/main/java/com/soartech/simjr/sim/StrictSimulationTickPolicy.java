@@ -75,7 +75,7 @@ public class StrictSimulationTickPolicy extends AbstractAdaptable implements  Si
         return newPolicy;
     }
     
-    private StrictSimulationTickPolicy()
+    protected StrictSimulationTickPolicy()
     {
         logger.info("created with tickPeriod " + tickPeriod);        
     }
