@@ -403,21 +403,9 @@ public class EntityTools
      */
     public static Color getLineColor(Entity e, Color def)
     {
-        String color = (String)e.getProperty(EntityConstants.PROPERTY_SHAPE_LINE_COLOR);
-
-        Color entityColor = getColorByName(color);
-        if(entityColor != null) { 
-            return entityColor; 
-        }
-        
-        entityColor = getColorByCode(color);
-        if(entityColor != null) { 
-            return entityColor; 
-        }
-        
-        return def;
+        return getColorProperty(e, EntityConstants.PROPERTY_SHAPE_LINE_COLOR, def);
     }
-    
+
     /**
      * Returns the fill color or default fill  color of an entity as a Color.
      * 
@@ -426,15 +414,41 @@ public class EntityTools
      */
     public static Color getFillColor(Entity e, Color def)
     {
-        String color = (String)e.getProperty(EntityConstants.PROPERTY_SHAPE_FILL_COLOR);
-        Color entityColor;
-        try{
-            Field field = Color.class.getField(color);
-            entityColor = (Color)field.get(null);
-        }catch (Exception E){
-            entityColor = def;
+        return getColorProperty(e, EntityConstants.PROPERTY_SHAPE_FILL_COLOR, def);
+    }
+    
+    /**
+     * Returns a property value of type color for the specified entity and property name.
+     * 
+     * @param e The entity to retrieve the color property for
+     * @param propname Name of the property to retrieve
+     * @param def The default color to use if no color property can be retrieved
+     * @return The color specified by the property or the default value if one can't be retrieved
+     */
+    public static Color getColorProperty(Entity e, String propName, Color def)
+    {
+        Object obj = e.getProperty(propName);
+
+        if ( obj instanceof Color )
+        {
+            return (Color) obj;
         }
-        return entityColor;
+        else if ( obj instanceof String )
+        {
+            String colorStr = (String) obj;
+            Color entityColor = getColorByName(colorStr);
+            if (entityColor != null) { 
+                return entityColor; 
+            }
+            
+            entityColor = getColorByCode(colorStr);
+            if (entityColor != null) { 
+                return entityColor; 
+            }
+        }
+        
+        // If we make it here then all we can do is return the default
+        return def;
     }
     
     /**
