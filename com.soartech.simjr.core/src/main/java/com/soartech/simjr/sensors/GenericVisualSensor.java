@@ -42,18 +42,37 @@ import com.soartech.simjr.util.ExtendedProperties;
 
 public class GenericVisualSensor extends AbstractSensor implements VisionSensor
 {
+    private static final double DEFAULT_VIS_RANGE = 7500.;
+    private static final double DEFAULT_VIS_FOV = 2.*Math.PI;
+    
     private EntityFilter filter;
     private List<Detection> detections = new ArrayList<Detection>();
     
-    private double visualRange;
-    private double visualAngle;
+    private double visualRange = DEFAULT_VIS_RANGE;
+    private double visualAngle = DEFAULT_VIS_FOV;
     
     public GenericVisualSensor(String name, ExtendedProperties props) {
-        super(name);
-        
-        visualRange = props.getDouble(name+".range", 7500.);
-        visualAngle = props.getDouble(name+".angle", 2.*Math.PI);
+        this(name, 
+             props.getDouble(name+".range", DEFAULT_VIS_RANGE),
+             props.getDouble(name+".angle", DEFAULT_VIS_FOV));
     }    
+    
+    public GenericVisualSensor(String name)
+    {
+        this(name, DEFAULT_VIS_RANGE);
+    }
+    
+    public GenericVisualSensor(String name, double range)
+    {
+        this(name, range, DEFAULT_VIS_FOV);
+    }
+    
+    public GenericVisualSensor(String name, double range, double fieldOfView)
+    {
+        super(name);
+        visualRange = range;
+        visualAngle = fieldOfView;
+    }
     
     public void setVisualRange(double visualRange)
     {
