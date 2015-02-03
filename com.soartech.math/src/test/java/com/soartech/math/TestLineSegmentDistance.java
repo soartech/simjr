@@ -49,6 +49,61 @@ public class TestLineSegmentDistance
     }
     
     @Test
+    public void testClosestToEndPoint()
+    {
+        Vector3 start = new Vector3(1, 1, 0);
+        Vector3 end = new Vector3(-1, 1, 0);
+        Vector3 dir = end.subtract(start);
+        
+        double d = LineSegmentDistance.toPoint(start, end, dir, new Vector3(-2.0, 2.0, 0));
+        assertEquals(Math.sqrt(2.0), d, 1e-6);        
+    }
+    
+    @Test
+    public void testClosestToStartPoint()
+    {
+        Vector3 start = new Vector3(1, 1, 0);
+        Vector3 end = new Vector3(-1, 1, 0);
+        Vector3 dir = end.subtract(start);
+        
+        double d = LineSegmentDistance.toPoint(start, end, dir, new Vector3(2, 0, 0));
+        assertEquals(Math.sqrt(2.0), d, 1e-6);
+    }
+    
+    @Test
+    public void testClosestPoint()
+    {
+        Vector3 start = new Vector3(1, 1, 0);
+        Vector3 end = new Vector3(-1, 1, 0);
+        Vector3 dir = end.subtract(start);
+        
+        Vector3 cpt = LineSegmentDistance.closestPointOnLineSegment(start, end, dir, new Vector3(-.55, .55, 0));
+        assertEquals(new Vector3(-0.55, 1, 0), cpt);
+    }
+    
+    @Test
+    public void testClosestPointEnd()
+    {
+        Vector3 start = new Vector3(1, 1, 0);
+        Vector3 end = new Vector3(-1, 1, 0);
+        Vector3 dir = end.subtract(start);
+        
+        Vector3 cpt = LineSegmentDistance.closestPointOnLineSegment(start, end, dir, new Vector3(-2.0, 2.0, 0));
+        assertEquals(end, cpt);        
+    }
+    
+    @Test
+    public void testClosestPointStart()
+    {
+        Vector3 start = new Vector3(1, 1, 0);
+        Vector3 end = new Vector3(-1, 1, 0);
+        Vector3 dir = end.subtract(start);
+        
+        Vector3 cpt = LineSegmentDistance.closestPointOnLineSegment(start, end, dir, new Vector3(2, 0, 0));
+        assertEquals(start, cpt);
+    }    
+    
+    @Test
     public void testSimpleDistance()
     {
         Vector3 aStart = new Vector3(-1, 0, 1);
