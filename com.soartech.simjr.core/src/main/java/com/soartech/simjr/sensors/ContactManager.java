@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.soartech.simjr.adaptables.Adaptables;
 import com.soartech.simjr.sim.Entity;
-import com.soartech.simjr.sim.EntityTools;
 
 public class ContactManager
 {
@@ -43,16 +43,13 @@ public class ContactManager
     
     public void update(double dt) 
     {
-        SensorPlatform sensorPlatform = EntityTools.getSensorPlatform(entity);
-        if ( sensorPlatform == null ) 
-        {
-            return;
-        }
-        
         HashMap<String,Contact> undetectedContacts = new HashMap<String,Contact>(contactMap);
-        for (Sensor sensor : sensorPlatform.getSensors() ) 
+        
+        List<SensorPlatform> sensorPlatforms = Adaptables.adaptCollection(this.entity.getCapabilities(), SensorPlatform.class);
+        
+        for (SensorPlatform sensorPlatform : sensorPlatforms )
         {
-            if ( sensor instanceof RadarSensor || sensor instanceof VisionSensor ) 
+            for (Sensor sensor : sensorPlatform.getSensors() ) 
             {
                 processDetections( sensor.getDetections(), undetectedContacts );
             }
