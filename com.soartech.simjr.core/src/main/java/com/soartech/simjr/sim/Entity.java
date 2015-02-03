@@ -31,6 +31,7 @@
  */
 package com.soartech.simjr.sim;
 
+import java.util.List;
 import java.util.Map;
 
 import com.soartech.math.Vector3;
@@ -256,6 +257,12 @@ public interface Entity extends Adaptable
      * @param capability the capability to remove
      */
     void removeCapability(EntityCapability capability);
+    
+    /**
+     * Returns an unmodifiable list of the entities capabilities. Useful for some introspection type
+     * tasks that the Adaptable approach doesn't support (e.g. find all capabilities of type X).
+     */
+    List<EntityCapability> getCapabilities();
     
     /**
      * Sets the parent of an entity

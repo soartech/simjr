@@ -562,6 +562,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Entity#addCapability(com.soartech.simjr.sim.EntityCapability)
      */
+    @Override
     public void addCapability(EntityCapability capability)
     {
         capability.attach(this);
@@ -595,6 +596,7 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
     /* (non-Javadoc)
      * @see com.soartech.simjr.sim.Entity#removeCapability(com.soartech.simjr.sim.EntityCapability)
      */
+    @Override
     public void removeCapability(EntityCapability capability)
     {
         tickableCaps.remove(capability);
@@ -611,6 +613,15 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         {
             accelerationProvider = !this.accelerationProviderStack.empty() ? this.accelerationProviderStack.pop() : null;
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see com.soartech.simjr.sim.Entity#getCapabilities()
+     */
+    @Override
+    public List<EntityCapability> getCapabilities()
+    {
+        return Collections.unmodifiableList(this.capabilities);
     }
 
     /* (non-Javadoc)
