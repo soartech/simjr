@@ -41,19 +41,40 @@ public class RadioMessage
     private final String content;
     private final double time;
     private final String frequency;
+    private final Object extraData;
     
     /**
+     * 
      * @param source
+     * @param target
      * @param content
+     * @param time
+     * @param frequency
+     * @param extraData
      */
-    public RadioMessage(String source, String target, String content, double time, String frequency)
+    public RadioMessage(String source, String target, String content, double time, String frequency, Object extraData)
     {
         this.source = source;
         this.target = target;
         this.content = content;
         this.time = time;
         this.frequency = frequency;
+        this.extraData = extraData;
     }
+    
+    /**
+     * 
+     * @param source
+     * @param target
+     * @param content
+     * @param time
+     * @param frequency
+     */
+    public RadioMessage(String source, String target, String content, double time, String frequency)
+    {
+        this(source, target, content, time, frequency, null);
+    }
+    
     /**
      * @return the content
      */
@@ -92,6 +113,15 @@ public class RadioMessage
     {
         return frequency;
     }
+    
+    /**
+     * @return the extra data object
+     */
+    public Object getExtraData()
+    {
+        return this.extraData;
+    }
+    
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
