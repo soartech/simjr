@@ -104,10 +104,10 @@ public class EntityVisibleRangeShape
             style.setFillColor(color);
             style.setLineColor(color);
             style.setFillStyle(FillStyle.FILLED);
-            style.setOpacity(0.3f);
+            style.setOpacity(0.5f);
             
             shape = new Arc(parent.getRootFrame().getName() + "." + property, 
-                                        EntityConstants.LAYER_AREA,
+                                        EntityConstants.LAYER_GROUND,
                                         new Position(parent.getBodyFrame().getName()),
                                         Rotation.createRelative(parent.getBodyFrame().getName()),
                                         style,
