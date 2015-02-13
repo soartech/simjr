@@ -194,10 +194,16 @@ public class EntityShapeManager
         }
         synchronized(addedEntities)
         {
+            Set<Entity> alreadyAdded = new HashSet<Entity>(addedEntities.size(), 0.75f);
             for(Entity e : addedEntities)
             {
                 // Skip entities that have been removed
                 if(e.getSimulation() == null)
+                {
+                    continue;
+                }
+                // Skip entities that were already added this cycle.
+                if (!alreadyAdded.add(e))
                 {
                     continue;
                 }
