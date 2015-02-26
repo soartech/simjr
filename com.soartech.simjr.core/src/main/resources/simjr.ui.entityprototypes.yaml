@@ -160,6 +160,11 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.MobileSAMShape$Factory []
 
+- &aaa
+    id: aaa
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.MobileSAMShape$Factory []
+
 ###############################################################################
 - &water-tower
     id: water-tower

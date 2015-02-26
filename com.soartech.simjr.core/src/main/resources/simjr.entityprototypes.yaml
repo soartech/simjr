@@ -374,6 +374,13 @@ prototypes:
     properties:
         ms2525.template: "S%cGPUCDS--"
         
+- &aaa
+    id: aaa
+    parent: *ground-vehicle
+    category: aaa
+    properties:
+        ms2525.template: "S%cGPUCDS--"
+        
 - &hmmwv
     id: hmmwv
     parent: *fixed-size-ground-vehicle
