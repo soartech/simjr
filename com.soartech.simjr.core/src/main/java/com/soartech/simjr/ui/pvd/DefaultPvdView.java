@@ -35,8 +35,6 @@ import com.soartech.simjr.sim.Terrain;
 import com.soartech.simjr.ui.SelectionManager;
 import com.soartech.simjr.ui.SelectionManagerListener;
 import com.soartech.simjr.ui.actions.ActionManager;
-import com.soartech.simjr.ui.pvd.imagery.MapOpacityController;
-import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.DetonationShapeManager;
 import com.soartech.simjr.ui.shapes.EntityShape;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
@@ -75,9 +73,6 @@ class DefaultPvdView extends JPanel implements PvdView
     private final GridManager grid = new GridManager(transformer);
 
     private MapImage mapBackgroundImage;
-    private MapTileRenderer tileRenderer;
-    private final MapOpacityController mapOpacityController;
-    private MapDebugPanel mapDebugPanel;
     private final CoordinatesPanel coordinatesPanel;
     private final AppStateIndicator appStateIndicator;
 
@@ -148,21 +143,8 @@ class DefaultPvdView extends JPanel implements PvdView
             }
         });
 
-        this.tileRenderer = new MapTileRenderer(this);
-        this.tileRenderer.approximateScale(transformer.screenToMeters(1));
-
         this.coordinatesPanel = new CoordinatesPanel();
         addCoordinatesPanel();
-
-        this.mapOpacityController = new MapOpacityController(tileRenderer);
-        addMapOpacityController();
-
-        if(SimJrProps.get("simjr.map.imagery.debug", false)) { 
-            this.mapDebugPanel = new MapDebugPanel(transformer, tileRenderer);
-            addMapDebugPanel();
-        } else {
-            this.mapDebugPanel = null;
-        }
 
         repaintTimer.start();
 
@@ -173,20 +155,6 @@ class DefaultPvdView extends JPanel implements PvdView
         coordinatesPanel.setActivePvd(this);
         coordinatesPanel.setBounds(12, 10, 300, 20);
         add(coordinatesPanel);
-    }
-    
-    private void addMapOpacityController()
-    {
-        mapOpacityController.setBounds(0, 30, mapOpacityController.getPreferredSize().width, mapOpacityController.getPreferredSize().height);
-        add(mapOpacityController);
-        showMapOpacityController(false);
-    }
-
-    private void addMapDebugPanel()
-    {
-        mapDebugPanel.setActivePvd(this);
-        mapDebugPanel.setBounds(10, 75, mapDebugPanel.getPreferredSize().width, mapDebugPanel.getPreferredSize().height);
-        add(mapDebugPanel);
     }
     
     @Override
@@ -263,12 +231,6 @@ class DefaultPvdView extends JPanel implements PvdView
     }
     
     @Override
-    public MapTileRenderer getMapTileRenderer()
-    {
-        return tileRenderer;
-    }
-    
-    @Override
     public void setMapImage(MapImage map)
     {
         this.mapBackgroundImage = map;
@@ -338,9 +300,6 @@ class DefaultPvdView extends JPanel implements PvdView
         final double newY = transformer.getPanOffsetY() + pt.getY() - newScreenPosition.y;
         transformer.setPanOffset(newX, newY);
 
-        //Scale tiles appropriately
-        tileRenderer.approximateScale(transformer.screenToMeters(1));
-        
         repaint();
     }
 
@@ -356,12 +315,6 @@ class DefaultPvdView extends JPanel implements PvdView
         zoomRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), amount);
     }
 
-    @Override
-    public void showMapOpacityController(boolean show)
-    {
-        mapOpacityController.setVisible(show);
-    }
-    
     /**
      * @param screenDelta The screen vector, in pixels
      * @return The displacement vector, in meters, corresponding to the given screen

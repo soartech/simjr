@@ -49,7 +49,6 @@ import org.jdesktop.swingx.JXPanel;
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
-import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 
 /**
  * Displays a large set of coordinate system information in a transparent
@@ -59,7 +58,6 @@ public class MapDebugPanel extends JXPanel
 {
     private static final long serialVersionUID = 1L;
 
-    private final MapTileRenderer mapRenderer;
     private SwingCoordinateTransformer transformer;
     private DefaultPvdView pvd = null;
     
@@ -115,13 +113,12 @@ public class MapDebugPanel extends JXPanel
     };
     
         
-    public MapDebugPanel(SwingCoordinateTransformer transformer, final MapTileRenderer mapRenderer)
+    public MapDebugPanel(SwingCoordinateTransformer transformer)
     {
         super();
         
         setLayout(new MigLayout("gapy 0", "[]5[]", ""));
         
-        this.mapRenderer = mapRenderer;
         this.transformer = transformer;
         
         add(new BoldJLabel("Sim Center (px):"));
@@ -189,7 +186,7 @@ public class MapDebugPanel extends JXPanel
     
     private void update()
     {
-        if(pvd == null || mapRenderer == null || mapRenderer.getTileSource() == null) { return; }
+        if(pvd == null) { return; }
         
         Point mousePtPx = pvd.getMousePosition();
         if(mousePtPx != null)
@@ -211,22 +208,7 @@ public class MapDebugPanel extends JXPanel
             mouseLatlonCoords.setText(String.format("%8.6f, %8.6f", new Object[]{ Math.toDegrees(mouseLatlon.latitude), 
                                                                                   Math.toDegrees(mouseLatlon.longitude) }));
             
-            Point osmCenterPx = mapRenderer.getCenter();
-            osmZoomLabel.setText(Integer.toString(mapRenderer.getZoom()));
-            osmCenterLabel.setText(osmCenterPx.x + ", " + osmCenterPx.y);
-            osmMppLabel.setText(Double.toString(mapRenderer.getMetersPerPixel()));
             
-            double scale = mapRenderer.getScaleFactor();
-            
-            Point.Double osmUpperLeft = new Point.Double(osmCenterPx.x - (pvd.getWidth()/2 / scale), osmCenterPx.y - (pvd.getHeight()/2) / scale);
-            Point.Double osmMousePx = new Point.Double(osmUpperLeft.x + mousePtPx.x / scale, osmUpperLeft.y + mousePtPx.y / scale);
-            mouseOsmPxCoords.setText(String.format("%8.2f, %8.2f", new Object[] { osmMousePx.x, osmMousePx.y }));
-            
-            double tileSize = mapRenderer.getTileSize();
-            osmTileSizeLabel.setText(String.format("%8.2f", tileSize));
-            mouseOsmTileCoords.setText(String.format("%8.2f, %8.2f", new Object[] { osmMousePx.x / tileSize, osmMousePx.y / tileSize}));
-            
-            osmScaleFactorLabel.setText(String.format("%8.6f", scale));
         }
     }
 }

@@ -11,7 +11,6 @@ import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Terrain;
-import com.soartech.simjr.ui.pvd.imagery.MapTileRenderer;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
 
 /**
@@ -59,8 +58,6 @@ public interface PvdView
 
     SwingCoordinateTransformer getTransformer();
 
-    MapTileRenderer getMapTileRenderer();
-
     void setMapImage(MapImage map);
 
     MapImage getMapImage();
@@ -94,8 +91,6 @@ public interface PvdView
      * values zoom in.  Each unit of zoom is about +/-10%.
      */
     void zoom(int amount);
-
-    void showMapOpacityController(boolean show);
 
     /**
      * @param screenDelta The screen vector, in pixels

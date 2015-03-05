@@ -118,7 +118,6 @@ import com.soartech.simjr.ui.actions.ToggleCategoryLabelsAction;
 import com.soartech.simjr.ui.actions.UnloadContainerAction;
 import com.soartech.simjr.ui.actions.ZoomInAction;
 import com.soartech.simjr.ui.actions.ZoomOutAction;
-import com.soartech.simjr.ui.actions.imagery.ImageryMenu;
 import com.soartech.simjr.ui.cheatsheets.CheatSheetView;
 import com.soartech.simjr.ui.properties.EntityPropertiesView;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
@@ -689,8 +688,6 @@ public class SimulationMainFrame extends JFrame implements SimulationService, Pl
         
         //create the views menu
         initViewsMenu(bar, am);
-        
-        bar.add(new ImageryMenu(am));
         
         //create the simulation menu
         JMenu simMenu = new JMenu("Simulation");

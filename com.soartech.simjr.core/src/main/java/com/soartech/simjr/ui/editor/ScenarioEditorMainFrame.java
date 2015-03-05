@@ -68,7 +68,6 @@ import com.soartech.simjr.ui.actions.AddDistanceToolAction;
 import com.soartech.simjr.ui.actions.AdjustMapOpacityAction;
 import com.soartech.simjr.ui.actions.ClearDistanceToolsAction;
 import com.soartech.simjr.ui.actions.ShowAllAction;
-import com.soartech.simjr.ui.actions.imagery.ImageryMenu;
 import com.soartech.simjr.ui.editor.actions.ImportOSMAction;
 import com.soartech.simjr.ui.editor.actions.NewAction;
 import com.soartech.simjr.ui.editor.actions.NewEntityAction;
@@ -306,8 +305,6 @@ public class ScenarioEditorMainFrame extends JFrame implements ModelChangeListen
         view.add(submenuPiece3);
 
         bar.add(view.getMenu());
-        
-        bar.add(new ImageryMenu(am));
         
         final JMenu insert = new JMenu("Insert");
         insert.add(new NewEntityAction(am, "New Entity", "any", "ctrl E"));
