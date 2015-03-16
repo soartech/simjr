@@ -57,5 +57,17 @@ public class SimpleTerrainTest extends TestCase
         String newMgrs = terrain.toMgrs(Vector3.ZERO);
         assertEquals(mgrs, newMgrs);
     }
+    
+    public void testTranslation()
+    {
+        Geodetic.Point origin = new Geodetic.Point(0.5825127242298382, -2.049493620687549, 0.0);
+        SimpleTerrain terrain = new SimpleTerrain(origin);
+        Geodetic.Point pt = new Geodetic.Point(Math.toRadians(27.96), Math.toRadians(-140.0991), -800);
+        Geodetic.Point pt2 = terrain.toGeodetic(terrain.fromGeodetic(pt));
+
+        assertEquals(pt.latitude, pt2.latitude, 0.000001);
+        assertEquals(pt.longitude, pt2.longitude, 0.000001);
+        assertEquals(pt.altitude, pt2.altitude, 0.01);
+    }
 
 }
