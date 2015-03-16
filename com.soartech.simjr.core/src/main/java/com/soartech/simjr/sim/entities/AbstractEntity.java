@@ -230,16 +230,16 @@ public abstract class AbstractEntity extends AbstractAdaptable implements Entity
         final Map<String, Object> temp = finalProperties.get();
         if(temp != null)
         {
-            return temp;
+            return new HashMap<String, Object>(temp);
         }
 
         // Recalculate properties
-        final HashMap<String, Object> newFinalProps = new HashMap<String, Object>(baseProperties);
+        final Map<String, Object> newFinalProps = new ConcurrentHashMap<String, Object>(baseProperties);
         finalProperties.set(newFinalProps);
 
         updateProperties(newFinalProps);
 
-        return newFinalProps;
+        return new HashMap<String, Object>(newFinalProps);
     }
 
     /* (non-Javadoc)
