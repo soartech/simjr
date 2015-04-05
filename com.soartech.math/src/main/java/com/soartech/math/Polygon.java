@@ -38,8 +38,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Represents a convex polygon as an un-closed list of points in 
- * counter-clockwise order.
+ * Represents a polygon as an un-closed list of points.
  * 
  * <p>Although points are stored as Vector3 objects, only the X and Y components
  * of the points are considered in the polygon.
@@ -48,7 +47,7 @@ import java.util.List;
  */
 public class Polygon
 {
-    List<Vector3> points = new ArrayList<Vector3>();
+    private List<Vector3> points;
 
     /**
      * Create a polygon that is the convex hull of a collection of X-Y points.
@@ -86,16 +85,16 @@ public class Polygon
     }
     
     /**
-     * Create a polygon that is the concave hull of a collection of X-Y points.
+     * Create a polygon that is a collection of X-Y points.
      * 
-     * @param hullPoints
-     *            An ordered list of input points that hull is calculated from. 
+     * @param polyPoints
+     *            An ordered list of input points. 
      *            Only the X and Y coordinates of the points are considered.
-     * @return A polygon that is the concave hull of a set of points
+     * @return A polygon that is a set of points
      */
-    public static Polygon createPolygon(Collection<Vector3> hullPoints)
+    public static Polygon createPolygon(Collection<Vector3> polyPoints)
     {
-        return new Polygon(new ArrayList<Vector3>(hullPoints));
+        return new Polygon(new ArrayList<Vector3>(polyPoints));
     }
 
     /**
