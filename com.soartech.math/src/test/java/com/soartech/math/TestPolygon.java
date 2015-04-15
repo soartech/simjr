@@ -139,6 +139,29 @@ public class TestPolygon
         }
     }
     
+    
+    @Test
+    public void testConcave()
+    {
+        Vector3 a = new Vector3(0, 0, 0);
+        Vector3 b = new Vector3(100, 0, 0);
+        Vector3 c = new Vector3(50, 50, 0);
+        Vector3 d = new Vector3(100, 100, 0);
+        Vector3 e = new Vector3(0, 100, 0);
+        
+        Polygon p = Polygon.createPolygon(Arrays.asList(a,b,c,d,e));
+        
+        for(int i = 0; i < 50; i += 5)
+        {
+            assertFalse("Expected not to be contained", p.contains(new Vector3(51 + i,50 + i,0)));
+        }
+        for(int i = 0; i < 50; i += 5)
+        {
+            assertTrue("Expected to be contained", p.contains(new Vector3(50 + i,49 - i,0)));
+            assertTrue("Expected to be contained", p.contains(new Vector3(50 + i,51 + i,0)));
+        }
+    }
+    
     @Test
     public void testCentroid()
     {
