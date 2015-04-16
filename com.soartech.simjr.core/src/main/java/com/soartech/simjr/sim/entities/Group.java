@@ -43,12 +43,12 @@ public class Group extends Container
         
         public static Type getTypeByCount(int numUnits)
         {
-            Type groupType = Type.division;
+            Type groupType = Type.fireteam;
             for(Type t : groupMaxSize.keySet())
             {
-                if(groupMaxSize.get(t) <= numUnits)
+                groupType = t;
+                if(groupMaxSize.get(t) >= numUnits)
                 {
-                    groupType = t;
                     break;
                 }
             }
