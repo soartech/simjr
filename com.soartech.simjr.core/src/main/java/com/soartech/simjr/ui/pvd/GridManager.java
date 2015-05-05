@@ -156,25 +156,10 @@ public class GridManager
         
     }
     
-    private double getNextGridMultiple(double value, double incr)
+    static double getNextGridMultiple(double value, double incr)
     {
-        double r = 0.0;
-        if(value >= 0)
-        {
-            while(r < value)
-            {
-                r += incr;
-            }
-        }
-        else
-        {
-            while(r > value)
-            {
-                r -= incr;
-            }
-            r += incr;
-        }
-        return r;
+        double mod = Math.ceil(value/incr);
+        return mod*incr;
     }
 
 }
