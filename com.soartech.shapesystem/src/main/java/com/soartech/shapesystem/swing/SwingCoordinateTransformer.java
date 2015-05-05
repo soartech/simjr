@@ -77,6 +77,11 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         return 100.;
     }
     
+    private double getMinScale()
+    {
+        return 1./100000.;
+    }
+    
     /** sets the pan offset in screen pixels */
     public void setPanOffset(double x, double y)
     {
@@ -99,7 +104,7 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
      */
     public void setScale(double s)
     {
-        if (s <= getMaxScale())
+        if (s <= getMaxScale() && s >= getMinScale() )
         {
             scale = s;
         }
