@@ -38,7 +38,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Represents a polygon as an un-closed list of points.
+ * Represents a convex polygon as an un-closed list of points in 
+ * counter-clockwise order.
  * 
  * <p>Although points are stored as Vector3 objects, only the X and Y components
  * of the points are considered in the polygon.
@@ -85,16 +86,36 @@ public class Polygon
     }
     
     /**
-     * Create a polygon that is a collection of X-Y points.
+     * Create a polygon that is the concave hull of a collection of X-Y points.
      * 
-     * @param polyPoints
-     *            An ordered list of input points. 
+     * @param hullPoints
+     *            An ordered list of input points that hull is calculated from. 
      *            Only the X and Y coordinates of the points are considered.
-     * @return A polygon that is a set of points
+     * @return A polygon that is the concave hull of a set of points
      */
-    public static Polygon createPolygon(Collection<Vector3> polyPoints)
+    public static Polygon createPolygon(Collection<Vector3> inPoints)
     {
-        return new Polygon(new ArrayList<Vector3>(polyPoints));
+        return new Polygon(new ArrayList<Vector3>(inPoints));
+    }
+
+    public static Polygon createPolygon(double[][] pointsAry)
+    {
+        ArrayList<Vector3> pts = new ArrayList<Vector3>();
+        
+        for(double[] ary : pointsAry)
+        {
+            double x = ary[0];
+            double y = ary[1];
+            double z = 0.0;
+            
+            if (ary.length > 2) z = ary[2];
+            
+            Vector3 v = new Vector3(x, y, z);
+            
+            pts.add(v);
+        }
+        
+        return new Polygon(pts);
     }
 
     /**
@@ -184,6 +205,21 @@ public class Polygon
         return c;
     }
 
+    public long size()
+    {
+        return points.size();
+    }
+    
+    public boolean isEmpty()
+    {
+        return points.isEmpty();
+    }
+    
+    public Vector3 get(int i)
+    {
+        return points.get(i);
+    }
+    
     /**
      * Clients should use the public factory methods above in lieue of this
      * private constructor.
@@ -383,4 +419,6 @@ public class Polygon
         center = center.multiply(1.0/pts.size());
         return center.distance(p);
     }
+
+
 }
