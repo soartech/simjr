@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soartech</groupId>
 	<artifactId>simjr-math</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>SimJr Math</name>
 
     <scm>
         <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
-      <tag>simjr-math-0.0.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
