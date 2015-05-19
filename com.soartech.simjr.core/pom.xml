@@ -7,6 +7,10 @@
     <packaging>jar</packaging>
     <name>SimJr Core</name>
     
+    <scm>
+        <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

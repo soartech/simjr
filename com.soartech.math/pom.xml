@@ -6,7 +6,11 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>SimJr Math</name>
-  
+
+    <scm>
+        <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
