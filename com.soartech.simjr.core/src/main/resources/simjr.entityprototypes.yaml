@@ -381,6 +381,13 @@ prototypes:
     properties:
         ms2525.template: "S%cGPUCDS--"
         
+- &scud
+    id: scud
+    parent: *ground-vehicle
+    category: scud
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+        
 - &hmmwv
     id: hmmwv
     parent: *fixed-size-ground-vehicle

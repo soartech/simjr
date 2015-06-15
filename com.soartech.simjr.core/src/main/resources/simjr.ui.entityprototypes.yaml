@@ -165,6 +165,11 @@ prototypes:
     properties:
         shape: !!com.soartech.simjr.ui.shapes.MobileSAMShape$Factory []
 
+- &scud
+    id: scud
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []
+
 ###############################################################################
 - &water-tower
     id: water-tower
