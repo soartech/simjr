@@ -10,6 +10,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-internal-snapshots</id>
+            <name>SoarTech Internal Snapshots</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>
+
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-releases</id>
+            <name>SoarTech Releases</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+    
     <repositories>
         <repository>
             <id>soartech-public</id>

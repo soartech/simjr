@@ -17,6 +17,24 @@
         <url>http://www.soartech.com</url>
     </organization>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-internal-snapshots</id>
+            <name>SoarTech Internal Snapshots</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>
+
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>soartech-releases</id>
+            <name>SoarTech Releases</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+    
     <!-- repositories that will be searched when downloading dependencies -->
     <repositories>
         <repository>
