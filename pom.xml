@@ -2,13 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.soartech</groupId>
     <artifactId>simjr</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
     <packaging>pom</packaging>
     <name>SimJr</name>
 
     <scm>
         <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>simjr-0.0.5</tag>
     </scm>
 
     <properties>
