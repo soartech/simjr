@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.soartech</groupId>
   <artifactId>simjr-web</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5-SNAPSHOT</version>
   <name>SimJr Web</name>
   <packaging>jar</packaging>
 
@@ -19,7 +19,7 @@
   	<dependency>
   		<groupId>com.soartech</groupId>
   		<artifactId>simjr-core</artifactId>
-  		<version>0.0.4</version>
+  		<version>0.0.5-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>com.google.code.gson</groupId>
