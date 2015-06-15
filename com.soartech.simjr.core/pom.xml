@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.soartech</groupId>
     <artifactId>simjr-core</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
     <name>SimJr Core</name>
 
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.soartech</groupId>
 			<artifactId>simjr-math</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>0.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>com.soartech</groupId>
 			<artifactId>simjr-shapesystem</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>0.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>de.sciss</groupId>
