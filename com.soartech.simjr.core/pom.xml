@@ -5,11 +5,6 @@
     <version>0.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>SimJr Core</name>
-    
-    <scm>
-        <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,25 +40,6 @@
         </repository>
     </repositories>
     
-    
-    <distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-internal-snapshots</id>
-            <name>SoarTech Internal Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
-            <layout>default</layout>
-        </snapshotRepository>
-        
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-releases</id>
-            <name>SoarTech Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
-    
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -73,7 +49,7 @@
 		<dependency>
 			<groupId>com.soartech</groupId>
 			<artifactId>simjr-math</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
@@ -127,7 +103,7 @@
 		<dependency>
 			<groupId>com.soartech</groupId>
 			<artifactId>simjr-shapesystem</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.sciss</groupId>

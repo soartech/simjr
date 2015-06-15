@@ -4,7 +4,7 @@
     <!-- project identification -->
     <groupId>com.soartech</groupId>
     <artifactId>simjr-example</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>SimJr Example</name>
     
     <properties>
@@ -47,36 +47,18 @@
             </snapshots>
         </repository>
     </repositories>
-    
-    <!-- when the deploy goal is invoked, distribute to these servers  -->
-    <distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-internal-snapshots</id>
-            <name>SoarTech Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
-            <layout>default</layout>
-        </snapshotRepository>
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-releases</id>
-            <name>SoarTech Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-      </distributionManagement>
 
     <!-- list of dependencies, including other simjr modules -->
     <dependencies>
         <dependency>
 	        <groupId>com.soartech</groupId>
 	        <artifactId>simjr-core</artifactId>
-	        <version>0.0.3-SNAPSHOT</version>
+	        <version>0.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
 	        <groupId>com.soartech</groupId>
 	        <artifactId>simjr-web</artifactId>
-	        <version>0.0.2-SNAPSHOT</version>
+	        <version>0.0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
         

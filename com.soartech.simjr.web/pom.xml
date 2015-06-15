@@ -2,30 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.soartech</groupId>
   <artifactId>simjr-web</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <name>SimJr Web</name>
   <packaging>jar</packaging>
 
   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <distributionManagement>
-    <snapshotRepository>
-        <uniqueVersion>true</uniqueVersion>
-        <id>soartech-internal-snapshots</id>
-        <name>SoarTech Internal Snapshots</name>
-        <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
-        <layout>default</layout>
-    </snapshotRepository>
-    <repository>
-        <uniqueVersion>true</uniqueVersion>
-        <id>soartech-releases</id>
-        <name>SoarTech Releases</name>
-        <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
-        <layout>default</layout>
-    </repository>
-  </distributionManagement>
   
   <dependencies>
   	<dependency>
@@ -36,7 +19,7 @@
   	<dependency>
   		<groupId>com.soartech</groupId>
   		<artifactId>simjr-core</artifactId>
-  		<version>0.0.3-SNAPSHOT</version>
+  		<version>0.0.4-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>com.google.code.gson</groupId>
