@@ -149,6 +149,11 @@ prototypes:
     id: truck
     properties:
         shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []
+
+- &ugv
+    id: ugv
+    properties:
+        shape: !!com.soartech.simjr.ui.shapes.TruckShape$Factory []
         
 - &tank
     id: tank
