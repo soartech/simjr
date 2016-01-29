@@ -94,9 +94,10 @@ public class EntityVisibleRangeShape
         }
         
         double angle = range.getVisibleAngle();
+        double relhdg = range.getVisibleRelativeHeading();
         Scalar radius = Scalar.createMeter(range.getVisibleRange());
-        Rotation startAngle = Rotation.fromRadians(-angle / 2.0, RotationType.WORLD);
-        Rotation endAngle = Rotation.fromRadians(angle / 2.0, RotationType.WORLD);
+        Rotation startAngle = Rotation.fromRadians(relhdg - angle/2.0, RotationType.WORLD);
+        Rotation endAngle = Rotation.fromRadians(relhdg + angle/2.0, RotationType.WORLD);
 
         if(shape == null)
         {

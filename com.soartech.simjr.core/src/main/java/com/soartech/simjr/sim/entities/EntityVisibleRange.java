@@ -52,6 +52,7 @@ public class EntityVisibleRange
     private String property;
     private double visibleRange = 0.0;
     private double visibleAngle = Math.PI / 4.0;
+    private double visibleRelativeHeading = 0.0;
     
     public static EntityVisibleRange get(Entity entity)
     {
@@ -116,6 +117,23 @@ public class EntityVisibleRange
     }
     
     /**
+     * @return the relative heading in radians
+     */
+    public double getVisibleRelativeHeading()
+    {
+        return visibleRelativeHeading;
+    }
+    
+    /**
+     * @param relHeading the relative heading in radians
+     */
+    public void setVisibleRelativeHeading(double relHeading)
+    {
+        entity.firePropertyChanged(property);
+        this.visibleRelativeHeading = relHeading;
+    }
+    
+    /**
      * Tests whether a position is within this visible range
      * 
      * @param otherPos The position to test. Z is ignored.
@@ -131,8 +149,9 @@ public class EntityVisibleRange
         double xyRange = xyDisplacement.length();
         double xyAngle = Math.atan2(xyDisplacement.y, xyDisplacement.x);
         double agentAngle = Angles.boundedAngleRadians(entity.getHeading());
+        double relHdgAngle = Angles.boundedAngleRadians(visibleRelativeHeading);
         
-        if(xyRange > visibleRange || Math.abs(Angles.angleDifference(xyAngle, agentAngle)) > 0.5* visibleAngle)
+        if(xyRange > visibleRange || Math.abs(Angles.angleDifference(xyAngle, agentAngle + relHdgAngle)) > 0.5* visibleAngle)
         {
             return false;
         }
@@ -155,10 +174,10 @@ public class EntityVisibleRange
     @Override
     public String toString()
     {
-        return String.format("%.0f meters, %.0f degrees", 
-                new Object[] { visibleRange, Math.toDegrees(visibleAngle) });
+        return String.format("%.0f meters, %.0f degrees, %.0f hdg degrees", 
+                             visibleRange, 
+                             Math.toDegrees(visibleAngle), 
+                             Math.toDegrees(visibleRelativeHeading));
     }
-
-    
-    
+  
 }
