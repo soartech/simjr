@@ -96,6 +96,23 @@ public class PathInterpolater
         
     }
     
+    public Vector3 getDirection()
+    {
+        Vector3 startPt;
+        Vector3 endPt;
+        if ( isPathComplete() )
+        {
+            startPt = path.get(currentPtIndex-1);
+            endPt = path.get(currentPtIndex);
+        }
+        else
+        {
+            startPt = path.get(currentPtIndex);
+            endPt = path.get(currentPtIndex+1);            
+        }
+        return endPt.subtract(startPt).normalized();
+    }
+    
     private double getCurrentSegmentDistance()
     {
         if ( isPathComplete() )
