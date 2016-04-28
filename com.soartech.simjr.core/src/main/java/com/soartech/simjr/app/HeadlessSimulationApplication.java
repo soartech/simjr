@@ -31,115 +31,23 @@
  */
 package com.soartech.simjr.app;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.soartech.math.geotrans.Geodetic;
-import com.soartech.math.geotrans.Mgrs;
 import com.soartech.simjr.NullProgressMonitor;
-import com.soartech.simjr.ProgressMonitor;
 import com.soartech.simjr.SimJrProps;
-import com.soartech.simjr.SimulationException;
-import com.soartech.simjr.scripting.ScriptRunner;
-import com.soartech.simjr.services.DefaultServiceManager;
-import com.soartech.simjr.sim.ScenarioLoader;
-import com.soartech.simjr.sim.SimpleTerrain;
-import com.soartech.simjr.sim.Simulation;
-import com.soartech.simjr.util.FileTools;
 
 /**
  * Application entry point for running Sim Jr with no UI.
  * 
  * @author ray
  */
-public class HeadlessSimulationApplication extends DefaultServiceManager
+public class HeadlessSimulationApplication extends AbstractSimulationApplication//DefaultServiceManager
 {
     private static final Logger logger = LoggerFactory.getLogger(HeadlessSimulationApplication.class);
-                
-    private DefaultApplicationStateService appState = new DefaultApplicationStateService();
-    
-    public HeadlessSimulationApplication()
-    {
-    }
 
-    public void initialize(ProgressMonitor progress, String[] args)
-    {
-        progress = NullProgressMonitor.createIfNull(progress);
-        
-        addService(appState);
-        
-        progress.subTask("Initializing scripting support ...");
-        addService(new ScriptRunner(this));        
-        
-        createSimulation(progress);
-                                
-        try
-        {
-            loadScenario(progress, args);
-            
-        }
-        catch (Throwable e)
-        {
-            logger.error("Application initialization failure", e);
-            try
-            {
-                shutdownServices();
-            }
-            catch (SimulationException e1)
-            {
-                logger.error(e1.toString());
-            }
-        }
-        finally
-        {
-            appState.setState(ApplicationState.RUNNING);
-        }
-    }
+    public HeadlessSimulationApplication() { }
 
-    private void loadScenario(ProgressMonitor progress, String[] args)
-            throws SimulationException, Exception
-    {
-        progress.subTask("Loading scenario ...");
-        final ScriptRunner scriptRunner = findService(ScriptRunner.class);
-        final ScenarioLoader loader = new ScenarioLoader(this);
-        for(String arg : args)
-        {
-            final String ext = FileTools.getExtension(arg).toLowerCase();
-            if(ext.equals("xml") || ext.equals("sjx"))
-            {
-                loader.loadScenario(new File(arg), progress);
-            }
-            else
-            {
-                scriptRunner.run(progress, new File(arg));
-            }
-        }
-    }
-
-    private void createSimulation(ProgressMonitor progress)
-    {
-        // Set up the simulation with a default terrain. It can be set later by a scenario script
-        // For now, we're doing this here so that the global simulation variable can be set correctly
-        // in simjr.common.js. TODO: get rid of the global variable or something.
-        progress.subTask("Initializing simulation ...");
-        Geodetic.Point origin = new Mgrs().toGeodetic(SimJrProps.get("simjr.simulation.defaultOriginMgrs", "11SMS6025093000"));
-        SimpleTerrain terrain = new SimpleTerrain(origin);
-        Simulation simulation = new Simulation(terrain);
-        addService(simulation);
-    }
-
-    /* (non-Javadoc)
-     * @see com.soartech.simjr.ServiceManager#shutdownServices()
-     */
-    public void shutdownServices() throws SimulationException
-    {
-        super.shutdownServices();
-        logger.info("Exiting");
-        System.exit(0);
-    }
-    
     /**
      * @param args
      */
