@@ -47,27 +47,27 @@ import org.slf4j.LoggerFactory;
 public class ServiceProviderLocator
 {
     private static final Logger logger = LoggerFactory.getLogger(ServiceProviderLocator.class);
-    
+
     private static final Map<String, ServiceProvider> providers = new HashMap<String, ServiceProvider>();
     static {
-    	logger.info("Loading ServiceProviders from classpath");
-    	
-    	ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
-    	
-    	for (ServiceProvider provider : loader) {
-    		logger.info("Loaded ServiceProvider: " + provider.getClass().getName());
-			for (String name : provider.getServiceNames()) {
-				providers.put(name, provider);
-			}
-		}
+        logger.info("Loading ServiceProviders from classpath");
+
+        ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
+
+        for (ServiceProvider provider : loader) {
+            logger.info("Loaded ServiceProvider: " + provider.getClass().getName());
+            for (String name : provider.getServiceNames()) {
+                providers.put(name, provider);
+            }
+        }
     }
-    
-	public static ServiceProvider getProvider(String name) {
-		return providers.get(name);
-	}
-	
-	public static Collection<ServiceProvider> getProviders() 
-	{
-	    return providers.values();
-	}
+
+    public static ServiceProvider getProvider(String name) {
+        return providers.get(name);
+    }
+
+    public static Collection<ServiceProvider> getProviders() 
+    {
+        return providers.values();
+    }
 }
