@@ -51,7 +51,6 @@ public abstract class AbstractSimulationApplication extends DefaultServiceManage
             
             loadPluginServices(ServiceProviderLocator.getProviders()); 
             loadScenario(progress, args);
-            
         }
         catch (Throwable e)
         {
