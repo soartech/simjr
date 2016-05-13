@@ -299,6 +299,7 @@ public class SimJrProps
             try
             {
                 scope.load(is);
+                scope.putAll(System.getProperties()); //Command line properties must still take precedence
             }
             finally
             {
@@ -342,6 +343,7 @@ public class SimJrProps
             {
                 is = url.openStream();
                 scope.load(is);
+                scope.putAll(System.getProperties()); //Command line properties must still take precedence
             }
             finally
             {
