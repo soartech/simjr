@@ -117,6 +117,7 @@ public class DefaultServiceManager implements ServiceManager
         {
             try
             {
+                logger.info("Starting service: " + r);
                 r.start(new NullProgressMonitor());
             }
             catch (SimulationException e)
