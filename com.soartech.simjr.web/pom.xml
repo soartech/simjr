@@ -13,21 +13,45 @@
       <distributionManagement>
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
-            <id>soartech-internal-snapshots</id>
-            <name>SoarTech Internal Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+            <id>soartech-public-snapshots</id>
+            <name>SoarTech Public Snapshots</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/</url>
             <layout>default</layout>
         </snapshotRepository>
 
         <repository>
             <uniqueVersion>true</uniqueVersion>
-            <id>soartech-releases</id>
-            <name>SoarTech Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+            <id>soartech-public-releases</id>
+            <name>SoarTech Public Releases</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/</url>
             <layout>default</layout>
         </repository>
     </distributionManagement>
     
+      <repositories>
+        <repository>
+            <id>soartech-public-releases</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/
+            </url>
+        </repository>
+        <repository>
+            <id>soartech-public-snapshots</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/
+            </url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>soartech-thirdparty</id>
+            <url>
+                https://nexus.soartech.com:8443/nexus/content/repositories/thirdparty/
+            </url>
+        </repository>
+    </repositories>
+      
   <dependencies>
   	<dependency>
   		<groupId>org.eclipse.jetty</groupId>

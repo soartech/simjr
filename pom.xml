@@ -7,7 +7,7 @@
     <name>SimJr</name>
 
     <scm>
-        <developerConnection>scm:git:https://git.soartech.com/git/simjr.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/soartech/simjr.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -26,17 +26,17 @@
     <distributionManagement>
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
-            <id>soartech-internal-snapshots</id>
-            <name>SoarTech Internal Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/snapshots/</url>
+            <id>soartech-public-snapshots</id>
+            <name>SoarTech Public Snapshots</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/</url>
             <layout>default</layout>
         </snapshotRepository>
 
         <repository>
             <uniqueVersion>true</uniqueVersion>
-            <id>soartech-releases</id>
-            <name>SoarTech Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/releases/</url>
+            <id>soartech-public-releases</id>
+            <name>SoarTech Public Releases</name>
+            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/</url>
             <layout>default</layout>
         </repository>
     </distributionManagement>
