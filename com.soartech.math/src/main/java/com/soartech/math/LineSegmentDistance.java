@@ -48,41 +48,55 @@ public class LineSegmentDistance
      * @param start The start of the line segment
      * @param end The end of the line segment
      * @param direction The <b>unnormalized</b> direction of the line segment, i.e.
-     *          {@param end} - {@param start}. This is for efficieny purposes
+     *          {@code end} - {@code start}. This is for efficiency purposes
      *          because this value can easily be cached to avoid frequent
      *          recalculation. If not set correctly, results are undefined.
      * @param point The point to test
-     * @return The minimum distance between {@param point} and the line segment
-     *      defined by {@param start} and {@param end}.
+     * @return The minimum distance between {@code point} and the line segment
+     *      defined by {@code start} and {@code end}.
      */
     public static double toPoint(Vector3 start, Vector3 end, Vector3 direction, Vector3 point)
-    {       
-        // If the line segment is degenerate, just return distance to start
-        // point to avoid divide by zero below.
+    {
+        Vector3 closestPoint = closestPointOnLineSegment(start, end, direction, point);
+        return point.distance(closestPoint);
+    }
+    
+    /**
+     * Calculates the closest point on a line segment to a specified point.
+     * 
+     * @param start The start of the line segment
+     * @param end The end of the line segment
+     * @param direction The <b>unnormalized</b> direction of the line segment, i.e.
+     *          {@code end} - {@code start}. This is for efficiency purposes
+     *          because this value can easily be cached to avoid frequent
+     *          recalculation. If not set correctly, results are undefined.
+     * @param point The point to test
+     * @return The closest point on the line segment to the specified point
+     */
+    public static Vector3 closestPointOnLineSegment(Vector3 start, Vector3 end, Vector3 direction, Vector3 point)
+    {
+        // If the line segment is degenerate, just return start point
         if(direction.epsilonEquals(Vector3.ZERO))
         {
-            return point.distance(start);
+            return start;
         }
         
         double u = direction.dot(point.subtract(start)) / direction.lengthSquared();
-        double d = 0.0;
         if(u <= 0)
         {
             // start of line segment
-            d = point.distance(start);
+            return start;
         }
         else if(u >= 1)
         {
             // end of line segment
-            d = point.distance(end);
+            return end;
         }
         else
         {
             // interpolate along line segment
-            d = point.distance(start.add(direction.multiply(u)));
+            return start.add(direction.multiply(u));
         }
-        
-        return d;
     }
     
     

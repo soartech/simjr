@@ -109,11 +109,21 @@ public class Circle extends Shape
     @Override
     public boolean hitTest(double x, double y, double tolerance)
     {
+        return distance(x, y) < cachedRadius + tolerance;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
         if(!isVisible() || points.isEmpty())
         {
-            return false;
+            return Double.MAX_VALUE;
         }
-        return points.get(0).distance(x, y) < cachedRadius + tolerance;
+        return points.get(0).distance(x, y);
     }
 
 }

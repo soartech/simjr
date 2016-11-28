@@ -183,8 +183,23 @@ public class Arc extends Shape
         {
             return false;
         }
+        // TODO: Constrain to arc and handle tolerance.
+        return distance(x, y) < cachedRadius;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
         // TODO: Constrain to arc
-        return points.get(0).distance(x, y) < cachedRadius;
+        return points.get(0).distance(x, y);
     }
 
 }

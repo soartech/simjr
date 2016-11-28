@@ -47,17 +47,8 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     private final JComponent component;
     private double panOffsetRight = 0;
     private double panOffsetUp = 0;
-    private double scale = 1;
-    
+    private double scale = 0.01;
     private double rotation = 0.0;
-    public double getRotation()
-    {
-        return rotation;
-    }
-    public void setRotation(double newRotation)
-    {
-        this.rotation = newRotation;
-    }
     
     /**
      * @param component
@@ -65,6 +56,16 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     public SwingCoordinateTransformer(JComponent component)
     {
         this.component = component;
+    }
+    
+    public double getRotation()
+    {
+        return rotation;
+    }
+    
+    public void setRotation(double newRotation)
+    {
+        this.rotation = newRotation;
     }
 
     private double getMaxScale()
@@ -74,6 +75,11 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         // return Math.min( d.getWidth() / extents.x, d.getHeight() /
         // extents.y);
         return 100.;
+    }
+    
+    private double getMinScale()
+    {
+        return 1./100000.;
     }
     
     /** sets the pan offset in screen pixels */
@@ -98,7 +104,7 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
      */
     public void setScale(double s)
     {
-        if (s <= getMaxScale())
+        if (s <= getMaxScale() && s >= getMinScale() )
         {
             scale = s;
         }
@@ -121,7 +127,7 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
     
     /**
      * @param pixels
-     * @return
+     * @return Distance covered by {@code pixels} in meters.
      */
     public double screenToMeters(double pixels)
     {
@@ -143,7 +149,6 @@ public class SwingCoordinateTransformer implements CoordinateTransformer
         AffineTransform.getRotateInstance(-rotation, 0.0, 0.0).transform(pt, 0, pt, 0, 1);
         mx = pt[0];
         my = pt[1];
-        
         
         return new Vector3(mx, my, 0.0);
     }

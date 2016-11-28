@@ -1,0 +1,2 @@
+requireScript("hello");
+

@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class Polygon
 {
-    List<Vector3> points = new ArrayList<Vector3>();
+    private List<Vector3> points;
 
     /**
      * Create a polygon that is the convex hull of a collection of X-Y points.
@@ -93,9 +93,29 @@ public class Polygon
      *            Only the X and Y coordinates of the points are considered.
      * @return A polygon that is the concave hull of a set of points
      */
-    public static Polygon createPolygon(Collection<Vector3> hullPoints)
+    public static Polygon createPolygon(Collection<Vector3> inPoints)
     {
-        return new Polygon(new ArrayList<Vector3>(hullPoints));
+        return new Polygon(new ArrayList<Vector3>(inPoints));
+    }
+
+    public static Polygon createPolygon(double[][] pointsAry)
+    {
+        ArrayList<Vector3> pts = new ArrayList<Vector3>();
+        
+        for(double[] ary : pointsAry)
+        {
+            double x = ary[0];
+            double y = ary[1];
+            double z = 0.0;
+            
+            if (ary.length > 2) z = ary[2];
+            
+            Vector3 v = new Vector3(x, y, z);
+            
+            pts.add(v);
+        }
+        
+        return new Polygon(pts);
     }
 
     /**
@@ -106,6 +126,56 @@ public class Polygon
         return points;
     }
 
+    public Vector3[] getBoundingBox()
+    {
+        double maxX = -Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+        double maxZ = -Double.MAX_VALUE;
+        double minX =  Double.MAX_VALUE;
+        double minY =  Double.MAX_VALUE;
+        double minZ =  Double.MAX_VALUE;
+        
+        for( Vector3 v : points)
+        {
+            if (maxX < v.x) maxX = v.x;
+            if (maxY < v.y) maxY = v.y;
+            if (maxZ < v.z) maxZ = v.z;
+
+            if (minX > v.x) minX = v.x;
+            if (minY > v.y) minY = v.y;
+            if (minZ > v.z) minZ = v.z;
+        }
+        
+        Vector3[] retVal = new Vector3[2];
+        retVal[0] = new Vector3(minX, minY, minZ);
+        retVal[1] = new Vector3(maxX, maxY, maxZ);
+        
+        return retVal;
+    }
+    
+    /** 
+     * @return Returns an average of all the points in the polygon
+     */
+    public Vector3 getCentroid()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        
+        for( Vector3 v : points)
+        {
+            x += v.x;
+            y += v.y;
+            z += v.z;
+        }
+        
+        x /= points.size();
+        y /= points.size();
+        z /= points.size();
+        
+        return new Vector3(x, y, z);
+    }
+    
     /**
      * Returns true if the polygon contains the given point, ignoring the
      * point's Z coordinate.
@@ -135,6 +205,21 @@ public class Polygon
         return c;
     }
 
+    public long size()
+    {
+        return points.size();
+    }
+    
+    public boolean isEmpty()
+    {
+        return points.isEmpty();
+    }
+    
+    public Vector3 get(int i)
+    {
+        return points.get(i);
+    }
+    
     /**
      * Clients should use the public factory methods above in lieue of this
      * private constructor.
@@ -315,5 +400,25 @@ public class Polygon
         // of the first
         return asList(stack, minmax != minmin ? top + 1 : top);
     }
+
+    /**
+     * @return the distance from the center of this Polygon to the point <code>p</code>.
+     */
+    public double distance(Vector3 p)
+    {
+        Vector3 center = Vector3.ZERO;
+        final List<Vector3> pts = getPoints();
+        if (pts.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        for(Vector3 hullPoint : pts)
+        {
+            center = center.add(hullPoint);
+        }
+        center = center.multiply(1.0/pts.size());
+        return center.distance(p);
+    }
+
 
 }

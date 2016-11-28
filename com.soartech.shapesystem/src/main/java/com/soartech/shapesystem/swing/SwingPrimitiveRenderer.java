@@ -43,6 +43,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.soartech.shapesystem.CapStyle;
 import com.soartech.shapesystem.FillStyle;
 import com.soartech.shapesystem.JoinStyle;
@@ -179,7 +180,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
      * @see com.soartech.shapesystem.PrimitiveRenderer#drawImage(com.soartech.shapesystem.SimplePosition, java.lang.String, double, double)
      */
     public void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width,
-            double height)
+            double height, float opacity)
     {
         Graphics2D g = factory.getGraphics2D();
 
@@ -204,7 +205,21 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
         AffineTransform transform = new AffineTransform();
         transform.rotate(-rotation.inRadians(), center.x, center.y);
         transform.translate(topLeftX, topLeftY);
+        
+        // If the width or height passed in is different from the actual width or height
+        // of the image, scale the image.
+        if(w != image.getWidth(null) || h != image.getHeight(null)){
+            double xScale = width >= 0 ? width / image.getWidth(null) : 1.0;
+            double yScale = height >= 0 ? height / image.getHeight(null) : 1.0;
+            transform.scale(xScale, yScale);
+        }
+
+        AffineTransform oldTransform = g.getTransform();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+        
         g.drawImage(image, transform, null);
+        
+        g.setTransform(oldTransform);
     }
 
     /* (non-Javadoc)
@@ -290,7 +305,7 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
     /* (non-Javadoc)
      * @see com.soartech.shapesystem.PrimitiveRenderer#drawText(com.soartech.shapesystem.SimplePosition, java.lang.String)
      */
-    public void drawText(SimplePosition p, String string)
+    public List<SimplePosition> drawText(SimplePosition p, String string)
     {
         final Graphics2D g = factory.getGraphics2D();
         /*
@@ -326,18 +341,43 @@ public class SwingPrimitiveRenderer implements PrimitiveRenderer
                 g.setFont(ts.getFont());
             }
         }
+
+        FontMetrics fontMetrics = g.getFontMetrics();
+        Rectangle2D rect = fontMetrics.getStringBounds(string, g);
+        rect = setRectOrigin(rect, p);
         if(filled)
         {
             switchToFillColor();
-            FontMetrics fontMetrics = g.getFontMetrics();
-            Rectangle2D rect = fontMetrics.getStringBounds(string, g);
             int pad = 3;
-            g.fillRoundRect((int) p.x - pad, (int) p.y - fontMetrics.getAscent() - pad, 
-                            (int) rect.getWidth() + 2 * pad, (int) rect.getHeight() + 2 * pad, 3 * pad, 3 * pad);
+            rect = padRect(rect, fontMetrics, pad);
+            g.fillRoundRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight(), 3 * pad, 3 * pad);
         }
         switchToLineColor();
         g.drawString(string, (int) p.x, (int) p.y);
         g.setFont(oldFont);
+        return rectToSimplePosition(rect);
+    }
+
+    private static Rectangle2D setRectOrigin(Rectangle2D rect, SimplePosition pos)
+    {
+        return new Rectangle2D.Double(pos.x, pos.y, rect.getWidth(), rect.getHeight());
+    }
+
+    private static Rectangle2D padRect(Rectangle2D rect, FontMetrics fontMetrics, int pad)
+    {
+        return new Rectangle2D.Double((int) rect.getX() - pad, (int) rect.getY() - fontMetrics.getAscent() - pad, 
+                (int) rect.getWidth() + 2 * pad, (int) rect.getHeight() + 2 * pad);
+    }
+    
+    private static List<SimplePosition> rectToSimplePosition(Rectangle2D rect)
+    {
+        final List<SimplePosition> pts = Lists.newArrayList();
+        pts.add(new SimplePosition(rect.getX(), rect.getY()));
+        pts.add(new SimplePosition(rect.getX() + rect.getWidth(), rect.getY()));
+        pts.add(new SimplePosition(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight()));
+        pts.add(new SimplePosition(rect.getX(), rect.getY() + rect.getHeight()));
+        //pts.add(new SimplePosition(rect.getX(), rect.getY()));
+        return pts;
     }
 
     /* (non-Javadoc)

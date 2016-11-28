@@ -1,0 +1,681 @@
+# Copyright (c) 2010, Soar Technology, Inc.
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the
+#   documentation and/or other materials provided with the distribution.
+# 
+# * Neither the name of Soar Technology, Inc. nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without the specific prior written permission of Soar Technology, Inc.
+# 
+# THIS SOFTWARE IS PROVIDED BY SOAR TECHNOLOGY, INC. AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL SOAR TECHNOLOGY, INC. OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#
+# This is Sim Jr's default entity prototype database. Each prototype has several properties:
+#
+# parent: Parent prototype (YAML reference, or !prototype identifier)
+# id: A unique id for the prototype. This is required!
+# domain: The domain of the prototype, e.g. air, sea, etc. Inherited from 
+#         parent if omitted.
+# category: High-level category of the entity, e.g. fwa. Inherited from parent
+#           if omitted.
+# subcategory: Most specific type of the entity. If omitted, defaults to id.
+# factory: A factory (such as a class) for creating the entity
+# abstract: true/false (default is false) to indicate entity prototypes that aren't instantiable
+# properties: Default values for entity properties such as shape, visible, etc.
+
+prototypes:
+- &any
+    id: any
+    domain: any
+    category: any
+    factory: !class com.soartech.simjr.sim.entities.DefaultEntity
+    properties:
+        visible: true
+        locked: false
+    
+- &control
+    id: control
+    parent: *any
+    domain: control
+    category: control
+    abstract: true
+         
+- &waypoint
+    id: waypoint
+    parent: *control
+    category: waypoint
+    
+- &cylinder
+    id: cylinder
+    parent: *waypoint
+    category: cylinder
+    properties:
+        polygon.closed: false
+
+- &Special_use_airspace-cylinder
+    id: Special_use_airspace-cylinder
+    parent: *cylinder
+    category: cylinder
+    subcategory: Special_use_airspace
+    properties:
+        # ASCA - Airspace Control Area = Light Gray
+        shape.fill.color: lightGray
+        
+- &ROZ-cylinder
+    id: ROZ-cylinder
+    parent: *cylinder
+    category: cylinder
+    subcategory: ROZ
+    properties:
+        # ROA - Restricted Operations Area = Red
+        shape.fill.color: red
+            
+- &polygon
+    id: polygon
+    parent: *control
+    domain: polygon
+    category: polygon
+    subcategory: polygon
+    abstract: true
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.DefaultPolygon
+        
+- &polygon-static
+    id: polygon-static
+    parent: *polygon
+    domain: polygon
+    category: polygon
+    subcategory: polygon
+    abstract: true
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.StaticPolygon
+   
+- &route
+    id: route
+    parent: *polygon
+    category: route
+    subcategory: route
+    properties:
+        polygon.closed: false
+        # AIRRTE - Air Route = Blue
+        shape.line.color: blue
+
+- &SAAFR
+    id: SAAFR
+    parent: *route
+    category: route
+    subcategory: SAAFR
+    properties:
+        # SAAFR - Standard Use Army Aircraft Flight Route = Cyan
+        shape.line.color: cyan
+        
+- &AIRCOR
+    id: AIRCOR
+    parent: *route
+    category: route
+    subcategory: AIRCOR
+    properties:
+        # AIRCOR = Dark Green
+        shape.line.color: "347235"
+- &area
+    id: area
+    parent: *polygon
+    category: area
+    subcategory: area
+    properties:
+        # ACA - Airspace Coordination Area = Light Gray
+        shape.line.color: lightGray
+        polygon.closed: true
+       
+- &ROZ
+    id: ROZ
+    parent: *area
+    category: area
+    subcategory: ROZ
+    properties:
+        # ROA - Restricted Operations Area = Red
+        shape.fill.color: red 
+        
+- &Special_use_airspace
+    id: Special_use_airspace
+    parent: *area
+    category: area
+    subcategory: Special_use_airspace
+    properties:
+        # ASCA - Airspace Control Area = Light Gray
+        shape.fill.color: lightGray
+        
+- &complex-area
+    id: complex-area
+    parent: *polygon
+    category: area
+    subcategory: area
+    properties:
+        polygon.closed: true
+        
+- &complex-area-static
+    id: complex-area-static
+    parent: *polygon-static
+    category: area
+    subcategory: area
+    properties:
+        polygon.closed: true
+        
+- &compound-area
+    id: compound-area
+    parent: *control
+    domain: compoundarea
+    category: compoundarea
+    subcategory: compoundarea
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.DefaultCompoundPolygon
+
+###############################################################################
+
+- &flyout
+    id: flyout
+    parent: *any
+    domain: flyout
+    category: flyout
+    abstract: true
+    properties:
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.MilStd2525Provider
+        
+- &missile
+    id: missile
+    parent: *flyout
+    properties:
+        ms2525.template: "S%cAPWM----"
+
+
+- &bomb
+    id: bomb
+    parent: *flyout
+            
+###############################################################################
+
+- &ground
+    id: ground
+    parent: *any
+    domain: ground
+    category: ground
+    abstract: true
+    properties:
+        damage: !!com.soartech.simjr.sim.entities.DamageStatus 'intact'
+        enforce-agl: 0.0
+        ms2525.template: "S%cGP------"
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.MilStd2525Provider
+    
+- &fixed-size-ground
+    id: fixed-size-ground
+    parent: *ground
+    category: ground
+    
+- &sea
+    id: sea
+    parent: *any
+    domain: sea
+    category: sea
+    abstract: true
+    properties:
+        damage: !!com.soartech.simjr.sim.entities.DamageStatus 'intact'
+        enforce-agl: 0.0
+        ms2525.template: "S%cSP------"
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.MilStd2525Provider
+    
+- &air
+    id: air
+    parent: *any
+    domain: air
+    category: air
+    abstract: true
+    properties:
+        damage: !!com.soartech.simjr.sim.entities.DamageStatus 'intact'
+        ms2525.template: "S%cAP------"
+        capabilities: 
+        - !class com.soartech.simjr.sim.entities.MilStd2525Provider
+
+- &fwa
+    id: fwa
+    parent: *air
+    category: fwa
+    factory: !class com.soartech.simjr.sim.entities.Vehicle
+    properties:
+        ms2525.template: "S%cAPMF----"
+    
+- &rwa
+    id: rwa
+    parent: *air
+    category: rwa
+    factory: !class com.soartech.simjr.sim.entities.Helicopter
+    properties:
+        ms2525.template: "S%cAPMH----"
+
+- &generic-aircraft
+    id: generic-aircraft
+    parent: *fwa
+
+- &generic-fighter
+    id: generic-fighter
+    parent: *generic-aircraft
+    properties:
+        maxSpeed: 800.0
+        ms2525.template: "S%cAPMFF---"
+        
+- &generic-fueler
+    id: generic-fueler
+    parent: *generic-aircraft
+    properties:
+        maxSpeed: 600.0
+        
+- &e2c
+    id: e2c
+    parent: *generic-aircraft
+    properties:
+        maxSpeed: 600.0
+        
+- &dismounted-infantry
+    id: dismounted-infantry
+    parent: *ground
+    category: dismounted-infantry
+    factory: !class com.soartech.simjr.sim.entities.DismountedInfantry
+    properties:
+        ms2525.template: "S%cGPUC----"
+
+- &person
+    id: person
+    parent: *ground
+    category: person
+    factory: !class com.soartech.simjr.sim.entities.Person
+    properties:
+        ms2525.template: "O%cPP------"
+
+- &ground-vehicle
+    id: ground-vehicle
+    parent: *ground
+    category: vehicle
+    factory: !class com.soartech.simjr.sim.entities.Vehicle
+    
+- &fixed-size-ground-vehicle
+    id: fixed-size-ground-vehicle
+    parent: *fixed-size-ground
+    category: vehicle
+    factory: !class com.soartech.simjr.sim.entities.Vehicle
+      
+- &truck
+    id: truck
+    parent: *ground-vehicle
+    category: truck
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+
+- &semi
+    id: semi
+    parent: *ground-vehicle
+    category: semi
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+        
+- &car
+    id: car
+    parent: *ground-vehicle
+    category: car
+    properties:
+        ms2525.template: "S%cGPEVC---"
+
+- &van
+    id: van
+    parent: *ground-vehicle
+    category: van
+    properties:
+        ms2525.template: "S%cGPEVCML-"
+
+- &bus
+    id: bus
+    parent: *ground-vehicle
+    category: bus
+    properties:
+        ms2525.template: "S%cGPEVCMH-"
+                
+- &tank
+    id: tank
+    parent: *ground-vehicle
+    category: tank
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+
+- &mobile-sam
+    id: mobile-sam
+    parent: *ground-vehicle
+    category: mobile-sam
+    properties:
+        ms2525.template: "S%cGPUCDS--"
+        
+- &aaa
+    id: aaa
+    parent: *ground-vehicle
+    category: aaa
+    properties:
+        ms2525.template: "S%cGPUCDS--"
+        
+- &scud
+    id: scud
+    parent: *ground-vehicle
+    category: scud
+    properties:
+        ms2525.template: "S%cGPEVCO--"
+        
+- &hmmwv
+    id: hmmwv
+    parent: *fixed-size-ground-vehicle
+    category: hmmwv
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+
+- &rader
+    id: rader
+    parent: *fixed-size-ground-vehicle
+    category: rader
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+
+- &mrap
+    id: mrap
+    parent: *fixed-size-ground-vehicle
+    category: mrap
+    properties:
+        ms2525.template: "S%cGPUCAT--"
+        
+- &metallic-ied
+    id: metallic-ied
+    parent: *fixed-size-ground
+    category: ied
+        
+- &non-metallic-ied
+    id: non-metallic-ied
+    parent: *fixed-size-ground
+    category: ied
+    
+#### F-18 #####################################################################
+- &fa-18
+    id: fa-18
+    parent: *generic-fighter
+- &fa-18c
+    id: fa-18c
+    parent: *fa-18
+- &fa-18d
+    id: fa-18d
+    parent: *fa-18
+- &fa-18e
+    id: fa-18e
+    parent: *fa-18
+- &fa-18f
+    id: fa-18f
+    parent: *fa-18
+
+#### P-8A #####################################################################
+- &p-8a
+    id: p-8a
+    parent: *generic-fighter
+    
+#### UAV #####################################################################
+- &uav
+    id: uav
+    parent: *generic-fighter
+
+### Apache #####################################################################
+- &ah-64
+    id: ah-64
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
+        
+- &uh-60
+    id: uh-60
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cAPMHA---"
+        average-speed: 53.6448
+    
+- &ch-47
+    id: ch-47
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cAPMHC---"
+        average-speed: 58.1152
+
+### Ships #####################################################################
+- &sea-vehicle
+    id: sea-vehicle
+    parent: *sea
+    category: vehicle
+    factory: !class com.soartech.simjr.sim.entities.Vehicle
+    
+- &trawler
+    id: trawler
+    parent: *sea-vehicle
+    category: trawler
+    properties:
+        ms2525.template: "S%cSPXM----"
+
+- &merchantman
+    id: merchantman
+    parent: *sea-vehicle
+    category: merchantman
+    properties:
+        ms2525.template: "S%cSPXM----"
+    
+- &tanker
+    id: tanker
+    parent: *sea-vehicle
+    category: tanker
+    properties:
+        ms2525.template: "S%cSPXMO---"
+   
+# Can't find the 2525 SIDC for this one 
+- &lcs
+    id: lcs
+    parent: *sea-vehicle
+    category: lcs
+    properties:
+        ms2525.template: "S%cSPCLLL--"
+
+- &lpd
+    id: lpd
+    parent: *sea-vehicle
+    category: lpd
+    properties:
+        ms2525.template: "S%cSPCA----"
+
+- &destroyer
+    id: destroyer
+    parent: *sea-vehicle
+    category: destroyer
+    properties:
+        ms2525.template: "S%cSPCLDD--"
+    
+- &cruiser
+    id: cruiser
+    parent: *sea-vehicle
+    category: cruiser
+    properties:
+        ms2525.template: "S%cSPCLCC--"
+    
+- &battleship
+    id: battleship
+    parent: *sea-vehicle
+    category: battleship
+    properties:
+        ms2525.template: "S%cSPCLBB--"
+    
+- &carrier
+    id: carrier
+    parent: *sea-vehicle
+    category: carrier
+    properties:
+        ms2525.template: "S%cSPCLCV--"
+
+### Structures ##################################################################
+- &structure
+    id: structure
+    parent: *ground
+    properties:
+        category: Structures
+
+- &water-tower
+    id: water-tower
+    parent: *structure
+    properties:
+        ms2525.template: "E%cFPMG----"
+
+- &telecom-tower
+    id: telecom-tower
+    parent: *structure
+    properties:
+        ms2525.template: "E%cFPKB----"
+
+### Drones ##################################################################
+- &drone-attack
+    id: drone-attack
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
+
+- &raven
+    id: raven
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
+- &reaper
+    id: reaper
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cAPMFQA"
+
+### Roles ######################################################################
+
+- &role
+    id: role
+    parent: *any
+    domain: role
+    category: role
+    properties: 
+        category: "Role"
+        visible: false
+        
+- &atc-support
+    id: atc-support
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-afatds
+    id: atc-afatds
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-ac2
+    id: atc-ac2
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-base-ops
+    id: atc-base-ops
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+
+- &atc-adam-cell
+    id: atc-adam-cell
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+        
+- &atc-aic
+    id: atc-aic
+    parent: *role
+    domain: role
+    category: atc
+    properties: 
+        visible: false
+
+- &triton
+    id: triton
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cGPUCVUF-"
+
+- &uclass
+    id: uclass
+    parent: *generic-fighter
+    properties:
+        ms2525.template: "S%cGPUCVUF-"
+
+- &fire-scout-b
+    id: fire-scout-b
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cGPUCVUR-"
+
+- &fire-scout-c
+    id: fire-scout-c
+    parent: *rwa
+    properties:
+        ms2525.template: "S%cGPUCVUR-"
+
+- &ugv
+    id: ugv
+    parent: *ground-vehicle
+    
+### Groups ##################################################################
+- &group
+    id: group
+    parent: *ground
+    category: humans
+    factory: !class com.soartech.simjr.sim.entities.Group
+    properties:
+        ms2525.template: "O%cPP------"
+    
+- &building
+    id: building
+    parent: *polygon
+    category: area
+    factory: !class com.soartech.simjr.sim.entities.Building
+    properties:
+        polygon.closed: true

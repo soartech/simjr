@@ -106,6 +106,11 @@ public abstract class Shape
     {
         return style;
     }
+    
+    public void setStyle(ShapeStyle style)
+    {
+        this.style = style;
+    }
 
     public void reset()
     {
@@ -131,6 +136,15 @@ public abstract class Shape
         this.visible = visible;
     }
     
+
+    /**
+     * Distance between this shape and the x/y point.
+     * 
+     * Return {@link Double#MAX_VALUE} if distance is not applicable for
+     * this shape.
+     */
+    public abstract double distance(double x, double y);
+
     public abstract boolean hitTest(double x, double y, double tolerance);
 
     public SimpleTransformation calculate(ShapeSystem system, CoordinateTransformer transformer)

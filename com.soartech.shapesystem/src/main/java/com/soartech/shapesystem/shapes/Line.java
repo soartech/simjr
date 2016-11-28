@@ -59,11 +59,12 @@ public class Line extends Shape
     private SimplePosition calculatedEnd;
 
     /**
+     * 
      * @param name
      * @param layer
-     * @param pos
-     * @param rot
      * @param style
+     * @param start
+     * @param end
      */
     public Line(String name, String layer, ShapeStyle style,
                 String start, String end)
@@ -136,13 +137,27 @@ public class Line extends Shape
             return false;
         }
         
+        final double d = distance(x, y);
+        return d <= tolerance;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || calculatedStart == null || calculatedEnd == null)
+        {
+            return Double.MAX_VALUE;
+        }
+        
         final Vector3 start = new Vector3(calculatedStart.x, calculatedStart.y, 0.0);
         final Vector3 end = new Vector3(calculatedEnd.x, calculatedEnd.y, 0.0);
         final Vector3 dir = end.subtract(start);
         
-        final double d = LineSegmentDistance.toPoint(start, end, dir, new Vector3(x, y, 0.0));
-        
-        return d <= tolerance;
+        return LineSegmentDistance.toPoint(start, end, dir, new Vector3(x, y, 0.0));
     }
 
 }

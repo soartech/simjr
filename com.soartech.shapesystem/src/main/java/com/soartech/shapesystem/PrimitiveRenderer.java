@@ -39,7 +39,10 @@ import java.util.List;
 public interface PrimitiveRenderer
 {
 
-    void drawText(SimplePosition p, String string);
+    /**
+     * Return a rectangle of the bounding box of the text (inclusive of any padding.)
+     */
+    List<SimplePosition> drawText(SimplePosition p, String string);
 
     void drawArc(SimplePosition center, double radius, SimpleRotation from, SimpleRotation to);
 
@@ -49,7 +52,7 @@ public interface PrimitiveRenderer
 
     void drawLine(SimplePosition start, SimplePosition end);
 
-    void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width, double height);
+    void drawImage(SimplePosition center, SimpleRotation rotation, String imageId, double width, double height, float opacity);
     void drawImage(SimplePosition center, SimpleRotation rotation, String imageId);
 
     double getViewportWidth();

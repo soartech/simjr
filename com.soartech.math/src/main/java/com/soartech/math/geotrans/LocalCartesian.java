@@ -102,13 +102,6 @@ public class LocalCartesian extends GeoTransBase
     /**
      * 
      */
-    public LocalCartesian()
-    {
-    }
-
-    /**
-     * 
-     */
     public LocalCartesian(double a, double f, double Origin_Latitude,
             double Origin_Longitude, double Origin_Height, double Orientation)
 

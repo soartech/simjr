@@ -33,7 +33,10 @@ package com.soartech.shapesystem.shapes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.soartech.math.Polygon;
+import com.soartech.math.Vector3;
 import com.soartech.shapesystem.CoordinateTransformer;
 import com.soartech.shapesystem.Position;
 import com.soartech.shapesystem.PrimitiveRenderer;
@@ -51,6 +54,7 @@ public class Text extends Shape
 {
 
     private String text;
+    private final AtomicReference<List<SimplePosition>> currentBounds = new AtomicReference<List<SimplePosition>>();
 
     /**
      * @param name
@@ -105,7 +109,7 @@ public class Text extends Shape
     {
         PrimitiveRenderer renderer = rendererFactory.createPrimitiveRenderer(style);
         
-        renderer.drawText(points.get(0), text);
+        currentBounds.set(renderer.drawText(points.get(0), text));
     }
 
     /* (non-Javadoc)
@@ -127,11 +131,23 @@ public class Text extends Shape
         {
             return false;
         }
-        SimplePosition p = points.get(0);
-        
-        // TODO: Get actual font information for text hit testing
-        return x >= p.x && x <= (p.x + 5 * text.length()) && 
-               y >= (p.y - 5) && y <= p.y;
+        Polygon polygon = Util.createPlanarConvexHull(currentBounds.get());
+        return polygon.contains(new Vector3(x, y, 0.0)) || polygon.distance(new Vector3(x, y, 0.0)) < tolerance;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.soartech.shapesystem.Shape#distance(double, double)
+     */
+    @Override
+    public double distance(double x, double y)
+    {
+        if(!isVisible() || points.isEmpty())
+        {
+            return Double.MAX_VALUE;
+        }
+        Polygon polygon = Util.createPlanarConvexHull(currentBounds.get());
+        return polygon.distance(new Vector3(x, y, 0.0));
     }
 
 }

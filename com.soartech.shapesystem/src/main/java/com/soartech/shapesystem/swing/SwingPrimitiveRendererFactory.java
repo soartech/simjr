@@ -92,6 +92,13 @@ public class SwingPrimitiveRendererFactory implements PrimitiveRendererFactory
         images.put(id, image);
     }
     
+    /**
+     * This method doesn't seem to work with the maven version of simjr
+     * @param loader
+     * @param id
+     * @param path
+     * @return
+     */
     public Image loadImage(ClassLoader loader, String id, String path)
     {
         URL url = loader.getResource('/' + path);
@@ -109,6 +116,35 @@ public class SwingPrimitiveRendererFactory implements PrimitiveRendererFactory
             return null;
         }
         
+        images.put(id, image);
+        return image;
+    }
+    
+    /**
+    * Use this method, not the one with ClassLoader as a param.
+    * 
+    * @param klass
+    * @param id
+    * @param path
+    * @return
+    */
+    public Image loadImage(Class klass, String id, String path)
+    {
+        URL url = klass.getResource('/' + path);
+        Image image = null;
+        if (url != null)
+        {
+            image = new ImageIcon(url).getImage();
+        }
+        else if (new File(path).exists())
+        {
+            image = new ImageIcon(path).getImage();
+        }
+        else
+        {
+            return null;
+        }
+
         images.put(id, image);
         return image;
     }
