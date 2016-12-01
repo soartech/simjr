@@ -7,6 +7,15 @@ Sim Jr is a lightweight simulation framework built by Soar Technology. It was cr
 
 Out of these needs came Sim Jr, which SoarTech decided to open source in May 2010. Sim Jr sacrifices high-fidelity platform and sensor models in exchange for simplicity and ease of development. Since 2007, SoarTech has used Sim Jr as a demonstration environment for a wide variety of intelligent agent technologies.
 
+
+Now Using Maven
+--------------------------------
+
+SimJr now uses maven as both a dependency manager and build system.
+
+Each SimJr module has its own pom, and can be distributed as a jar. These jars are then referenced in the other SimJr modules as dependencies.
+
+
 Setting up Development Environment
 --------------------------------
 
@@ -57,24 +66,18 @@ Setting up Development Environment
 
 6. Clone the SimJr GIT repository with your favorite GIT tool to a suitable location on your hard drive (maybe C:\src or ~/src)
 
-         git clone https://git.soartech.com/git/simjr.git
+         git clone https://github.com/soartech/simjr.git
 
-7. Setup your maven/nexus credentials by going to http://maven.soartech.com and following the instructions there.
+7. Select the "File->Import..." menu item in Eclipse and select the "Existing Maven Projects" project type.
 
-8. Select the "File->Import..." menu item in Eclipse and select the "Existing Maven Projects" project type.
-
-9. Set the "Root folder" to the root of the SID-CODE GIT repository you checked out in step 3 and press the
+8. Set the "Root folder" to the root of the SID-CODE GIT repository you checked out in step 3 and press the
    "Select All" button and press the "Finish" button.
 
-10. After about a minute of downloading some internal dependencies the various sub projects
+9. After about a minute of downloading some internal dependencies the various sub projects
     should appear in the project view. At this point you should be ready to begin development.
 
 At times you may have to "Refresh (F5)" all the projects, run "Maven->Update Project..." or do a "Project->Clean" to resolve any remaining build issues.
 
-Mavenizing Existing Simjr Plugins
----------------------------------
-
-See here for more details: https://confluence.soartech.com/display/irad/Sim+Jr+Mavenization
 
 System Dependencies
 ----------------------
@@ -89,11 +92,37 @@ Running the unit tests
 --------------------------------
 
 To run all the unit tests simply run the following from the command line in the root directory of
-the sapient source checkout:
+the source checkout:
 
     mvn test
 
-Also an automated build has been setup for this project at (http://jenkins.aa.soartech.com).
+Running Simjr in Eclipse
+--------------------------------
+
+1. Select Run -> Run Configurations. The Run Configurations dialog should open.
+
+2. Right-click on Java Application and select New. A new run configuration should be created.
+
+3. Rename the new run configuration something meaningful.
+
+4. Click the Browse button next to the Project input and select your plugin (or simjr-example).
+
+5. Click the Search button next to the Main Class input and type SimulationApplication. Select the matching item. Alternatively you can just type "com.soartech.simjr.ui.SimulationApplication" into the Main Class input.
+
+6. Click Apply to save your changes, then Click Run. Simjr should start.
+
+Using SimJr
+--------------------------------
+
+SimJr needs to load a scenario to do anything interesting.
+
+1. Select File -> Load Scenario
+
+2. Search for your scenario and click Open. The simjr-example plugin has some scenarios in /src/main/resources/scenarios
+
+3. Once your scenario is loaded, you can start it by selecting the green Play icon in the upper left.
+
+
 
 Building a Distribution
 --------------------------------
@@ -103,7 +132,22 @@ TODO...
 Project Descriptions
 ------------------
 
-TODO...
+com.soartech.core
+* This is the core Simjr module. It depends on the shapesystem.
+
+com.soartech.shapesystem
+* The shapesystem depends on the math module.
+
+com.soartech.math
+* Does math.
+
+com.soartech.simjr.example
+* An example plugin to run and show you how to make your own plugin.
+
+com.soartech.simjr.web
+* Has some networking functionality.
+
+
 
 Maven Command Line Installation
 ------------------------------
@@ -112,14 +156,3 @@ To install the maven for use from the command line (DOS or Unix) follow the inst
 
     http://maven.apache.org/download.cgi
 
-Known Issues
----------------
-
-Here's a list of known issues with the SID-CODE code:
-
-* Need to make an official v3.0 release. The current Maven version numbers aren't consistent with the old releases. 
-
-TODO Items
--------------
-
-* TODO :^)
