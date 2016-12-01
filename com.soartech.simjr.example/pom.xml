@@ -4,7 +4,7 @@
     <!-- project identification -->
     <groupId>com.soartech</groupId>
     <artifactId>simjr-example</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.2</version>
     <name>SimJr Example</name>
     
     <properties>
@@ -65,12 +65,12 @@
         <dependency>
 	        <groupId>com.soartech</groupId>
 	        <artifactId>simjr-core</artifactId>
-	        <version>3.0.1-SNAPSHOT</version>
+	        <version>3.0.2</version>
         </dependency>
         <dependency>
 	        <groupId>com.soartech</groupId>
 	        <artifactId>simjr-web</artifactId>
-	        <version>3.0.1-SNAPSHOT</version>
+	        <version>3.0.2</version>
         </dependency>
     </dependencies>
         
