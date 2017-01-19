@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simjr:scenario xmlns:simjr="http://simjr.soartech.com/schema/scenario/1.0" simjr:version="1.0">
+  
+  <simjr:metadata>
+    <simjr:name>EPEX Demo</simjr:name>
+    <simjr:description>Example scenario for EPEX demo</simjr:description>
+  </simjr:metadata>
+  
+  <simjr:terrain>
+    <simjr:origin simjr:latitude="37.5" simjr:longitude="-116.5" simjr:altitude="0.0" />
+    <simjr:image simjr:href="./staticmap.png" simjr:metersPerPixel="117">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.5" simjr:longitude="-116.5" simjr:altitude="0.0" />
+      </simjr:location>
+    </simjr:image>
+  </simjr:terrain>
+  
+  <simjr:entities>
+    <simjr:entity simjr:name="a" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.62823840911927" simjr:longitude="-116.33387031757307" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint a");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="b" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.7351028" simjr:longitude="-116.3210373" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint b");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="c" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.7018750" simjr:longitude="-116.2388306" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint c");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="d" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.6325861" simjr:longitude="-116.2495972" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint d");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="e" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.3081222" simjr:longitude="-116.2443278" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint e");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="f" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.1025583" simjr:longitude="-116.3733000" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint f");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="g" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.3357472" simjr:longitude="-116.5468056" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint g");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="h" simjr:prototype="waypoint" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.4355722" simjr:longitude="-116.5718583" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+			logger.info("Created waypoint h");
+	  </simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="a-h" simjr:prototype="route" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="0.0" simjr:longitude="0.0" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+		logger.info("Created route entity a-h");</simjr:initScript>
+      <simjr:points>
+        <simjr:point simjr:name="a" />
+        <simjr:point simjr:name="b" />
+        <simjr:point simjr:name="c" />
+        <simjr:point simjr:name="d" />
+        <simjr:point simjr:name="e" />
+        <simjr:point simjr:name="f" />
+        <simjr:point simjr:name="g" />
+        <simjr:point simjr:name="h" />
+      </simjr:points>
+    </simjr:entity>
+    
+    <simjr:entity simjr:name="uav-1" simjr:prototype="uav" simjr:force="friendly" simjr:visible="true">
+      <simjr:location>
+        <simjr:lla simjr:latitude="37.62823840911927" simjr:longitude="-116.33387031757307" simjr:altitude="0.0" />
+      </simjr:location>
+      <simjr:orientation simjr:heading="0.0" simjr:roll="0.0" simjr:pitch="0.0" />
+      <simjr:initScript simjr:type="text/javascript">
+		logger.info("Created entity uav-1");
+
+simjr.entities.capabilities.add(self,
+		new Packages.com.soartech.simjr.controllers.RouteFollower(),  
+		{
+			route: "a-h",
+			speed: 800
+		});</simjr:initScript>
+      <simjr:points />
+    </simjr:entity>
+    
+  </simjr:entities>
+  
+  <simjr:preLoadScript simjr:type="text/javascript">
+  
+    // Commonly used imports and scripts
+    importPackage(Packages.com.soartech.simjr.controllers);
+    importPackage(Packages.com.soartech.simjr.web);
+    requireScript("ui");
+    requireScript("terrain");
+    requireScript("polygons");
+    requireScript("weapons");
+
+    // Set up any necessary services using methods in the the example common.js script
+    //
+    // NOTE: This only needs to be done in the scenario file here if there isn't a 
+    //       ServiceProvider implemented for the service. 
+    //      
+    //       In the case of the ExampleShapeManager there is already one implemented
+    //       as the class ShapeManagerServiceProvider. It is mapped using Java SPI
+    //       in the META-INF/services folder.
+    //
+    //       While the above Java SPI approach is preferred, this is still included here 
+    //       as an example of another way to do it. This way is better than Java SPI if the 
+    //       scenario needs to load when Sim Jr starts.
+    //
+    requireScript("example");
+    initExampleServices(services);
+    
+  </simjr:preLoadScript>
+
+  <simjr:postLoadScript simjr:type="text/javascript">
+    // createCheatSheet(); // load cheatsheet.html
+    getActivePlanViewDisplay().getView().showAll();
+  </simjr:postLoadScript>
+  
+</simjr:scenario>
+
