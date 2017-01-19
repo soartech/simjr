@@ -92,13 +92,18 @@ public class SlippyMap
         int numMaptilesY = (int) Math.ceil(height / 256.0);
 
         //make the num maptiles odd
-        if(numMaptilesX % 2 == 0)
-        {
+        if(numMaptilesX % 2 == 0) {
             numMaptilesX += 1;
+        } else {
+            numMaptilesX += 2;
         }
+        
+        
         if(numMaptilesY % 2 == 0)
         {
             numMaptilesY += 1;
+        } else {
+            numMaptilesY += 2;
         }
         
 //        logger.info("numMaptilesX: " + numMaptilesX);
