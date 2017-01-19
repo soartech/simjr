@@ -61,6 +61,7 @@ import com.soartech.simjr.ui.pvd.PvdView;
 import com.soartech.simjr.ui.pvd.MapImage;
 import com.soartech.simjr.ui.pvd.PlanViewDisplay;
 import com.soartech.simjr.ui.pvd.PlanViewDisplayProvider;
+import com.soartech.simjr.ui.pvd.SlippyMap;
 
 /**
  * @author ray
@@ -71,6 +72,10 @@ public class ScenarioLoader
     private final ServiceManager services;
     
     private ModelService model;
+    
+    private static final int DEFAULT_ZOOM_LEVEL = 8; 
+    private int zoomLevelFromScenario = DEFAULT_ZOOM_LEVEL; 
+    private boolean loadedSlippyMap = false;
     
     public ScenarioLoader(ServiceManager services)
     {
@@ -102,6 +107,14 @@ public class ScenarioLoader
             runPrePostLoadScript(progress, model.getModel().getPostLoadScript(), "post");
             loadCheatSheet();
             logger.info("Finished loading scenario.");
+            
+            //zoom slippy map if necessary
+            if(loadedSlippyMap)
+            {
+                PvdView pvdView = findPvdView();
+                pvdView.zoomToLevel(zoomLevelFromScenario);
+            }
+            
         }
         catch (ModelException e)
         {
@@ -132,6 +145,13 @@ public class ScenarioLoader
             runPrePostLoadScript(progress, model.getModel().getPostLoadScript(), "post");
             loadCheatSheet();
             logger.info("Finished loading scenario.");
+
+            //zoom slippy map if necessary
+            if(loadedSlippyMap)
+            {
+                PvdView pvdView = findPvdView();
+                pvdView.zoomToLevel(zoomLevelFromScenario);
+            }
         }
         finally
         {
@@ -181,38 +201,58 @@ public class ScenarioLoader
     private void loadTerrainImages(Simulation sim, DetailedTerrain detailedTerrain)
     {
         final TerrainImageElement tie = model.getModel().getTerrain().getImage();
-        if (!tie.hasImage())
+        
+        if (tie != null && tie.hasImage() && tie.hasImageHref()) //try to load the image from the href
         {
-            return;
+            loadedSlippyMap = false;
+            
+            final File href = tie.getImageFile();
+            logger.info("Using map image from '" + href + "'");
+            final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
+            detailedTerrain.setCoordinateFrame(origin, tie.getImageMetersPerPixel());
+            
+            PvdView pvdView = findPvdView();
+            if (pvdView != null)
+            {
+            	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
+            	pvdView.setMapImage(image);
+            }
+            
+            BufferedImage terrainImage = detailedTerrain.getTerrainImage();
+            if (terrainImage == null)
+            {
+                return;
+            }
+            
+            logger.info("Using terrain image.");
+            
+            if (pvdView != null)
+            {
+                MapImage mi = pvdView.getMapImage();
+                mi.setCenterMeters(1, origin);
+                mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
+                mi.setImage(1, terrainImage);
+                mi.setName(1, "terrain");
+            }
         }
-        
-        final File href = tie.getImageFile();
-        logger.info("Using map image from '" + href + "'");
-        final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
-        detailedTerrain.setCoordinateFrame(origin, tie.getImageMetersPerPixel());
-        
-        PvdView pvdView = findPvdView();
-        if (pvdView != null)
+        else //if(tie.hasSlippy()) //try to use the slippy map
         {
-        	final MapImage image = new MapImage(href, origin, tie.getImageMetersPerPixel());
-        	pvdView.setMapImage(image);
-        }
-        
-        BufferedImage terrainImage = detailedTerrain.getTerrainImage();
-        if (terrainImage == null)
-        {
-            return;
-        }
-        
-        logger.info("Using terrain image.");
-        
-        if (pvdView != null)
-        {
-            MapImage mi = pvdView.getMapImage();
-            mi.setCenterMeters(1, origin);
-            mi.setMetersPerPixel(1, tie.getImageMetersPerPixel());
-            mi.setImage(1, terrainImage);
-            mi.setName(1, "terrain");
+            loadedSlippyMap = true;
+            
+            //get the zoom level
+            int zoomLevel = DEFAULT_ZOOM_LEVEL;
+            if(tie.hasZoomLevel())
+            {
+                zoomLevel = tie.getZoomLevel();
+            }
+            zoomLevelFromScenario = zoomLevel;
+
+            //tell the slippy map to load
+            PvdView pvdView = findPvdView();
+            logger.info("Loading map from: USING SLIPPY MAP.");
+            final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
+            pvdView.loadSlippyMap(origin, zoomLevel, detailedTerrain);
+
         }
     }
 

@@ -177,7 +177,9 @@ public abstract class AbstractSimulationApplication extends DefaultServiceManage
         // For now, we're doing this here so that the global simulation variable can be set correctly
         // in simjr.common.js. TODO: get rid of the global variable or something.
         progress.subTask("Initializing simulation ...");
-        Geodetic.Point origin = new Mgrs().toGeodetic(SimJrProps.get("simjr.simulation.defaultOriginMgrs", "11SMS6025093000"));
+//        Geodetic.Point origin = new Mgrs().toGeodetic(SimJrProps.get("simjr.simulation.defaultOriginMgrs", "11SMS6025093000"));
+        Geodetic.Point origin = new Mgrs().toGeodetic(SimJrProps.get("simjr.simulation.defaultOriginMgrs", "31NAA6602100000"));
+        
         SimpleTerrain terrain = new SimpleTerrain(origin);
         Simulation simulation = new Simulation(terrain);
         // UI Only

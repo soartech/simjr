@@ -80,7 +80,7 @@ public abstract class ZoomAction extends AbstractSimulationAction
             return;
         }
         
-        pvd.zoom(amount);
+        pvd.zoomLevelByAmount(amount);
     }
 
 }

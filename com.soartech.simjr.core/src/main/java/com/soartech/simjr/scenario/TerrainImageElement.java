@@ -40,10 +40,13 @@ import javax.swing.undo.UndoableEdit;
 
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.soartech.simjr.scenario.model.Model;
 import com.soartech.simjr.scenario.model.ModelChangeEvent;
 import com.soartech.simjr.scenario.model.ModelElement;
+import com.soartech.simjr.sim.ScenarioLoader;
 import com.soartech.simjr.util.FileTools;
 import com.soartech.simjr.util.UndoTools;
 
@@ -52,6 +55,8 @@ import com.soartech.simjr.util.UndoTools;
  */
 public class TerrainImageElement implements ModelElement
 {
+    private static final Logger logger = LoggerFactory.getLogger(TerrainImageElement.class);
+    
     public static final String ADDED = TerrainImageElement.class.getCanonicalName() + ".added";
     public static final String REMOVED = TerrainImageElement.class.getCanonicalName() + ".removed";
     public static final String HREF = TerrainImageElement.class.getCanonicalName() + ".href";
@@ -67,6 +72,8 @@ public class TerrainImageElement implements ModelElement
     private final XPath metersPerPixel;
     private final LocationElement location;
     
+    private final XPath zoomPath;
+    
 
     public static TerrainImageElement attach(TerrainElement parent)
     {
@@ -80,6 +87,8 @@ public class TerrainImageElement implements ModelElement
         this.imagePath = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image");
         this.imageHref = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:href");
         this.metersPerPixel = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:metersPerPixel");
+        
+        this.zoomPath = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:zoomLevel");
         
         this.location = new LocationElement(this);
     }
@@ -131,6 +140,11 @@ public class TerrainImageElement implements ModelElement
         return getModel().getText(imageHref, null);
     }
     
+    public boolean hasImageHref()
+    {
+        return getModel().getNode(imageHref, null) != null;
+    }
+    
     /**
      * @return the image file as an absolute path, or null if no image is set
      */
@@ -140,7 +154,11 @@ public class TerrainImageElement implements ModelElement
         {
             return null;
         }
+        
         final File href = new File(getImageHref());
+        
+        logger.info("HREF: " + href);
+        
         if(href.isAbsolute())
         {
             return href;
@@ -200,6 +218,16 @@ public class TerrainImageElement implements ModelElement
     public LocationElement getLocation()
     {
         return location;
+    }
+    
+    public boolean hasZoomLevel()
+    {
+        return getModel().getNode(zoomPath, null) != null;
+    }
+    
+    public int getZoomLevel()
+    {
+        return (int) getModel().getDouble(zoomPath, null);
     }
 
     private UndoableEdit getOrCreateImageElement(String href, double metersPerPixel)

@@ -315,7 +315,14 @@ public class DefaultPvdController implements PvdController
     {
         public void mouseWheelMoved(MouseWheelEvent e) 
         {
-            view.zoomRelativeToPoint(e.getPoint(), e.getWheelRotation());
+            if(view.getSlippyMap() != null)
+            {
+                view.zoomLevelAmountRelativeToPoint(e.getPoint(), -e.getWheelRotation());
+            }
+            else
+            {
+                view.zoomRelativeToPoint(e.getPoint(), e.getWheelRotation());
+            }
         }
     }
 }

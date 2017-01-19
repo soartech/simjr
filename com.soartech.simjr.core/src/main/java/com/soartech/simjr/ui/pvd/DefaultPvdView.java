@@ -17,6 +17,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.soartech.math.Vector3;
 import com.soartech.math.geotrans.Geodetic;
 import com.soartech.shapesystem.ShapeSystem;
@@ -28,6 +31,7 @@ import com.soartech.simjr.app.ApplicationState;
 import com.soartech.simjr.app.ApplicationStateService;
 import com.soartech.simjr.radios.RadioHistory;
 import com.soartech.simjr.services.ServiceManager;
+import com.soartech.simjr.sim.DetailedTerrain;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.EntityConstants;
 import com.soartech.simjr.sim.Simulation;
@@ -49,6 +53,8 @@ import com.soartech.simjr.util.SwingTools;
  */
 class DefaultPvdView extends JPanel implements PvdView
 {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultPvdView.class);
+    
     /**
      * 
      */
@@ -75,17 +81,29 @@ class DefaultPvdView extends JPanel implements PvdView
     private MapImage mapBackgroundImage;
     private final CoordinatesPanel coordinatesPanel;
     private final AppStateIndicator appStateIndicator;
+    private SlippyMap slippyMap = null;
 
     private boolean draggingEntity = false;
     private Cursor defaultCursor = Cursor.getDefaultCursor();
     private Cursor draggingCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 
     private Entity lockEntity;
-
+    
     @Override
     public JComponent getComponent()
     {
         return this;
+    }
+    
+    public SlippyMap getSlippyMap()
+    {
+        return slippyMap;
+    }
+    
+    public void loadSlippyMap(Vector3 origin, int zoomLevel, DetailedTerrain terrain)
+    {
+        slippyMap = new SlippyMap(origin, zoomLevel, terrain, this);
+//        zoomToLevel(zoomLevel);
     }
     
     public static PvdViewFactory FACTORY = new PvdViewFactory() {
@@ -115,7 +133,7 @@ class DefaultPvdView extends JPanel implements PvdView
         this.distanceTools = new DistanceToolManager(app, shapeSystem);
         this.detonationShapes = new DetonationShapeManager(sim, timedShapes);
         this.speechBubbles = new SpeechBubbleManager(sim, this.app.findService(RadioHistory.class), shapeAdapter);
-
+        
         setToolTipText(""); // Enable tooltips
         setFocusable(true);
         setBackground(Color.WHITE);
@@ -147,7 +165,6 @@ class DefaultPvdView extends JPanel implements PvdView
         addCoordinatesPanel();
 
         repaintTimer.start();
-
     }
 
     private void addCoordinatesPanel()
@@ -312,7 +329,129 @@ class DefaultPvdView extends JPanel implements PvdView
     @Override
     public void zoom(int amount)
     {
+//        logger.info("*** zoom()");
         zoomRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), amount);
+    }
+    
+    
+    /**
+     * Zoom in or out while keeping the center of the view fixed.
+     * 
+     */
+    public void zoomLevelByAmount(int zoomLevelAmount)
+    {
+//        logger.info("*** zoomLevelByAmount()");
+        if(slippyMap != null)
+        {
+            zoomLevelAmountRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), zoomLevelAmount);
+        }
+        else
+        {
+           zoom(zoomLevelAmount);
+        }
+    }
+    
+    /**
+     * Zoom in or out while keeping the center of the view fixed.
+     * 
+     */
+    public void zoomToLevel(int zoomLevel)
+    {
+//        logger.info("*** zoomToLevel()");
+        zoomToLevelRelativeToPoint(new Point(getWidth() / 2, getHeight() / 2), zoomLevel);
+    }
+
+    /**
+     * https://wiki.openstreetmap.org/wiki/Zoom_levels
+     * 
+     * S=C*cos(y)/2^(z+8)
+     * 
+     * 
+     * @param pt
+     * @param zoomLevel
+     */
+    public void zoomLevelAmountRelativeToPoint(Point pt, int zoomLevelAmount)
+    {
+//        logger.info("*** zoomLevelAmountRelativeToPoint()");
+        int currentZoomLevel = slippyMap.getCurrentZoomLevel();
+        zoomToLevelRelativeToPoint(pt, currentZoomLevel + zoomLevelAmount);
+    }
+    
+    
+    /**
+     * https://wiki.openstreetmap.org/wiki/Zoom_levels
+     * 
+     * S=C*cos(y)/2^(z+8)
+     * 
+     * 
+     * @param pt
+     * @param zoomLevel
+     */
+    public void zoomToLevelRelativeToPoint(Point pt, int zoomLevel)
+    {
+        int currentZoomLevel = slippyMap.getCurrentZoomLevel();
+        logger.info("CURRENT ZOOM LEVEL: " + currentZoomLevel);
+        logger.info("ZOOMING TO: " + zoomLevel);
+        
+        //stay in the bounds of zoom levels
+        if(zoomLevel < 8 || zoomLevel > 14)
+        {
+            logger.info("ERROR: CANNOT ZOOM PAST BOUNDS 8 to 14");
+            return;
+        }
+        
+        //update the zoom level
+        currentZoomLevel = zoomLevel;
+        slippyMap.setCurrentZoomLevel(currentZoomLevel);
+        
+        //use the pt to zoom to
+        final Vector3 fixedPoint = transformer.screenToMeters(pt.getX(), pt.getY());
+
+        // set the scale
+//        final double factor = Math.pow(0.9, amount);
+
+//        The distance represented by one pixel (S) is given by:
+//        S=C*cos(y)/2^(z+8)
+//        where...
+//        C is the (equatorial) circumference of the Earth = 40,075 km
+//        z is the zoom level
+//        y is the latitude of where you're interested in the scale
+        
+        double c = 40075000.0; //in meters 
+        double y = transformToLat(fixedPoint);
+        double scale = (c * Math.cos(Math.toRadians(y))) / (Math.pow(2, (double)(currentZoomLevel + 8)));
+        
+//        logger.info("ZOOM LEVEL: " + currentZoomLevel);
+        logger.info("ZOOM SCALE: " + scale);
+        
+        //scale in pixels / meters
+        transformer.setScale(1 / scale);
+        
+        final SimplePosition newScreenPosition = transformer.metersToScreen(fixedPoint.x, fixedPoint.y);
+        final double newX = transformer.getPanOffsetX() + pt.getX() - newScreenPosition.x;
+        final double newY = transformer.getPanOffsetY() + pt.getY() - newScreenPosition.y;
+        transformer.setPanOffset(newX, newY);
+
+        repaint();
+    }
+    
+    public double transformToLat(Vector3 meters)
+    {
+        Geodetic.Point gp = this.getTerrain().toGeodetic(meters);
+        double lat = Math.toDegrees(gp.latitude);
+//        double lon = Math.toDegrees(gp.longitude);
+//        return String.format("%8.6f, %8.6f", new Object[]{ lat, lon });
+        
+        return lat;
+    }
+    
+    public double transformToLon(Vector3 meters)
+    {
+        Geodetic.Point gp = this.getTerrain().toGeodetic(meters);
+//        double lat = Math.toDegrees(gp.latitude);
+        double lon = Math.toDegrees(gp.longitude);
+        
+        return lon;
     }
 
     /**
@@ -344,6 +483,7 @@ class DefaultPvdView extends JPanel implements PvdView
                                       topRight.x - bottomLeft.x,
                                       topRight.y - bottomLeft.y);
     }
+    
     
     /**
      * @return The center of the display in meters. Z is "fixed" to ground 
@@ -506,8 +646,11 @@ class DefaultPvdView extends JPanel implements PvdView
         // dependent on a sim lock.
         paintMapBackground(g2d);
         
-        //TODO: Reenable when reimplementd
-        //tileRenderer.paint(g2d);
+        //draw the slippy map if there is one
+        if(slippyMap != null)
+        {
+            slippyMap.draw(g2d, transformer);
+        }
         
         grid.draw(g2d);
         factory.setGraphics2D(g2dCopy, getWidth(), getHeight());
