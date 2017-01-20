@@ -5,8 +5,8 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -157,6 +157,23 @@ public class SlippyMap
         }
     }
     
+    private void saveMaptileToDisk(SlippyMapTile maptile)
+    {
+        File dir = new File("maptiles" + File.separator + "cache");
+        dir.mkdirs();
+        
+        try {
+            File outputfile = new File(dir, maptile.tileNumber + ".png");
+            outputfile.mkdirs();
+            outputfile.createNewFile();
+            
+            ImageIO.write(maptile.image, "png", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+    }
+    
     public int getCurrentZoomLevel() {
         return currentZoomLevel;
     }
@@ -293,9 +310,28 @@ public class SlippyMap
         }
         else
         {
+            
+            BufferedImage img = null;
+            try {
+                //try to load from disk before web
+                File dir = new File("maptiles" + File.separator + "cache");
+                img = ImageIO.read(new File(dir, tileNumber + ".png"));
+                
+            } catch (IOException e1) {
+//                e1.printStackTrace();
+//                logger.info("Maptile: " + tileNumber + " not on disk, loading from url");
+//                logger.error(e1.getMessage());
+            }
+            
             //load from web and save in cache
             try {
-                BufferedImage img = ImageIO.read(new URL(url));
+                if(img == null) {
+                    img = ImageIO.read(new URL(url));
+                    logger.info("Maptile: " + tileNumber + " not on disk, loading from url");
+                } else {
+                    logger.info("Using Maptile: " + tileNumber + " from disk");
+                }
+                
                 SlippyMapTile newMaptile = new SlippyMapTile();
                 newMaptile.image = img;
                 newMaptile.url = url;
@@ -318,8 +354,11 @@ public class SlippyMap
                 Vector3 centerMeters = pvd.getTerrain().fromGeodetic(centerDegrees);
                 newMaptile.centerMeters = centerMeters;
                 
-                
+                //save in memory cache
                 maptileCache.put(newMaptile.url, newMaptile);
+                
+                //save to disk cache
+                saveMaptileToDisk(newMaptile);
                 
                 return newMaptile;
             } catch (MalformedURLException e) {
