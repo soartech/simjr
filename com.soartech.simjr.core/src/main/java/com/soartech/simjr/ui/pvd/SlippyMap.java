@@ -5,17 +5,23 @@ package com.soartech.simjr.ui.pvd;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
@@ -34,11 +40,17 @@ import com.soartech.simjr.sim.DetailedTerrain;
  */
 public class SlippyMap 
 {
-    private static final Logger logger = LoggerFactory.getLogger(MapImage.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlippyMap.class);
+    
+    private static final ExecutorService threadpool = Executors.newFixedThreadPool(10);
+
+    private String mapserverUrl = "http://tile.openstreetmap.org/";
     
     private int currentZoomLevel = 0;
     private Vector3 origin;
     private DetailedTerrain terrain;
+    
+    private Map<String, TileDownloadable> tilesToDownload = Collections.synchronizedMap(new HashMap<String, TileDownloadable>());
     
     private class SlippyMapTile
     {
@@ -56,7 +68,7 @@ public class SlippyMap
 
     private DefaultPvdView pvd = null;
     
-    private Map<String, SlippyMapTile> maptileCache = new HashMap<String, SlippyMapTile>();
+    private Map<String, SlippyMapTile> maptileCache = Collections.synchronizedMap(new HashMap<String, SlippyMapTile>());
 
     /**
      * 
@@ -68,6 +80,26 @@ public class SlippyMap
         this.currentZoomLevel = zoomLevel;
         this.terrain = terrain;
         this.pvd = pvd;
+        
+        //load the default tile into memory
+        BufferedImage img = null;
+        try {
+            String defaultTileLoc = "/simjr/images/default-tile.png";
+            URL defaultTileUrl = SlippyMap.class.getResource(defaultTileLoc);
+            if(defaultTileUrl == null)
+            {
+                defaultTileUrl = (new File(defaultTileLoc)).toURI().toURL();
+            }
+            img = ImageIO.read(new File(defaultTileUrl.getPath()));
+            
+            SlippyMapTile newMaptile = new SlippyMapTile();
+            newMaptile.image = img;
+
+            //save in memory cache
+            maptileCache.put("default-tile", newMaptile);
+        } catch (IOException e1) {
+            logger.error(e1.getMessage());
+        }
     }
     
     /**
@@ -97,7 +129,6 @@ public class SlippyMap
         } else {
             numMaptilesX += 2;
         }
-        
         
         if(numMaptilesY % 2 == 0)
         {
@@ -195,17 +226,11 @@ public class SlippyMap
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, maptile.opacity);
         g2d.setComposite(ac);
         
-        final SimplePosition centerPixels = transformer.metersToScreen(maptile.centerMeters.x, maptile.centerMeters.y);
-        final SimplePosition originPixels = transformer.metersToScreen(maptile.originMeters.x, maptile.originMeters.y);
-        
-        double metersPerPixel = getMetersPerPixel(transformer, maptile, pvd);
-        terrain.setCoordinateFrame(pvd.getCenterInMeters(), metersPerPixel);
-//        logger.info("METERS/PIXEL: " + metersPerPixel);
-        
         //the maptiles are 256x256
         double widthInPixels = 256;
         double heightInPixels = 256;
         
+        //draw the tile and return if we know its potision
         if(x != null && y != null)
         {
             g2d.drawImage(maptile.image,
@@ -213,8 +238,19 @@ public class SlippyMap
                     y,
                     (int) widthInPixels, (int) heightInPixels,
                     null);
+            
+            return;
         } 
-        else if(x != null)
+        
+        final SimplePosition centerPixels = transformer.metersToScreen(maptile.centerMeters.x, maptile.centerMeters.y);
+        final SimplePosition originPixels = transformer.metersToScreen(maptile.originMeters.x, maptile.originMeters.y);
+        
+        double metersPerPixel = getMetersPerPixel(transformer, maptile, pvd);
+        terrain.setCoordinateFrame(pvd.getCenterInMeters(), metersPerPixel);
+//        logger.info("METERS/PIXEL: " + metersPerPixel);
+        
+        //calculate the tile position since we don't know it
+        if(x != null)
         {
             g2d.drawImage(maptile.image,
                     x,
@@ -241,29 +277,6 @@ public class SlippyMap
         
     }
     
-    public double getMetersPerPixel(CoordinateTransformer transformer, SlippyMapTile maptile, DefaultPvdView pvd)
-    {
-
-//      The distance represented by one pixel (S) is given by:
-//      S=C*cos(y)/2^(z+8)
-//      where...
-//      C is the (equatorial) circumference of the Earth = 40,075 km
-//      z is the zoom level
-//      y is the latitude of where you're interested in the scale
-      
-//      Point pt = new Point(pvd.getWidth() / 2, pvd.getHeight() / 2);
-//      final Vector3 fixedPoint = transformer.screenToMeters(pt.getX(), pt.getY());
-        
-//      logger.info("MAPTILE: " + maptile.tileNumber);
-//      logger.info("CENTER: " + maptile.centerMeters.x + ", " + maptile.centerMeters.y);
-        
-      double c = 40075000.0; //in meters
-      double y = pvd.transformToLat(maptile.centerMeters);
-      double scale = (c * Math.cos(Math.toRadians(y))) / (Math.pow(2, (double)(currentZoomLevel + 8)));
-      
-      return scale;
-    }
-    
     public SlippyMapTile getOrCreateMaptile(final double lat, final double lon, final int zoom)
     {
         //get the x and y tile indicies from the lat/lon
@@ -275,10 +288,6 @@ public class SlippyMap
     
     public SlippyMapTile getOrCreateMaptile(int xtile, int ytile, final int zoom)
     {
-        //get the x and y tile indicies from the lat/lon
-//        int xtile = (int)Math.floor( (lon + 180) / 360 * (1<<zoom) ) ;
-//        int ytile = (int)Math.floor( (1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 / Math.cos(Math.toRadians(lat))) / Math.PI) / 2 * (1<<zoom) ) ;
-        
         if (xtile < 0)
         {
             xtile=0;
@@ -300,7 +309,7 @@ public class SlippyMap
         }
         
         String tileNumber = "" + zoom + "/" + xtile + "/" + ytile; 
-        String url = "http://tile.openstreetmap.org/" + tileNumber + ".png";
+        String url = mapserverUrl + tileNumber + ".png";
         
         //load from cache if we already know about this maptile
         if(maptileCache.containsKey(url))
@@ -310,7 +319,7 @@ public class SlippyMap
         }
         else
         {
-            
+            //try to load from disk
             BufferedImage img = null;
             try {
                 //try to load from disk before web
@@ -318,20 +327,27 @@ public class SlippyMap
                 img = ImageIO.read(new File(dir, tileNumber + ".png"));
                 
             } catch (IOException e1) {
-//                e1.printStackTrace();
 //                logger.info("Maptile: " + tileNumber + " not on disk, loading from url");
 //                logger.error(e1.getMessage());
             }
             
-            //load from web and save in cache
-            try {
-                if(img == null) {
-                    img = ImageIO.read(new URL(url));
-                    logger.info("Maptile: " + tileNumber + " not on disk, loading from url");
-                } else {
-                    logger.info("Using Maptile: " + tileNumber + " from disk");
-                }
+            if(img == null)
+            {
+                TileDownloadable td = new TileDownloadable(xtile, ytile, zoom, tileNumber, url); 
                 
+                if(!tilesToDownload.containsKey(td.url))
+                {
+                    logger.info("Maptile: " + tileNumber + " not on disk, loading from url");
+                    tilesToDownload.put(td.url, td);
+                    return downloadTileAsync(td);
+                }
+                else
+                {
+                    return maptileCache.get("default-tile");  
+                }
+            }
+            else
+            {
                 SlippyMapTile newMaptile = new SlippyMapTile();
                 newMaptile.image = img;
                 newMaptile.url = url;
@@ -357,22 +373,149 @@ public class SlippyMap
                 //save in memory cache
                 maptileCache.put(newMaptile.url, newMaptile);
                 
-                //save to disk cache
-                saveMaptileToDisk(newMaptile);
-                
                 return newMaptile;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
             }
         }
-        
-        return null;
     }
     
+    class TileDownloadable
+    {
+        String tileNumber;
+        String url;
+        int xtile;
+        int ytile;
+        int zoom;
+        
+        public TileDownloadable(int xtile, int ytile, final int zoom, String tileNumber, String url)
+        {
+            this.tileNumber = tileNumber;
+            this.xtile = xtile;
+            this.ytile = ytile;
+            this.zoom = zoom;
+            this.url = url;
+        }
+    }
+    
+    class TileDownloader implements Callable<SlippyMapTile>
+    {
+        private TileDownloadable td;
+        
+        public TileDownloader(TileDownloadable td) 
+        {
+            this.td = td;
+        }
+        
+        @Override
+        public SlippyMapTile call() throws Exception {
+//            logger.info("*** TileDownloader call(): " + td.tileNumber);
+            return downloadTile(td);
+        }
+        
+    }
+    
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
+    }
+    
+    private SlippyMapTile downloadTileAsync(TileDownloadable td)
+    {
+        TileDownloader task = new TileDownloader(td);
+        Future<SlippyMapTile> future = threadpool.submit(task);
+        return maptileCache.get("default-tile"); 
+    }
+    
+    private SlippyMapTile downloadTile(TileDownloadable td)
+    {
+        BufferedImage img = null;
+      
+        //load from web and save in cache
+        try {
+            if(img == null) {
+                img = ImageIO.read(new URL(td.url));
+                logger.info("... Downloading Maptile: " + td.tileNumber + " ...");
+            } 
+              
+            SlippyMapTile newMaptile = new SlippyMapTile();
+            newMaptile.image = img;
+            newMaptile.url = td.url;
+            newMaptile.tileNumber = td.tileNumber; 
+            newMaptile.x = td.xtile;
+            newMaptile.y = td.ytile;
+            newMaptile.zoom = td.zoom;
+              
+            //set origin (upper left)
+            Geodetic.Point originDegrees = new Geodetic.Point(Math.toRadians(tile2lat(td.ytile, currentZoomLevel)), Math.toRadians(tile2lon(td.xtile, currentZoomLevel)), 0);
+            Vector3 originMeters = pvd.getTerrain().fromGeodetic(originDegrees);
+    //        Vector3 centerMeters = new Vector3(tile2lon(xtile, pvd.getCurrentZoomLevel()), tile2lat(ytile, pvd.getCurrentZoomLevel()), 0);
+            newMaptile.originMeters = originMeters;
+              
+            //set center
+            BoundingBox bb = tile2boundingBox(td.xtile, td.ytile, td.zoom);
+            double centerLat = (bb.north + bb.south) / 2;
+            double centerLon = (bb.east + bb.west) / 2;
+            Geodetic.Point centerDegrees = new Geodetic.Point(Math.toRadians(centerLat), Math.toRadians(centerLon), 0);
+            Vector3 centerMeters = pvd.getTerrain().fromGeodetic(centerDegrees);
+            newMaptile.centerMeters = centerMeters;
+            
+            //save in memory cache
+            maptileCache.put(newMaptile.url, newMaptile);
+            
+            //save to disk cache
+            saveMaptileToDisk(newMaptile);
+            
+            logger.info("Download Complete for Maptile: " + td.tileNumber);
+            
+            //remove from tilesToDownload if it exists. this
+            tilesToDownload.remove(td.url);
+            
+            return newMaptile;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+      
+        return maptileCache.get("default-tile");
+    }
+    
+    public double getMetersPerPixel(CoordinateTransformer transformer, SlippyMapTile maptile, DefaultPvdView pvd)
+    {
+//      The distance represented by one pixel (S) is given by:
+//      S=C*cos(y)/2^(z+8)
+//      where...
+//      C is the (equatorial) circumference of the Earth = 40,075 km
+//      z is the zoom level
+//      y is the latitude of where you're interested in the scale
+      
+//      Point pt = new Point(pvd.getWidth() / 2, pvd.getHeight() / 2);
+//      final Vector3 fixedPoint = transformer.screenToMeters(pt.getX(), pt.getY());
+        
+//      logger.info("MAPTILE: " + maptile.tileNumber);
+//      logger.info("CENTER: " + maptile.centerMeters.x + ", " + maptile.centerMeters.y);
+        
+      double c = 40075000.0; //in meters
+      double y = pvd.transformToLat(maptile.centerMeters);
+      double scale = (c * Math.cos(Math.toRadians(y))) / (Math.pow(2, (double)(currentZoomLevel + 8)));
+      
+      return scale;
+    }
     
     class BoundingBoxPixels 
     {
