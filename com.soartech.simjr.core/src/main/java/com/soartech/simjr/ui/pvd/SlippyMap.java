@@ -44,7 +44,11 @@ public class SlippyMap
     
     private static final ExecutorService threadpool = Executors.newFixedThreadPool(10);
 
+    private String tileset = "openstreetmap";
+//    private String tileset = "satellite";
+    
     private String mapserverUrl = "http://tile.openstreetmap.org/";
+    private String esriMapserverUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
     
     private int currentZoomLevel = 0;
     private Vector3 origin;
@@ -74,10 +78,11 @@ public class SlippyMap
      * 
      * @param zoomLevel
      */
-    public SlippyMap(Vector3 origin, int zoomLevel, DetailedTerrain terrain, DefaultPvdView pvd)
+    public SlippyMap(Vector3 origin, int zoomLevel, String source, DetailedTerrain terrain, DefaultPvdView pvd)
     {
         this.origin = origin;
         this.currentZoomLevel = zoomLevel;
+        this.tileset = source;
         this.terrain = terrain;
         this.pvd = pvd;
         
@@ -190,7 +195,7 @@ public class SlippyMap
     
     private void saveMaptileToDisk(SlippyMapTile maptile)
     {
-        File dir = new File("maptiles" + File.separator + "cache");
+        File dir = new File("maptiles" + File.separator + tileset);
         dir.mkdirs();
         
         try {
@@ -307,9 +312,21 @@ public class SlippyMap
         {
             ytile=((1<<zoom)-1);
         }
-        
-        String tileNumber = "" + zoom + "/" + xtile + "/" + ytile; 
-        String url = mapserverUrl + tileNumber + ".png";
+
+        //figure out which tileset we're using
+        String tileNumber = "";
+        String url = "";
+        if(tileset.equals("satellite"))
+        {
+            tileNumber = "" + zoom + "/" + ytile + "/" + xtile;
+            url = esriMapserverUrl + tileNumber + ".png";
+        }
+        else //use openstreetmap by default
+        {
+            tileset = "openstreetmap";
+            tileNumber = "" + zoom + "/" + xtile + "/" + ytile; 
+            url = mapserverUrl + tileNumber + ".png";
+        }
         
         //load from cache if we already know about this maptile
         if(maptileCache.containsKey(url))
@@ -323,7 +340,7 @@ public class SlippyMap
             BufferedImage img = null;
             try {
                 //try to load from disk before web
-                File dir = new File("maptiles" + File.separator + "cache");
+                File dir = new File("maptiles" + File.separator + tileset);
                 img = ImageIO.read(new File(dir, tileNumber + ".png"));
                 
             } catch (IOException e1) {

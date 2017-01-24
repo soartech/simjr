@@ -75,6 +75,8 @@ public class ScenarioLoader
     
     private static final int DEFAULT_ZOOM_LEVEL = 8; 
     private int zoomLevelFromScenario = DEFAULT_ZOOM_LEVEL; 
+    private static final String DEFAULT_SOURCE = "openstreetmap";
+    private String sourceFromScenario = DEFAULT_SOURCE;
     private boolean loadedSlippyMap = false;
     
     public ScenarioLoader(ServiceManager services)
@@ -246,12 +248,17 @@ public class ScenarioLoader
                 zoomLevel = tie.getZoomLevel();
             }
             zoomLevelFromScenario = zoomLevel;
+            
+            if(tie.hasSource())
+            {
+                sourceFromScenario = tie.getSource();
+            }
 
             //tell the slippy map to load
             PvdView pvdView = findPvdView();
             logger.info("Loading map from: USING SLIPPY MAP.");
             final Vector3 origin = sim.getTerrain().fromGeodetic(tie.getLocation().toRadians());
-            pvdView.loadSlippyMap(origin, zoomLevel, detailedTerrain);
+            pvdView.loadSlippyMap(origin, zoomLevel, sourceFromScenario, detailedTerrain);
 
         }
     }

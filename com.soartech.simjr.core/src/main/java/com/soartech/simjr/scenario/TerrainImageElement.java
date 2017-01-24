@@ -73,6 +73,7 @@ public class TerrainImageElement implements ModelElement
     private final LocationElement location;
     
     private final XPath zoomPath;
+    private final XPath sourcePath;
     
 
     public static TerrainImageElement attach(TerrainElement parent)
@@ -89,6 +90,7 @@ public class TerrainImageElement implements ModelElement
         this.metersPerPixel = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:metersPerPixel");
         
         this.zoomPath = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:zoomLevel");
+        this.sourcePath = this.parent.getModel().newXPath("/simjr:scenario/simjr:terrain/simjr:image/@simjr:source");
         
         this.location = new LocationElement(this);
     }
@@ -228,6 +230,16 @@ public class TerrainImageElement implements ModelElement
     public int getZoomLevel()
     {
         return (int) getModel().getDouble(zoomPath, null);
+    }
+    
+    public boolean hasSource()
+    {
+        return getModel().getNode(sourcePath, null) != null;
+    }
+    
+    public String getSource()
+    {
+        return getModel().getText(sourcePath, null);
     }
 
     private UndoableEdit getOrCreateImageElement(String href, double metersPerPixel)

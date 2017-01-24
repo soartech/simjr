@@ -166,5 +166,5 @@ public interface PvdView
     
     SlippyMap getSlippyMap();
     
-    void loadSlippyMap(Vector3 origin, int zoomLevel, DetailedTerrain terrain);
+    void loadSlippyMap(Vector3 origin, int zoomLevel, String source, DetailedTerrain terrain);
 }

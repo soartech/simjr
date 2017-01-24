@@ -100,9 +100,9 @@ class DefaultPvdView extends JPanel implements PvdView
         return slippyMap;
     }
     
-    public void loadSlippyMap(Vector3 origin, int zoomLevel, DetailedTerrain terrain)
+    public void loadSlippyMap(Vector3 origin, int zoomLevel, String source, DetailedTerrain terrain)
     {
-        slippyMap = new SlippyMap(origin, zoomLevel, terrain, this);
+        slippyMap = new SlippyMap(origin, zoomLevel, source, terrain, this);
 //        zoomToLevel(zoomLevel);
     }
     
