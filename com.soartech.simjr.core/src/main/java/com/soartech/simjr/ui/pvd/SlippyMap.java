@@ -161,13 +161,17 @@ public class SlippyMap
         
         //get tiles in a grid around the center one
         List<SlippyMapTile> orderedTiles = new ArrayList<SlippyMapTile>();
+        int numMaptilesAtZoom = (int) Math.pow(2, currentZoomLevel);
+        
         int xx = ((numMaptilesX - 1) / 2);
         int yy = ((numMaptilesY - 1) / 2);
         for(int y = 0 - yy; y <= yy; y++)
         {
             for(int x = 0 - xx; x <= xx; x++)
             {
-                orderedTiles.add(getOrCreateMaptile(centerMaptile.x + x, centerMaptile.y + y, centerMaptile.zoom));
+                orderedTiles.add(getOrCreateMaptile((centerMaptile.x + x + numMaptilesAtZoom) % (numMaptilesAtZoom), 
+                                                    (centerMaptile.y + y + numMaptilesAtZoom) % (numMaptilesAtZoom), 
+                                                    centerMaptile.zoom));
             }
         }
         
