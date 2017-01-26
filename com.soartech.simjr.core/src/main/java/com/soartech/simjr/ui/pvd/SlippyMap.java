@@ -42,7 +42,7 @@ public class SlippyMap
 {
     private static final Logger logger = LoggerFactory.getLogger(SlippyMap.class);
     
-    private static final ExecutorService threadpool = Executors.newFixedThreadPool(10);
+    private static final ExecutorService threadpool = Executors.newFixedThreadPool(2);
 
     private String tileset = "openstreetmap";
 //    private String tileset = "satellite";
