@@ -80,6 +80,7 @@ class DefaultPvdView extends JPanel implements PvdView
 
     private MapImage mapBackgroundImage;
     private final CoordinatesPanel coordinatesPanel;
+    private final MapLicenseAttributionHtml mapLicenseAttributionHtml;
     private final AppStateIndicator appStateIndicator;
     private SlippyMap slippyMap = null;
 
@@ -104,6 +105,7 @@ class DefaultPvdView extends JPanel implements PvdView
     {
         slippyMap = new SlippyMap(origin, zoomLevel, source, terrain, this);
 //        zoomToLevel(zoomLevel);
+        addMapLicenseAttribution("openstreetmap");
     }
     
     public static PvdViewFactory FACTORY = new PvdViewFactory() {
@@ -164,6 +166,8 @@ class DefaultPvdView extends JPanel implements PvdView
         this.coordinatesPanel = new CoordinatesPanel();
         addCoordinatesPanel();
 
+        this.mapLicenseAttributionHtml = new MapLicenseAttributionHtml();
+
         repaintTimer.start();
     }
 
@@ -172,6 +176,16 @@ class DefaultPvdView extends JPanel implements PvdView
         coordinatesPanel.setActivePvd(this);
         coordinatesPanel.setBounds(12, 10, 300, 20);
         add(coordinatesPanel);
+    }
+    
+    private void addMapLicenseAttribution(String provider)
+    {
+        mapLicenseAttributionHtml.setActivePvd(this);
+        mapLicenseAttributionHtml.setText(slippyMap.getMapAttributionHtml(provider));
+        
+        logger.info("BOUNDS: " + this.getWidth() + " " + this.getHeight());
+        mapLicenseAttributionHtml.setBounds(this.getWidth() - 184, this.getHeight() - 20, 184, 20);
+        add(mapLicenseAttributionHtml);
     }
     
     @Override

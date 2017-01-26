@@ -55,6 +55,7 @@ public class SlippyMap
     private DetailedTerrain terrain;
     
     private Map<String, TileDownloadable> tilesToDownload = Collections.synchronizedMap(new HashMap<String, TileDownloadable>());
+    private Map<String, String> mapAttributionHtmls = new HashMap<String, String>();
     
     private class SlippyMapTile
     {
@@ -105,6 +106,9 @@ public class SlippyMap
         } catch (IOException e1) {
             logger.error(e1.getMessage());
         }
+        
+        //init map attribution html strings
+        mapAttributionHtmls.put("openstreetmap", "&#169; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors");
     }
     
     /**
@@ -195,6 +199,11 @@ public class SlippyMap
                 y += tile.image.getHeight();
             }
         }
+    }
+    
+    public String getMapAttributionHtml(String provider)
+    {
+        return mapAttributionHtmls.get(provider);
     }
     
     private void saveMaptileToDisk(SlippyMapTile maptile)
