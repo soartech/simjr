@@ -675,6 +675,9 @@ class DefaultPvdView extends JPanel implements PvdView
         shapeSystem.displayErrors(factory);
         //shapeSystem.displayDebugging(factory, transformer);
         
+        //move attribution
+        mapLicenseAttributionHtml.setBounds(this.getWidth() - 184, this.getHeight() - 20, 184, 20);
+        
         g2dCopy.dispose();
     }
     
