@@ -8,11 +8,11 @@
   
   <simjr:terrain>
     <simjr:origin simjr:latitude="37.5" simjr:longitude="-116.5" simjr:altitude="0.0" />
-    <simjr:image simjr:zoomLevel="10" simjr:source="openstreetmap">
+    <simjr:image simjr:zoomLevel="10">
         <simjr:location>
             <simjr:lla simjr:latitude="37.5" simjr:longitude="-116.5" simjr:altitude="0.0" />
       </simjr:location>
-    </simjr:image>
+    </simjr:image>  
   </simjr:terrain>
   
   <simjr:entities>
