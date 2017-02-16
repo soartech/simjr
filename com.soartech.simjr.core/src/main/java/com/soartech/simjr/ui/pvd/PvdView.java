@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 import com.soartech.math.Vector3;
 import com.soartech.shapesystem.ShapeSystem;
 import com.soartech.shapesystem.swing.SwingCoordinateTransformer;
+import com.soartech.simjr.sim.DetailedTerrain;
 import com.soartech.simjr.sim.Entity;
 import com.soartech.simjr.sim.Terrain;
 import com.soartech.simjr.ui.shapes.EntityShapeManager;
@@ -91,6 +92,14 @@ public interface PvdView
      * values zoom in.  Each unit of zoom is about +/-10%.
      */
     void zoom(int amount);
+    
+    void zoomToLevel(int zoomLevel);
+    
+    void zoomToLevelRelativeToPoint(Point pt, int zoomLevel);
+    
+    void zoomLevelByAmount(int zoomLevelAmount);
+    
+    void zoomLevelAmountRelativeToPoint(Point pt, int zoomLevelAmount);
 
     /**
      * @param screenDelta The screen vector, in pixels
@@ -154,4 +163,8 @@ public interface PvdView
      * @return the {@link Cursor} preferred when the user drags the PVD.
      */
     Cursor getDraggingCursor();
+    
+    SlippyMap getSlippyMap();
+    
+    void loadSlippyMap(Vector3 origin, int zoomLevel, String source, DetailedTerrain terrain);
 }
