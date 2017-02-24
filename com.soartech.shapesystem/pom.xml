@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.soartech</groupId>
     <artifactId>simjr-shapesystem</artifactId>
-    <version>3.0.2</version>
+    <version>3.0.3</version>
     <packaging>jar</packaging>
     <name>SimJr ShapeSystem</name>
 
@@ -10,46 +10,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-public-snapshots</id>
-            <name>SoarTech Public Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/</url>
-            <layout>default</layout>
-        </snapshotRepository>
-
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-public-releases</id>
-            <name>SoarTech Public Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
     
     <repositories>
-        <repository>
-            <id>soartech-public-releases</id>
-            <url>
-                https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/
-            </url>
-        </repository>
-        <repository>
-            <id>soartech-public-snapshots</id>
-            <url>
-                https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/
-            </url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>soartech-thirdparty</id>
-            <url>
-                https://nexus.soartech.com:8443/nexus/content/repositories/thirdparty/
-            </url>
-        </repository>
     </repositories>
     
     <dependencies>
