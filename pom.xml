@@ -23,23 +23,6 @@
         <module>com.soartech.simjr.web</module>
     </modules>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-public-snapshots</id>
-            <name>SoarTech Public Snapshots</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-snapshots/</url>
-            <layout>default</layout>
-        </snapshotRepository>
-
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>soartech-public-releases</id>
-            <name>SoarTech Public Releases</name>
-            <url>https://nexus.soartech.com:8443/nexus/content/repositories/public-releases/</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
