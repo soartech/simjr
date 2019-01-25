@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soartech</groupId>
 	<artifactId>simjr-math</artifactId>
-	<version>3.0.2</version>
+	<version>3.0.3</version>
 	<packaging>jar</packaging>
 	<name>SimJr Math</name>
 
