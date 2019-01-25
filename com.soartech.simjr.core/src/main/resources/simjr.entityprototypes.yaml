@@ -446,6 +446,12 @@ prototypes:
     id: uav
     parent: *generic-fighter
 
+- &quadcopter
+    id: quadcopter
+    parent: *uav
+    properties:
+        maxSpeed: 20.0
+
 ### Apache #####################################################################
 - &ah-64
     id: ah-64
